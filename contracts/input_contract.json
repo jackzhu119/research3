@@ -1,0 +1,57 @@
+{
+  "schema_version": "paper3-signal-v2-preparation",
+  "status": "pending_stieger_roster_and_meta_train_duration_audit",
+  "channels": [
+    "FC3",
+    "FC4",
+    "C5",
+    "C3",
+    "C1",
+    "Cz",
+    "C2",
+    "C4",
+    "C6",
+    "CP3",
+    "CP4"
+  ],
+  "sfreq_hz": 128,
+  "reference": "CAR_exact_clinic11",
+  "band_hz": [
+    8,
+    30
+  ],
+  "filter": "4th-order bidirectional SOS within original trial context",
+  "selected_profile": null,
+  "context_s": null,
+  "crop_s": null,
+  "n_times": null,
+  "profile_candidates": {
+    "long": {
+      "context_s": [
+        0,
+        3
+      ],
+      "crop_s": [
+        0.5,
+        2.5
+      ],
+      "n_times": 256
+    },
+    "short": {
+      "context_s": [
+        0,
+        2
+      ],
+      "crop_s": [
+        0.5,
+        1.5
+      ],
+      "n_times": 128
+    }
+  },
+  "model_normalization": "channel temporal demeaning then joint trial RMS float64, no epsilon",
+  "spatial_adapter_position": "after CAR/filter/resample/crop/temporal demeaning and before joint RMS",
+  "window_audit_receipt": null,
+  "protocol_freeze_sha256": null,
+  "old_p1_or_legacy_npz_accepted": false
+}

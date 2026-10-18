@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "status": "BLOCKED_W1_WINDOW_AND_SOURCE_CACHE",
+  "purpose": "one controlled local source engineering GPU timing and exact checkpoint-resume pilot; no scientific fit",
+  "auto_start": false,
+  "server_actions": false,
+  "user_later_boot_required": true,
+  "execution_entrypoint": "tools/run_controlled_pilot.py",
+  "prerequisites": [
+    "verified pre-window Stieger qualified roster",
+    "frozen participant-isolated split",
+    "complete meta-train native duration audit and frozen common window",
+    "four-source native adapter and complete input-bound cache manifests",
+    "GPU hardware/runtime identity and exact local resume checks after user boot"
+  ],
+  "max_jobs": 1,
+  "seed": 20261018,
+  "max_source_updates": 200,
+  "max_meta_outer_updates": 0,
+  "max_external_jobs": 0,
+  "max_gpu_hours": 0.5,
+  "actual_gpu_hourly_rate": null,
+  "training_started": false,
+  "timing_estimates": "not measured; do not infer cost from parameter count",
+  "current_software_scope": "native schema adapters, synthetic math and source pilot gate/runner code; no GPU/real-EEG training or completed source fit",
+  "dependency_profile_cpu": "requirements-cpu.lock",
+  "dependency_profile_gpu": "requirements-gpu.lock; official CUDA12.8 CPython3.12/Linux x86_64 wheels downloaded and offline-resolved; not GPU-validated",
+  "max_wall_seconds": 1800,
+  "source_update_workload": {
+    "continuous_branch": 100,
+    "resume_branch_before_save": 50,
+    "resume_branch_after_reload": 50,
+    "total_actual_optimizer_updates": 200,
+    "meta_outer_updates": 0,
+    "external_updates": 0
+  },
+  "optimizer": {
+    "name": "Adam",
+    "learning_rate": 0.001,
+    "weight_decay": 0,
+    "batch_size": 64,
+    "dropout": 0.25,
+    "seed": 20261018,
+    "sampling": "equal dataset, subject, observed class, then trial; with replacement"
+  },
+  "dry_run_command": "python tools/run_controlled_pilot.py --root .",
+  "later_user_boot_execute_command": "python tools/run_controlled_pilot.py --root . --execute --user-started-gpu",
+  "execution_guards": [
+    "default dry run; no CUDA initialization",
+    "both explicit execute and user-started-gpu flags required",
+    "W1 and W2 status must both equal COMPLETE",
+    "frozen and validated contracts/input_contract.json",
+    "W2 cache_manifest path plus actual SHA256; only new .npy X/y plus event JSON; no legacy NPZ",
+    "all four exact source dataset IDs and source_train roles; no external or development query",
+    "CUDA required; no CPU fit fallback",
+    "single persistent job claim; no automatic duplicate/restart",
+    "100 versus independently initialized 50+checkpoint-reload+50 same-device exact state comparison"
+  ],
+  "cache_manifest_schema": "documented in tools/run_controlled_pilot.py module docstring",
+  "scientific_f0_receipt_produced": false,
+  "actual_gpu_resume_verified": false,
+  "gpu_pilot_executed": false,
+  "wall_budget_note": "cooperative 1800-second upper bound checked between updates; not a measured runtime or cost estimate",
+  "current_allowed_gpu_training_hours": 0,
+  "timing_protocol": {
+    "primary_branch_optimizer_updates": 100,
+    "warmup_update_indices_zero_based": [
+      0,
+      9
+    ],
+    "measured_update_indices_zero_based": [
+      10,
+      99
+    ],
+    "measured_updates": 90,
+    "warmup_included_in_100_updates": true,
+    "extra_optimizer_updates_for_timing": 0,
+    "whole_100_update_timing": [
+      "CUDA-event elapsed stream interval",
+      "CPU monotonic end-to-end wall"
+    ],
+    "per_update_components": [
+      "CPU sampling plus float64 joint RMS normalization",
+      "H2D CUDA-event interval",
+      "forward/backward/optimizer-step CUDA-event interval"
+    ],
+    "gpu_step_distribution": [
+      "p50",
+      "p90"
+    ],
+    "resume_comparison_total_actual_updates": 200,
+    "cost_note": "CUDA-event intervals are not kernel-summed time or account billing receipts; no cost is inferred without actual account price and billed duration"
+  }
+}

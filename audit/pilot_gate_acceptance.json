@@ -1,0 +1,28 @@
+{
+  "recorded_at_utc": "2026-10-18T06:07:24.236899+00:00",
+  "scope": "CPU_SOFTWARE_GATE_AND_IDENTITY_TESTS_ONLY",
+  "command": "python -m pytest tests/test_pilot_gate.py -q",
+  "passed": 20,
+  "failed": 0,
+  "model_fit_executed": false,
+  "gpu_execution": false,
+  "scientific_f0_produced": false,
+  "actual_gpu_resume_verified": false,
+  "current_workspace_dry_run": {
+    "status": "BLOCKED",
+    "reason": "W1 must be COMPLETE before a source pilot",
+    "training_started": false,
+    "exit_code": 2
+  },
+  "code": {
+    "tools/run_controlled_pilot.py": "3e14438440789109988976c0c4545c23bafb4fb9aff9637361f3b221cc166a68",
+    "tests/test_pilot_gate.py": "46a584cd80abaaee09b09159aa74d7e41a746836567c542488e4efb3edac0fd2",
+    "plans/controlled_pilot.json": "f0e2d61002f7b7757cc78cdfda93a18f776fa9cba1646b34e052d02997af65bd"
+  },
+  "limits": [
+    "CUDA timing and exact resume require later user-started GPU execution.",
+    "Synthetic temporary cache fixtures validate schema and rejection behavior only.",
+    "W1/W2 status is not changed by the runner or tests."
+  ],
+  "timing_design_test": "CPU fake scalars only: fixed 10 warmup of 100, remaining 90 p50/p90, no extra updates"
+}

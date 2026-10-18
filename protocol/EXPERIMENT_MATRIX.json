@@ -1,0 +1,327 @@
+{
+  "schema_version": "2.0",
+  "as_of": "2026-10-18",
+  "status": "planned_not_run",
+  "protocol_authority": "EXPERIMENT_PROTOCOL.md",
+  "method_authority": "METHOD_SPEC.md",
+  "baseline_authority": "BASELINE_SPEC.md",
+  "run_commands_are_not_implemented": true,
+  "stages": [
+    "W0",
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6",
+    "W7",
+    "W8",
+    "W9"
+  ],
+  "seeds": {
+    "screen": [
+      20261018
+    ],
+    "development_confirmation": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "final_pipeline": [
+      20261018,
+      20261019,
+      20261020,
+      20261021,
+      20261022
+    ],
+    "definition": "A seed binds source initialization/sampling, dictionary initialization and meta episode sequence. No extra Cartesian target-seed multiplier."
+  },
+  "input": {
+    "channels": [
+      "FC3",
+      "FC4",
+      "C5",
+      "C3",
+      "C1",
+      "Cz",
+      "C2",
+      "C4",
+      "C6",
+      "CP3",
+      "CP4"
+    ],
+    "sfreq_hz": 128,
+    "band_hz": [
+      8,
+      30
+    ],
+    "filter": "4th-order bidirectional SOS within bounded original-trial context",
+    "long_context_seconds": [
+      0,
+      3
+    ],
+    "long_crop_seconds": [
+      0.5,
+      2.5
+    ],
+    "short_context_seconds": [
+      0,
+      2
+    ],
+    "short_crop_seconds": [
+      0.5,
+      1.5
+    ],
+    "window_selected": null,
+    "window_rule": "Freeze metadata-only participant split first. Use meta-train participant-mean coverage >=0.80 and mean absolute class exclusion gap <=0.10; otherwise choose short window. No post-QC reassignment; if short also fails block main B20.",
+    "normalization": "per-channel trial temporal mean removal then joint trial RMS float64; no epsilon; invalid zero/nonfinite handled in QC"
+  },
+  "source": {
+    "main_datasets": [
+      "BNCI2014_001",
+      "Cho2017",
+      "Lee2019_MI",
+      "PhysionetMI"
+    ],
+    "optional_enhanced": "Yang2025_2C",
+    "lodo_folds": 4,
+    "initial_3seed_core_fit_count": 25,
+    "final_5seed_core_fit_count": 35,
+    "extra_classical_grid_fits_separately_counted": true,
+    "neural_max_epochs": 80,
+    "updates_per_epoch": 64,
+    "batch_size": 64,
+    "epoch_is_full_data_pass": false,
+    "optional_enhanced_status": "gate_pending"
+  },
+  "meta": {
+    "dataset": "Stieger2021",
+    "nominal_metadata_roster_split": [
+      40,
+      11,
+      11
+    ],
+    "exact_roster": null,
+    "split_seed": 20261018,
+    "split_stratify": "original intervention arm where available",
+    "G_gradient_group": "meta_train_only",
+    "reference_covariance_source": "four f0 source datasets only",
+    "support_acquired_trials": 20,
+    "outer_updates": 1000,
+    "episodes_per_outer": 4,
+    "inner_updates": 10,
+    "theta_learning_rate": 0.05,
+    "head_learning_rate": 0.01,
+    "outer_learning_rate": 0.01,
+    "optimizer": "projected gradient with QR retraction; no momentum; full unroll",
+    "validation_every_outer_updates": 50,
+    "grid": {
+      "r": [
+        2,
+        4,
+        8
+      ],
+      "rho": [
+        0.05,
+        0.15,
+        0.35
+      ]
+    },
+    "max_grid_configs": 9,
+    "main_pct_lambda": 0,
+    "selected_config": null
+  },
+  "methods": [
+    {
+      "id": "B0",
+      "name": "frozen",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 1,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B1",
+      "name": "head_only",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B2",
+      "name": "full_fine_tune",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B3",
+      "name": "source_covariance_alignment_head",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B4",
+      "name": "csp_source_prior_lda",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B5",
+      "name": "log_euclidean_reference_tangent_calibration",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B6",
+      "name": "free_spatial_lora",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B7",
+      "name": "free_spatial_lora_pct",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B8",
+      "name": "meta_learned_additive_basis",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B9",
+      "name": "random_generator_exp",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B10",
+      "name": "meta_lora",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "B11",
+      "name": "meta_lora_pct",
+      "required_main": true,
+      "spec": "BASELINE_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    },
+    {
+      "id": "P",
+      "name": "meta_learned_traceless_generator_exp",
+      "required_main": true,
+      "spec": "METHOD_SPEC.md",
+      "max_development_configs": 9,
+      "status": "not_implemented_for_new_protocol"
+    }
+  ],
+  "primary": {
+    "dataset": "HSStroke2026_v6",
+    "budget_cap_original_acquired_trials": 20,
+    "comparison": "P versus B_star selected from B1..B11 before external outcomes",
+    "B_star": null,
+    "B_star_seed_pool": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "B_star_selection": "Highest participant-mean validation BA; candidates within 0.005 of maximum -> lowest median calibration elapsed on same hardware -> lowest numeric ID",
+    "frozen_B0_reported_separately": true,
+    "statistical_unit": "participant",
+    "aggregation": "trial BA by session -> participant session mean -> five pipeline seed mean -> cohort mean",
+    "query_min_valid_trials": 20,
+    "query_min_each_class": 5,
+    "query_rule": "next complete physical LR run after calibration prefix; if no run but verified acquisition order, next complete original-trial block",
+    "support_invalid_trials_still_cost": true,
+    "bootstrap_iterations": 20000,
+    "bootstrap_seed": 20261018,
+    "bootstrap_unit": "participant with all session/seed structure intact",
+    "confidence_level": 0.95
+  },
+  "external_replication": {
+    "dataset": "Wang2026",
+    "scope": "explicit pure LR tasks; preferred run1 prefix20 -> complete run2; run6 remote query separately",
+    "unit_and_epoch_origin_gate_required": true,
+    "may_replace_primary_after_results": false
+  },
+  "secondary": {
+    "budget_curve": [
+      0,
+      4,
+      8,
+      12,
+      16,
+      20
+    ],
+    "same_query_after_B20_reserve": true,
+    "meta_subject_scaling": [
+      10,
+      20,
+      40
+    ],
+    "scaling_is_nested": true,
+    "scaling_same_outer_updates": 1000,
+    "source_enhancement": "four-source vs four-source+Yang only after audit; shared by all methods",
+    "generator_ablations": [
+      "no_whitening",
+      "no_radius_bound",
+      "symmetric_only",
+      "skew_only",
+      "full_99_coefficients",
+      "source_drift_pca",
+      "P_plus_PCT",
+      "mixed_budget_meta"
+    ],
+    "sequential_gate_required_for_primary": false,
+    "foundations_after_main": [
+      "MIRepNet",
+      "CBraMod_or_REVE_contract_dependent"
+    ],
+    "task_extensions_not_pooled": [
+      "Ding2025_Finger",
+      "SEFMEID2026"
+    ],
+    "unregistered_task_candidates": [
+      {
+        "name": "PROTEUS2026",
+        "status": "reserve_not_registered_not_executable"
+      }
+    ]
+  },
+  "resource_budget": {
+    "max_gpu_hours": null,
+    "max_wall_hours": null,
+    "max_download_bytes": null,
+    "max_jobs": null,
+    "actual_rate_per_gpu_hour": null,
+    "fill_from_existing_authorization_and_pilot_before_batches": true
+  },
+  "actual_results": {
+    "real_eeg_downloaded_this_request": false,
+    "new_algorithm_trained": false,
+    "cloud_training_submitted": false,
+    "effect_size": null
+  }
+}

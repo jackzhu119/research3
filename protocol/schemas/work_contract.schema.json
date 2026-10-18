@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:paper3:work-contract:v1",
+  "title": "Paper 3 work handoff contract — planning and later external freeze metadata",
+  "description": "Structural schema only. The accompanying standard-library checker enforces selected cross-field invariants. Neither proves EEG correctness or grants execution authorization.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "status",
+    "protocol_authority",
+    "this_delivery_executes_eeg_or_training",
+    "main_source_ids",
+    "meta",
+    "seeds",
+    "signal",
+    "method",
+    "primary",
+    "locked_healthy_confirmation_ids",
+    "secondary",
+    "legacy_reuse",
+    "freeze"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "paper3-work-contract-v1"
+    },
+    "status": {
+      "enum": [
+        "planning_only",
+        "frozen_for_external"
+      ]
+    },
+    "protocol_authority": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "this_delivery_executes_eeg_or_training": {
+      "const": false
+    },
+    "main_source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true
+    },
+    "meta": {
+      "type": "object"
+    },
+    "seeds": {
+      "type": "object"
+    },
+    "signal": {
+      "type": "object"
+    },
+    "method": {
+      "type": "object"
+    },
+    "primary": {
+      "type": "object"
+    },
+    "locked_healthy_confirmation_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "secondary": {
+      "type": "object"
+    },
+    "legacy_reuse": {
+      "type": "object"
+    },
+    "freeze": {
+      "type": "object",
+      "required": [
+        "protocol_freeze_sha256",
+        "artifacts"
+      ],
+      "properties": {
+        "protocol_freeze_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "role",
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

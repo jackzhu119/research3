@@ -1,0 +1,162 @@
+{
+  "actions": "Read-only check; no EEG download, fitting, or cloud operation",
+  "adapter_classes": {
+    "BNCI2014_001": {
+      "event_id": {
+        "feet": 3,
+        "left_hand": 1,
+        "right_hand": 2,
+        "tongue": 4
+      },
+      "interval": [
+        2,
+        6
+      ],
+      "published_ids": 9,
+      "usable": true
+    },
+    "Cho2017": {
+      "event_id": {
+        "left_hand": 1,
+        "right_hand": 2
+      },
+      "interval": [
+        0,
+        3
+      ],
+      "published_ids": 52,
+      "usable": true
+    },
+    "Lee2019_MI": {
+      "event_id": {
+        "left_hand": 2,
+        "right_hand": 1
+      },
+      "interval": [
+        0.0,
+        4.0
+      ],
+      "published_ids": 54,
+      "usable": true
+    },
+    "Ma2022": {
+      "reason": "Ma2022 is not exported by MOABB 1.7.2. It remains registered only. Supply an independently audited NPZ/JSON adapter; do not install moving develop.",
+      "usable": false
+    },
+    "PhysionetMI": {
+      "event_id": {
+        "feet": 5,
+        "hands": 4,
+        "left_hand": 2,
+        "rest": 1,
+        "right_hand": 3
+      },
+      "interval": [
+        0,
+        3
+      ],
+      "published_ids": 109,
+      "usable": true
+    }
+  },
+  "code_sha256": {
+    "__init__.py": "39ee2f3b9197e129f636d38ed316ea488884215a42fc27098d935068354a5637",
+    "__main__.py": "cf7390a2508a0fcad4777a4a629fc5212ab655cb45845975995f835676a834e3",
+    "cli.py": "98052e0430de68177683ac53fcb12bb28d5563877452894eda375ff9fa2913d0",
+    "core.py": "84e1ea9a2aa80cb4a382a7664b96a1e67160860841b388bba25ca394171b8782",
+    "datasets.py": "57d8072236a423b2a50e58571645d1f673463c53f86f0a51df1e7ac825e2c6d7",
+    "models.py": "96c40e0b2062bcb00367cb5093893dff7bf3b089c4a0f4cb91152e951dcab899",
+    "neural.py": "d09afd4bbf45e13eaeb9af69278a3333b053a7e73e8953faa18963ad432c268b"
+  },
+  "data_root": "/tmp/paper3-doctor",
+  "environment": {
+    "packages": {
+      "mne": "1.13.2",
+      "moabb": "1.7.2",
+      "numpy": "2.3.5",
+      "scikit-learn": "1.8.0",
+      "scipy": "1.17.0",
+      "torch": "2.8.0+cpu"
+    },
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "python": "3.12.14"
+  },
+  "imports": {
+    "mne": {
+      "import": true,
+      "version": "1.13.2"
+    },
+    "moabb": {
+      "import": true,
+      "version": "1.7.2"
+    },
+    "torch": {
+      "cuda_available": false,
+      "import": true,
+      "version": "2.8.0+cpu"
+    }
+  },
+  "registered_datasets": {
+    "BNCI2014_001": {
+      "doi": "10.3389/fnins.2012.00055",
+      "kwargs": {},
+      "role": "source"
+    },
+    "Cho2017": {
+      "doi": "10.5524/100295",
+      "kwargs": {},
+      "role": "source"
+    },
+    "Dreyer2023": {
+      "available": false,
+      "role": "excluded_paper1_active"
+    },
+    "GuttmannFlury2025_MI": {
+      "available": false,
+      "role": "holdout"
+    },
+    "HS-Stroke": {
+      "available": false,
+      "role": "holdout"
+    },
+    "Kumar2024": {
+      "available": false,
+      "role": "excluded_previous_paper"
+    },
+    "Lee2019_MI": {
+      "doi": "10.5524/100542",
+      "kwargs": {
+        "resting_state": false,
+        "test_run": false,
+        "train_run": true
+      },
+      "role": "source"
+    },
+    "Liu2024": {
+      "available": false,
+      "role": "holdout"
+    },
+    "Ma2022": {
+      "availability": "Not exported by pinned MOABB 1.7.2; audited NPZ adapter required.",
+      "doi": "10.1038/s41597-022-01647-1",
+      "kwargs": {},
+      "role": "development"
+    },
+    "PhysionetMI": {
+      "doi": "10.13026/C28G6P",
+      "kwargs": {
+        "executed": false,
+        "imagined": true
+      },
+      "role": "source"
+    },
+    "SEFMEID": {
+      "available": false,
+      "role": "holdout"
+    },
+    "Yang2025": {
+      "available": false,
+      "role": "excluded_paper1_active"
+    }
+  }
+}

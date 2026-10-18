@@ -1,0 +1,44 @@
+{
+  "protocol_id": "paper3_source_baselines_clinic11_20261018_v1",
+  "scope": "Source-only preparation and baseline training; no final clinical test",
+  "minimum_free_gib_prep": 100,
+  "preprocessing": {
+    "channels": ["FC3", "FC4", "C5", "C3", "C1", "Cz", "C2", "C4", "C6", "CP3", "CP4"],
+    "montage_policy": "Exact case-insensitive names only; no missing-channel interpolation or zero filling",
+    "fmin": 8.0,
+    "fmax": 30.0,
+    "sfreq": 128,
+    "context_s": [0.0, 3.0],
+    "crop_s": [0.5, 2.5],
+    "reference": "Common average of the exact selected 11 channels",
+    "filter": "Per-trial-context fourth-order Butterworth SOS, scipy sosfiltfilt odd padding",
+    "resample": "scipy resample_poly, Kaiser 5, no learned transformation",
+    "time_anchor": "MOABB 1.7.2 canonical task annotation; adapter interval shift already applied",
+    "units": "MNE Raw SI volts; saved float32 volts",
+    "qc_p2p_uv": 250,
+    "qc_policy": "Flag and retain; incomplete 3s contexts explicitly excluded; other data-integrity failure stops",
+    "downstream_normalization": "Each trial/channel temporal demeaning, then joint trial RMS; no cross-trial or target statistic"
+  },
+  "classical": {
+    "CSP": "Helmert CAR subspace; trace-normalized trial covariances; 0.1 shrinkage; dataset/person/class balanced means; two low plus two high generalized eigenvectors; log power",
+    "LDA": "sklearn lsqr, shrinkage auto, equal class priors; fit rows not sample weighted",
+    "TS": "Trace-normalized 0.1-shrunk covariances; training-only weighted log-Euclidean reference; whitened matrix log and sqrt(2) upper triangle",
+    "LR": "Training-only weighted StandardScaler; C=1, lbfgs, max_iter=2000; equal dataset/person/class weights",
+    "seeds": "Deterministic models run once per fold; seed aliases not counted as independent fits"
+  },
+  "neural": {
+    "architecture": "Compact EEGNet-family independent implementation; temporal63, F1=8, D=2, F2=16, depthwise15, pooling4/8",
+    "epochs": 80,
+    "steps_per_epoch": 64,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "dropout": 0.25,
+    "patience": 15,
+    "min_delta": 0.000001,
+    "threads": 4,
+    "retain_epoch_checkpoints": true,
+    "selection": "Source LODO participant-balanced validation cross-entropy only",
+    "sampling": "Equal dataset, person, then observed class, with replacement",
+    "resume": "All optimizer and PyTorch/sampler RNG state at epoch boundary; exact same identity/device"
+  }
+}

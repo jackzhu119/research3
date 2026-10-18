@@ -1,42 +1,47 @@
-# Paper3：协议导入前置检查
+# Paper3 — v2.0 协议导入与研究准备
 
-**阶段门：BLOCKED。尚未取得配套 ZIP，未读取协议，W0 未通过。**
+原始 `Paper3_Work_Handoff_20261018.zip` 已实际读取，529,763 bytes，整体 SHA256 为 `0398664faf34682a07fb38de4e46df9829f0e5ad050f657f905d0373dbfaf175`；包内 manifest 的 **52/52 文件逐项匹配**。原件位于 `protocol/`，后续实现位于 `p3work/`，两者分开维护。`legacy_baseline_v1` 保持原字节，只是历史基础软件，不是新算法或真实训练证据。
 
-本分支 `research/paper3-protocol-v2-w0` 只记录原包可用之前已实际执行的前置检查，不是新算法实现、训练包或实验结果。W0–W9 的任务、方法公式、数据清单及阶段门必须从完整 v2.0 协议导入后确定。
+**本提交时 W0 本地核查完成，W1 正在执行；统一窗口与参与者分组尚未冻结。** 阶段状态见 `status/tasks.json`，运行中的逐文件进度以本地 `status/local_preparation.json` 和 worker `batch_progress.json` 为准。只有真实 W1 完成后才能创建正式数值缓存。旧 `audit/w0_preflight.json` 记录原包尚未附加时的历史阻塞，不代表当前状态。
 
-## 已核实
+## 已完成的真实工作
 
-- 工作区为 `/workspace/research3`；`origin` 为 `jackzhu119/research3`。首次检查无提交，远端无 refs。
-- 当前环境网络策略为 enforced，状态 running/connected，观测为 current。
-- 既有 `R2_ENDPOINT`、`R2_BUCKET`、`AWS_ACCESS_KEY_ID`、`AWS_SECRET_ACCESS_KEY` 均存在且 ready。一次 `HeadBucket` 返回 HTTP 200，见 `audit/r2_connectivity.json`。
-- 未打印凭据值，未复制密钥，未新增凭据。未列举、读取或上传 R2 对象；HeadBucket 成功不代表数据已存在或对象读写已获验证。
+- 四 source 各一份原生 schema 样本：BNCI 144、Cho 200、OpenBMI offline train 100、PhysioNet 15，共459条原始 LR 元数据；不是完整 source 队列或最终合格训练数。
+- Stieger S1/Session1：450个混合任务 trial，150个纯水平 LR trial；保留 task/run/trial、原始时间、反馈终点、实测通道与 µV 转换。样本覆盖不能代替 meta-train 全体选窗。
+- 原始协议 ZIP 与5个 schema 原档已通过现有 R2 条件 PUT、完整 GET、字节数和 SHA256 校验。没有用 ETag 或 HEAD 冒充回读验收。
+- 新几何/适配内核实现 Q/E、Rref、无迹正交生成元、矩阵指数、联合 RMS、10步校准与完整 unroll 外层单步。CPU 合成张量测试仅验证软件；没有真实科研模型、性能结果或科研 pilot。
+- CPU 依赖实际安装并锁定；CPU和 CUDA12.8 的 CPython3.12/Linux x86_64 离线 wheels 已下载。CUDA profile 仅离线解析，未在 GPU 验证；备份状态以私有回执为准。
 
-## 当前缺口
+## 数据、访问与公开仓库
 
-Library ID `libfile_5f1cbeccc8ec81918b0f27ec5dcdd7ed` 只有用户提供的元数据。本会话无可调用的 Library/File Service 下载工具；Sediment `download_file` 不支持该类型 ID。`/workspace/library-files` 与共享下载目录均为空，也无可调用的浏览器工具。
+当前 GitHub 仓库为 PUBLIC。因此新增 EEG、逐trial清单、官方数据catalog、R2回执及批处理状态仅保存在本地与用户现有 R2。公开分支保留代码、用户授权导入的协议和汇总验收，不公开新增数据或凭据。完整固定包在私有 R2 及本地共享交付目录中生成。
 
-需要该 ZIP 的实际可读本地文件或受支持下载入口，无需提供凭据。用户给定的大小、SHA256、52 份 manifest 文件计数保存在 `provenance/handoff.expected.json`，均尚未独立核验；包内 DOCX 与附件一致也仅为用户声明。
+- `protocol/`：原始只读研究规格及52文件校验来源。
+- `p3work/`：新原生适配、权限/信号合同、几何与校准内核。
+- `contracts/`：当前工作合同；未知的窗口、名单和冻结参数保持 null。
+- `data/`：本次独立下载的原档和依赖 wheels；不复用论文1旧 NPZ。
+- `data_catalog/`、`audit/source_schema/`、`audit/stieger_w1/`：私有原生证据及逐事件记录。
+- `manifests/geometry_constants/`：实际固定 Q/E 数学数组及 SHA；不是 EEG 缓存或模型。
 
-## 固定前置检查包
+Stieger 分组必须先于选窗，时长决策只读已冻结 meta-train 的完整 session 元数据。HS/Wang 外测不下载、不解封；内部留出不用于方法选择。Cho按类别存储的顺序不能作为采集顺序。三个source MAT的固定loader单位证据与原生header证据分开记录，不授权绝对幅值QC或猜测物理run。
 
-仅在已安装 Python 和预先提供的既有环境变量下执行：
+## 已实现的准备命令
 
 ```bash
-python -m pip install -r requirements-preflight.txt
-python tools/check_r2.py --output audit/r2_connectivity_deployment.json
-python tools/verify_handoff_archive.py /actual/path/Paper3_Work_Handoff_20261018.zip --output audit/archive_integrity.json
+python -m p3work doctor
+python -m p3work status
+python -m p3work pilot-plan
+python tools/check_pilot_readiness.py --require-ready
+python tools/source_schema_audit.py --raw-root data/source_schema
+python tools/stieger_metadata_batch.py --plan plans/stieger_qualification.json
 ```
 
-归档校验器仅验证指定 ZIP 的大小、整体 SHA256 和 ZIP 目录安全性，不打开成员载荷、不解压、不执行包内内容、不声称完成 52 份文件 SHA 核验或协议阅读。缺少原包时返回失败。
+Stieger 执行需显式追加 `--execute`；同计划重复启动会由文件锁拒绝，结束后同命令可幂等恢复。资格计划固定62个最早session、38,395,648,006 bytes、单文件串行、GPU 0小时、活动wall上限14,400秒。原档校验、解析、R2完整回读成功后才清理工具自己新建的临时raw，已有S1原档保留。该基础 worker 在资格完成后仅生成 meta-train 全session计划。`tools/continue_local_preparation.py --execute` 只等待已运行的资格任务，核验62份回执后串行推进完整 meta-train 时长元数据、选窗、W2 source 新缓存和固定包备份；不重启资格任务，不执行评估或训练。完整时长批次使用独立记录的18小时CPU活动wall上限，原始选择计划及其SHA保留，名单和科学规则不变。
 
-原包可用后的顺序：整体 ZIP 核验 → 安全导入 → 逐一核验 manifest 的 52 份文件及 SHA → 读取完整协议与配套代码 → 建立 W0–W9 阶段门记录 → 按协议执行真实适配和最小 pilot。若缺原数据或代码，记录缺口；不得用合成或旧缓存结果替代。
+`tools/r2_backup.py` 和 `tools/r2_restore.py` 均默认dry-run；只有显式 `--execute` 才调用既有R2，严格使用文件manifest及完整GET/SHA。不扫描或复制环境、密钥文件及论文1/2上传配置。
 
-## 执行边界
+## 当前未完成与 GPU 边界
 
-- `legacy_baseline_v1` 只可按协议作为旧基线，不能当作新算法。
-- 不提前打开封存外测，不跳过阶段门。
-- RunPod `k3az08k9ji2d39` 由 dot 唯一浏览器操作者协调；本包不连接 RunPod，也不启动远端训练。
-- 不复用已清理的论文1原始/处理缓存或旧 NPZ；论文1/2 原代码与上传配置保持不动。
-- 不发邮件、不投稿、不新建付费实例。
+本提交时，全体资格、40/11/11、完整meta-train时长和共同窗口尚未完成；四source完整新缓存未生成；无有效 f0/Rref/G 科研权重。W5还有强对照与真实训练/恢复验收未完成，详见 `p3work/methods/STATUS.md`。
 
-尚未开始真实适配、pilot 或训练；尚未上传和回读。部署此前置检查包不能改变这些状态。
+已有 RunPod 的关闭和后续开机由用户管理，当前状态未通过本任务观察或更改。所有 GPU 训练等待用户后续开机；代码和准备工作不会自动启动或重启服务器。受控source pilot只依赖真实W1/W2；W3 Stieger数值缓存及后续科研阶段仍单独验收。`build_delivery.py --checkpoint --execute` 只生成明确标注未就绪的可恢复快照；正式固定包必须通过W1/W2及完整缓存回执覆盖检查。不得运行 legacy 的全量执行入口跳过新合同。

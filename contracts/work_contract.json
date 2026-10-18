@@ -1,0 +1,174 @@
+{
+  "schema_version": "paper3-work-contract-v1",
+  "status": "preparation_in_progress",
+  "protocol_authority": [
+    "EXPERIMENT_PROTOCOL.md",
+    "METHOD_SPEC.md",
+    "REFERENCE_METHODS.md",
+    "DATA_AUDIT.md",
+    "DATA_REGISTRY.json"
+  ],
+  "this_delivery_executes_eeg_or_training": true,
+  "main_source_ids": [
+    "BNCI2014_001",
+    "Cho2017",
+    "Lee2019_MI",
+    "PhysionetMI"
+  ],
+  "meta": {
+    "dataset_id": "Stieger2021",
+    "split_unit": "participant",
+    "roster_eligibility_independent_of_candidate_window": true,
+    "split_frozen_before_window_choice": true,
+    "replace_subjects_after_window_qc": false,
+    "desired_counts": {
+      "train": 40,
+      "validation": 11,
+      "internal_test": 11
+    },
+    "eligible_subject_ids": null,
+    "subject_lists": null,
+    "main_support_acquired_trials": 20,
+    "inner_updates": 10,
+    "episodes_per_outer": 4,
+    "outer_updates": 1000,
+    "search_r": [
+      2,
+      4,
+      8
+    ],
+    "search_rho": [
+      0.05,
+      0.15,
+      0.35
+    ],
+    "search_config_count": 9,
+    "nested_subject_counts": [
+      10,
+      20,
+      40
+    ]
+  },
+  "seeds": {
+    "screening": [
+      20261018
+    ],
+    "confirmation": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "external": [
+      20261018,
+      20261019,
+      20261020,
+      20261021,
+      20261022
+    ]
+  },
+  "signal": {
+    "channels": [
+      "FC3",
+      "FC4",
+      "C5",
+      "C3",
+      "C1",
+      "Cz",
+      "C2",
+      "C4",
+      "C6",
+      "CP3",
+      "CP4"
+    ],
+    "sfreq_hz": 128,
+    "reference": "CAR_exact_clinic11",
+    "adapter_before_joint_trial_rms": true,
+    "profile_candidates": {
+      "long": {
+        "context_s": [
+          0,
+          3
+        ],
+        "crop_s": [
+          0.5,
+          2.5
+        ],
+        "n_times": 256
+      },
+      "short": {
+        "context_s": [
+          0,
+          2
+        ],
+        "crop_s": [
+          0.5,
+          1.5
+        ],
+        "n_times": 128
+      }
+    },
+    "selected_profile": null,
+    "window_decision_role": "meta_train",
+    "window_participant_mean_coverage_min": 0.8,
+    "window_class_exclusion_gap_max": 0.1,
+    "window_audit_receipt": null
+  },
+  "method": {
+    "id": "GENEXP",
+    "parameterization": "r_coefficients_not_rank_r_update",
+    "reference_fit_pool": "f0_training_only",
+    "generator_gradient_pool": "meta_train_only",
+    "encoder_parameters_and_buffers_frozen": true,
+    "target_query_for_fit_or_selection": false,
+    "reuse_target_state_across_sessions": false,
+    "selected_r": null,
+    "selected_rho": null
+  },
+  "primary": {
+    "dataset_id": "HSStroke2026_v6",
+    "budget_acquired_trials": 20,
+    "analysis_unit": "participant_mean_of_session_BA",
+    "query_min_valid_trials": 20,
+    "query_min_valid_per_class": 5,
+    "query_order_evidence": null,
+    "comparator_id": null,
+    "comparator_selection_pool": "meta_validation_only"
+  },
+  "locked_healthy_confirmation_ids": [
+    "Wang2026"
+  ],
+  "secondary": {
+    "fixed_query_label_access_budgets": [
+      0,
+      4,
+      8,
+      12,
+      16,
+      20
+    ],
+    "gate_required_for_primary": false,
+    "mix_budget_meta_is_secondary": true,
+    "label_access_is_not_acquisition_savings": true
+  },
+  "legacy_reuse": {
+    "p1_processed_is_main_input": false,
+    "p2_results_are_new_p3_evidence": false,
+    "yang_required_by_main": false,
+    "yang_enhancement_requires_separate_gate_and_freeze": true
+  },
+  "freeze": {
+    "protocol_freeze_sha256": null,
+    "artifacts": []
+  },
+  "current_native_schema_preparation": {
+    "eeg_raw_schema_read": true,
+    "source_metadata_trials": 459,
+    "stieger_sample_lr_trials": 150,
+    "actual_training": false,
+    "complete_W1": false,
+    "source_receipt": "audit/source_schema/source_acceptance_checks.json",
+    "R2_raw_receipt": "audit/r2_schema_raw_receipt.json"
+  },
+  "execution_scope": "native EEG schema reading and CPU software tests only; no scientific model fit or GPU training",
+  "model_training_performed": false
+}

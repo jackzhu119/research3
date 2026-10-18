@@ -1,0 +1,41 @@
+{
+  "recorded_at_utc": "2026-10-18T05:52:00.589553+00:00",
+  "scope": "CPU_SYNTHETIC_SOFTWARE_ACCEPTANCE_ONLY",
+  "research_pilot": false,
+  "real_eeg_training": false,
+  "gpu_execution": false,
+  "protocol_stage_completed": null,
+  "torch": "2.8.0+cpu",
+  "pytest": {
+    "command": "python -m pytest tests/test_geometry.py tests/test_adapt.py -q",
+    "passed": 14,
+    "failed": 0
+  },
+  "full_unroll_finite_difference": {
+    "inner_steps": 10,
+    "direction": "unit Stiefel tangent; signed QR retraction",
+    "h": 0.0001,
+    "analytic": -0.00022660340677536274,
+    "central_difference": -0.0002266034054843047,
+    "absolute_error": 1.2910580536509147e-12,
+    "B_gradient_frobenius_norm": 0.006313463799483741
+  },
+  "float32_zero_replay": {
+    "max_abs_logit_error": 2.9802322387695312e-08,
+    "same_predictions": true
+  },
+  "q": {
+    "shape": [
+      10,
+      11
+    ],
+    "array_sha256": "f319d0af2e5d1f21357aeed9459f6bd60ffb7be81d529fe7f94c0f811d3b052c",
+    "hash_format": "shape string + canonical little-endian float64 array bytes"
+  },
+  "limits": [
+    "Synthetic arrays and random source weights only; no scientific performance estimate.",
+    "No learned G or valid source checkpoint produced.",
+    "Real manifest temporal boundaries require upstream native audits.",
+    "W5 incomplete: strong comparison implementations and checkpoint/resume acceptance remain."
+  ]
+}

@@ -1,0 +1,495 @@
+{
+  "as_of": "2026-10-18",
+  "datasets": [
+    {
+      "id": "bnci2014_001",
+      "name": "BNCI2014_001",
+      "year": "历史标准基准",
+      "role": "第一批 source",
+      "scale": "9人 2次不同日",
+      "signal": "22 EEG 250Hz",
+      "task": "四类中只取左手和右手MI",
+      "access": "公开；稳定MOABB有接口",
+      "size": "首次下载以清单为准",
+      "license": "须保留原站条款；不打包再分发EEG",
+      "url": "https://bnci-horizon-2020.eu/database/data-sets",
+      "risk": "全四类设计5184试次；左右手设计2592。已用于论文1，不能算新外部数据。",
+      "refs": "D01"
+    },
+    {
+      "id": "cho2017",
+      "name": "Cho2017",
+      "year": "2017",
+      "role": "第一批 source",
+      "scale": "52人 1次",
+      "signal": "64 EEG 512Hz",
+      "task": "左右手MI",
+      "access": "GigaDB公开；稳定MOABB有接口",
+      "size": "以原始文件清单为准",
+      "license": "归档原站数据许可",
+      "url": "https://gigadb.org/dataset/100295",
+      "risk": "不能支持长期跨日结论；4路EMG仅供辅助审计，主模型不输入。",
+      "refs": "D02"
+    },
+    {
+      "id": "lee2019_mi",
+      "name": "OpenBMI Lee2019_MI",
+      "year": "2019",
+      "role": "第一批 source",
+      "scale": "54人 2次不同日",
+      "signal": "62 EEG 1000Hz",
+      "task": "左右手grasp MI",
+      "access": "GigaDB公开；稳定MOABB有接口",
+      "size": "按有标注offline文件核算",
+      "license": "CC0 数据归档",
+      "url": "https://gigadb.org/dataset/100542",
+      "risk": "首批仅train_run；每session有标注offline 100 trials。不得将未提供trial类别的test_run混入。",
+      "refs": "D03 D19"
+    },
+    {
+      "id": "physionetmi",
+      "name": "PhysioNet EEGMMIDB",
+      "year": "2009数据版",
+      "role": "第一批 source",
+      "scale": "109人 1次访问 14runs",
+      "signal": "64 EEG 160Hz",
+      "task": "只选左/右手MI；排ME",
+      "access": "公开；稳定MOABB有接口",
+      "size": "官方1.9GB ZIP 3.4GB展开",
+      "license": "ODC-By 1.0",
+      "url": "https://physionet.org/content/eegmmidb/1.0.0/",
+      "risk": "原始4/8/12为左右手MI；T1/T2随run改变含义，不能按编码全库混合。",
+      "refs": "D04"
+    },
+    {
+      "id": "ma2022",
+      "name": "Ma2022 SHU",
+      "year": "2022",
+      "role": "独立montage开发或敏感性",
+      "scale": "25人 5个不同日",
+      "signal": "32 EEG 250Hz 4秒片段",
+      "task": "左右手MI",
+      "access": "Figshare公开；v1.7.2无Ma2022导出",
+      "size": "已核v1为4.22GB；新版本另核",
+      "license": "CC BY4.0",
+      "url": "https://doi.org/10.6084/m9.figshare.19228725",
+      "risk": "计划12500，发布可用11988；不是连续raw；部分坏通道。与HS的11通道不全兼容，需独立配置，不能补0冒充实测。",
+      "refs": "D05 D18"
+    },
+    {
+      "id": "stieger2021",
+      "name": "Stieger2021",
+      "year": "2021",
+      "role": "第二批长期开发 优先",
+      "scale": "62人 598sessions 269099 trials",
+      "signal": "64 EEG 1000Hz 超600小时",
+      "task": "LR UD 2D；主分析限制LR",
+      "access": "作者Figshare公开；老MOABB接口",
+      "size": "完整库较大；目录399GB口径须复核",
+      "license": "CC BY-NC4.0",
+      "url": "https://doi.org/10.6084/m9.figshare.13123148",
+      "risk": "每人7–11次；含MBSR和等待对照、视觉反馈、可变trial长度。先固定开发子集并核窗口覆盖，再扩量。",
+      "refs": "D06"
+    },
+    {
+      "id": "wang2026",
+      "name": "Wang2026 感觉引导共同学习",
+      "year": "2026-07论文",
+      "role": "封存 健康长期外测",
+      "scale": "主研究31人 额外EEGNet对照8人",
+      "signal": "发布62 EEG 1000Hz",
+      "task": "LR UD 2D分开处理",
+      "access": "KiltHub公开；新适配器需审计",
+      "size": "平台显示59.36GB",
+      "license": "CC BY-NC4.0",
+      "url": "https://doi.org/10.1184/R1/32293995",
+      "risk": "数据页31、发展loader39、镜像38口径不同，按manifest核实。后续session和远期随访不齐；触觉组不能合并解释。",
+      "refs": "L01 D07"
+    },
+    {
+      "id": "hs_stroke_2026",
+      "name": "HS-Stroke 修订版",
+      "year": "2026-06论文 v6为07-24",
+      "role": "封存 临床长期主外测",
+      "scale": "14人；原文278sessions；去重23382 trials",
+      "signal": "v6实核11 EEG 256Hz volts",
+      "task": "左/右手腕伸MI",
+      "access": "官方Figshare公开；已锁v6清单",
+      "size": "6903852376字节 6.4297GiB",
+      "license": "CC BY4.0",
+      "url": "https://doi.org/10.6084/m9.figshare.30747806.v6",
+      "risk": "旧57902有重复；93528是一秒窗口。按人/session/原trial分组，不能按窗口随机切分。",
+      "refs": "D08 D09"
+    },
+    {
+      "id": "liu2024",
+      "name": "Liu2024 急性卒中",
+      "year": "2024数据名称",
+      "role": "封存 临床跨人补充",
+      "scale": "原文50；维护者审计建议47人",
+      "signal": "29 EEG 500Hz 1session",
+      "task": "左右手MI 每人40trials",
+      "access": "Figshare公开；需固定去重版本",
+      "size": "以v5清单为准",
+      "license": "CC BY4.0",
+      "url": "https://doi.org/10.6084/m9.figshare.21679035.v5",
+      "risk": "维护者提示5/15/49疑似派生重复，尚需自身指纹审计；不是作者正式更正。40标签预算会无query，主上限20。",
+      "refs": "D10 D11"
+    },
+    {
+      "id": "alawieh2025",
+      "name": "Alawieh2025 TESS-BCI",
+      "year": "2025 PNAS",
+      "role": "储备 干预压力测试",
+      "scale": "25健康加2 SCI 27独立人",
+      "signal": "32或64 EEG 512Hz",
+      "task": "左右手MI 刺激干预",
+      "access": "Zenodo公开；online事件适配未完成",
+      "size": "官方版本约18.3GB",
+      "license": "下载前保留原站Rights记录",
+      "url": "https://zenodo.org/records/15454355",
+      "risk": "4名交叉再入组不是新参与者；发展loader只映射offline一session，不能据此宣称已能做全多日训练。",
+      "refs": "D12"
+    },
+    {
+      "id": "forenzo2023",
+      "name": "Forenzo2023 MI与空间注意",
+      "year": "2023",
+      "role": "储备 任务扩展",
+      "scale": "25人 5天",
+      "signal": "64 EEG 1000Hz",
+      "task": "MI OSA MIOSA分开",
+      "access": "KiltHub公开；适配器需对照原文",
+      "size": "档案快照87.72GB 实际manifest另核",
+      "license": "下载时锁定原站数据条款",
+      "url": "https://doi.org/10.1184/R1/23677098",
+      "risk": "前两天1D LR/UD，后三天2D，不能当5次统一LR；显性空间注意会改变眼动与视觉条件。",
+      "refs": "D13"
+    },
+    {
+      "id": "finger2025",
+      "name": "Ding2025 Finger-BCI",
+      "year": "2025-06论文 v2为08-20",
+      "role": "储备 细粒度MI外测",
+      "scale": "主21人 额外实验16人子集",
+      "signal": "128 EEG 1024Hz",
+      "task": "同一右手的手指MI 与ME分开",
+      "access": "KiltHub公开；作者代码",
+      "size": "平台显示502.77GB",
+      "license": "CC BY-NC4.0",
+      "url": "https://doi.org/10.1184/R1/29104040",
+      "risk": "不能改标为左/右手；优先筛MI文件而非整库下载；有BCI经验及筛选条件。",
+      "refs": "L02 D14"
+    },
+    {
+      "id": "copilot2025",
+      "name": "Lee2025 AI copilot",
+      "year": "2025-09",
+      "role": "方法参考 ME迁移储备",
+      "scale": "3健康与1 SCI",
+      "signal": "64 EEG 1000Hz 加任务流",
+      "task": "健康ME及瘫痪下肢尝试运动",
+      "access": "Zenodo公开；作者训练代码",
+      "size": "7.6GB ZIP",
+      "license": "以原站Rights为准 不默认CC BY",
+      "url": "https://zenodo.org/records/15165133",
+      "risk": "不是健康左右手MI库。公开包不等于全篇机器人实验；正式任务命中率改善3.9倍不是分类BA倍数。",
+      "refs": "L03 D15"
+    },
+    {
+      "id": "sefmeid2026",
+      "name": "SEFMEID",
+      "year": "2026-09-19",
+      "role": "待申请 多模态储备",
+      "scale": "50健康人",
+      "signal": "32 EEG1000Hz 加40 fNIRS11Hz",
+      "task": "rest ME rest MI在同一trial",
+      "access": "ScienceDB注册 DUA 约5–10工作日审批",
+      "size": "以获批版本清单为准",
+      "license": "以获批DUA为准",
+      "url": "https://doi.org/10.57760/sciencedb.30795",
+      "risk": "今天不能直接自动下载训练。同一trial不同阶段不能拆到训练/测试两边。",
+      "refs": "D16"
+    },
+    {
+      "id": "proteus2026",
+      "name": "PROTEUS Dreyer2026Proteus",
+      "year": "2026-10-01公开",
+      "role": "储备 小规模流式任务",
+      "scale": "公开10人 14sessions 112runs",
+      "signal": "41 EEG 500Hz",
+      "task": "MI 心算减法 词语生成 三类",
+      "access": "NEMAR公开；NeuralBench0.4.0需独立核验",
+      "size": "约1.2GB ZIP 1.48GB数据",
+      "license": "CC BY4.0",
+      "url": "https://www.nemar.org/dataset/nm000290",
+      "risk": "2人各3次加8人各1次。不能套用完整挑战20人乘6次；三任务也不是LRMI。",
+      "refs": "D17"
+    }
+  ],
+  "references": [
+    {
+      "id": "P01",
+      "title": "论文1明确标签资格修订 v3 2026年10月18日",
+      "url": "https://github.com/jackzhu119/cross-subject-mi-eeg/blob/0539379578818b3d71f995192e5e8a81cf4d5aef/research_runs/YANG_LABEL_ELIGIBILITY_20261018/README_zh.md"
+    },
+    {
+      "id": "P02",
+      "title": "论文1今晨原始标记故障审计",
+      "url": "https://github.com/jackzhu119/cross-subject-mi-eeg/blob/0539379578818b3d71f995192e5e8a81cf4d5aef/research_runs/YANG_MARKER_AUDIT_20261018/README_zh.md"
+    },
+    {
+      "id": "P03",
+      "title": "论文1源扩样科学方案",
+      "url": "https://github.com/jackzhu119/cross-subject-mi-eeg/blob/0539379578818b3d71f995192e5e8a81cf4d5aef/research_runs/SOURCE_EXPANSION_20261017/README_zh.md"
+    },
+    {
+      "id": "P04",
+      "title": "论文2最新科学快照及10月17日增补分析",
+      "url": "https://github.com/jackzhu119/few-shot-mi-eeg/blob/19a5909fd76d96be9316559602010932ccec81a8/docs/kumar_innovation_revision_20261017.md"
+    },
+    {
+      "id": "P05",
+      "title": "论文2既有独立后续探索方案",
+      "url": "https://github.com/jackzhu119/few-shot-mi-eeg/blob/19a5909fd76d96be9316559602010932ccec81a8/docs/kumar_component_exploratory_protocol_20261016.md"
+    },
+    {
+      "id": "L01",
+      "title": "Wang et al. Sensory-guided human-machine joint learning accelerates the acquisition of motor imagery brain computer interface control. Nature Communications. 2026-07-15.",
+      "url": "https://doi.org/10.1038/s41467-026-75435-5"
+    },
+    {
+      "id": "L02",
+      "title": "Ding et al. EEG-based brain-computer interface enables real-time robotic hand control at individual finger level. Nature Communications. 2025-06-30.",
+      "url": "https://doi.org/10.1038/s41467-025-61064-x"
+    },
+    {
+      "id": "L03",
+      "title": "Lee et al. Brain–computer interface control with artificial intelligence copilots. Nature Machine Intelligence. 2025-09-01.",
+      "url": "https://doi.org/10.1038/s42256-025-01090-y"
+    },
+    {
+      "id": "L04",
+      "title": "Liu et al. EEG-FM-Compass: progress, benchmarking and future directions for EEG foundation models. National Science Review. 2026-08-03; typeset 2026-10-12.",
+      "url": "https://doi.org/10.1093/nsr/nwag466"
+    },
+    {
+      "id": "L05",
+      "title": "Liu et al. MIRepNet: A pipeline and pre-trained model for EEG-based motor imagery classification. Knowledge-Based Systems 343, 115966. 2026.",
+      "url": "https://doi.org/10.1016/j.knosys.2026.115966"
+    },
+    {
+      "id": "L06",
+      "title": "MIRepNet作者预印本 表1列出预训练数据",
+      "url": "https://arxiv.org/pdf/2507.20254"
+    },
+    {
+      "id": "L07",
+      "title": "Wang et al. CBraMod: A Criss-Cross Brain Foundation Model for EEG Decoding. ICLR 2025.",
+      "url": "https://proceedings.iclr.cc/paper_files/paper/2025/hash/bbbd6d915cb90be21c1254a82d45cedd-Abstract-Conference.html"
+    },
+    {
+      "id": "L08",
+      "title": "Luo et al. Bayesian Test-Time Adaptation via Dirichlet feature projection and GMM-Driven Inference for Motor Imagery EEG Decoding. ICLR 2026.",
+      "url": "https://proceedings.iclr.cc/paper_files/paper/2026/hash/36eeec256f89eba9ed60cbca73ea92ed-Abstract-Conference.html"
+    },
+    {
+      "id": "L09",
+      "title": "Shen and Degras. A confidence-gated source selection strategy for cross-session transfer in brain–computer interfaces. Frontiers in Human Neuroscience. 2026-08-28.",
+      "url": "https://doi.org/10.3389/fnhum.2026.1895016"
+    },
+    {
+      "id": "L10",
+      "title": "Wimpff et al. Fine-Tuning Strategies for Continual Online EEG Motor Imagery Decoding: Insights from a Large-Scale Longitudinal Study. EMBC 2025.",
+      "url": "https://doi.org/10.1109/EMBC58623.2025.11253543"
+    },
+    {
+      "id": "L11",
+      "title": "Basit et al. EEG-Fusion: Failure-Informed Source-Free Expert Routing for Robust Motor Imagery EEG Decoding. 2026-09-27. 预印本。",
+      "url": "https://arxiv.org/abs/2609.33962"
+    },
+    {
+      "id": "L12",
+      "title": "Trocellier et al. Visual cues in MI-BCI induce biases in EEG classification models with deep learning but not with standard machine learning. Frontiers in Neuroergonomics. 2026-09-28.",
+      "url": "https://doi.org/10.3389/fnrgo.2026.1804143"
+    },
+    {
+      "id": "L13",
+      "title": "Willett et al. A high-performance speech neuroprosthesis. Nature. 2023-08-23.",
+      "url": "https://doi.org/10.1038/s41586-023-06377-x"
+    },
+    {
+      "id": "L14",
+      "title": "Flesher et al. A brain-computer interface that evokes tactile sensations improves robotic arm control. Science. 2021-05-21.",
+      "url": "https://doi.org/10.1126/science.abd0380"
+    },
+    {
+      "id": "D01",
+      "title": "BNCI Horizon 2020 原始数据目录及BCI IV-2a协议",
+      "url": "https://bnci-horizon-2020.eu/database/data-sets"
+    },
+    {
+      "id": "D02",
+      "title": "Cho2017原始研究及数据说明",
+      "url": "https://academic.oup.com/gigascience/article/6/7/gix034/3796323"
+    },
+    {
+      "id": "D03",
+      "title": "OpenBMI原始研究及数据说明",
+      "url": "https://academic.oup.com/gigascience/article/8/5/giz002/5304369"
+    },
+    {
+      "id": "D04",
+      "title": "PhysioNet EEG Motor Movement Imagery Dataset v1.0.0",
+      "url": "https://physionet.org/content/eegmmidb/1.0.0/"
+    },
+    {
+      "id": "D05",
+      "title": "Ma2022 A large EEG dataset for studying cross-session variability in motor imagery brain-computer interface",
+      "url": "https://doi.org/10.1038/s41597-022-01647-1"
+    },
+    {
+      "id": "D06",
+      "title": "Stieger2021长期MI数据原始Scientific Data论文",
+      "url": "https://doi.org/10.1038/s41597-021-00883-1"
+    },
+    {
+      "id": "D07",
+      "title": "Wang2026官方EEG数据 59.36GB CC BY-NC4.0",
+      "url": "https://doi.org/10.1184/R1/32293995"
+    },
+    {
+      "id": "D08",
+      "title": "HS-Stroke官方去重修订数据 v6 2026-07-24",
+      "url": "https://doi.org/10.6084/m9.figshare.30747806.v6"
+    },
+    {
+      "id": "D09",
+      "title": "HS-Stroke作者重复试次修正说明",
+      "url": "https://github.com/KINLAWWW/HS-Stroke/blob/main/dataset/README.md"
+    },
+    {
+      "id": "D10",
+      "title": "Liu2024急性卒中数据论文",
+      "url": "https://doi.org/10.1038/s41597-023-02787-8"
+    },
+    {
+      "id": "D11",
+      "title": "Liu2024发展版加载器的参与者重复审计说明",
+      "url": "https://moabb.neurotechx.com/docs/generated/moabb.datasets.Liu2024.html"
+    },
+    {
+      "id": "D12",
+      "title": "Alawieh2025 TESS-BCI原始数据版本",
+      "url": "https://zenodo.org/records/15454355"
+    },
+    {
+      "id": "D13",
+      "title": "Forenzo2023原始研究",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10803074/"
+    },
+    {
+      "id": "D14",
+      "title": "Finger-BCI官方数据 当前页显示版本2",
+      "url": "https://doi.org/10.1184/R1/29104040"
+    },
+    {
+      "id": "D15",
+      "title": "AI copilot官方数据",
+      "url": "https://zenodo.org/records/15165133"
+    },
+    {
+      "id": "D16",
+      "title": "SEFMEID2026同步EEG-fNIRS数据论文及申请条件",
+      "url": "https://doi.org/10.1038/s41597-026-08298-6"
+    },
+    {
+      "id": "D17",
+      "title": "PROTEUS公开数据 nm000290",
+      "url": "https://www.nemar.org/dataset/nm000290"
+    },
+    {
+      "id": "D18",
+      "title": "MOABB发展版Ma2022说明及版本范围",
+      "url": "https://moabb.neurotechx.com/docs/generated/moabb.datasets.Ma2022.html"
+    },
+    {
+      "id": "D19",
+      "title": "OpenBMI加载器train_run及test_run标签限制",
+      "url": "https://moabb.neurotechx.com/docs/generated/moabb.datasets.Lee2019_MI.html"
+    },
+    {
+      "id": "D20",
+      "title": "Yang2025多日MI数据原始论文",
+      "url": "https://doi.org/10.1038/s41597-025-04826-y"
+    },
+    {
+      "id": "D21",
+      "title": "Dreyer2023原始Scientific Data论文",
+      "url": "https://doi.org/10.1038/s41597-023-02445-z"
+    },
+    {
+      "id": "D22",
+      "title": "Kumar2024 NEMAR派生版 v1.0.5",
+      "url": "https://doi.org/10.82901/nemar.nm000177.v1.0.5"
+    }
+  ],
+  "literature": [
+    {
+      "ref": "L01",
+      "venue": "2026 Nature Communications",
+      "purpose": "最贴近长期MI和更新研究",
+      "method": "EEGNet与样本加权；按实验组及前后会话比较，保留远期随访。",
+      "boundary": "触觉反馈、人学习、机器更新共同作用；离线算法不能继承整套人机干预效果。",
+      "code": "https://github.com/bfinl/SensoryGuidedJointLearning"
+    },
+    {
+      "ref": "L02",
+      "venue": "2025 Nature Communications",
+      "purpose": "细粒度MI外部任务",
+      "method": "利用预训练与当前数据微调；同手手指任务可检验方法在更难类别上的稳定性。",
+      "boundary": "ME与MI、手指与左右手不能合池；离线分类不能声称完成真实机器人控制。",
+      "code": "https://github.com/bfinl/Finger-BCI-Decoding"
+    },
+    {
+      "ref": "L03",
+      "venue": "2025 Nature Machine Intelligence",
+      "purpose": "任务效用与回退思想",
+      "method": "CNN加Kalman适应及AI共享控制；用任务后果评价可靠性。",
+      "boundary": "3.9倍是特定任务命中率；健康者主要ME，不能作为普通左右手MI训练数据。",
+      "code": "https://github.com/kaolab-research/bci_raspy"
+    },
+    {
+      "ref": "L04",
+      "venue": "2026 National Science Review",
+      "purpose": "最重要的公平比较规范",
+      "method": "12个开放基础模型与专业基线、13数据集、9范式；统一划分与标签预算。",
+      "boundary": "不是Nature子刊；基础模型没有普遍胜出。单做大模型排行榜不足成为新贡献。",
+      "code": "https://github.com/Dingkun0817/EEG-FM-Benchmark"
+    },
+    {
+      "ref": "L05",
+      "venue": "2026 Knowledge-Based Systems",
+      "purpose": "MI专用预训练强基线",
+      "method": "MI通道模板、重建与监督联合预训练、少标签微调；比较不同更新范围。",
+      "boundary": "官方预训练含Dreyer、PhysioNet、Cho、OpenBMI；这些域不能称完全未见外测。[L06]",
+      "code": "https://github.com/staraink/MIRepNet"
+    },
+    {
+      "ref": "L07",
+      "venue": "2025 ICLR会议",
+      "purpose": "通用EEG基础模型对照",
+      "method": "分开建模空间和时间依赖，使用已有权重对比MI专用模型。",
+      "boundary": "顶级会议但不是SCI期刊；普通加adapter或attention不足确立创新。",
+      "code": "https://github.com/wjq-learning/CBraMod"
+    },
+    {
+      "ref": "L08",
+      "venue": "2026 ICLR会议",
+      "purpose": "无梯度在线适应强对照",
+      "method": "BTTA-DG利用Dirichlet预测特征与历史GMM校准输出。",
+      "boundary": "无标签TTA与有限监督校准的信息预算不同；必须分别报告。",
+      "code": "https://github.com/luo-huan-123/BTTA-DG"
+    }
+  ]
+}

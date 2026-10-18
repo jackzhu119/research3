@@ -1,0 +1,1170 @@
+{
+  "schema_version": "1.0",
+  "status": "RESEARCH_HANDOFF_NOT_EXECUTED",
+  "as_of_date": "2026-10-18",
+  "parameter_authority": [
+    "EXPERIMENT_PROTOCOL.md",
+    "METHOD_SPEC.md"
+  ],
+  "scope": "Only data evidence, provenance and adapter gates. No EEG downloaded or trained in this audit.",
+  "main_allocation": {
+    "source": [
+      "BNCI2014_001",
+      "Cho2017",
+      "Lee2019_MI",
+      "PhysionetMI"
+    ],
+    "development": [
+      "Stieger2021"
+    ],
+    "locked_healthy_confirmation": [
+      "Wang2026"
+    ],
+    "locked_clinical_confirmation": [
+      "HSStroke2026_v6"
+    ],
+    "historically_exposed": [
+      "Kumar2024",
+      "Dreyer2023"
+    ],
+    "independent_montage_development": [
+      "Ma2022"
+    ],
+    "optional_enhanced_source": [
+      "Yang2025_2C"
+    ],
+    "optional_enhanced_source_status": "Blocked until clock/unit/raw/numerical-cache gates; not required by main f0."
+  },
+  "participant_split_policy": {
+    "unit": "dataset + cohort + provider_subject",
+    "source_vs_development_vs_final": "Disjoint provider subject identities; do not claim cross-study biological nonoverlap without additional evidence.",
+    "stieger": "Metadata-stratified participant split 40 meta-train / 11 meta-validation / 11 one-time internal holdout if 62 eligible; otherwise predeclared proportional split. Exact IDs and split hash before model selection. No Stieger in f0 or Rref.",
+    "wang": "Whole study locked; no healthy development split in final recommended allocation.",
+    "hs": "All 14 published patients reserved; actual eligible roster generated only after schema/order gate.",
+    "exact_subject_lists": null,
+    "split_manifest_sha256": null,
+    "required_before_training": true
+  },
+  "proposed_input_contract": {
+    "channels": [
+      "FC3",
+      "FC4",
+      "C5",
+      "C3",
+      "C1",
+      "Cz",
+      "C2",
+      "C4",
+      "C6",
+      "CP3",
+      "CP4"
+    ],
+    "sampling_rate_hz": 128,
+    "primary": {
+      "anchor": "Verified task/feedback onset, not unverified cue",
+      "context_half_open_seconds": [
+        0,
+        3
+      ],
+      "analysis_half_open_seconds": [
+        0.5,
+        2.5
+      ],
+      "analysis_samples": 256
+    },
+    "prespecified_short_fallback": {
+      "context_half_open_seconds": [
+        0,
+        2
+      ],
+      "analysis_half_open_seconds": [
+        0.5,
+        1.5
+      ],
+      "analysis_samples": 128,
+      "trigger": "Only Stieger meta-train subjects: mean of participant long-window retention below 0.80 OR mean of participant absolute left/right exclusion-rate difference above 0.10. EXPERIMENT_PROTOCOL.md owns definitions; no meta-validation/internal/external outcomes used.",
+      "scope": "Reprepare/retrain all main source and development models under the same short contract before opening external outcomes."
+    },
+    "reference": "Common average of the exact 11 channels; never crop CAR18 and claim CAR11.",
+    "base_frequency_hz": [
+      8,
+      30
+    ],
+    "model_input_normalization": "Per-trial per-channel temporal demeaning then common trial RMS, no fitted statistics across trials.",
+    "saved_physical_units": "V only where verified. Preserve unresolved calibrated numeric for Yang/Wang until gate; do not silently set V or microvolt.",
+    "qc_unresolved_units": "Absolute microvolt QC is null/uninterpretable when physical unit is unresolved. No outcome-based exclusions.",
+    "status": "Proposed v2-compatible adapter contract, not an implemented replacement for v1.",
+    "frozen_contract_sha256": null
+  },
+  "visibility_policy": {
+    "locked_data_before_freeze": "Official manifests, small headers, schema checks, source field definitions and reproducible metadata counts only; no model scores or hyperparameter selection.",
+    "final_query": "One immutable query definition per budget family; labels hidden from fitting and gate selection.",
+    "after_stop": "No learning or normalization update using trials from stopping time to Bmax or query.",
+    "budget_unit": "Independent original trial; all derived windows grouped; audit labels charged.",
+    "main_bmax": 20,
+    "secondary_bmax": 40,
+    "main_query": "Whole next physical run where verified; otherwise only a preregistered later original-trial block after acquisition-order gate.",
+    "label_savings_not_waiting_time": true
+  },
+  "overlap_watchlist": [
+    {
+      "datasets": [
+        "Stieger2021",
+        "Wang2026",
+        "Ding2025_Finger"
+      ],
+      "status": "unknown",
+      "evidence": "Shared Bin He laboratory; main Wang BCI-naive and Finger previously experienced descriptions do not constitute a cross-study identity crosswalk.",
+      "mitigation": "Keep Finger outside training; qualify participant-independence claim; obtain author-level nonoverlap evidence for strict unseen-person claim."
+    },
+    {
+      "datasets": [
+        "HSStroke2026_v6",
+        "UET175"
+      ],
+      "status": "distinct_reported_study_populations",
+      "evidence": "Huashan Hospital Shanghai vs Hospital 175 Vietnam, different original authors/protocols; not a renamed release.",
+      "biological_crosswalk_verified": false
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "BNCI2014_001",
+      "role": "source",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 9,
+      "n_sessions_per_subject_reported": 2,
+      "reported_sampling_rate_hz": 250,
+      "reported_eeg_channels": 22,
+      "n_trials_reported": 5184,
+      "n_trials_reported_scope": "All four classes; nominal LR 2592. P3 eligible count remains null.",
+      "task": "left/right hand MI only from four-class protocol",
+      "archive_version": null,
+      "primary_urls": [
+        "https://bnci-horizon-2020.eu/database/data-sets",
+        "https://www.bbci.de/competition/iv/"
+      ],
+      "data_doi": null,
+      "storage": {
+        "bytes": null,
+        "display": null,
+        "evidence": "Not measured in this audit."
+      },
+      "license": {
+        "value": null,
+        "status": "Retain provider terms in raw manifest; do not infer from software license."
+      },
+      "adapter": {
+        "engine": "MOABB",
+        "version": "1.7.2",
+        "class_name": "BNCI2014_001",
+        "stable_api_present": true,
+        "clock": "Native trial-start plus 2s cue; preserve native physical runs."
+      },
+      "prior_exposure": "P1 source; reuse verified native MAT files/manifests but new numeric contract cache.",
+      "gates": [
+        "Provider file hash manifest",
+        "Actual clinic11 and task/cue inventory",
+        "Human identity split",
+        "Do not reuse P1 CAR18 NPZ as CAR11"
+      ]
+    },
+    {
+      "dataset_id": "Cho2017",
+      "role": "source",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 52,
+      "n_sessions_per_subject_reported": 1,
+      "reported_sampling_rate_hz": 512,
+      "reported_eeg_channels": 64,
+      "task": "left/right hand MI, 3s task; exclude EMG/non-task records",
+      "paper_doi": "10.1093/gigascience/gix034",
+      "data_doi": "10.5524/100295",
+      "primary_urls": [
+        "https://gigadb.org/dataset/100295",
+        "https://doi.org/10.1093/gigascience/gix034"
+      ],
+      "archive_version": null,
+      "storage": {
+        "bytes": null,
+        "display": null
+      },
+      "license": {
+        "value": "CC0",
+        "status": "GigaDB provider terms; save actual record with downloaded version."
+      },
+      "adapter": {
+        "engine": "MOABB",
+        "version": "1.7.2",
+        "class_name": "Cho2017",
+        "stable_api_present": true
+      },
+      "gates": [
+        "Physical trial/cue alignment and 3s context support",
+        "Actual 11-channel header mapping",
+        "Separate provider sessions from synthetic run IDs"
+      ]
+    },
+    {
+      "dataset_id": "Lee2019_MI",
+      "role": "source",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 54,
+      "n_sessions_per_subject_reported": 2,
+      "reported_sampling_rate_hz": 1000,
+      "reported_eeg_channels": 62,
+      "task": "left/right hand MI, offline train_run only in current baseline",
+      "paper_doi": "10.1093/gigascience/giz002",
+      "data_doi": "10.5524/100542",
+      "primary_urls": [
+        "https://gigadb.org/dataset/100542",
+        "https://doi.org/10.1093/gigascience/giz002"
+      ],
+      "archive_version": null,
+      "storage": {
+        "bytes": null,
+        "display": null
+      },
+      "license": {
+        "value": "CC0",
+        "status": "GigaDB record; retain official version terms."
+      },
+      "adapter": {
+        "engine": "MOABB",
+        "version": "1.7.2",
+        "class_name": "Lee2019_MI",
+        "kwargs": {
+          "train_run": true,
+          "test_run": false,
+          "resting_state": false
+        },
+        "stable_api_present": true
+      },
+      "reported_trial_scope": "100 offline + 100 online per session protocol; do not assume both are label-usable via installed adapter.",
+      "gates": [
+        "Use only verified labelled train_run",
+        "Physical session order/date distinct from adapter name",
+        "Never double source count using unverified test_run labels"
+      ]
+    },
+    {
+      "dataset_id": "PhysionetMI",
+      "role": "source",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 109,
+      "n_sessions_per_subject_reported": 1,
+      "reported_sampling_rate_hz": 160,
+      "reported_eeg_channels": 64,
+      "task": "left/right hand motor imagery",
+      "included_original_runs": [
+        4,
+        8,
+        12
+      ],
+      "excluded_task_runs": {
+        "motor_execution": [
+          3,
+          7,
+          11
+        ],
+        "both_hands_feet_imagery": [
+          6,
+          10,
+          14
+        ]
+      },
+      "data_doi": "10.13026/C28G6P",
+      "archive_version": "1.0.0",
+      "primary_urls": [
+        "https://physionet.org/content/eegmmidb/1.0.0/"
+      ],
+      "storage": {
+        "bytes": null,
+        "download_display": "1.9 GB ZIP",
+        "uncompressed_display": "3.4 GB",
+        "scope": "Entire provider database, not LR subset."
+      },
+      "license": {
+        "value": "Open Data Commons Attribution 1.0",
+        "status": "Provider release."
+      },
+      "adapter": {
+        "engine": "MOABB",
+        "version": "1.7.2",
+        "class_name": "PhysionetMI",
+        "kwargs": {
+          "imagined": true,
+          "executed": false
+        },
+        "stable_api_present": true
+      },
+      "gates": [
+        "Verify duration/trigger/subject irregularities without silent exclusion",
+        "Only original runs 4/8/12",
+        "One visit is not long-term drift"
+      ]
+    },
+    {
+      "dataset_id": "Yang2025_2C",
+      "role": "optional_source",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 51,
+      "n_sessions_per_subject_reported": 3,
+      "n_sessions_reported": 153,
+      "paper_full_study_subjects": {
+        "two_class": 51,
+        "three_class": 11
+      },
+      "reported_sampling_rate_hz": 1000,
+      "reported_eeg_channels": 59,
+      "author_derivative": {
+        "channels": 58,
+        "sampling_rate_hz": 250,
+        "seconds": 4
+      },
+      "n_nominal_lr_trials": 30600,
+      "n_explicit_lr_events_verified_in_P1_audit": 30591,
+      "p1_explicit_label_counts": {
+        "left_code_1": 15295,
+        "right_code_2": 15296
+      },
+      "paper_doi": "10.1038/s41597-025-04826-y",
+      "data_doi": "10.25452/figshare.plus.22671172",
+      "paper_published": "2025-03-23",
+      "archive_version": null,
+      "version_in_existing_P1_audit": 5,
+      "primary_urls": [
+        "https://link.springer.com/article/10.1038/s41597-025-04826-y",
+        "https://doi.org/10.25452/figshare.plus.22671172"
+      ],
+      "source_code_url": "https://github.com/jackzhu119/cross-subject-mi-eeg/blob/0539379578818b3d71f995192e5e8a81cf4d5aef/research_runs/SOURCE_EXPANSION_20261017/p1_data.py",
+      "source_commit": "0539379578818b3d71f995192e5e8a81cf4d5aef",
+      "eligibility_readme_url": "https://github.com/jackzhu119/cross-subject-mi-eeg/blob/0539379578818b3d71f995192e5e8a81cf4d5aef/research_runs/YANG_LABEL_ELIGIBILITY_20261018/README_zh.md",
+      "eligibility_manifest_sha256": "5291d362185a8db9bf45ddc95d9cb49d40de57893d2fd4da8681a802b5ab36f9",
+      "storage": {
+        "bytes": null,
+        "display": null,
+        "evidence": "Reuse already downloaded P1 raw members; no new full archive size verified this round."
+      },
+      "license": {
+        "value": null,
+        "status": "Carry forward exact P1 source version license evidence; do not infer from Nature article."
+      },
+      "native_clinic11_supported_by_P1_channel_audit": true,
+      "native_unit": "?V",
+      "physical_unit_verified": false,
+      "calibrated_numeric_policy": "Exact P1 v5 header calibration and common positive gain only; model trial RMS cancels common gain. Never label unknown intermediate arrays as V.",
+      "anchor": {
+        "raw": "Explicit BDF annotation 1/2",
+        "analysis_offset_seconds": 1.5,
+        "mi_onset_verified": false,
+        "primary_analysis_from_raw_marker_seconds": [
+          2,
+          4
+        ],
+        "new_3s_context_from_raw_marker_seconds": [
+          1.5,
+          4.5
+        ],
+        "caution": "Two provider timing interpretations; analysis reference only. Source-dependent contract must be frozen."
+      },
+      "reuse": {
+        "raw_files": true,
+        "headers_hashes_events_clock_manifest": true,
+        "processed_P1_npz_as_main": false,
+        "reason": "P1 CAR18,160Hz,6s context,3 views,RMS vs new CAR11,128Hz,3s context.",
+        "p1_channels": [
+          "Fz",
+          "FC3",
+          "FC1",
+          "FCz",
+          "FC2",
+          "FC4",
+          "C5",
+          "C3",
+          "C1",
+          "Cz",
+          "C2",
+          "C4",
+          "C6",
+          "CP3",
+          "CP1",
+          "CP2",
+          "CP4",
+          "Pz"
+        ]
+      },
+      "adapter": {
+        "engine": "Native BDF audit reuse plus new P3 adapter",
+        "stable_api_present": false
+      },
+      "gates": [
+        "Current raw complete SHA vs approved P1 v3 manifest",
+        "Explicit labels only; preserve 255 and missing evidence",
+        "Keep original event index/onset, never renumber each 40 retained trials into run",
+        "Marker9 only operational separator, physical run semantics unresolved",
+        "New numerical cache and unit-aware receipt",
+        "No absolute uV QC on unresolved unit"
+      ],
+      "train_allowed_after_gates_in_enhanced_branch": true,
+      "required_by_main_pipeline": false,
+      "access_status": "ADAPTER_GATES_PENDING"
+    },
+    {
+      "dataset_id": "Stieger2021",
+      "role": "development",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 62,
+      "n_sessions_reported": 598,
+      "n_sessions_per_subject_reported_range": [
+        7,
+        11
+      ],
+      "n_trials_reported": 269099,
+      "n_trials_reported_scope": "All LR, UD and 2D tasks",
+      "n_nominal_lr_trials_upper_bound": 89700,
+      "reported_sampling_rate_hz": 1000,
+      "reported_eeg_channels": 62,
+      "acquisition_cap_channels": 64,
+      "native_unit": "uV",
+      "paper_doi": "10.1038/s41597-021-00883-1",
+      "data_doi": "10.6084/m9.figshare.13123148",
+      "paper_published": "2021-04-01",
+      "archive_published": "2021-02-13",
+      "primary_urls": [
+        "https://link.springer.com/article/10.1038/s41597-021-00883-1",
+        "https://figshare.com/articles/dataset/Human_EEG_Dataset_for_Brain-Computer_Interface_and_Meditation/13123148"
+      ],
+      "archive_version": null,
+      "storage": {
+        "bytes": null,
+        "display": "351.01 GB",
+        "evidence": "Official original Figshare live Download all display on 2026-10-18; not a mirror estimate."
+      },
+      "license": {
+        "value": "CC BY 4.0",
+        "status": "Verified official original archive page; supersedes prior incorrect NC/mirror attribution."
+      },
+      "task_filter": {
+        "TrialData_tasknumber": 1,
+        "source_target_map": {
+          "1": "right_hand",
+          "2": "left_hand"
+        },
+        "do_not_mix_tasknumber_3_LR": true
+      },
+      "clock": {
+        "event_time": "BCI.time in ms relative to target cue",
+        "feedback_onset_ms": 2000,
+        "source_fields": [
+          "TrialData.runnumber",
+          "TrialData.trialnumber",
+          "TrialData.triallength",
+          "TrialData.resultind",
+          "metadata.date",
+          "metadata.day",
+          "metadata.time"
+        ],
+        "absolute_date_fields_documented": true,
+        "actual_fields_loaded": false
+      },
+      "adapter": {
+        "engine": "Native BCI MAT required for physical task/run metadata",
+        "moabb_version_audited": "1.7.2",
+        "stable_api_present": true,
+        "moabb_code": "https://github.com/NeuroTechX/moabb/blob/v1.7.2/moabb/datasets/stieger2021.py",
+        "not_sufficient_because": "Raw construction concatenates trials, loses task/run keys; default cue0 and feedback-length selection are not same anchor."
+      },
+      "gates": [
+        "Fixed participant split",
+        "Task==LR not merely target left/right",
+        "Feedback-onset window, no post-result padding",
+        "Development coverage audit; primary >=3s or prespecified global 2s fallback",
+        "Clinic11 real-channel/bad-channel inventory",
+        "Physical run coverage for common query",
+        "MBSR/control and initial ceiling selection retained as covariates/limitations"
+      ]
+    },
+    {
+      "dataset_id": "Wang2026",
+      "role": "locked_test",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_main_subjects_reported": 31,
+      "n_additional_independently_recruited_EEGNet_control_reported": 8,
+      "n_unique_release_subjects_verified": null,
+      "groups_reported": {
+        "joint_learning": 15,
+        "bci2000_control": 8,
+        "tactile_control": 8,
+        "eegnet_control_additional": 8
+      },
+      "main_session_completion": {
+        "first_4": 31,
+        "session_5_and_6": 21,
+        "more_than_2month_followup": 16
+      },
+      "pure_LR_sessions": "Sessions1-2, verified LR portion of session3, additional LR follow-up; session4-6 are2D.",
+      "reported_sampling_rate_hz": 1000,
+      "reported_eeg_channels": 62,
+      "acquisition_cap_channels": 64,
+      "task": "Main only explicit pure LR; 2D target-left/right retained as separate context-shift extension.",
+      "paper_doi": "10.1038/s41467-026-75435-5",
+      "data_doi": "10.1184/R1/32293995",
+      "paper_published": "2026-07-15",
+      "archive_published": "2026-05-29",
+      "archive_version": null,
+      "version_candidate": "v1, as development adapter cites; verify official manifest before downloading.",
+      "primary_urls": [
+        "https://link.springer.com/article/10.1038/s41467-026-75435-5",
+        "https://kilthub.cmu.edu/articles/dataset/EEG_Datasets_for_Sensory-Guided_Joint_Learning_in_Motor_Imagery_Brain-Computer_Interfaces/32293995"
+      ],
+      "author_code": "https://github.com/bfinl/SensoryGuidedJointLearning",
+      "author_code_commit": "57710f76a5ddd6f9a3aad28566ca55776a424400",
+      "storage": {
+        "bytes": null,
+        "display": "59.36 GB",
+        "evidence": "Official KiltHub Download all display."
+      },
+      "license": {
+        "value": "CC BY-NC 4.0",
+        "status": "Verified official KiltHub page."
+      },
+      "native_unit": null,
+      "physical_unit_verified": false,
+      "file_schema": {
+        "fixed": "runData.trialSignal samples x62 xtrials; author example5000x62x30",
+        "variable": "BCI2000 cell array per trial, variable length",
+        "labels": "EEGNet trialTargetClass vs BCI2000 trialTargetCode differ",
+        "required_preserved_fields": [
+          "meta",
+          "trialInfo",
+          "trialTargetClass",
+          "trialTargetCode",
+          "trialFeedbackLabel"
+        ],
+        "not_raw_dat": true
+      },
+      "nominal_mi_seconds": 5,
+      "trial_signal_start_verified": false,
+      "synthetic_padding_verified_absent": false,
+      "cohort_archive_file_id_candidates": {
+        "JointLearning": 64710999,
+        "BCI2000Control": 64710750,
+        "TactileControl": 64710993,
+        "EEGNetControl": 64710990
+      },
+      "preferred_query": "Run1 prefix <=20 support -> entire run2 no-tactile feedback test. Run6 separate distal query with intervening original human-machine training.",
+      "adapter": {
+        "engine": "New native public-MAT adapter",
+        "development_doc_available": true,
+        "stable_1_7_2_support_verified": false,
+        "reference_commit": "ed1aacdb39a445efe13a4f026673b14cc2913b85",
+        "warning": "Development adapter ignores meta/trialInfo, renumbers runs and admits unverified1e-6 unit scale; not formal adapter."
+      },
+      "gates": [
+        "Official version and true39-vs31 file roster",
+        "Per-group label code semantics and task/run mapping",
+        "MI/feedback onset versus array start",
+        "Prove real signal duration and absence of padding",
+        "Unit/common-gain conditions",
+        "Acquisition trial order/pair identity",
+        "No scores during gate; external final once frozen",
+        "Same-lab identity overlap unknown"
+      ]
+    },
+    {
+      "dataset_id": "HSStroke2026_v6",
+      "role": "locked_test",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 14,
+      "n_sessions_reported": 278,
+      "n_trials_reported": 23382,
+      "n_one_second_windows_reported": 93528,
+      "trial_count_evidence": "Author v6 correction; no full EEG independent count in this audit.",
+      "reported_sampling_rate_hz": 256,
+      "reported_eeg_channels": 11,
+      "verified_small_metadata": {
+        "channels": [
+          "FC3",
+          "FC4",
+          "C5",
+          "C3",
+          "C1",
+          "Cz",
+          "C2",
+          "C4",
+          "C6",
+          "CP3",
+          "CP4"
+        ],
+        "sampling_rate_hz": 256,
+        "unit": "V",
+        "reference": "linked mastoids (M1-M2 average)",
+        "md5_checked": true,
+        "full_EEG_schema": false
+      },
+      "paper_doi": "10.1038/s41597-026-07742-x",
+      "data_doi": "10.6084/m9.figshare.30747806.v6",
+      "paper_published": "2026-06-26",
+      "archive_version": 6,
+      "archive_published": "2026-07-24",
+      "primary_urls": [
+        "https://doi.org/10.1038/s41597-026-07742-x",
+        "https://figshare.com/articles/dataset/HS_Stroke_dataset_an_upper-limb_motor_imagery_EEG_dataset_of_chronic_stroke_patients/30747806/6"
+      ],
+      "official_metadata_local": "p3_workflow_sources/paper3_pretrain_20261018/catalog/hs_stroke_v6_official_metadata.json",
+      "storage": {
+        "bytes": 6903852376,
+        "file_count": 21,
+        "scope": "Full v6 record",
+        "primary_source_zip_bytes": 4894533454,
+        "optional_derivative_zip_bytes": 2005900019
+      },
+      "required_raw_archive": {
+        "file_id": 66772196,
+        "url": "https://ndownloader.figshare.com/files/66772196",
+        "bytes": 4894533454,
+        "md5": "a079fa4a6f3073e0ebb92102ade23731"
+      },
+      "optional_derivative_archive": {
+        "file_id": 66772193,
+        "url": "https://ndownloader.figshare.com/files/66772193",
+        "bytes": 2005900019,
+        "md5": "f9eff51ad9a3de6fad728b542804c73c"
+      },
+      "license": {
+        "value": "CC BY 4.0",
+        "status": "Verified official v6 manifest."
+      },
+      "author_code": "https://github.com/KINLAWWW/HS-Stroke",
+      "author_code_commit": "33d2f269256442f7b5af7199f5d5259d5b390182",
+      "schema_expected_from_author_code": {
+        "source_array": "EEGdata channel x time x trial",
+        "labels": "EEGdatalabel[:,0]",
+        "mi_source_seconds": [
+          9,
+          13
+        ],
+        "original_mi_samples": 1024,
+        "derivative_array": "trial x11x1024;1s cutting occurs later in loader"
+      },
+      "proposed_source_crop": {
+        "primary_context_seconds": [
+          9,
+          12
+        ],
+        "primary_analysis_seconds": [
+          9.5,
+          11.5
+        ],
+        "short_context_seconds": [
+          9,
+          11
+        ],
+        "short_analysis_seconds": [
+          9.5,
+          10.5
+        ]
+      },
+      "label_code_mapping_verified": false,
+      "label_code_mapping": null,
+      "physical_run_id_verified": false,
+      "absolute_recording_clock_verified": false,
+      "acquisition_order_verified": false,
+      "chronology_evidence": "Author source loader iterates array order with sorted sub/ses/file paths; deterministic retained order is not independent proof of acquisition order.",
+      "preferred_query": "Whole next true run if verified; otherwise prefix20 -> entire later original-trial block only after acquisition-order evidence.",
+      "adapter": {
+        "engine": "New source MAT adapter",
+        "author_run_id_is_actually_trial_index": true,
+        "stable_1_7_2_support_verified": false
+      },
+      "gates": [
+        "Actual source MAT shape & labels vs v6 events.json/tsv",
+        "Array acquisition-order evidence required for pseudo-online claim",
+        "Never call loop trial index physicalrun",
+        "Source-file boundaries and deduplicated retained gaps",
+        "No query-score-guided chronology fallback",
+        "No author AutoReject/minmax across future audit/query",
+        "Keep old releases out"
+      ]
+    },
+    {
+      "dataset_id": "Kumar2024",
+      "role": "exposed_exploratory",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 18,
+      "n_sessions_per_subject_reported": 6,
+      "reported_sampling_rate_hz": 512,
+      "reported_eeg_channels": 22,
+      "paper_doi": "10.1093/pnasnexus/pgae076",
+      "data_doi": "10.5281/zenodo.10694880",
+      "primary_urls": [
+        "https://zenodo.org/records/10694880",
+        "https://doi.org/10.1093/pnasnexus/pgae076"
+      ],
+      "archive_version": null,
+      "storage": {
+        "bytes": null,
+        "display": null
+      },
+      "license": {
+        "value": null,
+        "status": "Carry exact prior P2 archive terms; not reread this round."
+      },
+      "prior_exposure": "P2 already uses all18 with prior development6/confirmation12; no new P3 confirmatory claim.",
+      "task": "LR MI; one offline+five online sessions; bar/racing/recentering policies differ",
+      "reuse": {
+        "raw_files": true,
+        "subject_manifest": true,
+        "processed_cache": "Only if identical new contract proven; otherwise rebuild.",
+        "prior_model_results": "Historical/exploratory only."
+      },
+      "gates": [
+        "Keep physical days and bar/racing condition",
+        "All labels charged in new protocol",
+        "Do not recycle P2 confirmation as previously unseen P3 cohort"
+      ]
+    },
+    {
+      "dataset_id": "Dreyer2023",
+      "role": "exposed_exploratory",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 87,
+      "n_P1_subjects_after_P1_exclusions": 85,
+      "n_sessions_per_subject_reported": 1,
+      "paper_doi": "10.1038/s41597-023-02445-z",
+      "data_doi": "10.5281/zenodo.8089820",
+      "primary_urls": [
+        "https://link.springer.com/article/10.1038/s41597-023-02445-z",
+        "https://zenodo.org/records/8089820"
+      ],
+      "archive_version": null,
+      "storage": {
+        "bytes": null,
+        "display": null
+      },
+      "license": {
+        "value": null,
+        "status": "Reuse exact prior P1 terms; not reread this round."
+      },
+      "prior_exposure": "P1 external analysis; no fresh P3 confirmation.",
+      "identity_correction": "Primary paper says cohortC has six later new naive participants; do not repeat secondary-catalog claim that C re-recorded A.",
+      "gates": [
+        "Original87 vs P1 retained85 are different scope",
+        "Preserve prior exposure label",
+        "No automatic movement into final locked_test"
+      ]
+    },
+    {
+      "dataset_id": "Ma2022",
+      "role": "development",
+      "train_allowed_before_final_freeze": true,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 25,
+      "n_sessions_per_subject_reported": 5,
+      "n_nominal_trials": 12500,
+      "n_trials_reported_after_provider_rejection": 11988,
+      "reported_sampling_rate_hz": 250,
+      "reported_eeg_channels": 32,
+      "nominal_mi_seconds": 4,
+      "paper_doi": "10.1038/s41597-022-01647-1",
+      "data_doi": "10.6084/m9.figshare.19228725",
+      "primary_urls": [
+        "https://link.springer.com/article/10.1038/s41597-022-01647-1",
+        "https://figshare.com/articles/software/shu_dataset/19228725/1"
+      ],
+      "archive_version": 1,
+      "version_reason": "Only v1 size confirmed; later release must be separately pinned.",
+      "storage": {
+        "bytes": null,
+        "display": "4.22 GB",
+        "scope": "Official v1 display previously audited."
+      },
+      "license": {
+        "value": "CC BY 4.0",
+        "status": "Provider v1."
+      },
+      "clinic11_compatible": false,
+      "allowed_input_family": "C3/Cz/C4 or independently defined native32 montage",
+      "adapter": {
+        "development_doc_available": true,
+        "stable_1_7_2_export": false
+      },
+      "gates": [
+        "Separate input/checkpoint identity",
+        "Provider preprocessing0.5-40Hz baseline/badtrial rejection retained as limitation",
+        "Not primary clinic11 long-term development"
+      ]
+    },
+    {
+      "dataset_id": "Liu2024",
+      "role": "reserve",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 50,
+      "n_sessions_per_subject_reported": 1,
+      "n_trials_per_subject_reported": 40,
+      "reported_sampling_rate_hz": 500,
+      "reported_eeg_channels": 29,
+      "paper_doi": "10.1038/s41597-023-02787-8",
+      "data_doi": "10.6084/m9.figshare.21679035.v5",
+      "primary_urls": [
+        "https://doi.org/10.1038/s41597-023-02787-8",
+        "https://figshare.com/articles/dataset/21679035/5"
+      ],
+      "archive_version": 5,
+      "storage": {
+        "bytes": null,
+        "display": null
+      },
+      "license": {
+        "value": "CC BY 4.0",
+        "status": "Provider release; retain exact v5 manifest."
+      },
+      "duplicate_candidates_from_development_adapter": [
+        {
+          "duplicate": 5,
+          "source": 4
+        },
+        {
+          "duplicate": 15,
+          "source": 11
+        },
+        {
+          "duplicate": 49,
+          "source": 47
+        }
+      ],
+      "n_independent_subjects_verified": null,
+      "development_adapter_default_subject_count": 47,
+      "task": "LR hand grasp MI in acute stroke, single-session low-calibration adjunct",
+      "query_contract": "Bmax20 + remaining20 by original sequence; B40 has no query and is excluded.",
+      "gates": [
+        "Independent duplicate audit rather than treating development default as author correction",
+        "Original event order",
+        "No long-term/cross-session claim",
+        "Clinic11 actual mapping"
+      ]
+    },
+    {
+      "dataset_id": "UET175",
+      "role": "reserve",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "access_status": "PASSWORD_PENDING",
+      "n_subjects_reported": 30,
+      "n_trials_reported_before_provider_rejection": 2640,
+      "n_trials_rejected_reported": 97,
+      "n_trials_reported_after_rejection": 2543,
+      "n_physical_sessions_verified": null,
+      "reported_session_count_conflict": "Paper says220sessions but mean1.43/max3perperson;220x12trials matches run count. Do not resolve without original files.",
+      "collection_interval_reported": [
+        "2024-10",
+        "2025-01"
+      ],
+      "paper_published": "2025-06-17",
+      "reported_sampling_rate_hz": 128,
+      "reported_eeg_channels": 22,
+      "nominal_mi_seconds": 4,
+      "task": "left/right arm and left/right leg imagery, four classes; only explicit arm pair eligible for main-style adjunct",
+      "paper_doi": "10.3389/fnins.2025.1580931",
+      "data_doi": null,
+      "archive_version": null,
+      "primary_urls": [
+        "https://www.frontiersin.org/journals/neuroscience/articles/10.3389/fnins.2025.1580931/pdf",
+        "https://github.com/nmk-k66-uet/UET175"
+      ],
+      "author_code_commit": "e05a1ae12421514d2392db169f20437b1c60673d",
+      "storage": {
+        "bytes": 178930296,
+        "bytes_evidence": "Git LFS pointer object size for Data_UET175.rar; object not downloaded.",
+        "sha256": "0c203151d1127b2c38f6ae1646237d455b3a16bfe590e36c728bf6e4705cdd2e",
+        "uncompressed_display": "434 MB",
+        "uncompressed_evidence": "Original article.",
+        "pointer_file_bytes": 134
+      },
+      "license": {
+        "value": null,
+        "status": "README quotes articleCCBY; distinct dataset usage terms/password grant not yet obtained."
+      },
+      "access_requirement": "Author correspondence for RAR decompression password; no mail sent, no access granted in this audit.",
+      "clock": {
+        "available_files_reported": [
+          "Raw Signals.csv",
+          "Session setup.json",
+          "Action label.txt",
+          "Event timestamp.txt"
+        ],
+        "event_timestamp_is_raw_cue": false,
+        "event_timestamp_definition": "Response-selected1s segment withERD>=30%, rejected noisy/nonresponse trials removed.",
+        "fixed_cue_recovery_verified": false
+      },
+      "clinic11_compatible": null,
+      "acquisition_order_verified": false,
+      "near_neighbor_preprint": "https://arxiv.org/abs/2609.00282",
+      "gates": [
+        "Obtain password and usage terms through separately authorized correspondence",
+        "Inspect original physicalsession/run hierarchy",
+        "Recover fixed stimulus cue without response-selected timestamps",
+        "Verify22column map containsclinic11",
+        "Only1-3truevisits possible until proved otherwise",
+        "No response-selected window used to claim unbiased continuous clinical deployment"
+      ]
+    },
+    {
+      "dataset_id": "Alawieh2025",
+      "role": "reserve",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_subjects_reported": 27,
+      "n_healthy_reported": 25,
+      "n_SCI_reported": 2,
+      "main_group_reported": 20,
+      "main_training_days_reported": 5,
+      "crossover_subset_not_new_subjects": 4,
+      "single_pulse_new_group_reported": 5,
+      "reported_sampling_rate_hz": 512,
+      "reported_eeg_channel_counts": [
+        32,
+        64
+      ],
+      "task": "left/right hand kinestheticMI with bar feedback; pre-sessionTESS/rest/single-pulseconditions",
+      "paper_doi": "10.1073/pnas.2418920122",
+      "data_doi": "10.5281/zenodo.15454355",
+      "primary_urls": [
+        "https://zenodo.org/records/15454355",
+        "https://doi.org/10.1073/pnas.2418920122",
+        "https://github.com/hma001/TESS_BCI_PNAS"
+      ],
+      "archive_version": "v1",
+      "archive_published": "2025-05-18",
+      "storage": {
+        "bytes": null,
+        "display": "18.3 GB",
+        "main_group_display": "5.3 GB",
+        "evidence": "OfficialZenodo file list."
+      },
+      "license": {
+        "value": null,
+        "status": "HTMLRights/License field not extractable in audit; gate exactAPI/archivedterms before use."
+      },
+      "adapter": {
+        "development_doc_available": true,
+        "full_longitudinal_loaded_by_default": false
+      },
+      "gates": [
+        "Explicit32/64montage intersection",
+        "Original event/run/time metadata and availableMI duration",
+        "Crossover IDmerge",
+        "TESS/rest/source-of-shift separation",
+        "Do not infer online5day availability from one offlineMOABB session"
+      ]
+    },
+    {
+      "dataset_id": "Ding2025_Finger",
+      "role": "task_extension",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "n_main_subjects_reported": 21,
+      "n_extension_participants_reported": 16,
+      "n_unique_release_subjects_verified": null,
+      "reported_sampling_rate_hz": 1024,
+      "reported_eeg_channels": 128,
+      "task": "Right-hand individualfinger MI andME; not left/right-hand classification",
+      "paper_doi": "10.1038/s41467-025-61064-x",
+      "data_doi": "10.1184/R1/29104040",
+      "paper_published": "2025-06-30",
+      "primary_urls": [
+        "https://www.nature.com/articles/s41467-025-61064-x.pdf",
+        "https://kilthub.cmu.edu/articles/dataset/EEG-BCI_Dataset_for_Real-time_Robotic_Hand_Control_at_Individual_Finger_Level/29104040",
+        "https://github.com/bfinl/Finger-BCI-Decoding"
+      ],
+      "archive_version": 2,
+      "archive_version_date": "2025-08-20",
+      "storage": {
+        "bytes": null,
+        "display": "502.77 GB",
+        "scope": "WholeMI+ME+extensionarchive, not newLRMI."
+      },
+      "license": {
+        "value": "CC BY-NC 4.0",
+        "status": "Provider archive."
+      },
+      "prior_selection": "Main participants had priorlimbBCIexperience and offline performance screen; keepselection limitation.",
+      "gates": [
+        "No mixingME intoMI",
+        "Subject map across main/extension and otherBinHelabstudies",
+        "Separatetasklabels and inputfamily",
+        "NotusedforsourcebeforeWangconfirmation"
+      ]
+    },
+    {
+      "dataset_id": "SEFMEID2026",
+      "role": "reserve",
+      "train_allowed_before_final_freeze": false,
+      "permission_scope": "Data role only; execution authorization follows current user/session instructions.",
+      "n_eligible_lr_trials_verified": null,
+      "n_eligible_subjects_verified": null,
+      "n_eligible_sessions_verified": null,
+      "actual_eeg_schema_audit_passed": false,
+      "biological_identity_independence_verified": false,
+      "access_status": "APPLICATION_DUA_PENDING",
+      "n_subjects_reported": 50,
+      "reported_sampling_rate_hz": 1000,
+      "reported_eeg_channels": 32,
+      "reported_fnirs_channels": 40,
+      "paper_doi": "10.1038/s41597-026-08298-6",
+      "data_doi": "10.57760/sciencedb.30795",
+      "paper_published": "2026-09-19",
+      "primary_urls": [
+        "https://doi.org/10.1038/s41597-026-08298-6",
+        "https://doi.org/10.57760/sciencedb.30795"
+      ],
+      "archive_version": null,
+      "storage": {
+        "bytes": null,
+        "display": null
+      },
+      "license": {
+        "value": null,
+        "status": "Registration/DUA/provider approval required; no grant in this audit."
+      },
+      "task": "Left/right hand protocol cycle: 8s rest -> 8s ME -> 8s rest -> 8s MI",
+      "nominal_mi_seconds": 8,
+      "clinic11_compatible": null,
+      "gates": [
+        "Approvalandversion",
+        "Actualchannel map",
+        "SeparateME/MIlabels",
+        "Allphasesofoneoriginalcyclegrouped",
+        "MIafterMEhistorypreserved;not independent randomMIepisode"
+      ]
+    }
+  ],
+  "global_required_fields": [
+    "dataset",
+    "cohort",
+    "provider_subject",
+    "source_version",
+    "source_file_sha256",
+    "source_file_bytes",
+    "source_record_id",
+    "session_id",
+    "session_order",
+    "physical_run_id_or_null",
+    "run_order_evidence",
+    "original_trial_index",
+    "trial_uid",
+    "raw_label_code",
+    "canonical_label",
+    "event_sample_or_null",
+    "event_time_coordinate",
+    "analysis_anchor_sample",
+    "mi_onset_verified",
+    "native_sfreq",
+    "native_channel_order",
+    "selected_indices",
+    "native_unit_string",
+    "physical_scale_evidence",
+    "real_trial_start_end",
+    "feedback_condition",
+    "pair_or_cycle_id_or_null",
+    "eligibility_reason",
+    "pipeline_hash",
+    "split_manifest_hash"
+  ],
+  "stage_gates": {
+    "A": "Official metadata/version/license and file inventory",
+    "B": "Actual per-variant rawschema/channel/unit/task/clock/acquisition-order audit",
+    "C": "Freeze metadata-only participant roster and split using identity, channel and pure-LR task presence before candidate-window retention; no post-QC reassignment",
+    "D": "Stieger meta-train-only window retention and class-gap decision, then freeze numerical input contract; materialize trial inventory, duplicates and common query eligibility under that contract",
+    "E": "Source/developmenttraining only;selection confined tothese data",
+    "F": "Allmethods/baselines/budgets/query/cohort/exclusions frozen before finalpredictions",
+    "G": "Onefinalexternalevaluation with paidlabels and auditedcheckpoint rules"
+  }
+}
