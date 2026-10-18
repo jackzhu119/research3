@@ -473,7 +473,10 @@ def _validate_rows(rows: list, session: dict, *, contract: dict, contract_sha: s
             if (any(type(number) is not int or number < 1 for number in numbers)
                     or any(type(flag) is not bool for flag in flags) or len(set(flags)) != 1):
                 raise EpisodeGateError("whole_run_completion_evidence_required")
-            if flags[0] and numbers != list(range(1, 26)):
+            # Native trialnumber can be session-global. Completeness concerns
+            # the actual 25 records within this run, not an invented 1..25 or
+            # session-grid origin. Preserve the provider numbers unchanged.
+            if flags[0] and (len(numbers) != 25 or any(b != a + 1 for a, b in zip(numbers, numbers[1:]))):
                 raise EpisodeGateError("complete_stieger_run_needs_all_25_original_trials")
     if session.get("original_lr_trials") != len(output) or session.get("valid_trials") != len(valid_indices):
         raise EpisodeGateError("session_original_or_valid_trial_count_failed")

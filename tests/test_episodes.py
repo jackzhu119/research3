@@ -141,7 +141,7 @@ class EpisodeFixture:
                 "participant_id": session["participant_id"], "session_id": session["session_id"],
                 "partition": session["partition"],
                 "source_record_id": session["source_record_id"], "source_file_sha256": self.raw_sha,
-                "original_trial_index": index, "provider_trialnumber": index % 25 + 1,
+                "original_trial_index": index, "provider_trialnumber": index + 1,
                 "physical_run_id": index // 25 + 1, "physical_run_complete_verified": True,
                 "tasknumber": 1, "label": label, "canonical_label": "right_hand" if label else "left_hand",
                 "native_sfreq_hz": 1000, "acquisition_order_verified": True,
@@ -515,6 +515,71 @@ def test_incomplete_future_run_is_removed_as_whole_run(fixture):
     assert len(plan.incomplete_future_run_uids) == 25
     assert len(plan.query_event_uids) == 25
     assert plan.query_eligible
+
+
+@pytest.mark.parametrize("starts", [(1, 26, 51), (1, 26, 300), (76, 151, 300)])
+def test_complete_runs_keep_contiguous_session_global_provider_numbers(fixture, starts):
+    recorded = {}
+    def numbered(rows):
+        for row in rows:
+            run = row["physical_run_id"]
+            row["provider_trialnumber"] = starts[run - 1] + row["original_trial_index"] % 25
+            recorded[row["event_uid"]] = (row["original_trial_index"], row["provider_trialnumber"], run)
+    fixture.mutate_rows(fixture.train[0], numbered)
+    catalog = fixture.load(); plan = catalog.plan(fixture.train[0], "1")
+    assert len(plan.acquired_event_uids) == 20 and len(plan.support_event_uids) == 19
+    assert len(plan.query_event_uids) == 50 and plan.incomplete_future_run_uids == ()
+    audit = plan.to_dict()["temporal_audit"]["original_event_audit"]
+    assert {row["event_uid"]: (row["original_trial_index"], row["provider_trialnumber"], row["physical_run_id"])
+            for row in audit} == recorded
+    assert all(row["physical_run_complete_verified"] is True for row in audit)
+    assert not (set(plan.query_event_uids) & set(plan.acquired_event_uids + plan.unused_boundary_run_uids))
+
+
+@pytest.mark.parametrize("violation", ["gap", "duplicate", "descending", "zero", "noninteger", "only_24"])
+def test_complete_run_claim_requires_25_actual_positive_contiguous_original_records(fixture, violation):
+    def invalid(rows):
+        if violation == "gap": rows[40]["provider_trialnumber"] += 2
+        elif violation == "duplicate": rows[40]["provider_trialnumber"] = rows[39]["provider_trialnumber"]
+        elif violation == "descending": rows[40]["provider_trialnumber"] = rows[39]["provider_trialnumber"] - 1
+        elif violation == "zero": rows[25]["provider_trialnumber"] = 0
+        elif violation == "noninteger": rows[25]["provider_trialnumber"] = 26.0
+        else:
+            rows.pop(49)
+            for cache_index, row in enumerate(row for row in rows if row["valid"]):
+                row["cache_index"] = cache_index
+    fixture.mutate_rows(fixture.train[0], invalid)
+    with pytest.raises(EpisodeGateError, match="whole_run_completion|all_25_original"):
+        fixture.load()
+
+
+def test_actual_24_record_run_stays_incomplete_and_later_300_to_324_run_is_usable(fixture):
+    session = fixture.session(); path = fixture.root / session["events"]["path"]
+    rows = json.loads(path.read_text())
+    removed_uid = rows[49]["event_uid"]
+    rows.pop(49)
+    signals = []
+    for row in rows:
+        if row["physical_run_id"] == 2:
+            row["physical_run_complete_verified"] = False
+        elif row["physical_run_id"] == 3:
+            row["provider_trialnumber"] = 300 + row["original_trial_index"] - 50
+        if row["valid"]:
+            row["cache_index"] = len(signals)
+            signals.append(fixture.values[row["original_trial_index"]])
+    x_path = path.with_name("X_with_actual_missing_record.npy")
+    np.save(x_path, np.stack(signals), allow_pickle=False)
+    session.update(original_lr_trials=len(rows), valid_trials=len(signals), X=descriptor(fixture.root, x_path))
+    write(path, rows); session["events"] = descriptor(fixture.root, path); fixture.refresh()
+    catalog = fixture.load(); plan = catalog.plan(fixture.train[0], "1")
+    audit = plan.to_dict()["temporal_audit"]["original_event_audit"]
+    assert len(audit) == 74 and removed_uid not in {row["event_uid"] for row in audit}
+    assert len(plan.incomplete_future_run_uids) == 24 and len(plan.query_event_uids) == 25
+    assert [row["provider_trialnumber"] for row in audit if row["physical_run_id"] == 3] == list(range(300, 325))
+    assert {row["original_trial_index"] for row in audit} == set(range(75)) - {49}
+    assert all(row["physical_run_complete_verified"] is False for row in audit if row["physical_run_id"] == 2)
+    assert not (set(plan.incomplete_future_run_uids) & set(plan.query_event_uids))
+    assert len(plan.acquired_event_uids) == 20 and len(plan.support_event_uids) == 19 and plan.query_eligible
 
 
 def test_missing_support_class_is_preserved_and_sampled_for_f0_fallback(fixture):

@@ -1,15 +1,15 @@
 {
   "schema_version": "paper3-software-preparation-acceptance-v1",
-  "recorded_at_utc": "2026-10-18T11:17:32.593415+00:00",
-  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_REAL_DATA_GATES_PENDING",
+  "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
+  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_REAL_W1_WINDOW_GATE_BLOCKED",
   "scope": "CPU_SOFTWARE_AND_SYNTHETIC_MATHEMATICAL_ACCEPTANCE_ONLY",
   "latest_completed_full_suite": {
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
-    "passed": 1196,
+    "passed": 1210,
     "failed": 0,
-    "wall_seconds": 220.46,
-    "log_sha256": "9e15e604d01f53607ca3e4adeb102d317961dfa52d4a76b66b837f6ba94fcf2c",
-    "log_path": "audit/software_tests/pilot_evidence_fullsuite_1196.log",
+    "wall_seconds": 213.95,
+    "log_sha256": "c5c3b55725be217110fc108d792aa5cb52fd6c4cd9ad68d80401d7e26260e7a8",
+    "log_path": "audit/software_tests/run_number_correction_fullsuite_1210.log",
     "new_executable_changes_after_this_suite": false
   },
   "original_protocol_files_verified": 52,
@@ -29,16 +29,17 @@
     "actual engineering measurement and complete training artifacts"
   ],
   "remaining_gates": [
-    "W1 complete all meta_train duration metadata",
-    "W2 full source fresh cache and full R2 GET/SHA256 coverage",
-    "user later manual GPU boot before controlled engineering pilot"
+    "Explicit scientific decision/amendment: both original W1 common-window candidates fail the full meta_train coverage gate",
+    "W2 full source native audit, fresh numerical cache and complete R2 GET/SHA256 proof after an actual valid window contract",
+    "User later manual GPU boot before a controlled source engineering pilot"
   ],
   "drift_pca_formal_estimation": "BLOCKED_UNRESOLVED_IMPLEMENTATION_PARAMETERS",
   "W9_real_analysis": "BLOCKED_W7_AND_EXTERNAL_ARCHIVED_PREDICTION_VERIFIER_PENDING",
   "W5_scientific_stage_complete": false,
   "code_manifest": {
     "path": "audit/software_code_manifest.json",
-    "sha256": "41d34843407c8e9f5018cf18ecb8e1b622e066eeb9f97468fc2b1e119bc92412",
+    "sha256": "179c7b7ce58effda6ee881904f0f57479a4896a9bb836a05703f84732486aa2a",
+    "bytes": 16409,
     "python_files": 100
   },
   "source_control_counts": {
@@ -90,10 +91,14 @@
     "meta_train_all_sessions_required": 396,
     "window_selected": null,
     "meta_train_duration_progress_snapshot": {
-      "recorded_at_utc": "2026-10-18T11:01:33.080237+00:00",
-      "verified_complete_sessions": 144,
+      "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
+      "verified_complete_sessions": 396,
       "required_sessions": 396,
-      "scientific_window_decision": null
+      "original_lr_trials": 59399,
+      "scientific_window_decision": null,
+      "status": "BOTH_ORIGINAL_WINDOWS_FAIL_REAL_COVERAGE",
+      "exact_audit_artifact_sha256": "6133022119d6497e87f3f08bc5373c4714a14bc7f4a99969a0c9ff716b6ec8e9",
+      "meta_train_duration_verified_official_bytes": 251064060656
     }
   },
   "real_development_profiles_completed": 0,
@@ -104,7 +109,7 @@
   "previous_8a422a8_worker_dependency_bytes_unchanged": {
     "tools/stieger_metadata_batch.py": false,
     "tools/continue_local_preparation.py": true,
-    "p3work/adapters/stieger_native.py": true,
+    "p3work/adapters/stieger_native.py": false,
     "p3work/splits.py": true,
     "p3work/window.py": false,
     "p3work/contracts.py": true
@@ -112,7 +117,7 @@
   "resumed_worker_dependency_bytes_match_restart_receipt": {
     "tools/stieger_metadata_batch.py": true,
     "tools/continue_local_preparation.py": true,
-    "p3work/adapters/stieger_native.py": true,
+    "p3work/adapters/stieger_native.py": false,
     "p3work/splits.py": true,
     "p3work/window.py": true,
     "p3work/contracts.py": true
@@ -133,10 +138,9 @@
     "scope": "historical_8a422a8_before_recovery_fixes"
   },
   "concurrency_candidate": {
-    "status": "ACTUALLY_RUNNING_BOUNDED_CPU_DATA_PREPARATION",
+    "status": "COMPLETED_396_BOUNDED_CPU_OBJECTS_STOPPED_AT_REAL_PROTOCOL_WINDOW_GATE",
     "max_inflight_files": 2,
     "max_native_parsers": 1,
-    "actual_parallel_coordinators_started": 1,
     "scientific_selection_changed": false,
     "budgets_increased": false,
     "independent_w1_tests_passed": 28,
@@ -144,7 +148,11 @@
     "operational_proposal_sha256": "af72bdf444b1e2c75f81af3c8e06fea7e41357f054f7b9f7170c4c93d62e3d95",
     "previous_coordinator_exited_confirmed": true,
     "original_locks_released_before_new_start": true,
-    "cumulative_wall_not_reset": true
+    "cumulative_wall_not_reset": true,
+    "current_active_coordinators": 0,
+    "maximum_simultaneous_coordinators": 1,
+    "sequential_coordinator_starts_under_same_plan": 5,
+    "original_parallel_cutover_count": 1
   },
   "previous_0c11e8f_completed_full_suite": {
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
@@ -195,5 +203,54 @@
     "existing_environments_or_wheels_modified": false,
     "GPU_initialized": false,
     "model_fit_performed": false
+  },
+  "previous_8c387bc_completed_full_suite": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
+    "passed": 1196,
+    "failed": 0,
+    "wall_seconds": 220.46,
+    "log_sha256": "9e15e604d01f53607ca3e4adeb102d317961dfa52d4a76b66b837f6ba94fcf2c",
+    "log_path": "audit/software_tests/pilot_evidence_fullsuite_1196.log",
+    "new_executable_changes_after_this_suite": true,
+    "scope": "historical_pilot_evidence_extension_before_real_native_run_number_correction"
+  },
+  "resumed_worker_dependency_comparison_scope": "Current bytes versus the earlier restart: native reader was corrected only after all 396 objects completed and coordinator exited; old af72 plan remains immutable completed history and must not be restarted with changed code.",
+  "real_native_run_number_correction": {
+    "status": "SOFTWARE_FIXED_SYNTHETIC_ACCEPTANCE_PASSED",
+    "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
+    "files": [
+      {
+        "path": "p3work/adapters/stieger_native.py",
+        "sha256": "9f39dfc66e20c60afb342e41a6ff517808af977a9c2059ebc6a6fecb95c3182e",
+        "bytes": 11199
+      },
+      {
+        "path": "p3work/episodes.py",
+        "sha256": "348604283251b8d50a34c5b0545a895afb7bbaa024ff82d7c62be11e30504a65",
+        "bytes": 43688
+      },
+      {
+        "path": "tests/test_stieger_native.py",
+        "sha256": "128c1b8c19336d227428c385733ce2b7f9711efe337b5966c239f7f065230773",
+        "bytes": 11872
+      },
+      {
+        "path": "tests/test_episodes.py",
+        "sha256": "d8a9e92acfeeacdfeb4552cde21d483741d29a8e6e5dd72e8cc52f04cb1608cd",
+        "bytes": 47494
+      }
+    ],
+    "targeted_native_cache_metadata_tests_passed": 41,
+    "targeted_episode_tests_passed": 93,
+    "latest_unified_tests_passed": 1210,
+    "data_workers_active_during_edit": 0,
+    "old_396_W1_metadata_bytes_unchanged": true,
+    "post_correction_W1_exact_artifact_sha256": "6133022119d6497e87f3f08bc5373c4714a14bc7f4a99969a0c9ff716b6ec8e9",
+    "original_provider_trialnumbers_and_UIDs_preserved": true,
+    "actual_24_record_run_remains_incomplete": true,
+    "future_W3_requires_new_adapter_bound_raw_derived_cache": true,
+    "scientific_window_result_changed": false,
+    "real_fits_completed": 0,
+    "real_GPU_jobs_started": 0
   }
 }

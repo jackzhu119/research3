@@ -1,5 +1,5 @@
 {
-  "recorded_at_utc": "2026-10-18T11:01:33.080237+00:00",
+  "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
   "W0": {
     "status": "COMPLETE_LOCAL_SCOPE",
     "evidence": [
@@ -13,7 +13,7 @@
     "raw_npz_reused": false
   },
   "W1": {
-    "status": "IN_PROGRESS",
+    "status": "BLOCKED_WINDOW_COVERAGE_PROTOCOL_REVIEW_REQUIRED",
     "manifest_verified_files": 52,
     "source_schema_specs": 4,
     "stieger_native_schema_sessions": 62,
@@ -25,7 +25,7 @@
       "audit/stieger_w1/adapter_audit.json",
       "audit/stieger_w1/batches/c825be2636a5f423838816f76ededbae8cb08e92a3ddbc57032fb911db8763fa/participant_split.json"
     ],
-    "next": "complete duration metadata for all 396 official frozen meta_train sessions, then measured common window; no partial selection",
+    "next": "Protocol line88 pauses main B20 because both registered windows fail. Explicit scientific window amendment/decision is required; no numerical cache, fit or pilot has started.",
     "qualification_batch_status": "COMPLETE_62_OFFICIAL_FILES_AND_R2_FULL_GET_VERIFIED",
     "qualification_plan": "plans/stieger_qualification.json",
     "qualification_complete_files": 62,
@@ -41,13 +41,27 @@
     "participant_split_sha256": "1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd",
     "complete_meta_train_sessions_required": 396,
     "meta_train_duration_plan_sha256": "0c53f43ca0f4eb424796d3d7c83c736936bc886f92b0555c35811b4daa306c37",
-    "meta_train_duration_audit": "ACTUALLY_RUNNING_SINGLE_COORDINATOR_TWO_FILE_LIFECYCLES_ONE_NATIVE_PARSER",
+    "meta_train_duration_audit": "COMPLETE_396_OFFICIAL_FILES_AND_FULL_GET_VERIFIED",
     "recovery": "Old CPU coordinator gracefully stopped and original locks released before the sole bounded CPU coordinator inherited cumulative wall and strictly verified prior objects",
-    "cpu_operational_amendment_sha256": "af72bdf444b1e2c75f81af3c8e06fea7e41357f054f7b9f7170c4c93d62e3d95"
+    "cpu_operational_amendment_sha256": "af72bdf444b1e2c75f81af3c8e06fea7e41357f054f7b9f7170c4c93d62e3d95",
+    "meta_train_complete_files": 396,
+    "meta_train_verified_official_bytes": 251064060656,
+    "meta_train_original_lr_trials": 59399,
+    "window_gate_failure_review": {
+      "path": "audit/stieger_w1/window_gate_review_20261018/review.json",
+      "sha256": "3dc0a220060c010da15274e8e151198bd30721b1df05353c2626860960a6c7c8",
+      "bytes": 4573
+    },
+    "exact_window_audit": {
+      "path": "audit/stieger_w1/window_exact_gate_failure_20261018.json",
+      "sha256": "f7c58673ecca0d320ed7d39a817065cadba48c5f3c23e8f0a06bba3ed711a9cc",
+      "bytes": 188516
+    }
   },
   "W2": {
     "status": "NOT_STARTED_DEPENDS_ON_W1",
-    "old_npz_accepted": false
+    "old_npz_accepted": false,
+    "blocking_reason": "Both registered common windows fail the W1 original metadata coverage gate."
   },
   "W3": {
     "status": "NOT_STARTED_DEPENDS_ON_W1"
@@ -62,7 +76,7 @@
     "software_inventory": "p3work/methods/STATUS.md",
     "scientific_fits_completed": 0,
     "remaining_data_and_gpu_gates": true,
-    "latest_unified_cpu_tests_passed": 1196
+    "latest_unified_cpu_tests_passed": 1210
   },
   "W6": {
     "status": "NOT_STARTED"

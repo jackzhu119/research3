@@ -191,7 +191,13 @@ def load_session(path: str | Path, *, expected_sha256: str) -> StiegerSession:
         raise ValueError("Physical run/trial chronology inconsistent with original cell order")
     for run in {row["physical_run_id"] for row in rows}:
         rr = [row for row in rows if row["physical_run_id"] == run]
-        complete = [row["provider_trialnumber"] for row in rr] == list(range(1, 26))
+        numbers = [row["provider_trialnumber"] for row in rr]
+        # The provider may number trials across the entire session. A complete
+        # physical run has 25 actual records with consecutive positive native
+        # numbers; its first number need not be 1 or follow a synthetic grid.
+        # Keep every original number/index unchanged, including incomplete runs.
+        complete = (len(rr) == 25 and all(number > 0 for number in numbers)
+                    and all(right == left + 1 for left, right in zip(numbers, numbers[1:])))
         one_task = len({row["tasknumber"] for row in rr}) == 1
         for row in rr:
             row["physical_run_complete_verified"] = complete and one_task

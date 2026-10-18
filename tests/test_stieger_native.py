@@ -13,6 +13,72 @@ from p3work.window import choose_window
 
 
 class NativeReaderTest(unittest.TestCase):
+    @staticmethod
+    def write_numbered_run_fixture(path, runs):
+        """Small native-structure software fixture; never real EEG evidence."""
+        data, times, trials = [], [], []
+        for run, numbers, tasks in runs:
+            for number, task in zip(numbers, tasks):
+                n = 5002
+                data.append(np.ones((11, n), dtype=np.float32))
+                times.append(np.arange(n) - 2000)
+                trials.append({"tasknumber": task, "targetnumber": 1 + number % 2,
+                    "runnumber": run, "trialnumber": number, "triallength": .001,
+                    "resultind": 4002, "artifact": 0})
+        cells, clocks = np.empty(len(data), object), np.empty(len(times), object)
+        cells[:], clocks[:] = data, times
+        savemat(path, {"BCI": {"data": cells, "time": clocks, "SRATE": 1000,
+            "TrialData": np.array(trials, dtype=object), "metadata": {"MBSRsubject": 0},
+            "chaninfo": {"label": np.array(CLINIC11, dtype=object), "noisechan": np.empty(0)}}},
+            do_compression=True)
+
+    def test_complete_physical_runs_accept_session_global_numbers_without_renumbering(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "S1_Session_1.mat"
+            first, second = list(range(26, 51)), list(range(300, 325))
+            self.write_numbered_run_fixture(path, [(2, first, [1] * 25), (13, second, [1] * 25)])
+            session = load_session(path, expected_sha256=file_sha256(path))
+            self.assertTrue(all(row["physical_run_complete_verified"] for row in session.rows))
+            self.assertEqual([row["provider_trialnumber"] for row in session.rows], first + second)
+            self.assertEqual([row["original_trial_index"] for row in session.rows], list(range(50)))
+            self.assertEqual([row["physical_run_id"] for row in session.rows], [2] * 25 + [13] * 25)
+
+    def test_incomplete_physical_run_keeps_24_actual_records_and_native_numbers(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "S1_Session_1.mat"
+            numbers = list(range(276, 300))
+            self.write_numbered_run_fixture(path, [(12, numbers, [1] * 24)])
+            session = load_session(path, expected_sha256=file_sha256(path))
+            self.assertEqual(len(session.rows), 24)
+            self.assertEqual([row["provider_trialnumber"] for row in session.rows], numbers)
+            self.assertTrue(all(row["physical_run_complete_verified"] is False for row in session.rows))
+
+    def test_count_alone_cannot_verify_gap_nonpositive_or_mixed_task_run(self):
+        cases = [
+            (list(range(26, 38)) + list(range(39, 52)), [1] * 25),
+            (list(range(25)), [1] * 25),
+            (list(range(26, 51)), [1] * 24 + [3]),
+        ]
+        for numbers, tasks in cases:
+            with self.subTest(numbers=numbers, tasks=tasks), tempfile.TemporaryDirectory() as d:
+                path = Path(d) / "S1_Session_1.mat"
+                self.write_numbered_run_fixture(path, [(2, numbers, tasks)])
+                session = load_session(path, expected_sha256=file_sha256(path))
+                self.assertEqual(len(session.rows), 25)
+                self.assertEqual([row["provider_trialnumber"] for row in session.rows], numbers)
+                self.assertTrue(all(row["physical_run_complete_verified"] is False for row in session.rows))
+
+    def test_provider_run_number_disorder_or_duplicate_is_rejected_before_completion(self):
+        disordered = list(range(26, 51))
+        disordered[1], disordered[2] = disordered[2], disordered[1]
+        duplicated = list(range(26, 51)); duplicated[2] = duplicated[1]
+        for numbers in (disordered, duplicated):
+            with self.subTest(numbers=numbers), tempfile.TemporaryDirectory() as d:
+                path = Path(d) / "S1_Session_1.mat"
+                self.write_numbered_run_fixture(path, [(2, numbers, [1] * 25)])
+                with self.assertRaisesRegex(ValueError, "chronology inconsistent"):
+                    load_session(path, expected_sha256=file_sha256(path))
+
     def test_native_task_filter_units_endpoint_and_sha(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "S1_Session_1.mat"
