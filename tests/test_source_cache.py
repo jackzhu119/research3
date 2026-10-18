@@ -5,8 +5,11 @@ attest that real W1, a real source inventory, or a scientific W2 run completed.
 """
 import importlib.util
 import fcntl
+import io
 import json
 from pathlib import Path
+import signal
+import subprocess
 import sys
 
 import numpy as np
@@ -247,6 +250,152 @@ def test_r2_failure_keeps_w2_incomplete_and_has_no_cache_manifest(partial_fixtur
     assert not (root / item["path"]).exists()
 
 
+def test_R2_restore_has_independent_inventory_derived_durable_reservation_before_call(partial_fixture, monkeypatch):
+    root, inventory, _ = partial_fixture
+    body, item = make_r2_only_fixture(root, inventory)
+    def restore(**kwargs):
+        ledger = json.loads((root / "audit/source_cache/resource_progress.json").read_text())
+        assert set(ledger["byte_scopes"]) == {"R2_cache_raw_restore_GET_body"}
+        budget = ledger["byte_scopes"]["R2_cache_raw_restore_GET_body"]
+        assert budget["charged_bytes"] == len(body) + 1 and budget["observed_bytes"] == 0
+        assert budget["limit_bytes"] == 2 * (len(body) + 1)
+        assert ledger["limit_derivation"]["official_provider_GET_bytes_included"] is False
+        path = root / item["path"]; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(body)
+        return {"status": "restored_verified", "objects": [{"bytes_read": len(body), "complete_body_read": True}]}
+    monkeypatch.setattr(cache, "run_restore", restore)
+    result = cache.prepare_cache(root, "manifests/source_fixture.json", execute=True,
+                                 partial_scope=True, restore_backed_raw=True)
+    assert result["status"] == "PILOT_CACHE_PARTIAL"
+    budget = json.loads((root / result["resource_progress_path"]).read_text())["byte_scopes"]["R2_cache_raw_restore_GET_body"]
+    assert budget["observed_bytes"] == budget["charged_bytes"] == len(body)
+    assert budget["attempts"][0]["status"] == "COMPLETE_OBSERVED_BODY"
+    assert not (root / item["path"]).exists()
+
+
+def test_failed_R2_retries_stop_at_independent_cap_and_need_recorded_amendment(partial_fixture, monkeypatch):
+    root, inventory, _ = partial_fixture
+    body, item = make_r2_only_fixture(root, inventory)
+    calls = []
+    def failed_restore(**kwargs):
+        calls.append("fixture_failed_GET")
+        return {"status": "failed", "objects": [{"bytes_read": 7, "complete_body_read": False}]}
+    monkeypatch.setattr(cache, "run_restore", failed_restore)
+    for _ in range(3):
+        result = cache.prepare_cache(root, "manifests/source_fixture.json", execute=True,
+                                     partial_scope=True, restore_backed_raw=True)
+        assert result["status"] == "SOURCE_CACHE_INCOMPLETE"
+    assert len(calls) == 2  # A third network operation is refused before run_restore.
+    journal = json.loads((root / "audit/source_cache/resource_progress.json").read_text())
+    ledger = journal["byte_scopes"]["R2_cache_raw_restore_GET_body"]
+    assert ledger["charged_bytes"] == 2 * (len(body) + 1) and ledger["observed_bytes"] == 14
+    old_identity = journal["resource_identity_sha256"]
+    def completed_restore(**kwargs):
+        path = root / item["path"]; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(body)
+        return {"status": "restored_verified", "objects": [{"bytes_read": len(body), "complete_body_read": True}]}
+    monkeypatch.setattr(cache, "run_restore", completed_restore)
+    with pytest.raises(cache.SourceCacheGateError, match="budget is unavailable"):
+        cache.prepare_cache(root, "manifests/source_fixture.json", execute=True, partial_scope=True,
+                            restore_backed_raw=True, max_r2_restore_bytes=3 * (len(body) + 1))
+    result = cache.prepare_cache(root, "manifests/source_fixture.json", execute=True, partial_scope=True,
+        restore_backed_raw=True, max_r2_restore_bytes=3 * (len(body) + 1),
+        operational_amendment_note="Explicit operational-only fixture retry extension")
+    assert result["status"] == "PILOT_CACHE_PARTIAL"
+    journal = json.loads((root / "audit/source_cache/resource_progress.json").read_text())
+    assert journal["resource_identity_sha256"] == old_identity
+    assert len(journal["byte_scopes"]["R2_cache_raw_restore_GET_body"]["amendments"]) == 1
+
+
+def test_real_SIGKILL_after_R2_commit_preserves_budget_and_raw_ownership_on_replay(partial_fixture, monkeypatch):
+    root, inventory, _ = partial_fixture
+    body, item = make_r2_only_fixture(root, inventory)
+    control = root / "SOFTWARE_TEST_DOUBLE_BODY.bin"; control.write_bytes(body)
+    script = '''
+import os, signal, sys
+from pathlib import Path
+from tools import prepare_source_cache as cache
+root, relative, control = Path(sys.argv[1]), sys.argv[2], Path(sys.argv[3])
+def interrupted_restore(**kwargs):
+    target = root / relative
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(control.read_bytes())
+    os.kill(os.getpid(), signal.SIGKILL)
+cache.run_restore = interrupted_restore
+cache.prepare_cache(root, 'manifests/source_fixture.json', execute=True,
+    partial_scope=True, restore_backed_raw=True)
+'''
+    child = subprocess.run([sys.executable, "-c", script, str(root), item["path"], str(control)],
+                           cwd=ROOT, capture_output=True, timeout=20)
+    assert child.returncode == -signal.SIGKILL
+    journal = json.loads((root / "audit/source_cache/resource_progress.json").read_text())
+    ledger = journal["byte_scopes"]["R2_cache_raw_restore_GET_body"]
+    assert ledger["charged_bytes"] == len(body) + 1 and ledger["observed_bytes"] == 0
+    assert ledger["active"] is not None
+    assert cache.recover_owned_cache_restore(root, item) is True
+    assert control.read_bytes() == body  # Unmarked local files are preserved.
+    def restore(**kwargs):
+        target = root / item["path"]; target.parent.mkdir(parents=True, exist_ok=True); target.write_bytes(body)
+        return {"status": "restored_verified", "objects": [{"bytes_read": len(body), "complete_body_read": True}]}
+    monkeypatch.setattr(cache, "run_restore", restore)
+    result = cache.prepare_cache(root, "manifests/source_fixture.json", execute=True,
+                                 partial_scope=True, restore_backed_raw=True)
+    assert result["status"] == "PILOT_CACHE_PARTIAL" and not (root / item["path"]).exists()
+    ledger = json.loads((root / "audit/source_cache/resource_progress.json").read_text())["byte_scopes"]["R2_cache_raw_restore_GET_body"]
+    assert ledger["charged_bytes"] == 2 * len(body) + 1 and ledger["observed_bytes"] == len(body)
+    assert ledger["attempts"][0]["status"] == "UNCLEAN_FULL_RESERVATION_REMAINS_CHARGED"
+
+
+@pytest.mark.parametrize("expiry_point", ["last_raw", "final_manifest"])
+def test_last_CPU_work_cannot_return_cache_completion_after_wall_cap(partial_fixture, monkeypatch, expiry_point):
+    root, _, _ = partial_fixture
+    from tools import source_preparation_batch as batch
+    actual_budget = batch.ResourceBudget
+    tick = [0.0]
+    def budget_factory(*args, **kwargs):
+        return actual_budget(*args, **kwargs, clock=lambda: tick[0], utc_clock=lambda: 1000 + tick[0], boot_id="fixture")
+    budget_factory.R2_RESTORE = actual_budget.R2_RESTORE
+    monkeypatch.setattr(batch, "ResourceBudget", budget_factory)
+    if expiry_point == "last_raw":
+        actual_iterator = cache.iter_native_contexts
+        def last_raw_expiry(*args, **kwargs):
+            yield from actual_iterator(*args, **kwargs)
+            tick[0] = 2.0
+        last_raw_expiry.__module__ = actual_iterator.__module__
+        monkeypatch.setattr(cache, "iter_native_contexts", last_raw_expiry)
+    else:
+        actual_write = cache.write_receipt
+        def late_manifest_expiry(path, value):
+            actual_write(path, value)
+            if Path(path).name == "source_cache.json": tick[0] = 2.0
+        monkeypatch.setattr(cache, "write_receipt", late_manifest_expiry)
+    with pytest.raises(cache.SourceCacheGateError, match="wall_budget_exhausted"):
+        cache.prepare_cache(root, "manifests/source_fixture.json", execute=True,
+                            partial_scope=True, max_wall_seconds=1)
+    assert json.loads((root / "status/tasks.json").read_text())["W2"]["status"] == "NOT_STARTED"
+    journal = json.loads((root / "audit/source_cache/resource_progress.json").read_text())
+    assert journal["active_wall_elapsed_s"] == 2.0
+
+
+def test_native_R2_restore_helper_uses_budgeted_body_proxy_without_network(partial_fixture, monkeypatch):
+    root, inventory, _ = partial_fixture
+    body, item = make_r2_only_fixture(root, inventory)
+    class Client:
+        def get_object(self, **kwargs):
+            return {"ResponseMetadata": {"HTTPStatusCode": 200}, "ContentLength": len(body), "Body": io.BytesIO(body)}
+    actual_restore = cache.run_restore
+    def fixture_bucket_restore(**kwargs):
+        return actual_restore(**kwargs, bucket="SOFTWARE_TEST_DOUBLE_BUCKET")
+    monkeypatch.setattr(cache, "run_restore", fixture_bucket_restore)
+    monkeypatch.setattr(cache, "_NATIVE_RESTORE_IMPLEMENTATION", fixture_bucket_restore)
+    monkeypatch.setattr(cache, "create_client", lambda: Client())
+    result = cache.prepare_cache(root, "manifests/source_fixture.json", execute=True,
+                                 partial_scope=True, restore_backed_raw=True)
+    assert result["status"] == "PILOT_CACHE_PARTIAL"
+    ledger = json.loads((root / "audit/source_cache/resource_progress.json").read_text())["byte_scopes"]["R2_cache_raw_restore_GET_body"]
+    assert ledger["observed_bytes"] == ledger["charged_bytes"] == len(body)
+    assert ledger["attempts"][0]["reserved_bytes"] == len(body) + 1
+    assert not (root / item["path"]).exists()
+
+
 def test_killed_cache_restore_requires_durable_ownership_and_full_original_receipt(partial_fixture):
     root, inventory, _ = partial_fixture
     body, item = make_r2_only_fixture(root, inventory)
@@ -289,11 +438,17 @@ def test_active_cache_restore_holds_raw_worker_lock_until_context_finishes(parti
         return {"status": "restored_verified"}
     monkeypatch.setattr(cache, "run_restore", restore)
     lock_path = root / "audit/source_preparation/.source_worker.lock"
-    with cache._available_raw(root, item, path, restore_backed_raw=True):
-        assert path.exists()
-        with lock_path.open("a") as competitor:
-            with pytest.raises(BlockingIOError):
-                fcntl.flock(competitor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    from tools.source_preparation_batch import ResourceBudget
+    budget = ResourceBudget({"plan_sha256": "a" * 64, "max_download_bytes": 2 * len(body), "max_wall_seconds": 100},
+        root / "audit/mock_restore_budget.json", scope=ResourceBudget.R2_RESTORE, identity_sha256="b" * 64)
+    try:
+        with cache._available_raw(root, item, path, restore_backed_raw=True, resource_budget=budget):
+            assert path.exists()
+            with lock_path.open("a") as competitor:
+                with pytest.raises(BlockingIOError):
+                    fcntl.flock(competitor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    finally:
+        budget.close()
     assert not path.exists()
     with lock_path.open("a") as competitor:
         fcntl.flock(competitor, fcntl.LOCK_EX | fcntl.LOCK_NB)

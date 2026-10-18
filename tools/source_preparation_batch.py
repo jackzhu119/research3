@@ -27,13 +27,15 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 from p3work.adapters.source_native import audit_native_source
 from p3work.contracts import digest, file_digest, validate_signal_contract
+from p3work.recovery_budget import PersistentWallBudget, WallBudgetError
 from tools.prepare_source_cache import expected_source_objects
-from tools.r2_backup import run_backup, sha256_file, utc_now
+from tools.r2_backup import create_client, run_backup, sha256_file, utc_now
 from tools.r2_restore import load_verified_receipt, no_symlink_components
 
 CHUNK = 4 * 1024**2
 PREFIX = "paper3/source-preparation-v2/"
 SOURCE_ADAPTER_PATH = Path(sys.modules[audit_native_source.__module__].__file__).resolve()
+_NATIVE_BACKUP_IMPLEMENTATION = run_backup
 VERSIONS = {
     "BNCI2014_001": "001-2014, unversioned native MAT",
     "Cho2017": "GigaDB DOI snapshot retrieved in receipt",
@@ -98,7 +100,7 @@ def build_plan(*, max_download_bytes=100 * 1024**3, max_single_raw_bytes=2 * 102
             "adapter_code_sha256": file_digest(SOURCE_ADAPTER_PATH),
             "files": files, "candidate_count": len(files), "provider_roster_verified": False,
             "candidate_sizes_known": False, "inflight_downloads": 1, "parallel_native_parsers": 1,
-            "download_byte_budget_scope": "actual official-provider GET body bytes including failed attempts; R2 readback reported separately",
+            "download_byte_budget_scope": "official-provider full-GET reservations including failed/unclean attempts; observed bytes reported separately; independent R2 caps",
             "max_jobs": len(files), "max_gpu_hours": 0, **limits,
             "raw_staging_relative_root": "data/source_preparation/staging",
             "raw_removal": "only tool-owned temporary raw after full R2 PUT/GET/SHA256 verification",
@@ -131,43 +133,294 @@ def execution_gate(root: Path, contract_path="contracts/input_contract.json") ->
 
 
 class ResourceBudget:
-    """Persist bytes actually read, including failed or over-budget transfers.
+    """Durable wall plus separately capped full-body reservation ledgers.
 
-    Wall and bytes accumulate across invocations, so repeated failures do not
-    reset budgets. An interrupted download resumes only within remaining limits.
+    Observed bytes are only bytes whose post-read record was persisted. Charged
+    bytes additionally include *all* of an unclosed/failed GET reservation, so a
+    SIGKILL between read() and accounting cannot refund that transfer. The
+    official-provider cap does not cover R2: backup verification and cache raw
+    restoration have independent scopes and explicit limits.
     """
 
-    def __init__(self, plan, progress_path, *, clock=time.monotonic):
-        self.plan, self.path, self.clock = plan, progress_path, clock
-        prior = json.loads(progress_path.read_text()) if progress_path.exists() else {}
-        if prior and prior.get("plan_sha256") != plan["plan_sha256"]:
-            raise BatchError("budget_plan_identity_mismatch")
-        self.data = {"plan_sha256": plan["plan_sha256"], "download_bytes_read": prior.get("download_bytes_read", 0),
-                     "active_wall_elapsed_s": prior.get("active_wall_elapsed_s", 0), "max_gpu_hours": 0}
-        if (type(self.data["download_bytes_read"]) is not int or self.data["download_bytes_read"] < 0
-                or type(self.data["active_wall_elapsed_s"]) not in (float, int)
-                or not math.isfinite(self.data["active_wall_elapsed_s"]) or self.data["active_wall_elapsed_s"] < 0):
-            raise BatchError("invalid_persisted_resource_counters")
-        self.prior_wall, self.started = self.data["active_wall_elapsed_s"], self.clock()
+    OFFICIAL = "official_provider_GET_body"
+    R2_BACKUP = "R2_backup_full_GET_body"
+    R2_RESTORE = "R2_cache_raw_restore_GET_body"
 
-    def checkpoint(self):
-        self.data["active_wall_elapsed_s"] = self.prior_wall + self.clock() - self.started
+    def __init__(self, plan, progress_path, *, clock=time.monotonic, utc_clock=None, boot_id=None,
+                 scope=OFFICIAL, identity_sha256=None, max_download_bytes=None,
+                 max_wall_seconds=None, max_r2_readback_bytes=None, amendment_note=None):
+        self.plan, self.path, self.clock, self.scope = plan, Path(progress_path), clock, scope
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._lock = self.path.with_name(self.path.name + ".lock").open("a")
+        self._closed = False
+        try:
+            try:
+                fcntl.flock(self._lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            except BlockingIOError:
+                raise BatchError("source_resource_budget_already_active") from None
+            prior = json.loads(self.path.read_text()) if self.path.exists() else None
+            if prior is not None and not isinstance(prior, dict):
+                raise BatchError("invalid_persisted_resource_journal")
+            prior_scopes = prior.get("byte_scopes", {}) if prior else {}
+            maximum = prior_scopes.get(scope, {}).get("limit_bytes", plan["max_download_bytes"]) if max_download_bytes is None else max_download_bytes
+            wall_file = self.path.with_name(self.path.stem + ".wall.json")
+            saved_wall = json.loads(wall_file.read_text()) if wall_file.exists() else {}
+            wall_maximum = saved_wall.get("max_wall_seconds", plan["max_wall_seconds"]) if max_wall_seconds is None else max_wall_seconds
+            limits = {scope: maximum}
+            if scope == self.OFFICIAL:
+                limits[self.R2_BACKUP] = prior_scopes.get(self.R2_BACKUP, {}).get("limit_bytes", 2 * plan["max_download_bytes"]) if max_r2_readback_bytes is None else max_r2_readback_bytes
+            if any(type(v) is not int or v <= 0 for v in limits.values()):
+                raise BatchError("explicit_positive_byte_limits_required")
+            resource_identity = identity_sha256 or digest({"schema": "source-resource-identity-v2",
+                "adapter_code_sha256": plan.get("adapter_code_sha256"), "files": plan.get("files"), "scope": scope})
+            if prior is not None:
+                if (prior.get("schema_version") != "paper3-source-resource-budget-v2" or
+                        prior.get("resource_identity_sha256") != resource_identity or prior.get("primary_scope") != scope or
+                        set(prior.get("byte_scopes", {})) != set(limits)):
+                    raise BatchError("resource_identity_or_legacy_untracked_intent_mismatch_preserved")
+                self.data = prior
+                for name, ledger in prior["byte_scopes"].items():
+                    for key in ("observed_bytes", "charged_bytes", "limit_bytes", "initial_limit_bytes", "next_sequence"):
+                        if type(ledger.get(key)) is not int or ledger[key] < (1 if key in {"limit_bytes", "initial_limit_bytes", "next_sequence"} else 0):
+                            raise BatchError("invalid_persisted_byte_ledger")
+                    if ledger["observed_bytes"] > ledger["charged_bytes"] or not isinstance(ledger.get("attempts"), list):
+                        raise BatchError("invalid_persisted_byte_high_water")
+                    sequences = set(); observed_sum = 0; charged_sum = 0
+                    attempts = ledger["attempts"] + ([ledger["active"]] if ledger.get("active") is not None else [])
+                    for attempt in attempts:
+                        if (not isinstance(attempt, dict) or type(attempt.get("sequence")) is not int or
+                                not 0 < attempt["sequence"] < ledger["next_sequence"] or attempt["sequence"] in sequences or
+                                attempt.get("scope") != name or type(attempt.get("reserved_bytes")) is not int or attempt["reserved_bytes"] <= 0 or
+                                type(attempt.get("expected_body_bytes")) is not int or not 0 < attempt["expected_body_bytes"] <= attempt["reserved_bytes"] or
+                                type(attempt.get("observed_bytes")) is not int or not 0 <= attempt["observed_bytes"] <= attempt["reserved_bytes"]):
+                            raise BatchError("invalid_persisted_GET_reservation")
+                        sequences.add(attempt["sequence"]); observed_sum += attempt["observed_bytes"]
+                        charged_sum += attempt["observed_bytes"] if attempt.get("status") == "COMPLETE_OBSERVED_BODY" else attempt["reserved_bytes"]
+                    if (observed_sum, charged_sum) != (ledger["observed_bytes"], ledger["charged_bytes"]):
+                        raise BatchError("persisted_byte_counter_differs_from_durable_attempts")
+                    limit = ledger["initial_limit_bytes"]
+                    if not isinstance(ledger.get("amendments"), list):
+                        raise BatchError("invalid_persisted_byte_amendments")
+                    for amendment in ledger["amendments"]:
+                        if (amendment.get("previous_limit_bytes") != limit or type(amendment.get("new_limit_bytes")) is not int or
+                                amendment["new_limit_bytes"] <= limit or amendment.get("scientific_identity_changed") is not False or
+                                not isinstance(amendment.get("note"), str) or not amendment["note"].strip()):
+                            raise BatchError("invalid_persisted_byte_amendments")
+                        limit = amendment["new_limit_bytes"]
+                    if limit != ledger["limit_bytes"]:
+                        raise BatchError("byte_limit_differs_from_explicit_amendments")
+                    if ledger.get("active") is not None:
+                        attempt = ledger["active"]
+                        if (type(attempt.get("reserved_bytes")) is not int or attempt["reserved_bytes"] <= 0 or
+                                type(attempt.get("observed_bytes")) is not int or not 0 <= attempt["observed_bytes"] <= attempt["reserved_bytes"]):
+                            raise BatchError("invalid_persisted_GET_reservation")
+                        ledger["attempts"].append({**attempt, "status": "UNCLEAN_FULL_RESERVATION_REMAINS_CHARGED"})
+                        ledger["active"] = None
+                    self._amend_byte_limit(name, limits[name], amendment_note)
+            else:
+                self.data = {"schema_version": "paper3-source-resource-budget-v2", "resource_identity_sha256": resource_identity,
+                    "primary_scope": scope, "plan_sha256": plan["plan_sha256"], "byte_scopes": {},
+                    "active_wall_elapsed_s": 0.0, "max_gpu_hours": 0,
+                    "accounting": "observed_post_read_bytes_separate_from_conservative_full_GET_reservations",
+                    "scope_definitions": {self.OFFICIAL: "provider GET body plus at most one explicit EOF probe byte per reservation",
+                        self.R2_BACKUP: "backup verification full GET body; default declared cap=2*initial provider cap, not a measured source-size estimate",
+                        self.R2_RESTORE: "cache native-raw GET body only; independent inventory-derived limit; excludes provider GET and backup verification"},
+                    "limits_are_operational_only": True}
+                for name, maximum in limits.items():
+                    self.data["byte_scopes"][name] = {"initial_limit_bytes": maximum, "limit_bytes": maximum,
+                        "observed_bytes": 0, "charged_bytes": 0, "active": None, "next_sequence": 1,
+                        "attempts": [], "amendments": []}
+            options = {"monotonic": clock, "boot_id": boot_id, "amendment_note": amendment_note}
+            if utc_clock is not None:
+                options["utc_now"] = utc_clock
+            self.wall = PersistentWallBudget(wall_file, resource_identity,
+                wall_maximum, checkpoint_wall_seconds=self.data["active_wall_elapsed_s"], **options)
+            if not self.wall.blocked and not self.wall.exhausted:
+                self.wall.start_interval()
+            self._persist()
+        except BaseException as error:
+            if hasattr(self, "wall"):
+                self.wall.close()
+            self._lock.close(); self._closed = True
+            if isinstance(error, WallBudgetError):
+                raise BatchError("source_wall_budget_identity_clock_or_explicit_amendment_required") from None
+            raise
+
+    def _amend_byte_limit(self, scope, maximum, note):
+        ledger = self.data["byte_scopes"][scope]
+        if maximum == ledger["limit_bytes"]:
+            return
+        if maximum <= ledger["limit_bytes"] or not isinstance(note, str) or not note.strip():
+            raise BatchError("byte_limit_change_requires_explicit_larger_operational_amendment")
+        ledger["amendments"].append({"previous_limit_bytes": ledger["limit_bytes"], "new_limit_bytes": maximum,
+            "note": note.strip(), "scientific_identity_changed": False})
+        ledger["limit_bytes"] = maximum
+
+    def _persist(self):
+        ledger = self.data["byte_scopes"][self.scope]
+        self.data.update(download_bytes_read=ledger["observed_bytes"], download_bytes_charged=ledger["charged_bytes"])
+        if hasattr(self, "wall"):
+            report = self.wall.report()
+            self.data["active_wall_elapsed_s"] = max(self.data["active_wall_elapsed_s"], report["wall_seconds"])
+            self.data["wall_budget"] = report
         atomic_json(self.path, self.data)
 
-    def check(self, *, required_bytes=0):
+    def checkpoint(self):
+        try:
+            self.wall.checkpoint(self.data["active_wall_elapsed_s"])
+        except WallBudgetError:
+            self._persist()
+            raise BatchError("source_wall_clock_unknown_no_stage_advance") from None
+        self._persist()
+
+    def check(self, *, required_bytes=0, scope=None):
         self.checkpoint()
-        if self.data["active_wall_elapsed_s"] >= self.plan["max_wall_seconds"]:
+        if self.wall.blocked:
+            raise BatchError("source_wall_clock_unknown_no_stage_advance")
+        if self.wall.exhausted:
             raise BatchError("wall_budget_exhausted")
-        if self.data["download_bytes_read"] + required_bytes > self.plan["max_download_bytes"]:
+        ledger = self.data["byte_scopes"][scope or self.scope]
+        if type(required_bytes) is not int or required_bytes < 0:
+            raise BatchError("invalid_required_byte_reservation")
+        if ledger["charged_bytes"] + required_bytes > ledger["limit_bytes"]:
             raise BatchError("download_byte_budget_exhausted")
 
-    def consume(self, count):
-        self.data["download_bytes_read"] += count
-        self.check()
+    def reserve_transfer(self, expected_bytes, *, object_id, scope=None, probe_bytes=0):
+        scope = scope or self.scope
+        if (type(expected_bytes) is not int or expected_bytes <= 0 or type(probe_bytes) is not int or probe_bytes < 0 or
+                not isinstance(object_id, str) or not object_id):
+            raise BatchError("complete_known_positive_GET_body_reservation_required")
+        reserved = expected_bytes + probe_bytes
+        self.check(required_bytes=reserved, scope=scope)
+        if any(row["active"] is not None for row in self.data["byte_scopes"].values()):
+            raise BatchError("serial_GET_reservation_already_open")
+        ledger = self.data["byte_scopes"][scope]
+        attempt = {"sequence": ledger["next_sequence"], "object_id": object_id,
+            "expected_body_bytes": expected_bytes, "reserved_bytes": reserved, "observed_bytes": 0,
+            "scope": scope, "intent": "durably_reserved_before_GET_or_body_read"}
+        ledger["next_sequence"] += 1; ledger["charged_bytes"] += reserved; ledger["active"] = attempt
+        self._persist()
+        return attempt["sequence"]
+
+    def consume(self, count, *, transfer_id=None, scope=None):
+        scope = scope or self.scope
+        ledger = self.data["byte_scopes"][scope]; active = ledger["active"]
+        if (active is None or transfer_id != active["sequence"] or type(count) is not int or count < 0):
+            raise BatchError("body_read_requires_matching_durable_GET_reservation")
+        active["observed_bytes"] += count; ledger["observed_bytes"] += count
+        excess = max(0, active["observed_bytes"] - active["reserved_bytes"])
+        if excess:
+            ledger["charged_bytes"] += excess; active["reserved_bytes"] += excess
+        self._persist()  # Persist observed traffic before checking a wall/cap stop.
+        self.check(scope=scope)
+
+    def finish_transfer(self, transfer_id, *, complete_body_read=False, scope=None):
+        scope = scope or self.scope
+        ledger = self.data["byte_scopes"][scope]; active = ledger["active"]
+        if active is None or transfer_id != active["sequence"]:
+            raise BatchError("GET_completion_without_matching_reservation")
+        exact = complete_body_read is True and active["observed_bytes"] == active["expected_body_bytes"]
+        if exact:
+            ledger["charged_bytes"] -= active["reserved_bytes"] - active["observed_bytes"]
+        ledger["attempts"].append({**active, "status": "COMPLETE_OBSERVED_BODY" if exact else "FAILED_OR_UNKNOWN_FULL_RESERVATION_REMAINS_CHARGED"})
+        ledger["active"] = None
+        self._persist()
 
     def timeout(self):
         self.check()
-        return max(0.1, min(90, self.plan["max_wall_seconds"] - self.data["active_wall_elapsed_s"]))
+        return max(0.1, min(90, self.wall.remaining_seconds))
+
+    def close(self):
+        if not self._closed:
+            try:
+                self.wall.graceful_close(self.data["active_wall_elapsed_s"])
+                self._persist()
+            finally:
+                self.wall.close(); self._lock.close(); self._closed = True
+
+    def __del__(self):
+        if hasattr(self, "_lock") and not self._lock.closed:
+            self._lock.close()  # No graceful-close claim when a handle is discarded.
+
+
+class _BudgetedR2Body:
+    def __init__(self, body, budget, transfer_id, scope, expected_bytes):
+        self.body, self.budget, self.transfer_id, self.scope = body, budget, transfer_id, scope
+        self.remaining = expected_bytes
+        self.eof_probed = False
+
+    def read(self, amount=-1):
+        self.budget.check(scope=self.scope)
+        if self.remaining == 0:
+            if self.eof_probed:
+                return b""
+            block = self.body.read(1)  # Exactly one additionally reserved byte, never an unbounded EOF read.
+            if not isinstance(block, bytes):
+                raise BatchError("non_binary_R2_GET_EOF_probe")
+            self.budget.consume(len(block), transfer_id=self.transfer_id, scope=self.scope)
+            self.eof_probed = True
+            if block:
+                raise BatchError("R2_GET_body_exceeds_exact_reserved_ContentLength")
+            return b""
+        count = self.remaining if amount is None or amount < 0 else min(amount, self.remaining)
+        block = self.body.read(count)
+        if not isinstance(block, bytes):
+            raise BatchError("non_binary_R2_GET_body")
+        self.budget.consume(len(block), transfer_id=self.transfer_id, scope=self.scope)
+        if len(block) > count:
+            raise BatchError("R2_stream_violated_bounded_read_contract")
+        self.remaining -= len(block)
+        return block
+
+    def __getattr__(self, name):
+        return getattr(self.body, name)
+
+
+class _WallCheckedUpload:
+    def __init__(self, body, budget, scope):
+        self.body, self.budget, self.scope = body, budget, scope
+
+    def read(self, amount=-1):
+        self.budget.check(scope=self.scope)
+        return self.body.read(amount)
+
+    def __getattr__(self, name):
+        return getattr(self.body, name)
+
+
+class BudgetedR2Client:
+    """Configured SDK proxy; no global helper or credential changes.
+
+    Require exact expected response length before reading, then bound each read
+    to its remaining framed body and persist observed bytes/wall checks. PUT
+    body reads check wall limits but remain outside GET byte counters.
+    """
+    def __init__(self, client, budget, transfer_id, expected_gets, *, scope):
+        self.client, self.budget, self.transfer_id = client, budget, transfer_id
+        self.expected_gets, self.scope = dict(expected_gets), scope
+
+    def get_object(self, **kwargs):
+        key = kwargs.get("Key")
+        if key not in self.expected_gets:
+            raise BatchError("R2_GET_not_in_exact_reserved_manifest")
+        self.budget.check(scope=self.scope)
+        response = self.client.get_object(**kwargs)
+        body, expected = response.get("Body"), self.expected_gets[key]
+        if (response.get("ResponseMetadata", {}).get("HTTPStatusCode") != 200 or
+                type(response.get("ContentLength")) is not int or response["ContentLength"] != expected or body is None):
+            if body is not None:
+                body.close()
+            raise BatchError("R2_GET_requires_200_and_exact_reserved_ContentLength_before_read")
+        return {**response, "Body": _BudgetedR2Body(body, self.budget, self.transfer_id, self.scope, expected)}
+
+    def put_object(self, **kwargs):
+        self.budget.check(scope=self.scope)
+        if hasattr(kwargs.get("Body"), "read"):
+            kwargs["Body"] = _WallCheckedUpload(kwargs["Body"], self.budget, self.scope)
+        return self.client.put_object(**kwargs)
+
+    def __getattr__(self, name):
+        return getattr(self.client, name)
 
 
 def check_space(root: Path, size: int, plan: dict) -> None:
@@ -217,40 +470,45 @@ def download_object(entry: dict, observation: dict, partial: Path, final: Path, 
         raise BatchError("partial_exceeds_observed_content_length")
     started, downloaded = time.monotonic(), 0
     if offset < size:
-        if budget:
-            budget.check(required_bytes=size-offset)
         headers = {"If-Match": observation["response_headers"]["ETag"]}
         if offset:
             headers["Range"] = f"bytes={offset}-"
         timeout = budget.timeout() if budget else 90
-        with opener(urllib.request.Request(entry["url"], headers=headers), timeout=timeout) as response:
-            if offset:
-                if response.status != 206 or response.headers.get("Content-Range") != f"bytes {offset}-{size-1}/{size}":
-                    raise BatchError("resume_requires_exact_206_content_range")
-            elif response.status != 200:
-                raise BatchError("initial_get_requires_200")
-            if str(response.headers.get("Content-Length")) != str(size-offset):
-                raise BatchError("get_content_length_disagrees_with_head_or_range")
-            if any(response.headers.get(k) != observation["response_headers"][k] for k in ("ETag", "Last-Modified")):
-                raise BatchError("get_validators_disagree_with_fresh_head")
-            mode = "ab" if partial.exists() else "xb"
-            with partial.open(mode) as stream:
-                while True:
-                    if budget:
-                        budget.check()
-                    block = response.read(min(CHUNK, size-offset-downloaded+1))
-                    if not isinstance(block, bytes):
-                        raise BatchError("non_binary_official_get_body")
-                    if not block:
-                        break
-                    downloaded += len(block)
-                    if budget:
-                        budget.consume(len(block))
-                    if offset + downloaded > size:
-                        raise BatchError("official_get_body_exceeds_observed_size")
-                    stream.write(block)
-                stream.flush()
-                os.fsync(stream.fileno())
+        transfer = budget.reserve_transfer(size-offset, object_id=entry["object_id"], probe_bytes=1) if budget else None
+        eof = False
+        try:
+            with opener(urllib.request.Request(entry["url"], headers=headers), timeout=timeout) as response:
+                if offset:
+                    if response.status != 206 or response.headers.get("Content-Range") != f"bytes {offset}-{size-1}/{size}":
+                        raise BatchError("resume_requires_exact_206_content_range")
+                elif response.status != 200:
+                    raise BatchError("initial_get_requires_200")
+                if str(response.headers.get("Content-Length")) != str(size-offset):
+                    raise BatchError("get_content_length_disagrees_with_head_or_range")
+                if any(response.headers.get(k) != observation["response_headers"][k] for k in ("ETag", "Last-Modified")):
+                    raise BatchError("get_validators_disagree_with_fresh_head")
+                mode = "ab" if partial.exists() else "xb"
+                with partial.open(mode) as stream:
+                    while True:
+                        if budget:
+                            budget.check()
+                        block = response.read(min(CHUNK, size-offset-downloaded+1))
+                        if not isinstance(block, bytes):
+                            raise BatchError("non_binary_official_get_body")
+                        if not block:
+                            eof = True
+                            break
+                        downloaded += len(block)
+                        if budget:
+                            budget.consume(len(block), transfer_id=transfer)
+                        if offset + downloaded > size:
+                            raise BatchError("official_get_body_exceeds_observed_size")
+                        stream.write(block)
+                    stream.flush()
+                    os.fsync(stream.fileno())
+        finally:
+            if budget:
+                budget.finish_transfer(transfer, complete_body_read=eof and downloaded == size-offset)
     sha, actual = sha256_file(partial)
     if actual != size:
         raise BatchError("official_get_incomplete_body")
@@ -504,7 +762,25 @@ def process_file(entry, *, root, batch_dir, plan, contract_sha256, budget=None,
         if budget:
             budget.check()
         prefix = f"{PREFIX}{plan['plan_sha256']}/{entry['object_id']}/"
-        backup = backup_fn(manifest_path=manifest_path, root=root, prefix=prefix, receipt_path=receipt_path, execute=True)
+        r2_transfer = budget.reserve_transfer(sum(item["bytes"] for item in manifest["files"]),
+            object_id=entry["object_id"], scope=ResourceBudget.R2_BACKUP, probe_bytes=len(manifest["files"])) if budget else None
+        backup = None
+        instrumented = budget is not None and backup_fn is _NATIVE_BACKUP_IMPLEMENTATION
+        try:
+            options = {}
+            if instrumented:
+                options["client"] = BudgetedR2Client(create_client(), budget, r2_transfer,
+                    {prefix + item["path"]: item["bytes"] for item in manifest["files"]}, scope=ResourceBudget.R2_BACKUP)
+            backup = backup_fn(manifest_path=manifest_path, root=root, prefix=prefix, receipt_path=receipt_path, execute=True, **options)
+        finally:
+            if budget:
+                try:
+                    if isinstance(backup, dict) and not instrumented:
+                        observed = sum(item.get("get", {}).get("bytes_read", 0) for item in backup.get("objects", []))
+                        budget.consume(observed, transfer_id=r2_transfer, scope=ResourceBudget.R2_BACKUP)
+                finally:
+                    budget.finish_transfer(r2_transfer, complete_body_read=isinstance(backup, dict) and
+                        backup.get("status") == "verified", scope=ResourceBudget.R2_BACKUP)
         if backup.get("status") != "verified" or backup.get("execute") is not True:
             raise BatchError("r2_put_full_get_sha256_not_verified")
         state.update(status="BACKUP_VERIFIED", backup_manifest=descriptor(root, manifest_path),
@@ -521,7 +797,7 @@ def process_file(entry, *, root, batch_dir, plan, contract_sha256, budget=None,
         raise BatchError(state["error_code"]) from None
 
 
-def aggregate_inventory(plan, *, root, batch_dir) -> dict:
+def aggregate_inventory(plan, *, root, batch_dir, budget=None) -> dict:
     """Full raw inventory only after all 505 actual native audits and receipts.
 
     A complete raw archive can have R2-only raw bodies. This is not a numerical
@@ -531,6 +807,8 @@ def aggregate_inventory(plan, *, root, batch_dir) -> dict:
     root = root.resolve(strict=True)
     objects, missing, blocked, seen = [], [], [], set()
     for entry in plan["files"]:
+        if budget:
+            budget.check()
         state_path = batch_dir / "objects" / entry["object_id"] / "state.json"
         if not state_path.exists():
             missing.append(entry["object_id"])
@@ -583,7 +861,8 @@ def aggregate_inventory(plan, *, root, batch_dir) -> dict:
 
 
 def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, process_fn=None,
-                 contract_path="contracts/input_contract.json") -> dict:
+                 contract_path="contracts/input_contract.json", operational_limits=None,
+                 operational_amendment_note=None) -> dict:
     validate_plan(plan)
     root = Path(root).resolve(strict=True)
     contract_sha = execution_gate(root, contract_path)  # Before directories, HTTP, or raw access.
@@ -603,7 +882,20 @@ def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, process
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise BatchError("source_batch_already_active") from None
-        budget = ResourceBudget(plan, batch_dir / "resource_progress.json")
+        operational_limits = operational_limits or {}
+        if set(operational_limits) - {"max_download_bytes", "max_wall_seconds", "max_r2_readback_bytes"}:
+            raise BatchError("unknown_operational_resource_limit")
+        identity_sha = digest({"schema": "source-raw-resource-identity-v2", "files": plan["files"],
+            "adapter_code_sha256": plan["adapter_code_sha256"], "input_contract_sha256": contract_sha})
+        budget = ResourceBudget(plan, root / "audit/source_preparation/resource_progress.json",
+            identity_sha256=identity_sha, amendment_note=operational_amendment_note, **operational_limits)
+        try:
+            return _execute_serial_candidates(plan, root, batch_dir, max_new_files, process_fn, contract_sha, budget)
+        finally:
+            budget.close()
+
+
+def _execute_serial_candidates(plan, root, batch_dir, max_new_files, process_fn, contract_sha, budget):
         counts = {"new_objects_attempted": 0, "archived_schema_verified": 0, "schema_blocked": 0, "failed": 0}
         status = "ALL_CANDIDATES_ATTEMPTED"
         for entry in plan["files"]:
@@ -632,10 +924,18 @@ def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, process
                 budget.checkpoint()
             atomic_json(batch_dir / "batch_progress.json", {"status": "RUNNING", **counts,
                 "plan_sha256": plan["plan_sha256"], "last_object_id": entry["object_id"]})
-        result = aggregate_inventory(plan, root=root, batch_dir=batch_dir)
+        try:
+            result = aggregate_inventory(plan, root=root, batch_dir=batch_dir, budget=budget)
+        except BatchError as error:
+            status = str(error).upper() + "_NO_STAGE_ADVANCE"
+            result = {"status": "SOURCE_RAW_INVENTORY_PARTIAL", "actual_verified_objects": None}
         summary = {"status": status, "inventory_status": result["status"], **counts,
                    "actual_verified_objects": result["actual_verified_objects"], "required_target_object_count": 505,
                    "download_bytes_read": budget.data["download_bytes_read"],
+                   "download_bytes_charged": budget.data["download_bytes_charged"],
+                   "byte_scopes": {name: {key: ledger[key] for key in ("observed_bytes", "charged_bytes", "limit_bytes")}
+                                   for name, ledger in budget.data["byte_scopes"].items()},
+                   "resource_progress_path": budget.path.relative_to(root).as_posix(),
                    "active_wall_elapsed_s": budget.data["active_wall_elapsed_s"],
                    "numerical_cache_created": False, "training_started": False, "w2_complete": False}
         atomic_json(batch_dir / "batch_progress.json", summary)
@@ -651,6 +951,10 @@ def main() -> int:
     parser.add_argument("--max-download-bytes", type=int, default=100 * 1024**3)
     parser.add_argument("--max-single-raw-bytes", type=int, default=2 * 1024**3)
     parser.add_argument("--max-wall-seconds", type=int, default=86400)
+    parser.add_argument("--amend-max-download-bytes", type=int)
+    parser.add_argument("--amend-max-wall-seconds", type=int)
+    parser.add_argument("--amend-max-r2-readback-bytes", type=int)
+    parser.add_argument("--operational-amendment-note")
     args = parser.parse_args()
     try:
         plan = json.loads(args.plan.read_text()) if args.plan else build_plan(
@@ -665,7 +969,11 @@ def main() -> int:
                    "numerical_cache_created": False, "training_started": False}
         print(json.dumps(summary), flush=True)
         if args.execute:
-            result = execute_plan(plan, max_new_files=args.max_new_files)
+            limits = {name: value for name, value in {
+                "max_download_bytes": args.amend_max_download_bytes, "max_wall_seconds": args.amend_max_wall_seconds,
+                "max_r2_readback_bytes": args.amend_max_r2_readback_bytes}.items() if value is not None}
+            result = execute_plan(plan, max_new_files=args.max_new_files, operational_limits=limits,
+                                  operational_amendment_note=args.operational_amendment_note)
             print(json.dumps(result), flush=True)
             return 0 if result.get("inventory_status") == "SOURCE_RAW_INVENTORY_COMPLETE" else 2
         return 0

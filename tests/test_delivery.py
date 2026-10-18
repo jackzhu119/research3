@@ -137,6 +137,16 @@ def test_untracked_original_52_protocol_files_are_packaged(selection_fixture):
     assert "protocol/EXPERIMENT_PROTOCOL.md" in entries
 
 
+def test_accidentally_tracked_prediction_metadata_cannot_enter_execution_bundle(selection_fixture, monkeypatch):
+    root, _ = selection_fixture
+    target = root / "predictions/software_fixture/receipt.json"
+    _write_json(target, {"scope": "SOFTWARE_TEST_DOUBLE_NOT_A_PREDICTION"})
+    monkeypatch.setattr(delivery.subprocess, "check_output",
+                        lambda *args, **kwargs: b"predictions/software_fixture/receipt.json\0")
+    with pytest.raises(ValueError, match="Large data/weights must use explicit R2 manifests"):
+        delivery.selected_files(root)
+
+
 def test_changed_protocol_bytes_stop_packaging(selection_fixture):
     root, _ = selection_fixture
     with (root / "protocol/EXPERIMENT_PROTOCOL.md").open("ab") as stream:

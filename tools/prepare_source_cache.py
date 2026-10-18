@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Local CPU W2 source cache preparation; dry-run by default and W1-gated.
+"""CPU W2 source cache preparation; dry-run by default and W1-gated.
 
-No downloads, uploads, GPU calls, or status mutations. --execute materializes
+No uploads, GPU calls, or task-status mutations. --execute materializes
 new NPY participant shards only after W1 COMPLETE and a frozen input contract.
+Explicit --restore-backed-raw may restore exact receipt-backed native objects
+under its independent, durable R2-body and CPU-wall resource limits.
 --partial-scope can prepare an explicitly partial engineering cache after W1;
 it always emits PILOT_CACHE_PARTIAL and cannot satisfy the formal W2/pilot gate.
 """
@@ -27,8 +29,9 @@ sys.path.insert(0, str(ROOT))
 from p3work.adapters.source_native import iter_native_contexts
 from p3work.contracts import CHANNELS, SOURCE_IDS, digest, file_digest, validate_signal_contract
 from p3work.preprocess import prepare_trial
-from tools.r2_backup import write_receipt
+from tools.r2_backup import create_client, write_receipt
 from tools.r2_restore import load_verified_receipt, no_symlink_components, run_restore
+_NATIVE_RESTORE_IMPLEMENTATION = run_restore
 
 
 class SourceCacheGateError(ValueError):
@@ -173,7 +176,7 @@ def recover_owned_cache_restore(root, item):
 
 
 @contextmanager
-def _available_raw_context(root, item, path, *, restore_backed_raw=False):
+def _available_raw_context(root, item, path, *, restore_backed_raw=False, resource_budget=None):
     """Restore just one approved R2 raw object, then remove only our own restore."""
     created = False
     if path.exists() and item.get("raw_storage") == "verified_r2_only":
@@ -184,11 +187,32 @@ def _available_raw_context(root, item, path, *, restore_backed_raw=False):
     if not path.exists():
         if not restore_backed_raw:
             raise SourceCacheGateError("R2-only raw requires explicit --restore-backed-raw for numerical preparation")
+        if resource_budget is None:
+            raise SourceCacheGateError("R2 raw restore requires an independent durable body/wall budget")
         receipt = _remote_raw_receipt(root, item)
-        marker = begin_owned_cache_restore(root, item)
-        report = marker.with_name("restore_receipt.json")
-        result = run_restore(backup_receipt_path=receipt, root=root, report_path=report,
-                             paths=[item["path"]], execute=True)
+        transfer = resource_budget.reserve_transfer(item["bytes"], object_id=digest(item["path"]), probe_bytes=1)
+        result = None
+        instrumented = run_restore is _NATIVE_RESTORE_IMPLEMENTATION
+        try:
+            marker = begin_owned_cache_restore(root, item)
+            report = marker.with_name("restore_receipt.json")
+            options = {}
+            if instrumented:
+                from tools.source_preparation_batch import BudgetedR2Client
+                verified, _ = load_verified_receipt(receipt)
+                options["client"] = BudgetedR2Client(create_client(), resource_budget, transfer,
+                    {row["key"]: row["bytes"] for row in verified if row["path"] == item["path"]}, scope=resource_budget.scope)
+            result = run_restore(backup_receipt_path=receipt, root=root, report_path=report,
+                                 paths=[item["path"]], execute=True, **options)
+        finally:
+            try:
+                if isinstance(result, dict) and not instrumented:
+                    observed = sum(row.get("bytes_read", 0) for row in result.get("objects", []))
+                    resource_budget.consume(observed, transfer_id=transfer)
+            finally:
+                complete = (isinstance(result, dict) and result.get("status") == "restored_verified" and
+                    len(result.get("objects", [])) == 1 and result["objects"][0].get("complete_body_read") is True)
+                resource_budget.finish_transfer(transfer, complete_body_read=complete)
         if result.get("status") != "restored_verified":
             raise SourceCacheGateError("Approved native R2 full GET restore did not verify")
         if not path.is_file() or file_digest(path) != item["sha256"] or path.stat().st_size != item["bytes"]:
@@ -207,7 +231,7 @@ def _available_raw_context(root, item, path, *, restore_backed_raw=False):
 
 
 @contextmanager
-def _available_raw(root, item, path, *, restore_backed_raw=False):
+def _available_raw(root, item, path, *, restore_backed_raw=False, resource_budget=None):
     # Use the same process lock as the raw worker. Recovery must never remove
     # an active cache restore; a kill releases flock before the replay begins.
     lock_path = root / "audit/source_preparation/.source_worker.lock"
@@ -218,7 +242,8 @@ def _available_raw(root, item, path, *, restore_backed_raw=False):
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             raise SourceCacheGateError("Another source staging operation is active; preserve its raw") from None
-        with _available_raw_context(root, item, path, restore_backed_raw=restore_backed_raw) as available:
+        with _available_raw_context(root, item, path, restore_backed_raw=restore_backed_raw,
+                                    resource_budget=resource_budget) as available:
             yield available
 
 
@@ -341,10 +366,13 @@ def verify_preparation(root, inventory_path, *, partial_scope=False):
 
 
 def _prepare_shard(root, destination, temporary, *, dataset, subject, records,
-                   contract, contract_sha, adapter, processing, restore_backed_raw):
+                   contract, contract_sha, adapter, processing, restore_backed_raw, resource_budget=None):
     x, labels, events, exclusions = [], [], [], []
     for item, raw, rows in records:
-        with _available_raw(root, item, raw, restore_backed_raw=restore_backed_raw) as available:
+        if resource_budget:
+            resource_budget.check()
+        with _available_raw(root, item, raw, restore_backed_raw=restore_backed_raw,
+                            resource_budget=resource_budget) as available:
             for native in iter_native_contexts(dataset, available, rows=rows, contract=contract, expected_sha256=item["sha256"]):
                 row = native["row"]
                 if native.get("excluded"):
@@ -372,6 +400,8 @@ def _prepare_shard(root, destination, temporary, *, dataset, subject, records,
                     "native_context_sha256": hashlib.sha256(np.asarray(native["signal"], dtype="<f8").tobytes(order="C")).hexdigest(),
                     "processed_signal_sha256": hashlib.sha256(np.asarray(stored_signal, dtype="<f4").tobytes(order="C")).hexdigest(),
                     "original_context_samples": native["original_context_samples"], "preprocessing_qc": qc})
+        if resource_budget:
+            resource_budget.check()  # Includes the last raw's complete parse/preprocessing cost.
     (temporary / "exclusions.json").write_text(json.dumps(exclusions, indent=2, allow_nan=False) + "\n")
     final_directory = destination / dataset / subject
     artifact = lambda name: {"path": str((final_directory / name).relative_to(root)),
@@ -390,8 +420,9 @@ def _prepare_shard(root, destination, temporary, *, dataset, subject, records,
             "valid_trials": len(events), "excluded_trials": len(exclusions)}
 
 
-def prepare_cache(root, inventory_path="manifests/source_native_inventory.json", *,
-                  output="cache/source_v2", execute=False, partial_scope=False, restore_backed_raw=False):
+def _prepare_cache(root, inventory_path="manifests/source_native_inventory.json", *,
+                  output="cache/source_v2", execute=False, partial_scope=False, restore_backed_raw=False,
+                  resource_budget=None):
     root, contract, contract_sha, inventory_file, inventory, files, complete = verify_preparation(
         root, inventory_path, partial_scope=partial_scope)
     if not execute:
@@ -439,6 +470,8 @@ def prepare_cache(root, inventory_path="manifests/source_native_inventory.json",
                 "raw_inventory": descriptor(inventory_file), "shards": [], "participants_without_usable_trials": [],
                 "training_started": False, "normalization_applied": False}
     for (dataset, subject), records in sorted(shard_files.items()):
+        if resource_budget:
+            resource_budget.check()
         key = dataset + "/" + subject
         if key in state["completed_participants"]:
             shard = state["completed_participants"][key]
@@ -449,7 +482,9 @@ def prepare_cache(root, inventory_path="manifests/source_native_inventory.json",
             try:
                 shard = _prepare_shard(root, destination, temporary, dataset=dataset, subject=subject,
                     records=records, contract=contract, contract_sha=contract_sha, adapter=adapter,
-                    processing=processing, restore_backed_raw=restore_backed_raw)
+                    processing=processing, restore_backed_raw=restore_backed_raw, resource_budget=resource_budget)
+                if resource_budget:
+                    resource_budget.check()  # Do not commit a participant after its wall cap.
                 target = destination / dataset / subject
                 target.parent.mkdir(parents=True, exist_ok=True)
                 if target.exists():
@@ -481,14 +516,70 @@ def prepare_cache(root, inventory_path="manifests/source_native_inventory.json",
         {"processed_signal_sha256": key, "event_uids": sorted(values)}
         for key, values in sorted(signal_groups.items()) if len(values) > 1]
     manifest["duplicate_policy"] = "retain original identities; use signal groups to audit future train/validation splits; no silent deduplication"
+    if resource_budget:
+        resource_budget.check()  # Mechanism/duplicate audit can itself consume CPU time.
     write_receipt(destination / "source_cache.json", manifest)
     state.update(status=manifest["status"], cache_manifest=descriptor(destination / "source_cache.json"))
     write_receipt(state_path, state)
+    if resource_budget:
+        resource_budget.check()  # A late cap pauses before any completion result is returned.
     result = {"status": manifest["status"], "numerical_cache_created": True, "training_started": False,
               "cache_manifest": descriptor(destination / "source_cache.json"),
               "formal_w2_complete": complete and not partial_scope,
               "status_tasks_mutated": False}
     return result
+
+
+def prepare_cache(root, inventory_path="manifests/source_native_inventory.json", *,
+                  output="cache/source_v2", execute=False, partial_scope=False, restore_backed_raw=False,
+                  max_r2_restore_bytes=None, max_wall_seconds=None, operational_amendment_note=None):
+    if not execute:
+        return _prepare_cache(root, inventory_path, output=output, execute=False,
+            partial_scope=partial_scope, restore_backed_raw=restore_backed_raw)
+    # Only the small authorization/manifest header is read before durable CPU
+    # timing. The full per-file SHA/schema audit still runs inside that timer.
+    root = Path(root).resolve(strict=True)
+    tasks = json.loads((root / "status/tasks.json").read_text())
+    if tasks.get("W1", {}).get("status") != "COMPLETE":
+        raise SourceCacheGateError("W1 must be COMPLETE before numerical source cache preparation")
+    contract_sha = validate_signal_contract(json.loads((root / "contracts/input_contract.json").read_text()))
+    inventory_file = _local(root, inventory_path)
+    inventory = json.loads(inventory_file.read_text())
+    records = inventory.get("files", [])
+    if not isinstance(records, list) or any(type(item.get("bytes")) is not int or item["bytes"] <= 0 for item in records):
+        raise SourceCacheGateError("R2 restore budget needs positive recorded native object sizes, not candidate sizes")
+    known_bytes = sum(item["bytes"] for item in records if item.get("raw_storage") == "verified_r2_only")
+    known_objects = sum(item.get("raw_storage") == "verified_r2_only" for item in records)
+    # Operational allowance: one complete measured restore pass plus one
+    # conservative full-pass retry. No candidate size is called a measurement.
+    default_limit = max(1, 2 * (known_bytes + known_objects))  # One bounded EOF probe byte per object/pass.
+    identity = {"scope": "source_cache_CPU_and_receipt_backed_R2_restore", "contract_sha256": contract_sha,
+        "inventory_sha256": file_digest(inventory_file), "cache_builder_sha256": file_digest(__file__),
+        "partial_scope": partial_scope}
+    budget_plan = {"plan_sha256": digest(identity), "max_download_bytes": default_limit, "max_wall_seconds": 86400}
+    from tools.source_preparation_batch import BatchError, ResourceBudget  # Lazy: avoid the existing adapter registry import cycle.
+    try:
+        budget = ResourceBudget(budget_plan, root / "audit/source_cache/resource_progress.json",
+            scope=ResourceBudget.R2_RESTORE, identity_sha256=digest(identity),
+            max_download_bytes=max_r2_restore_bytes, max_wall_seconds=max_wall_seconds,
+            amendment_note=operational_amendment_note)
+    except Exception as error:
+        raise SourceCacheGateError("Source cache durable resource budget is unavailable; prior accounting preserved") from error
+    try:
+        budget.data["limit_derivation"] = {"inventory_recorded_R2_only_bytes": known_bytes,
+            "EOF_probe_bytes_per_full_pass": known_objects, "default_full_pass_allowance": 2, "default_limit_bytes": default_limit,
+            "official_provider_GET_bytes_included": False,
+            "per_object_receipt_validation_required_before_any_GET": True}
+        budget.check()
+        result = _prepare_cache(root, inventory_path, output=output, execute=True,
+            partial_scope=partial_scope, restore_backed_raw=restore_backed_raw, resource_budget=budget)
+        budget.check()
+        result["resource_progress_path"] = budget.path.relative_to(root).as_posix()
+        return result
+    except BatchError as error:
+        raise SourceCacheGateError(str(error)) from None
+    finally:
+        budget.close()
 
 
 def main(argv=None):
@@ -502,6 +593,9 @@ def main(argv=None):
     parser.add_argument("--import-schema-specimens", action="store_true",
                         help="Only create a measured partial inventory from existing schema receipts; no numerical cache")
     parser.add_argument("--execute", action="store_true")
+    parser.add_argument("--max-r2-restore-bytes", type=int)
+    parser.add_argument("--max-wall-seconds", type=int)
+    parser.add_argument("--operational-amendment-note")
     args = parser.parse_args(argv)
     try:
         if args.import_schema_specimens:
@@ -511,7 +605,8 @@ def main(argv=None):
         else:
             result = prepare_cache(args.root, args.inventory, output=args.output,
                                    execute=args.execute, partial_scope=args.partial_scope,
-                                   restore_backed_raw=args.restore_backed_raw)
+                                   restore_backed_raw=args.restore_backed_raw, max_r2_restore_bytes=args.max_r2_restore_bytes,
+                                   max_wall_seconds=args.max_wall_seconds, operational_amendment_note=args.operational_amendment_note)
     except (ValueError, FileNotFoundError, KeyError, TypeError, PermissionError) as error:
         print(json.dumps({"status": "BLOCKED", "reason": str(error),
                           "numerical_cache_created": False, "training_started": False}, indent=2))

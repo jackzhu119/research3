@@ -2,7 +2,11 @@
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
+import signal
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -271,19 +275,156 @@ class SourceBatchTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             path = Path(d) / "budget.json"
             plan = batch.build_plan(max_download_bytes=10, max_wall_seconds=100)
-            budget = batch.ResourceBudget(plan, path, clock=lambda: 5)
-            budget.consume(7)
+            budget = batch.ResourceBudget(plan, path, clock=lambda: 5, utc_clock=lambda: 1005, boot_id="fixture")
+            token = budget.reserve_transfer(7, object_id="SOFTWARE_TEST_DOUBLE")
+            budget.consume(7, transfer_id=token)
+            budget.finish_transfer(token, complete_body_read=True)
             with self.assertRaisesRegex(batch.BatchError, "byte_budget"):
-                budget.consume(4)
-            replay = batch.ResourceBudget(plan, path, clock=lambda: 7)
-            self.assertEqual(replay.data["download_bytes_read"], 11)
-            with self.assertRaises(batch.BatchError):
-                replay.check()
-            saved = json.loads(path.read_text())
-            saved.update(download_bytes_read=0, active_wall_elapsed_s=100)
+                budget.reserve_transfer(4, object_id="must_not_open_HTTP")
+            budget.close()
+            replay = batch.ResourceBudget(plan, path, clock=lambda: 7, utc_clock=lambda: 1007, boot_id="fixture")
+            self.assertEqual(replay.data["download_bytes_read"], 7)
+            self.assertEqual(replay.data["download_bytes_charged"], 7)
+            replay.close()
+            saved = json.loads(path.read_text()); saved["active_wall_elapsed_s"] = 100
             batch.atomic_json(path, saved)
+            exhausted = batch.ResourceBudget(plan, path, clock=lambda: 9, utc_clock=lambda: 1009, boot_id="fixture")
             with self.assertRaisesRegex(batch.BatchError, "wall_budget"):
-                batch.ResourceBudget(plan, path, clock=lambda: 9).check()
+                exhausted.check()
+            exhausted.close()
+
+    def test_complete_GET_body_is_reserved_before_opener_and_success_releases_only_probe(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d); plan = batch.build_plan(max_download_bytes=50)
+            budget = batch.ResourceBudget(plan, root / "budget.json")
+            observation = batch.head_object(self.entry, opener=lambda *a, **k: response(size=len(DATA)))
+            def opener(*args, **kwargs):
+                saved = json.loads((root / "budget.json").read_text())
+                ledger = saved["byte_scopes"][batch.ResourceBudget.OFFICIAL]
+                self.assertEqual(ledger["charged_bytes"], len(DATA) + 1)
+                self.assertEqual(ledger["observed_bytes"], 0)
+                return response(DATA)
+            batch.download_object(self.entry, observation, root / "raw.partial", root / "raw.mat", budget=budget, opener=opener)
+            self.assertEqual(budget.data["download_bytes_read"], len(DATA))
+            self.assertEqual(budget.data["download_bytes_charged"], len(DATA))
+            budget.close()
+
+    def test_actual_SIGKILL_between_body_read_and_consume_preserves_full_reservation(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "budget.json"
+            script = '''
+import io, os, signal, sys
+from pathlib import Path
+from tools.source_preparation_batch import ResourceBudget, build_plan
+b = ResourceBudget(build_plan(max_download_bytes=20, max_wall_seconds=100), Path(sys.argv[1]),
+    clock=lambda:10., utc_clock=lambda:1010., boot_id='fixture')
+b.reserve_transfer(10, object_id='SOFTWARE_TEST_DOUBLE', probe_bytes=1)
+io.BytesIO(b'0123456789').read(4)
+os.kill(os.getpid(), signal.SIGKILL)
+'''
+            child = subprocess.run([sys.executable, "-c", script, str(path)], cwd=batch.REPO, capture_output=True, timeout=20)
+            self.assertEqual(child.returncode, -signal.SIGKILL)
+            plan = batch.build_plan(max_download_bytes=20, max_wall_seconds=100)
+            replay = batch.ResourceBudget(plan, path, clock=lambda:20., utc_clock=lambda:1020., boot_id="fixture")
+            self.assertEqual(replay.data["download_bytes_read"], 0)
+            self.assertEqual(replay.data["download_bytes_charged"], 11)
+            self.assertEqual(replay.data["active_wall_elapsed_s"], 10)
+            self.assertEqual(replay.data["byte_scopes"][batch.ResourceBudget.OFFICIAL]["attempts"][0]["status"],
+                             "UNCLEAN_FULL_RESERVATION_REMAINS_CHARGED")
+            with self.assertRaisesRegex(batch.BatchError, "byte_budget"):
+                replay.reserve_transfer(10, object_id="second_attempt")
+            replay.close()
+
+    def test_failed_body_remains_charged_and_R2_full_GET_has_independent_cap(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "budget.json"; plan = batch.build_plan(max_download_bytes=10)
+            budget = batch.ResourceBudget(plan, path, max_r2_readback_bytes=3)
+            token = budget.reserve_transfer(8, object_id="official_partial")
+            budget.consume(2, transfer_id=token)
+            budget.finish_transfer(token, complete_body_read=False)
+            self.assertEqual((budget.data["download_bytes_read"], budget.data["download_bytes_charged"]), (2, 8))
+            r2 = budget.reserve_transfer(3, object_id="R2_FULL_GET", scope=batch.ResourceBudget.R2_BACKUP)
+            budget.consume(3, transfer_id=r2, scope=batch.ResourceBudget.R2_BACKUP)
+            budget.finish_transfer(r2, complete_body_read=True, scope=batch.ResourceBudget.R2_BACKUP)
+            self.assertEqual(budget.data["download_bytes_charged"], 8)
+            with self.assertRaisesRegex(batch.BatchError, "byte_budget"):
+                budget.reserve_transfer(1, object_id="R2_over_cap", scope=batch.ResourceBudget.R2_BACKUP)
+            budget.close()
+
+    def test_explicit_operational_amendments_preserve_identity_counters_and_resume_by_default(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / "budget.json"; plan = batch.build_plan(max_download_bytes=10, max_wall_seconds=10)
+            budget = batch.ResourceBudget(plan, path); token = budget.reserve_transfer(8, object_id="fixture")
+            budget.finish_transfer(token); original_identity = budget.data["resource_identity_sha256"]; budget.close()
+            with self.assertRaisesRegex(batch.BatchError, "amendment"):
+                batch.ResourceBudget(plan, path, max_download_bytes=20)
+            amended = batch.ResourceBudget(plan, path, max_download_bytes=20, max_wall_seconds=20,
+                                           amendment_note="Explicit operational fixture extension")
+            self.assertEqual(amended.data["resource_identity_sha256"], original_identity)
+            self.assertEqual(amended.data["download_bytes_charged"], 8)
+            amended.close()
+            resumed = batch.ResourceBudget(plan, path)
+            self.assertEqual(resumed.data["byte_scopes"][batch.ResourceBudget.OFFICIAL]["limit_bytes"], 20)
+            self.assertEqual(resumed.wall.max_wall_seconds, 20)
+            resumed.close()
+
+    def test_R2_proxy_rejects_wrong_length_before_read_and_bounds_overlong_EOF_probe(self):
+        class Body(io.BytesIO):
+            def __init__(self, data):
+                super().__init__(data); self.requests = []
+            def read(self, count=-1):
+                self.requests.append(count)
+                return super().read(count)
+        class Client:
+            def __init__(self, body, length): self.body, self.length = body, length
+            def get_object(self, **kwargs):
+                return {"ResponseMetadata": {"HTTPStatusCode": 200}, "ContentLength": self.length, "Body": self.body}
+        with tempfile.TemporaryDirectory() as d:
+            budget = batch.ResourceBudget(batch.build_plan(max_download_bytes=10), Path(d) / "resource.json")
+            scope = batch.ResourceBudget.R2_BACKUP
+            token = budget.reserve_transfer(5, object_id="bad_declared_length", scope=scope, probe_bytes=1)
+            wrong = Body(b"0123456789")
+            proxy = batch.BudgetedR2Client(Client(wrong, 10), budget, token, {"fixture-key": 5}, scope=scope)
+            with self.assertRaisesRegex(batch.BatchError, "ContentLength_before_read"):
+                proxy.get_object(Bucket="SOFTWARE_TEST_DOUBLE", Key="fixture-key")
+            self.assertEqual(wrong.requests, [])
+            budget.finish_transfer(token, scope=scope)
+            token = budget.reserve_transfer(5, object_id="overlong_body", scope=scope, probe_bytes=1)
+            too_long = Body(b"0123456789")
+            proxy = batch.BudgetedR2Client(Client(too_long, 5), budget, token, {"fixture-key": 5}, scope=scope)
+            body = proxy.get_object(Bucket="SOFTWARE_TEST_DOUBLE", Key="fixture-key")["Body"]
+            self.assertEqual(body.read(100), b"01234")
+            with self.assertRaisesRegex(batch.BatchError, "exceeds_exact_reserved"):
+                body.read(100)
+            self.assertEqual(too_long.requests, [5, 1])
+            self.assertEqual(budget.data["byte_scopes"][scope]["observed_bytes"], 6)
+            self.assertEqual(budget.data["byte_scopes"][scope]["charged_bytes"], 12)
+            budget.finish_transfer(token, scope=scope); budget.close()
+
+    def test_native_backup_helper_proxy_counts_GET_chunks_once_and_checks_upload_wall(self):
+        class Client:
+            def __init__(self): self.data = {}
+            def put_object(self, **kwargs):
+                self.data[kwargs["Key"]] = kwargs["Body"].read()
+                return {"ResponseMetadata": {"HTTPStatusCode": 200}}
+            def get_object(self, **kwargs):
+                body = self.data[kwargs["Key"]]
+                return {"ResponseMetadata": {"HTTPStatusCode": 200}, "ContentLength": len(body), "Body": io.BytesIO(body)}
+        native_backup = batch.run_backup
+        def fixture_bucket_backup(**kwargs):
+            return native_backup(**kwargs, bucket="SOFTWARE_TEST_DOUBLE_BUCKET")
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d); batch_dir, raw = self.fixture_object(root)
+            budget = batch.ResourceBudget(self.plan, root / "resource.json")
+            with patch.object(batch, "create_client", return_value=Client()), patch.object(batch, "_NATIVE_BACKUP_IMPLEMENTATION", fixture_bucket_backup):
+                state = self.process(root, batch_dir, budget=budget, backup_fn=fixture_bucket_backup)
+            self.assertEqual(state["status"], "COMPLETE")
+            ledger = budget.data["byte_scopes"][batch.ResourceBudget.R2_BACKUP]
+            self.assertEqual(ledger["observed_bytes"], state["r2_full_get_bytes_verified"])
+            self.assertEqual(ledger["charged_bytes"], ledger["observed_bytes"])
+            self.assertEqual(ledger["attempts"][0]["reserved_bytes"], ledger["observed_bytes"] + 3)
+            self.assertEqual(budget.data["download_bytes_read"], 0)
+            budget.close()
 
     def test_independent_object_failure_continues_and_bounded_stop_never_advances(self):
         with tempfile.TemporaryDirectory() as d:

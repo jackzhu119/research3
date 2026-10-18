@@ -9,7 +9,7 @@
 - 四 source 各一份原生 schema 样本：BNCI 144、Cho 200、OpenBMI offline train 100、PhysioNet 15，共459条原始 LR 元数据；不是完整 source 队列或最终合格训练数。
 - Stieger S1/Session1：450个混合任务 trial，150个纯水平 LR trial；保留 task/run/trial、原始时间、反馈终点、实测通道与 µV 转换。样本覆盖不能代替 meta-train 全体选窗。
 - 原始协议 ZIP 与5个 schema 原档已通过现有 R2 条件 PUT、完整 GET、字节数和 SHA256 校验。没有用 ETag 或 HEAD 冒充回读验收。
-- 新几何/适配内核实现 Q/E、Rref、无迹正交生成元、矩阵指数、联合 RMS、10步校准与完整 unroll 外层单步。CPU 合成张量测试仅验证软件；没有真实科研模型、性能结果或科研 pilot。
+- 新几何/适配内核、B0–B11/P/P+PCT 注册表、真实 episode 接口、source 与 meta 可恢复训练入口及不可覆盖预测存档均已实现。Rref/G/U0 的真实估计、训练和选择仍需上游数据及真实产物验收。CPU 合成测试只验证软件；没有真实科研模型、性能结果或科研 pilot。
 - CPU 依赖实际安装并锁定；CPU和 CUDA12.8 的 CPython3.12/Linux x86_64 离线 wheels 已下载。CUDA profile 仅离线解析，未在 GPU 验证；备份状态以私有回执为准。
 
 ## 数据、访问与公开仓库
@@ -17,7 +17,7 @@
 当前 GitHub 仓库为 PUBLIC。因此新增 EEG、逐trial清单、官方数据catalog、R2回执及批处理状态仅保存在本地与用户现有 R2。公开分支保留代码、用户授权导入的协议和汇总验收，不公开新增数据或凭据。完整固定包在私有 R2 及本地共享交付目录中生成。
 
 - `protocol/`：原始只读研究规格及52文件校验来源。
-- `p3work/`：新原生适配、权限/信号合同、几何与校准内核。
+- `p3work/`：新原生适配、权限/信号合同、方法、可恢复训练和预测存档。
 - `contracts/`：当前工作合同；未知的窗口、名单和冻结参数保持 null。
 - `data/`：本次独立下载的原档和依赖 wheels；不复用论文1旧 NPZ。
 - `data_catalog/`、`audit/source_schema/`、`audit/stieger_w1/`：私有原生证据及逐事件记录。
@@ -34,6 +34,10 @@ python -m p3work pilot-plan
 python tools/check_pilot_readiness.py --require-ready
 python tools/source_schema_audit.py --raw-root data/source_schema
 python tools/stieger_metadata_batch.py --plan plans/stieger_qualification.json
+python tools/train_source.py --help
+python tools/train_classical_source.py --help
+python tools/train_meta.py --help
+python tools/prepare_stieger_cache.py --help
 ```
 
 Stieger 执行需显式追加 `--execute`；同计划重复启动会由文件锁拒绝，结束后同命令可幂等恢复。资格计划固定62个最早session、38,395,648,006 bytes、单文件串行、GPU 0小时、活动wall上限14,400秒。原档校验、解析、R2完整回读成功后才清理工具自己新建的临时raw，已有S1原档保留。该基础 worker 在资格完成后仅生成 meta-train 全session计划。`tools/continue_local_preparation.py --execute` 只等待已运行的资格任务，核验62份回执后串行推进完整 meta-train 时长元数据、选窗、W2 source 新缓存和固定包备份；不重启资格任务，不执行评估或训练。完整时长批次使用独立记录的18小时CPU活动wall上限，原始选择计划及其SHA保留，名单和科学规则不变。
@@ -42,6 +46,6 @@ Stieger 执行需显式追加 `--execute`；同计划重复启动会由文件锁
 
 ## 当前未完成与 GPU 边界
 
-本提交时，全体资格、40/11/11、完整meta-train时长和共同窗口尚未完成；四source完整新缓存未生成；无有效 f0/Rref/G 科研权重。W5还有强对照与真实训练/恢复验收未完成，详见 `p3work/methods/STATUS.md`。
+本提交时，全体资格、40/11/11、完整meta-train时长和共同窗口尚未完成；四source完整新缓存未生成；无有效 f0/Rref/G 科研权重。强对照代码已补齐；真实数据训练、GPU恢复与阶段验收尚未执行，W5不能标为完成，详见 `p3work/methods/STATUS.md`。source神经开发/确认分别15/25次拟合，旧数学基线10次；新版B4/B5 source bank另需6次，不能将相似配方合并计数。
 
 已有 RunPod 的关闭和后续开机由用户管理，当前状态未通过本任务观察或更改。所有 GPU 训练等待用户后续开机；代码和准备工作不会自动启动或重启服务器。受控source pilot只依赖真实W1/W2；W3 Stieger数值缓存及后续科研阶段仍单独验收。`build_delivery.py --checkpoint --execute` 只生成明确标注未就绪的可恢复快照；正式固定包必须通过W1/W2及完整缓存回执覆盖检查。不得运行 legacy 的全量执行入口跳过新合同。

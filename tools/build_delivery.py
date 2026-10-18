@@ -91,7 +91,7 @@ def selected_files(root):
         if path.is_symlink() or not path.resolve().is_relative_to(root) or not path.is_file():
             raise ValueError("Unsafe delivery artifact")
         # Raw EEG and cache/wheel payloads are restored from explicit R2 receipts.
-        if Path(name).parts[0] in {"data", "cache", "runs", "checkpoints"}:
+        if Path(name).parts[0] in {"data", "cache", "runs", "predictions", "checkpoints"}:
             raise ValueError("Large data/weights must use explicit R2 manifests")
         entries[name] = path.read_bytes()
     dependency_rows, _ = load_verified_receipt(root / "audit/r2_dependencies_receipt.json")

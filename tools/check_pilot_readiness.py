@@ -37,7 +37,9 @@ def main():
             verify_inputs(root)
         except (ValueError, FileNotFoundError, KeyError, TypeError):
             blockers.append("Actual source cache/code/event hashes or original-trial provenance failed read-only verification")
-    print(json.dumps({"ready_for_gpu_training": not blockers, "blockers": blockers,
+    print(json.dumps({"ready_for_gpu_training": not blockers,
+                      "ready_for_controlled_source_pilot": not blockers,
+                      "scientific_training_ready": False, "blockers": blockers,
                       "scope": "controlled source engineering pilot only; scientific fits are not authorized by this check",
                       "user_later_gpu_boot_required": True, "remote_actions": False,
                       "training_started": False}, indent=2))
