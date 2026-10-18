@@ -681,7 +681,7 @@ def recover_interrupted_cache_restore(state, *, root, plan, entry, state_path) -
 
 
 def process_file(entry, *, root, batch_dir, plan, contract_sha256, budget=None,
-                 backup_fn=None, audit_fn=None, opener=None) -> dict:
+                 backup_fn=None, audit_fn=None, opener=None, client=None, bucket=None) -> dict:
     validate_entry(entry)
     root = root.resolve(strict=True)
     object_dir = batch_dir / "objects" / entry["object_id"]
@@ -779,8 +779,10 @@ def process_file(entry, *, root, batch_dir, plan, contract_sha256, budget=None,
         try:
             options = {}
             if instrumented:
-                options["client"] = BudgetedR2Client(create_client(), budget, r2_transfer,
+                options["client"] = BudgetedR2Client(client if client is not None else create_client(), budget, r2_transfer,
                     {prefix + item["path"]: item["bytes"] for item in manifest["files"]}, scope=ResourceBudget.R2_BACKUP)
+            if bucket is not None:
+                options["bucket"] = bucket
             backup = backup_fn(manifest_path=manifest_path, root=root, prefix=prefix, receipt_path=receipt_path, execute=True, **options)
         finally:
             if budget:

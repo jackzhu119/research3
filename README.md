@@ -13,7 +13,9 @@
 - 新几何/适配内核、B0–B11/P/P+PCT 注册表、真实 episode 接口、source 与 meta 可恢复训练入口及不可覆盖预测存档均已实现。Rref/G/U0 的真实估计、训练和选择仍需上游数据及真实产物验收。CPU 合成测试只验证软件；没有真实科研模型、性能结果或科研 pilot。
 - 已增加独立数据验收：完整396会话元数据的精确计数窗口门、505个 source 原档及每条原生 LR trial 的 valid/excluded 归账、实际缓存字节与 R2 完整回读证明。只读 support 接口和模型参数恢复都保留来源、角色与付费前缀约束，不能用状态标记替代真实数据。
 - CPU 依赖实际安装并锁定；CPU和 CUDA12.8 的 CPython3.12/Linux x86_64 离线 wheels 已下载。CUDA profile 仅离线解析，未在 GPU 验证；备份状态以私有回执为准。
-- 当前统一 CPU 软件回归为1077项通过，代码清单与验收范围见 `audit/software_preparation_acceptance.json`。这些测试不代表真实 EEG 拟合、GPU恢复验证或科研性能结果。
+- 当前统一 CPU 软件回归为1135项通过，代码清单与验收范围见 `audit/software_preparation_acceptance.json`。这些测试不代表真实 EEG 拟合、GPU恢复验证或科研性能结果。
+
+本地 CPU 双文件传输、单原生解析协调器已通过独立预算与中断恢复测试；它保留原名单及阶段门，仅修改运行并发。实际单一进程及逐文件状态以私有运行进度为准。
 
 ## 数据、访问与公开仓库
 
