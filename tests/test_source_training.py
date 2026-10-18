@@ -467,6 +467,18 @@ def test_selected_weights_and_uid_cannot_drift_from_committed_evidence(complete_
         training.verify_complete_fit(cache, job, folder)
 
 
+@pytest.mark.parametrize("changed", ["metadata", "acceptance_proof"])
+def test_completed_fit_cannot_skip_changed_upstream_proof(complete_artifact_envelope_double, changed):
+    cache, job, folder, _ = complete_artifact_envelope_double
+    assert training.verify_complete_fit(cache, job, folder)["committed_optimizer_updates"] == 4
+    if changed == "metadata":
+        cache.artifact_sha256["audit/SOFTWARE_TEST_DOUBLE_ONLY.json"] = "b" * 64
+    else:
+        cache.upstream_acceptance_sha256 = {"exact_window": "c" * 64, "full_source_cache": "d" * 64}
+    with pytest.raises(training.SourceTrainingError, match="identity is stale"):
+        training.verify_complete_fit(cache, job, folder)
+
+
 def make_pilot_fixture(cache):
     folder = cache.root / "pilot_fixture"; folder.mkdir()
     runtime = {"device": "cuda:0", "device_name": "MATHEMATICAL_TEST_DOUBLE", "device_uuid": "FIXTURE_UUID",
@@ -474,6 +486,8 @@ def make_pilot_fixture(cache):
         "cudnn": 0, "driver_versions": ["FIXTURE_DRIVER"], "numpy": "FIXTURE_NUMPY", "python": "FIXTURE_PYTHON"}
     identity = {**runtime, "driver_versions_local_nvidia_smi": runtime["driver_versions"],
         "input_contract_sha256": cache.input_contract_sha256, "cache_manifest_sha256": cache.manifest_sha256,
+        "cache_artifacts": dict(cache.artifact_sha256),
+        "upstream_acceptance_sha256": dict(getattr(cache, "upstream_acceptance_sha256", {})),
         "tf32": False, "mixed_precision": False, "deterministic_algorithms": True}
     for key, relative in {"runner_sha256": "tools/run_controlled_pilot.py", "bridge_sha256": "p3work/f0_bridge.py",
                           "geometry_sha256": "p3work/spatial_geometry.py", "contracts_sha256": "p3work/contracts.py"}.items():
@@ -518,6 +532,26 @@ def test_pilot_rechecks_checkpoint_states_not_just_receipt_booleans(fixture_cach
     training.atomic_json(receipt_path, receipt)
     with pytest.raises(training.SourceTrainingError, match="actually differ"):
         training.verify_engineering_pilot(cache, path)
+
+
+@pytest.mark.parametrize("changed", ["metadata", "acceptance_proof"])
+def test_pilot_cannot_reuse_different_upstream_acceptance(fixture_cache, changed):
+    cache = fixture_cache
+    path, _ = make_pilot_fixture(cache)
+    if changed == "metadata":
+        cache.artifact_sha256["audit/SOFTWARE_TEST_DOUBLE_ONLY.json"] = "b" * 64
+    else:
+        cache.upstream_acceptance_sha256 = {"exact_window": "c" * 64}
+    with pytest.raises(training.SourceTrainingError, match="upstream metadata or acceptance"):
+        training.verify_engineering_pilot(cache, path)
+
+
+def test_later_task_progress_does_not_invalidate_the_same_verified_pilot(fixture_cache):
+    cache = fixture_cache
+    cache.artifact_sha256["status/tasks.json"] = "b" * 64
+    path, _ = make_pilot_fixture(cache)
+    cache.artifact_sha256["status/tasks.json"] = "c" * 64
+    assert training.verify_engineering_pilot(cache, path)["exact_resume_verified"]
 
 
 def test_operational_wall_budget_amendment_preserves_fit_identity_and_resume(fixture_cache):

@@ -230,6 +230,12 @@ def verify_engineering_pilot(cache, receipt_path, *, runtime=None):
             identity.get("deterministic_algorithms") is not True or
             any(identity.get(key) != file_digest(cache.root / value) for key, value in required_code.items())):
         raise SourceTrainingError("Engineering pilot code/input/precision identity differs from formal training")
+    prior_artifacts = identity.get("cache_artifacts")
+    if (not isinstance(prior_artifacts, dict)
+            or {k: v for k, v in prior_artifacts.items() if k != "status/tasks.json"}
+                != {k: v for k, v in cache.artifact_sha256.items() if k != "status/tasks.json"}
+            or identity.get("upstream_acceptance_sha256") != dict(getattr(cache, "upstream_acceptance_sha256", {}))):
+        raise SourceTrainingError("Engineering pilot upstream metadata or acceptance identity differs from formal training")
     expected = {"engineering_initial.pt", "engineering_continuous100.pt", "engineering_resume50.pt", "engineering_resumed100.pt"}
     if set(receipt.get("checkpoint_files", {})) != expected:
         raise SourceTrainingError("Engineering pilot checkpoint evidence is incomplete")
@@ -365,6 +371,7 @@ def fit_identity(cache, job, config, runtime, *, synthetic_fixture=False):
             "architecture": ARCHITECTURE, "input_contract_sha256": cache.input_contract_sha256,
             "cache_manifest_sha256": cache.manifest_sha256,
             "cache_artifacts": {k: v for k, v in cache.artifact_sha256.items() if k != "status/tasks.json"},
+            "upstream_acceptance_sha256": dict(getattr(cache, "upstream_acceptance_sha256", {})),
             "policy_and_code": _code_policy(cache.root), "runtime": runtime,
             "synthetic": bool(synthetic_fixture), "device": runtime["device"]}
 
@@ -567,6 +574,8 @@ def verify_complete_fit(cache, job, folder):
             identity.get("runtime", {}).get("device") != "cuda:0" or
             identity.get("input_contract_sha256") != cache.input_contract_sha256 or
             identity.get("cache_manifest_sha256") != cache.manifest_sha256 or
+            identity.get("cache_artifacts") != {k: v for k, v in cache.artifact_sha256.items() if k != "status/tasks.json"} or
+            identity.get("upstream_acceptance_sha256") != dict(getattr(cache, "upstream_acceptance_sha256", {})) or
             identity.get("policy_and_code") != _code_policy(cache.root) or
             status.get("identity_sha256") != digest(identity)):
         raise SourceTrainingError("Completed source fit identity is stale")

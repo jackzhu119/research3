@@ -436,7 +436,8 @@ os.kill(os.getpid(), signal.SIGKILL)
                 if len(calls) == 1:
                     raise batch.BatchError("fixture_failure")
                 return {"status": "COMPLETE"}
-            with patch.object(batch, "validate_signal_contract", return_value=self.contract_sha), patch.object(batch, "aggregate_inventory", return_value={
+            with patch.object(batch, "verify_frozen_window", return_value={"input_contract_sha256": self.contract_sha,
+                    "SOFTWARE_TEST_DOUBLE": True}), patch.object(batch, "validate_signal_contract", return_value=self.contract_sha), patch.object(batch, "aggregate_inventory", return_value={
                     "status": "SOURCE_RAW_INVENTORY_PARTIAL", "actual_verified_objects": 0}):
                 result = batch.execute_plan(self.plan, root=root, max_new_files=2, process_fn=process)
             self.assertEqual(len(calls), 2)

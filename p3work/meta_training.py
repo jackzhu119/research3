@@ -35,7 +35,9 @@ META_CODE_FILES = ("p3work/meta_training.py", "p3work/meta_artifacts.py", "p3wor
     "p3work/recovery_budget.py", "p3work/meta_engineering.py",
     "p3work/selection.py", "p3work/episodes.py", "p3work/contracts.py", "p3work/splits.py",
     "p3work/adapt.py", "p3work/spatial_geometry.py", "p3work/methods/meta_train.py",
-    "p3work/methods/lowrank.py", "p3work/source_reference_io.py", "p3work/f0_bridge.py", "tools/train_meta.py")
+    "p3work/methods/lowrank.py", "p3work/source_reference_io.py", "p3work/f0_bridge.py", "tools/train_meta.py",
+    "p3work/window_acceptance.py", "p3work/source_cache_acceptance.py",
+    "p3work/source_training.py", "p3work/runtime_clock.py", "tools/run_controlled_pilot.py")
 
 META_RUNTIME_KEYS = ("python", "torch", "cuda", "cudnn", "driver_versions", "device_name",
     "device_uuid", "device_total_memory_bytes", "device_compute_capability", "autocast", "tf32", "float32_matmul_precision",

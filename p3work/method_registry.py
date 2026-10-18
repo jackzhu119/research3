@@ -8,7 +8,7 @@ source-bank artifacts; historical core models cannot serve as their priors.
 from __future__ import annotations
 
 import copy
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, fields
 import hashlib
 from itertools import product
 from pathlib import Path
@@ -88,6 +88,9 @@ def _weight_fingerprint(value):
         data = {"method": value.method, "fitted_state_sha256": value.fitted_state_sha256}
         if value.target_model is not None:
             data["actual_target_state"] = module_state_sha256(value.target_model)
+            data["actual_target_interface"] = _source_interface(value.target_model)
+            data["target_parameter_requires_grad"] = {name: p.requires_grad for name, p in value.target_model.named_parameters()}
+            data["target_module_training"] = {name: m.training for name, m in value.target_model.named_modules()}
         for name in ("alignment", "delta_w", "delta_b", "target_covariance", "target_shrunk_covariance"):
             tensor = getattr(value, name)
             if tensor is not None:
@@ -117,8 +120,64 @@ def _fit_identity(value):
         "context_identity_sha256": value.context_identity_sha256,
         "fitted_parameter_sha256": value.fitted_parameter_sha256,
         "dictionary_sha256": tensor_sha256(value.dictionary) if value.dictionary is not None else None,
+        "parameter_layout_sha256": _fit_layout_sha256(value),
         "learned_receipt": value.learned_receipt, "classical_receipt": value.classical_receipt,
+        "payload_metadata_sha256": _payload_metadata_sha256(value.payload),
         "scientific_meta_training_claim": value.scientific_meta_training_claim})
+
+
+def _tensor_layout(value):
+    """Portable numerical layout; device moves do not change this identity."""
+    if type(value) not in {torch.Tensor, torch.nn.Parameter} or value.layout != torch.strided:
+        raise TypeError("A strided numerical tensor is required")
+    return {"shape": list(value.shape), "stride": list(value.stride()),
+            "dtype": str(value.dtype), "layout": str(value.layout)}
+
+
+def _module_layout(module):
+    return {kind + "." + name: _tensor_layout(value)
+            for kind, entries in (("parameter", module.named_parameters()), ("buffer", module.named_buffers()))
+            for name, value in entries}
+
+
+def _fit_layout_sha256(fitted):
+    payload = fitted.payload
+    if type(payload) is classical.ClassicalModel:
+        layouts = {name: {"shape": list(value.shape), "stride_bytes": list(value.strides), "dtype": str(value.dtype)}
+                   for name, value in payload.arrays.items()}
+    elif type(payload) in {FitResult, lowrank.LowRankFitResult}:
+        layouts = {field.name: _tensor_layout(getattr(payload.weights, field.name)) for field in fields(payload.weights)}
+    elif type(payload) is neural_controls.NeuralControlFit:
+        layouts = {name: _tensor_layout(getattr(payload, name)) for name in
+                   ("alignment", "delta_w", "delta_b", "target_covariance", "target_shrunk_covariance")
+                   if getattr(payload, name) is not None}
+        if payload.target_model is not None:
+            layouts["target_model"] = _module_layout(payload.target_model)
+    else:
+        raise TypeError("Unknown registered fit payload")
+    return digest({"payload": layouts,
+                   "dictionary": _tensor_layout(fitted.dictionary) if fitted.dictionary is not None else None})
+
+
+def _context_layout_sha256(reference, geometry):
+    return digest({"reference": _tensor_layout(reference.matrix),
+        "geometry": {name: _tensor_layout(getattr(geometry, name))
+                     for name in ("q", "rref_sqrt", "rref_invsqrt", "e")}})
+
+
+def _payload_metadata_sha256(payload):
+    """Seal operational metadata as well as numerical adaptation parameters."""
+    if type(payload) is classical.ClassicalModel:
+        return digest({"method": payload.method, "receipt": payload.receipt, "state_sha256": payload.state_sha256})
+    if type(payload) not in {FitResult, lowrank.LowRankFitResult, neural_controls.NeuralControlFit}:
+        raise TypeError("Unknown registered fit payload")
+    skip = {"weights", "source", "target_model", "alignment", "delta_w", "delta_b", "target_covariance", "target_shrunk_covariance"}
+    data = {f.name: (asdict(payload.config) if f.name == "config" else getattr(payload, f.name))
+            for f in fields(payload) if f.name not in skip}
+    if type(payload) is neural_controls.NeuralControlFit:
+        data["actual_source_state_sha256"] = payload.source.frozen_state_sha256
+        data["actual_source_interface_sha256"] = _source_interface(payload.source)
+    return digest(data)
 
 
 @dataclass(frozen=True, init=False)
@@ -141,6 +200,7 @@ class Context:
     source_cache_sha256: str
     geometry_sha256: str
     reference_array_sha256: str
+    numerical_layout_sha256: str
     identity_sha256: str
     _seal: object
 
@@ -173,10 +233,11 @@ class Context:
                   "source_state_sha256": source.frozen_state_sha256, "source_interface_sha256": _source_interface(source),
                   "source_cache_sha256": source_info["source_cache_manifest_sha256"],
                   "geometry_sha256": geometry.sha256(),
-                  "reference_array_sha256": tensor_sha256(reference.matrix), "_seal": _CONTEXT_SEAL}
+                  "reference_array_sha256": tensor_sha256(reference.matrix),
+                  "numerical_layout_sha256": _context_layout_sha256(reference, geometry), "_seal": _CONTEXT_SEAL}
         values["identity_sha256"] = digest({k: values[k] for k in ("pipeline_seed", "signal_contract_sha256", "split_sha256",
             "source_receipt_sha256", "reference_receipt_sha256", "source_state_sha256", "source_interface_sha256", "source_cache_sha256",
-            "geometry_sha256", "reference_array_sha256")})
+            "geometry_sha256", "reference_array_sha256", "numerical_layout_sha256")})
         context = object.__new__(cls)
         for name, value in values.items():
             object.__setattr__(context, name, value)
@@ -191,6 +252,7 @@ class Context:
                 or _source_interface(self.source) != self.source_interface_sha256
                 or self.geometry.sha256() != self.geometry_sha256
                 or tensor_sha256(self.reference.matrix) != self.reference_array_sha256
+                or _context_layout_sha256(self.reference, self.geometry) != self.numerical_layout_sha256
                 or file_digest(local_path(self.root, self.source_receipt_path)) != self.source_receipt_sha256
                 or file_digest(local_path(self.root, self.reference_receipt_path)) != self.reference_receipt_sha256):
             raise ValueError("Verified method context source/reference/input changed")
@@ -346,6 +408,8 @@ class Context:
             return PredictionResult(torch.from_numpy(result["logits"]), torch.from_numpy(result["probability"]),
                 torch.from_numpy(result["prediction"]), result["event_uids"], inputs.protocol_freeze_sha)
         if type(fitted.payload) is neural_controls.NeuralControlFit:
+            if fitted.payload.source is not self.source:
+                raise ValueError("Neural fitted source is not the verified context capability")
             return neural_controls.predict_neural_control(fitted.payload, inputs)
         if type(fitted.payload) is lowrank.LowRankFitResult:
             return lowrank.predict_lowrank(self.source, self.geometry, fitted.payload, inputs)
@@ -361,4 +425,4 @@ def _source_interface(source):
     # A weight/buffer hash alone does not cover layout, feature count, or such
     # non-tensor module settings as BatchNorm eps and the encoder activation.
     return digest({"feature_dim": source.feature_dim, "input_layout": source.input_layout,
-                   "module_structure": repr(source)})
+                   "module_structure": repr(source), "numerical_layout": _module_layout(source)})

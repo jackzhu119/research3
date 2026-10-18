@@ -12,6 +12,16 @@ from tools.prepare_source_cache import begin_owned_cache_restore
 
 
 class PrepareAllSourcesTest(unittest.TestCase):
+    def setUp(self):
+        # Component orchestration uses an explicit software proof. The real
+        # guard is tested unmocked in test_window_acceptance.py.
+        proof = {"artifact_sha256": "e" * 64, "input_contract_sha256": "1" * 64,
+                 "SOFTWARE_TEST_DOUBLE": True}
+        for module in (wrapper, batch):
+            mock = patch.object(module, "verify_frozen_window", return_value=proof)
+            mock.start()
+            self.addCleanup(mock.stop)
+
     def test_default_dry_run_is_candidate_only_and_does_not_mutate(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)

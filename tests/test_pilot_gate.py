@@ -20,6 +20,7 @@ pilot = importlib.util.module_from_spec(spec)
 import sys
 sys.modules[spec.name] = pilot
 spec.loader.exec_module(pilot)
+PRODUCTION_UPSTREAM_VERIFIER = pilot._verify_upstream_acceptance
 
 
 def write(path, value):
@@ -28,7 +29,10 @@ def write(path, value):
 
 
 @pytest.fixture
-def gate_fixture(tmp_path):
+def gate_fixture(tmp_path, monkeypatch):
+    # These tiny arrays test the cache/runner component, not real W1/W2.
+    # Full upstream metadata verifiers have their own non-mocked gate tests.
+    monkeypatch.setattr(pilot, "_verify_upstream_acceptance", lambda cache: None)
     root = tmp_path
     contract = {"status": "window_frozen", "channels": list(CHANNELS), "sfreq_hz": 128,
                 "selected_profile": "long", "context_s": [0, 3], "crop_s": [.5, 2.5], "n_times": 256,
@@ -101,12 +105,57 @@ def test_fixture_cache_identity_and_equal_source_sampling_only(gate_fixture):
         torch.testing.assert_close(weights[mask].sum(), torch.tensor(.25, dtype=torch.float64))
 
 
+def test_upstream_evidence_failure_cannot_be_bypassed_by_complete_flags(gate_fixture, monkeypatch):
+    root, _, _, _, _ = gate_fixture
+    def missing_actual_evidence(cache):
+        raise ValueError("Actual complete metadata evidence is missing")
+    monkeypatch.setattr(pilot, "_verify_upstream_acceptance", missing_actual_evidence)
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: pytest.fail("Must gate before CUDA"))
+    with pytest.raises(ValueError, match="complete metadata"):
+        pilot.verify_inputs(root)
+
+
+def test_upstream_file_map_and_exact_proof_digest_are_bound_separately(gate_fixture, monkeypatch):
+    from p3work import (window_acceptance, source_cache_acceptance, contracts,
+                        f0_bridge, spatial_geometry, source_training, runtime_clock)
+    root, _, _, _, _ = gate_fixture
+    cache = pilot.verify_inputs(root)
+    proof = {"artifact_sha256": "f" * 64}
+    for name in ("selection_plan", "split", "inventory", "window_input_session_manifest", "window_coverage"):
+        relative = "audit/TEST_DOUBLE_ONLY_" + name + ".json"
+        write(root / relative, {"scope": "SOFTWARE_COMPONENT_TEST_ONLY"})
+        proof[name] = {"path": relative, "sha256": file_digest(root / relative)}
+    for module in (window_acceptance, source_cache_acceptance, contracts,
+                   f0_bridge, spatial_geometry, source_training, runtime_clock):
+        path = root / "p3work" / Path(module.__file__).name
+        path.write_bytes(Path(module.__file__).read_bytes())
+    runner = root / "tools/run_controlled_pilot.py"
+    runner.parent.mkdir(parents=True)
+    runner.write_bytes(Path(pilot.__file__).read_bytes())
+    monkeypatch.setattr(window_acceptance, "verify_frozen_window", lambda r: proof)
+    monkeypatch.setattr(source_cache_acceptance, "verify_source_cache_acceptance",
+                        lambda c: {"artifact_sha256": {"TEST_DOUBLE_ONLY": "e" * 64}})
+    PRODUCTION_UPSTREAM_VERIFIER(cache)
+    assert cache.upstream_acceptance_sha256["exact_window"] == "f" * 64
+    assert len(cache.upstream_acceptance_sha256["full_source_cache"]) == 64
+    assert cache.artifact_sha256["TEST_DOUBLE_ONLY"] == "e" * 64
+    assert proof["split"]["path"] in cache.artifact_sha256
+    # A --root pointing to another code version cannot record that version's
+    # SHA while actually running this process's model/training implementation.
+    with (root / "p3work/source_training.py").open("ab") as stream:
+        stream.write(b"\n# SOFTWARE_TEST_DOUBLE_DIFFERENT_PACKAGED_CODE\n")
+    with pytest.raises(pilot.PilotGateError, match="differs from packaged code"):
+        PRODUCTION_UPSTREAM_VERIFIER(cache)
+
+
 def test_dry_run_never_checks_cuda_or_calls_executor(gate_fixture, monkeypatch, capsys):
+    from p3work import runtime_clock
     root, _, _, _, _ = gate_fixture
     def forbidden(*args, **kwargs):
         pytest.fail("A CPU gate fixture attempted CUDA or model execution")
     monkeypatch.setattr(torch.cuda, "is_available", forbidden)
     monkeypatch.setattr(pilot, "execute_pilot", forbidden)
+    monkeypatch.setattr(runtime_clock, "collect_clock_preflight", forbidden)
     assert pilot.main(["--root", str(root)]) == 0
     result = json.loads(capsys.readouterr().out)
     assert result["training_started"] is False and result["gpu_checked"] is False

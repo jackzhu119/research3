@@ -94,10 +94,11 @@ def test_w1_block_happens_before_inventory_or_native_access(tmp_path, monkeypatc
     assert result["numerical_cache_created"] is False and not (tmp_path / "cache").exists()
 
 
-def test_declaring_partial_source_inventory_complete_cannot_complete_w2(partial_fixture):
+def test_declaring_partial_source_inventory_complete_cannot_complete_w2(partial_fixture, monkeypatch):
     root, inventory, _ = partial_fixture
     inventory.update(status="SOURCE_RAW_INVENTORY_COMPLETE", provider_roster_verified=True)
     write(root / "manifests/source_fixture.json", inventory)
+    monkeypatch.setattr(cache, "verify_frozen_window", lambda root: {"SOFTWARE_TEST_DOUBLE": True})
     with pytest.raises(cache.SourceCacheGateError, match="1/505"):
         cache.prepare_cache(root, "manifests/source_fixture.json", execute=True)
     assert not (root / "cache").exists()

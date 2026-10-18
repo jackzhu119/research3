@@ -17,7 +17,13 @@ The unchanged `protocol/legacy_baseline_v1` is historical source material.
 - `episodes.py`: W1/W3 and manifest-bound real episode interface, original paid
   prefix/run/query rules, deterministic participant-then-session sampling,
   split permissions and explicit label capabilities. No missing participant is
-  silently removed from the validation denominator.
+  silently removed from the validation denominator. The support-only interface
+  does not materialize query arrays or label capabilities. Catalogs, row maps
+  and plans are immutable and recheck their issued authority before access.
+- `fit_artifacts.py`: stores issued parameters for all fourteen methods using
+  tensors/JSON and complete SHA verification. Loading requires the same source,
+  reference, method, seed, role and paid prefix. It preserves numerical layout
+  and never refits or restores RNG merely to recover predictions.
 - `source_training.py` and `classical_training.py`: resumable, budgeted source
   entry points with complete plans and artifact hashes. The source neural plan
   has 15 development or 25 confirmation fits; the historical core math plan has
@@ -31,11 +37,13 @@ The unchanged `protocol/legacy_baseline_v1` is historical source material.
   Confirmation requires screening evidence; it cannot invent a selected model.
   `meta_engineering.py` verifies the actual 100-update checkpoint, both scheduled
   validations, full timing/memory ledger and same-device runtime before search.
-- `development_evaluation.py`: fixed control-search/confirmation plans and a
-  prediction-first resumable software-fixture core. Formal execution remains
-  blocked until a bounded measured GPU profile producer and complete production
-  parameter/checkpoint/timing/receipt verifier are implemented. It does not emit
-  a real W6 completion or make a synthetic selection into B*.
+- `development_evaluation.py`: fixed control-search/confirmation plans, bounded
+  calibration-profile and production evaluation entry points. Candidate
+  parameters are committed before predictions; recovery reuses a committed
+  candidate and counts incomplete dispatched attempts. Formal execution still
+  requires real data/source/learned artifacts, a complete measured same-device
+  profile and explicit budgets after user boot. No real W6 completion or B*
+  selection has occurred.
 - `prediction_store.py`: immutable logits/probability/class transactions,
   event identity, paid-label and update/time costs, and full SHA verification
   before internal holdout label release.
@@ -55,6 +63,13 @@ The unchanged `protocol/legacy_baseline_v1` is historical source material.
 - `tools/prepare_stieger_cache.py`: frozen-window, full-registry CPU cache plan,
   serial resource bounds, interruption recovery and complete R2 GET verification.
   It is not running before its W1 gate.
+- `window_acceptance.py` and `source_cache_acceptance.py`: independent read-only
+  acceptance of all 396 meta-train session metadata and all 505 source objects.
+  Window thresholds use integer counts and exact rational arithmetic. A
+  disagreement with the frozen decision blocks downstream work. Source checks
+  account for every native LR trial as valid or explicitly excluded, verify
+  actual float32 cache bytes, and bind complete R2 GET proofs. Status strings
+  cannot substitute for these artifacts.
 
 ## Acceptance scope and remaining gates
 

@@ -10,6 +10,7 @@ signal/input-contract identity here, never a claim of final W7 external freeze.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+from collections.abc import Mapping
 import hashlib
 import json
 import math
@@ -17,6 +18,7 @@ from pathlib import Path
 import re
 from types import MappingProxyType
 from typing import Any
+from weakref import WeakKeyDictionary
 
 import numpy as np
 import torch
@@ -31,6 +33,8 @@ PARTITIONS = ("meta_train", "meta_validation", "internal_holdout")
 PURPOSES = {"meta_train": "meta_gradient", "meta_validation": "model_selection",
             "internal_holdout": "internal_development_check"}
 STAGE = "pre_rms_car11_temporal_demeaned"
+_CATALOG_ISSUER = object()
+_CATALOG_SEALS = WeakKeyDictionary()
 
 
 class EpisodeGateError(ValueError):
@@ -62,8 +66,8 @@ def _local(root: Path, relative: str, *, must_exist=True) -> Path:
     return resolved
 
 
-def _artifact(root: Path, descriptor: dict, *, suffix=None) -> Path:
-    if not isinstance(descriptor, dict) or set(descriptor) != {"path", "sha256"}:
+def _artifact(root: Path, descriptor: Mapping, *, suffix=None) -> Path:
+    if not isinstance(descriptor, Mapping) or set(descriptor) != {"path", "sha256"}:
         raise EpisodeGateError("artifact_path_and_sha256_required")
     expected = _sha(descriptor["sha256"])
     path = _local(root, descriptor["path"])
@@ -143,7 +147,7 @@ def _internal_access(root: Path, tasks: dict, descriptor: dict | None,
     return access, descriptor["sha256"]
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class EpisodePlan:
     participant_id: str
     session_id: str
@@ -221,62 +225,149 @@ class EvaluationEpisode:
     plan: EpisodePlan
 
 
+def _immutable(value):
+    """Copy all nested scientific bindings into immutable containers once."""
+    if isinstance(value, Mapping):
+        return MappingProxyType({_immutable(key): _immutable(item) for key, item in value.items()})
+    if isinstance(value, (list, tuple)):
+        return tuple(_immutable(item) for item in value)
+    if value is None or type(value) in {str, int, float, bool} or isinstance(value, (Path, EpisodePlan)):
+        return value
+    raise EpisodeGateError("catalog_binding_contains_unfreezable_value")
+
+
+def _event_tensors(x, rows: Mapping, uids: tuple[str, ...], *, n_times: int, device):
+    selected = [rows[uid] for uid in uids]
+    indices = [row["cache_index"] for row in selected]
+    values = np.asarray(x[indices], dtype=np.float64).copy() if indices else np.empty((0, 11, n_times), dtype=np.float64)
+    signal = torch.from_numpy(values).to(device=device)
+    labels = torch.tensor([row["label"] for row in selected], dtype=torch.long, device=device)
+    return signal, labels
+
+
+def _plan_binding_sha(plan: EpisodePlan):
+    return digest({name: getattr(plan, name) for name in EpisodePlan.__dataclass_fields__})
+
+
+def _task_scientific_bindings(tasks, contract_sha, split_sha):
+    if (tasks.get("W1", {}).get("input_contract_sha256") != contract_sha
+            or tasks.get("W3", {}).get("input_contract_sha256") != contract_sha
+            or tasks.get("W3", {}).get("split_sha256") != split_sha):
+        raise EpisodeGateError("current_W1_W3_scientific_binding_mismatch")
+
+
 class VerifiedEpisodeCatalog:
     """Construct with load_episode_catalog; all plans bind actual local artifacts."""
+
+    __slots__ = ("root", "role", "purpose", "manifest_sha256", "split_sha256", "input_contract_sha256",
+                 "final_protocol_freeze_sha256", "n_times", "plans", "partition_people", "_sessions", "_plans",
+                 "_internal", "identity_sha256", "__weakref__")
 
     def __init__(self, *, root: Path, role: str, purpose: str, manifest_sha256: str,
                  split_sha256: str, input_contract_sha256: str, n_times: int,
                  sessions: dict, plans: tuple[EpisodePlan, ...], partition_people: tuple[str, ...],
-                 internal_access: dict | None = None, access_sha256: str | None = None):
-        self.root, self.role, self.purpose = root, role, purpose
-        self.manifest_sha256 = manifest_sha256
-        self.split_sha256 = split_sha256
-        self.input_contract_sha256 = input_contract_sha256
-        self.final_protocol_freeze_sha256 = None
-        self.n_times = n_times
-        self.plans = plans
-        self.partition_people = partition_people
-        self._sessions = MappingProxyType(sessions)
-        self._plans = {(plan.participant_id, plan.session_id): plan for plan in plans}
-        self._internal = internal_access
-        self.identity_sha256 = digest({"manifest_sha256": manifest_sha256, "split_sha256": split_sha256,
+                 internal_access: dict | None = None, access_sha256: str | None = None, _issuer=None):
+        if _issuer is not _CATALOG_ISSUER:
+            raise PermissionError("episode_catalog_must_be_issued_by_verified_loader")
+        attributes = {"root": root, "role": role, "purpose": purpose, "manifest_sha256": manifest_sha256,
+            "split_sha256": split_sha256, "input_contract_sha256": input_contract_sha256,
+            "final_protocol_freeze_sha256": None, "n_times": n_times, "plans": tuple(plans),
+            "partition_people": tuple(partition_people), "_sessions": _immutable(sessions),
+            "_plans": _immutable({(plan.participant_id, plan.session_id): plan for plan in plans}),
+            "_internal": _immutable(internal_access)}
+        attributes["identity_sha256"] = digest({"manifest_sha256": manifest_sha256, "split_sha256": split_sha256,
             "input_contract_sha256": input_contract_sha256, "role": role, "purpose": purpose,
             "internal_access_sha256": access_sha256})
+        for name, value in attributes.items():
+            object.__setattr__(self, name, value)
 
-    def plan(self, participant_id: str, session_id: str) -> EpisodePlan:
-        try:
-            return self._plans[participant_id, str(session_id)]
-        except KeyError:
-            raise PermissionError("session_not_in_authorized_partition") from None
+    def __setattr__(self, name, value):
+        raise AttributeError("issued_episode_catalog_bindings_are_immutable")
 
-    def materialize(self, plan: EpisodePlan, *, device="cpu") -> MetaTrainEpisode | EvaluationEpisode:
-        if (type(plan) is not EpisodePlan or self._plans.get((plan.participant_id, plan.session_id)) != plan
+    def __delattr__(self, name):
+        raise AttributeError("issued_episode_catalog_bindings_are_immutable")
+
+    def _assert_current_authority(self):
+        # The issuance record is independent of mutable object attributes. It
+        # contains immutable references, never a freshly reconstructed catalog.
+        seal = _CATALOG_SEALS.get(self)
+        if seal is None:
+            raise PermissionError("episode_catalog_has_no_verified_issuance_seal")
+        for name, value in seal["bindings"].items():
+            actual = getattr(self, name, None)
+            if (actual is not value if name in {"_sessions", "_plans", "plans", "partition_people", "_internal"} else actual != value):
+                raise PermissionError("issued_episode_catalog_binding_changed")
+        tasks = _read_json(_local(seal["root"], "status/tasks.json"))
+        if tasks.get("W1", {}).get("status") != "COMPLETE" or tasks.get("W3", {}).get("status") != "COMPLETE":
+            raise EpisodeGateError("W1_and_full_real_W3_must_be_COMPLETE")
+        if tasks["W3"].get("cache_manifest") != seal["cache_manifest"]:
+            raise EpisodeGateError("catalog_current_W3_authority_changed")
+        _task_scientific_bindings(tasks, seal["input_contract_sha256"], seal["split_sha256"])
+        for descriptor in seal["authority_artifacts"]:
+            _artifact(seal["root"], descriptor)
+        if seal["role"] == "internal_holdout":
+            access, access_sha = _internal_access(seal["root"], tasks, dict(seal["internal_access_receipt"]),
+                                                  seal["split_sha256"], seal["input_contract_sha256"])
+            if _immutable(access) != self._internal or access_sha != seal["access_sha256"]:
+                raise PermissionError("internal_development_check_permission_changed")
+        return seal
+
+    def _assert_issued_plan(self, plan, seal):
+        if (type(plan) is not EpisodePlan or self._plans.get((plan.participant_id, plan.session_id)) is not plan
                 or plan.role != self.role or plan.manifest_sha256 != self.manifest_sha256):
             raise PermissionError("episode_plan_not_issued_by_this_catalog")
+        if _plan_binding_sha(plan) != seal["plan_binding_sha256"][(plan.participant_id, plan.session_id)]:
+            raise PermissionError("issued_episode_plan_binding_changed")
+
+    def _assert_plan(self, plan):
+        seal = self._assert_current_authority()
+        self._assert_issued_plan(plan, seal)
+        if self.purpose != PURPOSES.get(self.role):
+            raise PermissionError("partition_purpose_permission_mismatch")
         if not plan.query_eligible or len(plan.acquired_event_uids) != 20:
             raise EpisodeGateError("episode_not_evaluable_under_predeclared_B20_query_rules")
+
+    def plan(self, participant_id: str, session_id: str) -> EpisodePlan:
+        seal = self._assert_current_authority()
+        try:
+            plan = self._plans[participant_id, str(session_id)]
+        except KeyError:
+            raise PermissionError("session_not_in_authorized_partition") from None
+        self._assert_issued_plan(plan, seal)
+        return plan
+
+    def materialize_support(self, plan: EpisodePlan, *, device="cpu") -> CalibrationPrefix:
+        """Issue only the original B20 support, without querying future labels.
+
+        Complete file hashes are rechecked, but the numerical view indexes only
+        valid acquired-prefix events. Invalid acquired originals still cost 20;
+        neither absent classes nor excluded originals receive replacements.
+        """
+        self._assert_plan(plan)
+        session = self._sessions[plan.participant_id, plan.session_id]
+        array_path = _artifact(self.root, session["X"], suffix=".npy")
+        _artifact(self.root, session["events"], suffix=".json")
+        x = np.load(array_path, mmap_mode="r", allow_pickle=False)
+        signal, labels = _event_tensors(x, session["rows"], plan.support_event_uids, n_times=self.n_times, device=device)
+        role = {"meta_train": "meta_train_support", "meta_validation": "meta_validation_support",
+                "internal_holdout": "calibration_prefix"}[self.role]
+        return CalibrationPrefix(signal, labels, plan.support_event_uids, plan.acquired_event_uids,
+                                 self.input_contract_sha256, role=role)
+
+    def materialize(self, plan: EpisodePlan, *, device="cpu") -> MetaTrainEpisode | EvaluationEpisode:
+        self._assert_plan(plan)
         session = self._sessions[plan.participant_id, plan.session_id]
         # Revalidate selected bytes at materialization, so a mutated file cannot
         # inherit an earlier successful catalog load.
         array_path = _artifact(self.root, session["X"], suffix=".npy")
         _artifact(self.root, session["events"], suffix=".json")
         x = np.load(array_path, mmap_mode="r", allow_pickle=False)
-        rows = session["rows"]
-
-        def tensors(uids):
-            rr = [rows[uid] for uid in uids]
-            indices = [row["cache_index"] for row in rr]
-            values = np.asarray(x[indices], dtype=np.float64).copy() if indices else np.empty((0, 11, self.n_times), dtype=np.float64)
-            signal = torch.from_numpy(values).to(device=device)
-            labels = torch.tensor([row["label"] for row in rr], dtype=torch.long, device=device)
-            return signal, labels
-
-        support_x, support_y = tensors(plan.support_event_uids)
+        support_x, support_y = _event_tensors(x, session["rows"], plan.support_event_uids, n_times=self.n_times, device=device)
         support_role = {"meta_train": "meta_train_support", "meta_validation": "meta_validation_support",
                         "internal_holdout": "calibration_prefix"}[self.role]
         support = CalibrationPrefix(support_x, support_y, plan.support_event_uids,
                                     plan.acquired_event_uids, self.input_contract_sha256, role=support_role)
-        query_x, query_y = tensors(plan.query_event_uids)
+        query_x, query_y = _event_tensors(x, session["rows"], plan.query_event_uids, n_times=self.n_times, device=device)
         if self.role == "meta_train":
             if self.purpose != "meta_gradient":
                 raise PermissionError("meta_gradient_capability_required")
@@ -460,6 +551,7 @@ def load_episode_catalog(root, cache_manifest=None, split_path=None, *,
     if (manifest.get("split_sha256") != split_sha
             or contract["window_audit_receipt"]["split_sha256"] != split_sha):
         raise EpisodeGateError("input_cache_and_person_split_identities_disagree")
+    _task_scientific_bindings(tasks, contract_sha, split_sha)
     internal, access_sha = None, None
     if role == "internal_holdout":
         internal, access_sha = _internal_access(root, tasks, internal_access_receipt, split_sha, contract_sha)
@@ -533,10 +625,23 @@ def load_episode_catalog(root, cache_manifest=None, split_path=None, *,
             "rows": MappingProxyType({row["event_uid"]: MappingProxyType(row) for row in rows}),
         }
     plans.sort(key=lambda plan: (int(plan.participant_id[1:]), int(plan.session_id)))
-    return VerifiedEpisodeCatalog(root=root, role=role, purpose=purpose, manifest_sha256=manifest_sha,
+    catalog = VerifiedEpisodeCatalog(root=root, role=role, purpose=purpose, manifest_sha256=manifest_sha,
         split_sha256=split_sha, input_contract_sha256=contract_sha, n_times=contract["n_times"],
         sessions=selected, plans=tuple(plans), partition_people=tuple(split["partitions"][role]),
-        internal_access=internal, access_sha256=access_sha)
+        internal_access=internal, access_sha256=access_sha, _issuer=_CATALOG_ISSUER)
+    _CATALOG_SEALS[catalog] = MappingProxyType({
+        "root": root, "role": role, "split_sha256": split_sha, "input_contract_sha256": contract_sha,
+        "cache_manifest": _immutable(authority), "internal_access_receipt": _immutable(internal_access_receipt),
+        "access_sha256": access_sha,
+        "plan_binding_sha256": _immutable({(plan.participant_id, plan.session_id): _plan_binding_sha(plan)
+                                           for plan in catalog.plans}),
+        "authority_artifacts": tuple(_immutable(item) for item in (
+            authority, manifest["input_contract"], manifest["participant_split"], manifest["adapter_code"],
+            manifest["processing_code"], manifest["official_inventory"])),
+        "bindings": MappingProxyType({name: getattr(catalog, name) for name in catalog.__slots__ if name != "__weakref__"}),
+    })
+    catalog._assert_current_authority()
+    return catalog
 
 
 class DeterministicEpisodeSampler:
@@ -549,9 +654,24 @@ class DeterministicEpisodeSampler:
     select a predeclared nested-identity experiment within the same frozen split.
     """
 
+    __slots__ = ("catalog", "seed", "cursor", "device", "people", "_eligible", "selection_sha256")
+
+    def __setattr__(self, name, value):
+        if name != "cursor":
+            raise AttributeError("episode_sampler_metadata_is_immutable")
+        if type(value) is not int or value < 0:
+            raise EpisodeGateError("integer_seed_and_nonnegative_sampler_cursor_required")
+        object.__setattr__(self, name, value)
+
+    def __delattr__(self, name):
+        raise AttributeError("episode_sampler_metadata_is_immutable")
+
     def __init__(self, catalog: VerifiedEpisodeCatalog, seed: int, *, cursor=0,
                  device="cpu", participant_subset=None):
-        if type(catalog) is not VerifiedEpisodeCatalog or catalog.role != "meta_train" or catalog.purpose != "meta_gradient":
+        if type(catalog) is not VerifiedEpisodeCatalog:
+            raise PermissionError("training_sampler_requires_meta_train_catalog")
+        catalog._assert_current_authority()
+        if catalog.role != "meta_train" or catalog.purpose != "meta_gradient":
             raise PermissionError("training_sampler_requires_meta_train_catalog")
         if type(seed) is not int or type(cursor) is not int or cursor < 0:
             raise EpisodeGateError("integer_seed_and_nonnegative_sampler_cursor_required")
@@ -565,11 +685,12 @@ class DeterministicEpisodeSampler:
                     for person in people}
         if any(not plans for plans in eligible.values()):
             raise EpisodeGateError("frozen_meta_train_person_has_no_evaluable_future_query_no_silent_reassignment")
-        self.catalog, self.seed, self.cursor, self.device = catalog, seed, cursor, device
-        self.people = people
-        self._eligible = eligible
-        self.selection_sha256 = digest({person: [plan.temporal_audit_sha256 for plan in plans]
-                                        for person, plans in eligible.items()})
+        attributes = {"catalog": catalog, "seed": seed, "cursor": cursor, "device": device,
+            "people": people, "_eligible": _immutable(eligible),
+            "selection_sha256": digest({person: [plan.temporal_audit_sha256 for plan in plans]
+                                         for person, plans in eligible.items()})}
+        for name, value in attributes.items():
+            object.__setattr__(self, name, value)
 
     def _draw(self, size: int, stage: str) -> int:
         # Rejection avoids modulo bias and never consumes global Python/NumPy/
@@ -583,9 +704,11 @@ class DeterministicEpisodeSampler:
             attempt += 1
 
     def next_plan(self) -> EpisodePlan:
+        seal = self.catalog._assert_current_authority()
         person = self.people[self._draw(len(self.people), "subject")]
         sessions = self._eligible[person]
         plan = sessions[self._draw(len(sessions), "session:" + person)]
+        self.catalog._assert_issued_plan(plan, seal)
         self.cursor += 1
         return plan
 
@@ -605,6 +728,7 @@ class DeterministicEpisodeSampler:
         return self
 
     def state_dict(self) -> dict:
+        self.catalog._assert_current_authority()
         return {"schema_version": "paper3-episode-sampler-v1", "seed": self.seed,
                 "cursor": self.cursor, "catalog_sha256": self.catalog.identity_sha256,
                 "manifest_sha256": self.catalog.manifest_sha256, "split_sha256": self.catalog.split_sha256,

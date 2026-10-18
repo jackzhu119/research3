@@ -17,6 +17,7 @@ import sys
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 from p3work.contracts import SOURCE_IDS, file_digest
+from p3work.window_acceptance import WindowAcceptanceError, verify_frozen_window
 from tools import source_preparation_batch as batch
 from tools.prepare_source_cache import prepare_cache
 from tools.r2_backup import run_backup, sha256_file
@@ -144,6 +145,12 @@ def prepare_all(root=REPO, *, contract="contracts/input_contract.json", progress
     if contract_path != root / "contracts/input_contract.json":
         raise PreparationError("canonical_input_contract_path_required")
     contract_sha = batch.execution_gate(root)
+    # Independent integer-count acceptance precedes every raw HEAD/GET and all
+    # preparation writes, even if a caller replaces the raw worker.
+    try:
+        window_proof = verify_frozen_window(root)
+    except WindowAcceptanceError as error:
+        raise PreparationError(error.code) from None
     lock_path = root / "audit/source_full/.prepare_all_sources.lock"
     no_symlink_components(lock_path)
     lock_path.parent.mkdir(parents=True, exist_ok=True)
@@ -154,7 +161,8 @@ def prepare_all(root=REPO, *, contract="contracts/input_contract.json", progress
         except BlockingIOError:
             raise PreparationError("all_sources_preparation_already_active") from None
         checkpoint = {"status": "RAW_PREPARATION", "execute": True, "training_started": False,
-                      "input_contract_sha256": contract_sha, "verified_raw_objects": 0, "candidate_objects": 505}
+                      "input_contract_sha256": contract_sha, "verified_raw_objects": 0, "candidate_objects": 505,
+                      "exact_window_acceptance_sha256": window_proof["artifact_sha256"]}
         batch.atomic_json(progress_path, checkpoint)
         try:
             raw_result = raw_fn(plan, root=root)

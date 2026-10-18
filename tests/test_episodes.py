@@ -4,6 +4,7 @@ Official-shaped metadata and status records below are test doubles for gate
 math. They are not empirical evidence that W1/W3 or any research run completed.
 """
 import copy
+from dataclasses import replace
 import hashlib
 import json
 from pathlib import Path
@@ -13,10 +14,11 @@ import pytest
 import torch
 
 from p3work.adapt import CalibrationPrefix
+from p3work import episodes as episode_module
 from p3work.contracts import CHANNELS, digest, file_digest, validate_signal_contract
 from p3work.episodes import (
     DeterministicEpisodeSampler, EpisodeGateError, EvaluationEpisode, EvaluationLabels,
-    load_episode_catalog,
+    VerifiedEpisodeCatalog, load_episode_catalog,
 )
 from p3work.methods.meta_train import MetaTrainEpisode, episode_objective
 from p3work.splits import freeze_subject_split
@@ -159,6 +161,8 @@ class EpisodeFixture:
 
     def refresh(self):
         write(self.manifest_path, self.manifest)
+        self.tasks["W1"]["input_contract_sha256"] = self.contract_sha
+        self.tasks["W3"].update(input_contract_sha256=self.contract_sha, split_sha256=self.split["split_sha256"])
         self.tasks["W3"]["cache_manifest"] = descriptor(self.root, self.manifest_path)
         write(self.root / "status/tasks.json", self.tasks)
 
@@ -209,6 +213,285 @@ def test_B20_cost_retains_invalid_and_excludes_entire_boundary_run(fixture):
     assert audit["original_event_audit"][20]["physical_run_id"] == 1
     assert audit["original_event_audit"][25]["physical_run_id"] == 2
     assert all("label" not in row for row in audit["original_event_audit"])
+
+
+@pytest.mark.parametrize("role", ["meta_train", "meta_validation"])
+def test_support_only_matches_full_episode_bitwise_and_keeps_original_B20_cost(fixture, role):
+    catalog = fixture.load(role=role); plan = catalog.plans[0]
+    expected = catalog.materialize(plan).support
+    actual = catalog.materialize_support(plan, device="cpu")
+    assert type(actual) is CalibrationPrefix
+    assert torch.equal(actual.x, expected.x) and torch.equal(actual.y, expected.y)
+    assert actual.x.dtype == torch.float64 and actual.y.dtype == torch.long
+    assert actual.x.device.type == actual.y.device.type == "cpu"
+    assert actual.event_uids == expected.event_uids == plan.support_event_uids
+    assert actual.acquired_event_uids == expected.acquired_event_uids == plan.acquired_event_uids
+    assert len(actual.acquired_event_uids) == 20 and len(actual.event_uids) == 19
+    assert actual.acquired_event_uids[0] not in actual.event_uids
+    assert actual.role == expected.role and actual.protocol_freeze_sha == expected.protocol_freeze_sha
+
+
+@pytest.mark.parametrize("role", ["meta_train", "meta_validation"])
+def test_support_only_never_indexes_query_signal_or_rows_or_constructs_query_capabilities(fixture, monkeypatch, role):
+    catalog = fixture.load(role=role); plan = catalog.plans[0]
+    session = catalog._sessions[plan.participant_id, plan.session_id]
+    allowed_uids = set(plan.support_event_uids)
+    allowed_indices = {session["rows"][uid]["cache_index"] for uid in allowed_uids}
+
+    class PrefixOnlyRows:
+        def __init__(self, rows):
+            self.rows = rows
+
+        def __getitem__(self, uid):
+            assert uid in allowed_uids, "Future or excluded metadata/labels accessed"
+            return self.rows[uid]
+
+    real_load = np.load
+    real_tensors = episode_module._event_tensors
+
+    def prefix_only_tensors(x, rows, uids, **kwargs):
+        assert set(uids) <= allowed_uids, "Future or excluded label view requested"
+        return real_tensors(x, PrefixOnlyRows(rows), uids, **kwargs)
+
+    class PrefixOnlyArray:
+        def __init__(self, array):
+            self.array = array
+
+        def __getitem__(self, indices):
+            assert set(indices) <= allowed_indices, "Future or excluded numerical cache indexed"
+            return self.array[indices]
+
+    def load_prefix_only(*args, **kwargs):
+        assert kwargs == {"mmap_mode": "r", "allow_pickle": False}
+        return PrefixOnlyArray(real_load(*args, **kwargs))
+
+    def no_query_capability(*args, **kwargs):
+        pytest.fail("Support-only path constructed a query/label capability")
+
+    monkeypatch.setattr(np, "load", load_prefix_only)
+    monkeypatch.setattr(episode_module, "_event_tensors", prefix_only_tensors)
+    for name in ("PredictionInputs", "EvaluationLabels", "MetaTrainEpisode"):
+        monkeypatch.setattr(episode_module, name, no_query_capability)
+    support = catalog.materialize_support(plan)
+    assert support.event_uids == plan.support_event_uids and len(support.acquired_event_uids) == 20
+
+
+@pytest.mark.parametrize("payload", ["X", "events"])
+def test_support_only_rechecks_actual_array_and_event_hashes(fixture, payload):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    path = fixture.root / fixture.session()[payload]["path"]
+    with path.open("ab") as stream:
+        stream.write(b"SYNTHETIC_MUTATION_AFTER_CATALOG_VERIFICATION")
+    with pytest.raises(EpisodeGateError, match="artifact_sha256"):
+        catalog.materialize_support(plan)
+
+
+def test_support_only_rejects_unknown_tampered_and_foreign_role_plans_before_payload_access(fixture, monkeypatch):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    validation = fixture.load(role="meta_validation")
+    bad = [object(), validation.plans[0], replace(plan, session_id="999999"),
+           replace(plan, role="internal_holdout"), replace(plan, manifest_sha256="0" * 64),
+           replace(plan, support_event_uids=plan.query_event_uids[:19]),
+           replace(plan, acquired_event_uids=plan.query_event_uids[:20]),
+           replace(plan, temporal_audit_sha256="0" * 64)]
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Unknown/foreign plan touched numerical cache"))
+    for candidate in bad:
+        with pytest.raises(PermissionError, match="not_issued_by_this_catalog"):
+            catalog.materialize_support(candidate)
+
+
+def test_support_only_cannot_repurpose_a_catalog_permission(fixture, monkeypatch):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    with pytest.raises(AttributeError, match="bindings_are_immutable"):
+        catalog.purpose = "internal_development_check"
+    # Even a deliberate object.__setattr__ bypass cannot rewrite the external
+    # issuance record and acquire a different capability.
+    object.__setattr__(catalog, "purpose", "internal_development_check")
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Wrong-purpose catalog touched numerical cache"))
+    with pytest.raises(PermissionError, match="binding_changed"):
+        catalog.materialize_support(plan)
+
+
+def test_catalog_nested_bindings_cannot_remap_future_query_rows_into_support(fixture):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    key = plan.participant_id, plan.session_id
+    session = catalog._sessions[key]
+    support_uid, query_uid = plan.support_event_uids[0], plan.query_event_uids[0]
+    expected = catalog.materialize_support(plan)
+    with pytest.raises(TypeError):
+        session["rows"] = {support_uid: session["rows"][query_uid]}
+    with pytest.raises(TypeError):
+        session["rows"][support_uid] = session["rows"][query_uid]
+    with pytest.raises(TypeError):
+        session["rows"][support_uid]["cache_index"] = session["rows"][query_uid]["cache_index"]
+    with pytest.raises(TypeError):
+        session["rows"][support_uid]["preprocessing_qc"]["data_after_context_accessed"] = True
+    with pytest.raises(TypeError):
+        session["X"]["path"] = "future_query.npy"
+    with pytest.raises(TypeError):
+        catalog._plans[key] = replace(plan, support_event_uids=plan.query_event_uids[:19])
+    with pytest.raises(AttributeError):
+        plan.support_event_uids = plan.query_event_uids[:19]
+    assert not hasattr(plan, "__dict__")
+    with pytest.raises(AttributeError, match="bindings_are_immutable"):
+        catalog._sessions = {key: session}
+    actual = catalog.materialize_support(plan)
+    assert torch.equal(actual.x, expected.x) and torch.equal(actual.y, expected.y)
+
+
+def test_public_constructor_and_unissued_object_cannot_forge_verified_catalog(fixture, monkeypatch):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Unissued catalog touched numerical cache"))
+    with pytest.raises(PermissionError, match="must_be_issued_by_verified_loader"):
+        VerifiedEpisodeCatalog(root=fixture.root, role="meta_train", purpose="meta_gradient",
+            manifest_sha256=catalog.manifest_sha256, split_sha256=catalog.split_sha256,
+            input_contract_sha256=catalog.input_contract_sha256, n_times=catalog.n_times,
+            sessions=catalog._sessions, plans=catalog.plans, partition_people=catalog.partition_people)
+    unissued = object.__new__(VerifiedEpisodeCatalog)
+    for operation in (lambda: unissued.materialize_support(plan), lambda: unissued.materialize(plan),
+                      lambda: unissued.plan(plan.participant_id, plan.session_id),
+                      lambda: DeterministicEpisodeSampler(unissued, 1)):
+        with pytest.raises(PermissionError, match="no_verified_issuance_seal"):
+            operation()
+
+
+def test_independent_plan_hash_seal_rejects_low_level_rewrite_of_same_issued_object(fixture, monkeypatch):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    sampler = DeterministicEpisodeSampler(catalog, 1, participant_subset=[plan.participant_id])
+    # Fix this software fixture to the first session of this participant.
+    monkeypatch.setattr(DeterministicEpisodeSampler, "_draw", lambda self, size, stage: 0)
+    object.__setattr__(plan, "support_event_uids", plan.query_event_uids[:19])
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Rewritten issued plan touched numerical cache"))
+    for operation in (lambda: catalog.materialize_support(plan), lambda: catalog.materialize(plan),
+                      lambda: catalog.plan(plan.participant_id, plan.session_id), sampler.next_plan):
+        with pytest.raises(PermissionError, match="issued_episode_plan_binding_changed"):
+            operation()
+    assert sampler.cursor == 0
+
+
+@pytest.mark.parametrize("operation", ["support", "episode", "sample"])
+@pytest.mark.parametrize("stage", ["W1", "W3"])
+def test_current_stage_downgrade_revokes_existing_materialization_and_sampler(fixture, monkeypatch, stage, operation):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    sampler = DeterministicEpisodeSampler(catalog, 1)
+    fixture.tasks[stage]["status"] = "PARTIAL"
+    write(fixture.root / "status/tasks.json", fixture.tasks)
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Revoked stage touched numerical cache"))
+    calls = {"support": lambda: catalog.materialize_support(plan), "episode": lambda: catalog.materialize(plan),
+             "sample": sampler.next_plan}
+    with pytest.raises(EpisodeGateError, match="must_be_COMPLETE"):
+        calls[operation]()
+    assert sampler.cursor == 0
+    with pytest.raises(EpisodeGateError, match="must_be_COMPLETE"):
+        DeterministicEpisodeSampler(catalog, 1)
+
+
+@pytest.mark.parametrize("operation", ["support", "episode", "sample"])
+@pytest.mark.parametrize("authority", ["contract", "split", "manifest", "adapter", "processing", "inventory", "W3_descriptor"])
+def test_current_authority_drift_revokes_existing_materialization_and_sampler(fixture, monkeypatch, authority, operation):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    sampler = DeterministicEpisodeSampler(catalog, 1)
+    paths = {"contract": fixture.contract_path, "split": fixture.split_path, "manifest": fixture.manifest_path,
+        "adapter": fixture.root / fixture.adapter["path"], "processing": fixture.root / fixture.processing["path"],
+        "inventory": fixture.root / fixture.manifest["official_inventory"]["path"]}
+    if authority == "W3_descriptor":
+        fixture.tasks["W3"]["cache_manifest"] = {"path": fixture.manifest_path.relative_to(fixture.root).as_posix(), "sha256": "0" * 64}
+        write(fixture.root / "status/tasks.json", fixture.tasks)
+    elif paths[authority].suffix == ".json":
+        write(paths[authority], {})
+    else:
+        with paths[authority].open("a") as stream:
+            stream.write("\n# SYNTHETIC_POST_ISSUANCE_CODE_DRIFT\n")
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Changed authority touched numerical cache"))
+    calls = {"support": lambda: catalog.materialize_support(plan), "episode": lambda: catalog.materialize(plan),
+             "sample": sampler.next_plan}
+    with pytest.raises(EpisodeGateError, match="artifact_sha256|authority_changed"):
+        calls[operation]()
+    assert sampler.cursor == 0
+
+
+def test_sampler_metadata_and_selection_are_immutable_but_resume_cursor_stays_supported(fixture):
+    catalog = fixture.load(); sampler = DeterministicEpisodeSampler(catalog, 7)
+    with pytest.raises(TypeError):
+        sampler._eligible[sampler.people[0]] = ()
+    for name, value in (("catalog", object()), ("seed", 5), ("people", ()), ("_eligible", {}), ("selection_sha256", "0" * 64)):
+        with pytest.raises(AttributeError, match="metadata_is_immutable"):
+            setattr(sampler, name, value)
+    sampler.cursor = 4
+    state = sampler.state_dict()
+    restored = DeterministicEpisodeSampler(catalog, 7)
+    restored.load_state_dict(state)
+    assert restored.cursor == 4
+    assert restored.next_plan() == sampler.next_plan()
+
+
+@pytest.mark.parametrize("stage,field", [("W1", "input_contract_sha256"),
+                                         ("W3", "input_contract_sha256"), ("W3", "split_sha256")])
+@pytest.mark.parametrize("change", ["missing", "changed"])
+def test_current_task_scientific_bindings_cannot_contradict_catalog_seal(fixture, monkeypatch, stage, field, change):
+    catalog = fixture.load(); plan = catalog.plans[0]
+    sampler = DeterministicEpisodeSampler(catalog, 1)
+    if change == "missing":
+        del fixture.tasks[stage][field]
+    else:
+        fixture.tasks[stage][field] = "0" * 64
+    write(fixture.root / "status/tasks.json", fixture.tasks)
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Contradictory scientific binding touched numerical cache"))
+    for operation in (lambda: catalog.materialize_support(plan), lambda: catalog.materialize(plan),
+                      lambda: catalog.plan(plan.participant_id, plan.session_id), sampler.next_plan, fixture.load):
+        with pytest.raises(EpisodeGateError, match="scientific_binding_mismatch"):
+            operation()
+    assert sampler.cursor == 0
+
+
+def authorize_synthetic_internal_catalog(fixture):
+    """Rebalance unaccessed test registry slots so only 11 internal payloads load.
+
+    All identities remain a complete 598-object, 62-person software double. The
+    numerical arrays and permission receipt below are entirely synthetic.
+    """
+    inventory_path = fixture.root / fixture.manifest["official_inventory"]["path"]
+    inventory = json.loads(inventory_path.read_text())
+    inventory_by_name = {entry["name"]: entry for entry in inventory["files"]}
+    for session in fixture.sessions:
+        if session["partition"] == "internal_holdout" and session["session_id"] != "1":
+            original = inventory_by_name[session["source_record_id"]]
+            person, ordinal = fixture.train[0], int(session["session_id"]) + 1
+            name = f"{person}_Session_{ordinal}.mat"
+            original.update(name=name, provider_subject=person, session_ordinal=ordinal)
+            session.update(participant_id=person, session_id=str(ordinal), partition="meta_train", source_record_id=name)
+        elif session["partition"] == "internal_holdout":
+            events = fixture.root / "cache/stieger/internal_holdout" / session["participant_id"] / "1/events.json"
+            write(events, fixture.rows(session))
+            session["events"] = descriptor(fixture.root, events)
+    write(inventory_path, inventory)
+    fixture.manifest["official_inventory"] = descriptor(fixture.root, inventory_path)
+    permission_path = fixture.root / "manifests/synthetic_internal_access.json"
+    write(permission_path, {"schema_version": "paper3-internal-check-access-v1",
+        "status": "AUTHORIZED_ONCE_DEVELOPMENT_CHECK", "role": "internal_holdout",
+        "split_sha256": fixture.split["split_sha256"], "input_contract_sha256": fixture.contract_sha,
+        "labels_after_predictions_only": True, "training_and_selection_allowed": False,
+        "selected_configuration_sha256": "c" * 64, "software_fixture_notes": ["not real data", "no internal evaluation"]})
+    permission = descriptor(fixture.root, permission_path)
+    fixture.tasks["W3"]["internal_access_receipt"] = permission
+    fixture.refresh()
+    return fixture.load(role="internal_holdout", internal_access_receipt=permission)
+
+
+def test_sealed_internal_support_rechecks_permission_and_keeps_query_labels_locked(fixture, monkeypatch):
+    catalog = authorize_synthetic_internal_catalog(fixture); plan = catalog.plans[0]
+    support = catalog.materialize_support(plan)
+    assert support.role == "calibration_prefix" and len(support.acquired_event_uids) == 20
+    episode = catalog.materialize(plan)
+    assert torch.equal(support.x, episode.support.x) and torch.equal(support.y, episode.support.y)
+    with pytest.raises(PermissionError, match="internal_labels_require_committed_predictions"):
+        episode.evaluation_labels.labels(purpose="internal_development_check")
+    del fixture.tasks["W3"]["internal_access_receipt"]
+    write(fixture.root / "status/tasks.json", fixture.tasks)
+    monkeypatch.setattr(np, "load", lambda *a, **k: pytest.fail("Revoked internal permission touched numerical cache"))
+    for operation in (lambda: catalog.materialize_support(plan), lambda: catalog.materialize(plan)):
+        with pytest.raises(PermissionError, match="explicit_post_selection_access_receipt"):
+            operation()
 
 
 def test_complete_future_runs_are_merged_before_per_class_query_threshold(fixture):
@@ -271,6 +554,9 @@ def test_missing_support_class_is_preserved_and_sampled_for_f0_fallback(fixture)
     assert set(episode.support.y.tolist()) == {0}
     assert len(episode.support.acquired_event_uids) == 20
     assert len(episode.support.event_uids) == 9
+    support = catalog.materialize_support(plan)
+    assert torch.equal(support.x, episode.support.x) and torch.equal(support.y, episode.support.y)
+    assert len(support.acquired_event_uids) == 20 and len(support.event_uids) == 9
 
 
 def test_query_threshold_failure_is_recorded_and_no_person_is_silently_reassigned(fixture):
@@ -284,6 +570,8 @@ def test_query_threshold_failure_is_recorded_and_no_person_is_silently_reassigne
     assert not catalog.plan(person, "1").query_eligible
     with pytest.raises(EpisodeGateError, match="not_evaluable"):
         catalog.materialize(catalog.plan(person, "1"))
+    with pytest.raises(EpisodeGateError, match="not_evaluable"):
+        catalog.materialize_support(catalog.plan(person, "1"))
     with pytest.raises(EpisodeGateError, match="no_silent_reassignment"):
         DeterministicEpisodeSampler(catalog, 4)
 

@@ -395,3 +395,100 @@ def test_direct_fit_record_construction_cannot_claim_verified_learning(fixture):
     ctx = fixture["build"]()
     with pytest.raises(PermissionError, match="issue a registered"):
         ctx.predict(registry.RegisteredFit(), fixture["inputs"])
+
+
+@pytest.mark.parametrize("field,value", [("updates", 0), ("fallback_reason", "insufficient_class_support"),
+    ("trainable_parameters", 999), ("support_event_uids", ()), ("acquired_event_uids", ()),
+    ("protocol_freeze_sha", "f" * 64), ("source_state_sha256", "f" * 64),
+    ("dictionary_sha256", "f" * 64), ("geometry_sha256", "f" * 64)])
+def test_all_operational_payload_metadata_is_frozen_at_registry_issuance(fixture, field, value):
+    ctx = fixture["build"]()
+    fitted = ctx.fit("B9", fixture["support"](), registry.registered_grid("B9")[0])
+    object.__setattr__(fitted.payload, field, value)  # Intentional software corruption.
+    with pytest.raises(ValueError, match="context or parameters changed"):
+        ctx.predict(fitted, fixture["inputs"])
+
+
+def test_lowrank_optimizer_configuration_is_also_part_of_the_issued_metadata(fixture):
+    ctx = fixture["build"]()
+    fitted = ctx.fit("B6", fixture["support"](), registry.registered_grid("B6")[0])
+    object.__setattr__(fitted.payload, "config", replace(fitted.payload.config, radius=.15))
+    with pytest.raises(ValueError, match="context or parameters changed"):
+        ctx.predict(fitted, fixture["inputs"])
+
+
+@pytest.mark.parametrize("violation", ["activation", "layout", "feature_count", "training", "requires_grad"])
+def test_b2_target_non_tensor_structure_and_inference_freeze_are_sealed(fixture, violation):
+    ctx = fixture["build"]()
+    fitted = ctx.fit("B2", fixture["support"](), registry.registered_grid("B2")[0])
+    target = fitted.payload.target_model
+    if violation == "activation": target.encoder[-1] = nn.Sigmoid()
+    elif violation == "layout": target.input_layout = "N1CT"
+    elif violation == "feature_count": target.feature_dim = 4
+    elif violation == "training": target.encoder[-1].training = True
+    else: next(target.parameters()).requires_grad_(True)
+    with pytest.raises(ValueError, match="context or parameters changed"):
+        ctx.predict(fitted, fixture["inputs"])
+
+
+def _different_dense_layout(value):
+    assert value.ndim == 2 and min(value.shape) > 1
+    changed = value.T.contiguous().T if value.is_contiguous() else value.contiguous()
+    assert changed.stride() != value.stride() and torch.equal(changed, value)
+    return changed
+
+
+@pytest.mark.parametrize("method,component", [("B2", "target_parameter"), ("B3", "alignment"),
+    ("B6", "u"), ("B9", "dictionary"), ("B9", "delta_w")])
+def test_value_preserving_parameter_stride_change_invalidates_issued_fit(fixture, method, component):
+    ctx = fixture["build"]()
+    row = registry.registered_grid(method)[3 if method == "B6" else 0]
+    fitted = ctx.fit(method, fixture["support"](), row)
+    if component == "target_parameter":
+        value = next(p for p in fitted.payload.target_model.parameters() if p.ndim == 2)
+    elif component == "dictionary":
+        value = fitted.dictionary
+    elif component in {"u", "delta_w"}:
+        value = getattr(fitted.payload.weights, component)
+    else:
+        value = getattr(fitted.payload, component)
+    numerical_sha = tensor_sha256(value)
+    if component == "delta_w":
+        changed = torch.zeros(value.numel() * 2, dtype=value.dtype)[::2]
+        changed.copy_(value)
+    else:
+        changed = _different_dense_layout(value)
+    value.data = changed
+    assert tensor_sha256(value) == numerical_sha  # Only numerical layout changed.
+    with pytest.raises(ValueError, match="context or parameters changed"):
+        ctx.predict(fitted, fixture["inputs"])
+
+
+@pytest.mark.parametrize("method", ["B4", "B5"])
+def test_classical_numpy_memory_order_is_part_of_issued_fit_identity(fixture, monkeypatch, method):
+    ctx, row, descriptor, _ = bank_fixture(fixture, monkeypatch, method)
+    fitted = ctx.fit(method, fixture["support"](), row, classic_model=descriptor)
+    value = fitted.payload.arrays["q"]
+    changed = value.copy(order="F" if value.flags.c_contiguous else "C")
+    changed.setflags(write=False)
+    assert changed.strides != value.strides and np.array_equal(changed, value)
+    fitted.payload.arrays["q"] = changed
+    fitted.payload.assert_unchanged()  # Existing numerical hash alone is equal.
+    with pytest.raises(ValueError, match="context or parameters changed"):
+        ctx.predict(fitted, fixture["inputs"])
+
+
+@pytest.mark.parametrize("component", ["source_parameter", "geometry", "reference"])
+def test_verified_context_rejects_value_preserving_source_and_geometry_layout_drift(fixture, component):
+    ctx = fixture["build"]()
+    if component == "source_parameter":
+        value = next(p for p in ctx.source.parameters() if p.ndim == 2)
+    elif component == "geometry":
+        value = ctx.geometry.q
+    else:
+        value = ctx.reference.matrix
+    numerical_sha = tensor_sha256(value)
+    value.data = _different_dense_layout(value)
+    assert tensor_sha256(value) == numerical_sha
+    with pytest.raises(ValueError, match="context source/reference/input changed"):
+        ctx._assert_current()

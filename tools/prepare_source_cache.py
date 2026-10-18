@@ -29,6 +29,7 @@ sys.path.insert(0, str(ROOT))
 from p3work.adapters.source_native import iter_native_contexts
 from p3work.contracts import CHANNELS, SOURCE_IDS, digest, file_digest, validate_signal_contract
 from p3work.preprocess import prepare_trial
+from p3work.window_acceptance import WindowAcceptanceError, verify_frozen_window
 from tools.r2_backup import create_client, write_receipt
 from tools.r2_restore import load_verified_receipt, no_symlink_components, run_restore
 _NATIVE_RESTORE_IMPLEMENTATION = run_restore
@@ -314,6 +315,11 @@ def verify_preparation(root, inventory_path, *, partial_scope=False):
         raise SourceCacheGateError("W1 must be COMPLETE before numerical source cache preparation")
     contract = json.loads((root / "contracts/input_contract.json").read_text())
     contract_sha = validate_signal_contract(contract)
+    if not partial_scope:
+        try:
+            verify_frozen_window(root)
+        except WindowAcceptanceError as error:
+            raise SourceCacheGateError(error.code) from None
     manifest_path = _local(root, inventory_path)
     manifest = json.loads(manifest_path.read_text())
     if (manifest.get("schema_version") != "paper3-source-native-inventory-v2" or
@@ -429,6 +435,7 @@ def _prepare_cache(root, inventory_path="manifests/source_native_inventory.json"
         return {"status": "DRY_RUN_GATES_PASSED", "numerical_cache_created": False,
                 "training_started": False, "raw_files_verified": len(files),
                 "scope": "partial" if partial_scope else "complete_four_source",
+                "exact_window_acceptance_scope": "engineering_partial_not_formal_W2" if partial_scope else "complete_frozen_W1_verified",
                 "would_emit_status": "PILOT_CACHE_PARTIAL" if partial_scope else "SOURCE_CACHE_COMPLETE",
                 "input_contract_sha256": contract_sha}
     destination = _local(root, output, must_exist=False)
@@ -467,6 +474,7 @@ def _prepare_cache(root, inventory_path="manifests/source_native_inventory.json"
                 "synthetic": False, "old_npz_reused": False, "role": "source_train",
                 "input_contract_sha256": contract_sha, "stage": "pre_rms_car11_temporal_demeaned",
                 "full_source_inventory_verified": complete and not partial_scope,
+                "exact_window_acceptance_scope": "engineering_partial_not_formal_W2" if partial_scope else "complete_frozen_W1_verified",
                 "raw_inventory": descriptor(inventory_file), "shards": [], "participants_without_usable_trials": [],
                 "training_started": False, "normalization_applied": False}
     for (dataset, subject), records in sorted(shard_files.items()):
@@ -543,6 +551,11 @@ def prepare_cache(root, inventory_path="manifests/source_native_inventory.json",
     if tasks.get("W1", {}).get("status") != "COMPLETE":
         raise SourceCacheGateError("W1 must be COMPLETE before numerical source cache preparation")
     contract_sha = validate_signal_contract(json.loads((root / "contracts/input_contract.json").read_text()))
+    if not partial_scope:
+        try:
+            verify_frozen_window(root)
+        except WindowAcceptanceError as error:
+            raise SourceCacheGateError(error.code) from None
     inventory_file = _local(root, inventory_path)
     inventory = json.loads(inventory_file.read_text())
     records = inventory.get("files", [])

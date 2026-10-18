@@ -122,7 +122,8 @@ def test_validation_catalog_materializes_and_scores_all_eleven_people_without_in
     materialized, label_reads = [], []
     original_materialize, original_labels = catalog.materialize, EvaluationLabels.labels
 
-    def materialize(plan, **kwargs):
+    def materialize(self, plan, **kwargs):
+        assert self is catalog
         episode = original_materialize(plan, **kwargs)
         assert type(episode) is EvaluationEpisode
         assert type(episode) is not MetaTrainEpisode
@@ -143,7 +144,7 @@ def test_validation_catalog_materializes_and_scores_all_eleven_people_without_in
         label_reads.append(capability.event_uids)
         return original_labels(capability, purpose=purpose, prediction_receipt=prediction_receipt)
 
-    monkeypatch.setattr(catalog, "materialize", materialize)
+    monkeypatch.setattr(type(catalog), "materialize", materialize)
     monkeypatch.setattr(EvaluationLabels, "labels", labels)
     result = evaluate_development(source, geometry, parameter, catalog, job)
     assert len(materialized) == len(label_reads) == len(result["sessions"]) == 11
@@ -193,11 +194,12 @@ def test_ineligible_session_is_skipped_while_eleven_person_denominator_stays_fro
     assert not ineligible.query_eligible and catalog.plan(person, "2").query_eligible
     original_materialize = catalog.materialize
     accessed = []
-    def materialize(plan, **kwargs):
+    def materialize(self, plan, **kwargs):
+        assert self is catalog
         assert plan.query_eligible
         accessed.append((plan.participant_id, plan.session_id))
         return original_materialize(plan, **kwargs)
-    monkeypatch.setattr(catalog, "materialize", materialize)
+    monkeypatch.setattr(type(catalog), "materialize", materialize)
     source = software_source(fixture)
     geometry = SpatialGeometry.from_reference(software_reference(fixture).matrix)
     result = evaluate_development(source, geometry, parameter_for("P"), catalog, MetaJob("P", 2, .15))
@@ -296,6 +298,6 @@ def test_verify_meta_inputs_rejects_pipeline_seed_mismatch_before_reference_or_e
 def test_evaluate_development_rejects_training_catalog_before_materialization(tmp_path, monkeypatch):
     fixture = make_fixture(tmp_path)
     catalog = fixture.load(role="meta_train")
-    monkeypatch.setattr(catalog, "materialize", lambda *args, **kwargs: pytest.fail("wrong-role materialization"))
+    monkeypatch.setattr(type(catalog), "materialize", lambda *args, **kwargs: pytest.fail("wrong-role materialization"))
     with pytest.raises(PermissionError, match="meta_validation only"):
         evaluate_development(None, None, parameter_for("P"), catalog, MetaJob("P", 2, .15))

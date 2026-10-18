@@ -28,6 +28,7 @@ sys.path.insert(0, str(REPO))
 from p3work.adapters.source_native import audit_native_source
 from p3work.contracts import digest, file_digest, validate_signal_contract
 from p3work.recovery_budget import PersistentWallBudget, WallBudgetError
+from p3work.window_acceptance import WindowAcceptanceError, verify_frozen_window
 from tools.prepare_source_cache import expected_source_objects
 from tools.r2_backup import create_client, run_backup, sha256_file, utc_now
 from tools.r2_restore import load_verified_receipt, no_symlink_components
@@ -127,9 +128,18 @@ def execution_gate(root: Path, contract_path="contracts/input_contract.json") ->
     if tasks.get("W1", {}).get("status") != "COMPLETE":
         raise BatchError("w1_complete_required_before_source_batch_execution")
     try:
-        return validate_signal_contract(json.loads(local_path(root, contract_path).read_text()))
+        contract_sha = validate_signal_contract(json.loads(local_path(root, contract_path).read_text()))
     except ValueError:
         raise BatchError("frozen_valid_signal_contract_required") from None
+    # The standalone worker shares the same exact post-freeze guard as the
+    # orchestration entry point; a direct --execute cannot bypass it.
+    try:
+        proof = verify_frozen_window(root, contract_path=contract_path)
+    except WindowAcceptanceError as error:
+        raise BatchError(error.code) from None
+    if proof["input_contract_sha256"] != contract_sha:
+        raise BatchError("exact_window_signal_contract_identity_mismatch")
+    return contract_sha
 
 
 class ResourceBudget:

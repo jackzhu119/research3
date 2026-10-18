@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import json
 import os
@@ -96,11 +96,46 @@ class VerifiedCache:
     rows: list[dict]
     locations: list[tuple[int, int]]
     artifact_sha256: dict
+    upstream_acceptance_sha256: dict = field(default_factory=dict)
 
     def batch(self, indices):
         # Gather ONLY authorized source training events, never whole target data.
         return np.stack([self.arrays[self.locations[i][0]][self.locations[i][1]]
                          for i in indices.tolist()])
+
+
+def _verify_upstream_acceptance(cache):
+    """Verify measured stage evidence; COMPLETE strings alone grant no access.
+
+    These read-only verifiers use metadata and local cache bytes only. They do
+    not restore raw EEG, contact R2, construct a model or initialize CUDA.
+    """
+    from p3work import (window_acceptance, source_cache_acceptance, contracts,
+                        f0_bridge, spatial_geometry, source_training, runtime_clock)
+    for module in (window_acceptance, source_cache_acceptance, contracts,
+                   f0_bridge, spatial_geometry, source_training, runtime_clock):
+        relative = "p3work/" + Path(module.__file__).name
+        packaged = _local(cache.root, relative)
+        if packaged.read_bytes() != Path(module.__file__).read_bytes():
+            raise PilotGateError("Executed upstream verifier differs from packaged code")
+        cache.artifact_sha256[relative] = file_digest(packaged)
+    runner = _local(cache.root, "tools/run_controlled_pilot.py")
+    if runner.read_bytes() != Path(__file__).read_bytes():
+        raise PilotGateError("Executed upstream verifier differs from packaged code")
+    cache.artifact_sha256["tools/run_controlled_pilot.py"] = file_digest(runner)
+    window = window_acceptance.verify_frozen_window(cache.root)
+    source = source_cache_acceptance.verify_source_cache_acceptance(cache)
+    # The window API returns a proof digest; the source API returns a map of
+    # actual file digests. Keep these distinct instead of treating a proof as
+    # an artifact path or silently dropping its measured decision identity.
+    for name in ("selection_plan", "split", "inventory", "window_input_session_manifest", "window_coverage"):
+        descriptor = window[name]
+        path = _artifact(cache.root, descriptor, suffix=".json")
+        cache.artifact_sha256[path.relative_to(cache.root).as_posix()] = descriptor["sha256"]
+    cache.artifact_sha256.update(source["artifact_sha256"])
+    cache.upstream_acceptance_sha256.update(
+        exact_window=_sha(window["artifact_sha256"]),
+        full_source_cache=digest(source))
 
 
 def verify_inputs(root, *, manifest_path=None) -> VerifiedCache:
@@ -184,8 +219,10 @@ def verify_inputs(root, *, manifest_path=None) -> VerifiedCache:
             locations.append((shard_index, i))
         arrays.append(x)
         labels.append(np.asarray(y, dtype=np.int64))
-    return VerifiedCache(root, contract["n_times"], signal_sha, file_digest(path),
-                         str(path.relative_to(root)), arrays, np.concatenate(labels), rows, locations, artifacts)
+    cache = VerifiedCache(root, contract["n_times"], signal_sha, file_digest(path),
+                          str(path.relative_to(root)), arrays, np.concatenate(labels), rows, locations, artifacts)
+    _verify_upstream_acceptance(cache)
+    return cache
 
 
 def sampling_weights(cache):
@@ -386,6 +423,9 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
     _atomic_json(output / "engineering_receipt.json", receipt)
     wall_start = time.monotonic()
     try:
+        from p3work.runtime_clock import collect_clock_preflight
+        receipt["clock_preflight"] = collect_clock_preflight()
+        _atomic_json(output / "engineering_receipt.json", receipt)
         if os.environ.get("CUBLAS_WORKSPACE_CONFIG", ":4096:8") not in {":4096:8", ":16:8"}:
             raise PilotGateError("CUBLAS workspace configuration is incompatible with deterministic execution")
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
@@ -416,6 +456,7 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
                     "input_contract_sha256": cache.input_contract_sha256,
                     "cache_manifest_sha256": cache.manifest_sha256,
                     "cache_artifacts": cache.artifact_sha256,
+                    "upstream_acceptance_sha256": cache.upstream_acceptance_sha256,
                     "runner_sha256": file_digest(__file__),
                     "bridge_sha256": file_digest(root / "p3work/f0_bridge.py"),
                     "geometry_sha256": file_digest(root / "p3work/spatial_geometry.py"),
