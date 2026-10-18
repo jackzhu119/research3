@@ -7,7 +7,10 @@ and cache payloads are clearly marked bytes and are never installed or fitted.
 import hashlib
 import json
 from pathlib import Path
+import re
+import shlex
 import shutil
+import subprocess
 import tarfile
 from types import SimpleNamespace
 
@@ -328,3 +331,46 @@ def test_startup_restores_both_dependency_receipts_and_cache_before_readiness():
     assert bootstrap < dependencies < extras < install_gpu < source_cache < gate
     assert text.index("--execute --user-started-gpu") > gate
     assert "GPU compatibility and timings remain unmeasured" in text
+
+
+@pytest.mark.parametrize("checkpoint", [False, True])
+def test_startup_result_backup_remains_reachable_after_failed_pilot(tmp_path, checkpoint):
+    """Execute shell test doubles only: the failed pilot must not skip backup."""
+    text = delivery.startup_text(checkpoint=checkpoint, cache_receipt="audit/cache_receipt.json")
+    blocks = re.findall(r"```bash\n(.*?)\n```", text, flags=re.S)
+    pilot = next(block for block in blocks if block.startswith("python tools/run_controlled_pilot.py "))
+    backup = next(block for block in blocks if block.startswith("python tools/r2_backup.py "))
+    pilot_args, backup_args = shlex.split(pilot), shlex.split(backup)
+    output = Path(pilot_args[pilot_args.index("--output") + 1])
+    assert output.as_posix() == "runs/controlled_source_pilot_seed20261018"
+    assert "--execute" in pilot_args and "--user-started-gpu" in pilot_args
+    assert Path(backup_args[backup_args.index("--manifest") + 1]) == output / "engineering_backup_manifest.json"
+    assert backup_args[backup_args.index("--root") + 1] == "."
+    assert backup_args[backup_args.index("--prefix") + 1] == "paper3/source-engineering-pilot/seed20261018/"
+    assert backup_args[backup_args.index("--receipt") + 1] == "audit/r2_source_engineering_pilot_receipt.json"
+    assert "--execute" in backup_args
+    assert "&&" not in pilot + backup
+    assert "runs/controlled_pilot_job_claim.json" in text and "one controlled pilot job" in text
+    assert "total200 updates" in text and "No automatic GPU command is executed" in text
+    assert "even when the pilot exits nonzero" in text
+    assert "A failed pilot keeps its failure status" in text
+    if checkpoint:
+        assert "CHECKPOINT: W1/W2 pending; no GPU pilot is permitted." in text
+
+    log = tmp_path / "invocations.txt"
+    python_double = tmp_path / "python-test-double"
+    python_double.write_text(
+        "#!/bin/sh\n"
+        f"printf '%s\\n' \"$1\" >> {shlex.quote(str(log))}\n"
+        "if [ \"$1\" = tools/run_controlled_pilot.py ]; then exit 3; fi\n"
+        "exit 0\n"
+    )
+    python_double.chmod(0o700)
+    command = "\n".join(
+        shlex.quote(str(python_double)) + block[len("python"):]
+        for block in (pilot, backup)
+    )
+    result = subprocess.run(["bash", "-c", command], cwd=tmp_path,
+                            capture_output=True, text=True, timeout=5)
+    assert result.returncode == 0
+    assert log.read_text().splitlines() == ["tools/run_controlled_pilot.py", "tools/r2_backup.py"]

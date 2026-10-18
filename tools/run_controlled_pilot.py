@@ -48,6 +48,11 @@ LEARNING_RATE = 0.001
 TOTAL_UPDATES = 200  # 100 continuous + 50 + restored 50, not 200 per branch.
 MAX_WALL_SECONDS = 1800
 WARMUP_UPDATES = 10  # Included within each branch's first 100; no extra updates.
+PREDICTION_SELECTION_RULE = "each sorted registered source: first min(16,n) event_uids sorted lexically; concatenate source order"
+PREDICTION_SCOPE = "ENGINEERING_SOURCE_PILOT_ONLY"
+CHECKPOINT_NAMES = ("engineering_initial.pt", "engineering_continuous100.pt",
+                    "engineering_resume50.pt", "engineering_resumed100.pt")
+PREDICTION_NAMES = ("engineering_continuous100_predictions.json", "engineering_resumed100_predictions.json")
 
 
 class PilotGateError(ValueError):
@@ -241,6 +246,47 @@ def sampling_weights(cache):
                          for row, label in zip(cache.rows, cache.labels)], dtype=torch.float64)
 
 
+def engineering_prediction_selection(cache):
+    """Pure CPU selection from already verified source training events only."""
+    y = np.asarray(cache.labels)
+    if y.ndim != 1 or y.dtype.kind not in "iu" or len(cache.rows) != len(y):
+        raise PilotGateError("Source engineering prediction event/label count mismatch")
+    by_dataset, seen = defaultdict(list), set()
+    for index, (row, label) in enumerate(zip(cache.rows, cache.labels)):
+        uid = row.get("event_uid") if isinstance(row, dict) else None
+        if (not isinstance(row, dict) or row.get("dataset") not in SOURCE_IDS or row.get("role") != "source_train"
+                or not isinstance(uid, str) or not uid or uid in seen
+                or int(label) not in (0, 1) or type(row.get("label")) is not int or row.get("label") != int(label)):
+            raise PilotGateError("Only distinct legal source_train prediction events are allowed")
+        seen.add(uid)
+        by_dataset[row["dataset"]].append((uid, index))
+    if set(by_dataset) != SOURCE_IDS:
+        raise PilotGateError("Fixed engineering predictions require all four sources")
+    indices = np.asarray([index for dataset in sorted(SOURCE_IDS)
+                          for _, index in sorted(by_dataset[dataset])[:16]], dtype=np.int64)
+    return indices, [cache.rows[i]["event_uid"] for i in indices], [int(cache.labels[i]) for i in indices]
+
+
+def engineering_prediction_metrics(labels, probabilities, *, predictions=None):
+    """Pure engineering metrics; no fitting, query data, or CUDA initialization."""
+    y, p = np.asarray(labels), np.asarray(probabilities, dtype=np.float64)
+    if (y.ndim != 1 or y.dtype.kind not in "iu" or not len(y) or not np.isin(y, [0, 1]).all()
+            or p.shape != (len(y), 2) or not np.isfinite(p).all()
+            or np.any(p < 0) or np.any(p > 1) or not np.allclose(p.sum(1), 1, rtol=0, atol=1e-6)):
+        raise PilotGateError("Invalid source engineering probability/label evidence")
+    prediction = p.argmax(1) if predictions is None else np.asarray(predictions)
+    if prediction.shape != y.shape or prediction.dtype.kind not in "iu" or not np.isin(prediction, [0, 1]).all():
+        raise PilotGateError("Invalid engineering class predictions")
+    counts = {str(c): int(np.sum(y == c)) for c in (0, 1)}
+    recall = {str(c): float(np.mean(prediction[y == c] == c)) if counts[str(c)] else None for c in (0, 1)}
+    floor = float(np.finfo(np.float64).tiny)
+    return {"n_trials": len(y), "class_counts": counts, "class_recall": recall,
+            "accuracy": float(np.mean(prediction == y)),
+            "balanced_accuracy": float((recall["0"] + recall["1"]) / 2) if all(counts.values()) else None,
+            "loss_cross_entropy": float(-np.log(np.maximum(p[np.arange(len(y)), y], floor)).mean()),
+            "cross_entropy_probability_floor": floor}
+
+
 def _atomic_json(path, record):
     path = Path(path)
     fd, temp = tempfile.mkstemp(dir=path.parent, prefix="." + path.name)
@@ -256,7 +302,34 @@ def _atomic_json(path, record):
             os.unlink(temp)
 
 
-def _atomic_checkpoint(path, record):
+def _check_deadline(deadline):
+    if deadline is not None and time.monotonic() > deadline:
+        raise TimeoutError("Controlled engineering pilot wall-time budget reached")
+
+
+def _io_event(timings, operation, path, action, *, deadline=None):
+    _check_deadline(deadline)
+    start = time.monotonic()
+    status = "complete"
+    try:
+        result = action()
+        _check_deadline(deadline)
+        return result
+    except BaseException:
+        status = "failed"
+        raise
+    finally:
+        if timings is not None:
+            timings.append({"operation": operation, "file": Path(path).name, "status": status,
+                            "monotonic_seconds": max(0.0, time.monotonic() - start)})
+
+
+def _atomic_checkpoint(path, record, *, io_timings=None, deadline=None):
+    return _io_event(io_timings, "checkpoint_save_fsync_atomic_commit", path,
+                     lambda: _write_checkpoint(path, record), deadline=deadline)
+
+
+def _write_checkpoint(path, record):
     fd, temp = tempfile.mkstemp(dir=path.parent, prefix="." + path.name)
     try:
         with os.fdopen(fd, "wb") as stream:
@@ -267,6 +340,129 @@ def _atomic_checkpoint(path, record):
     finally:
         if os.path.exists(temp):
             os.unlink(temp)
+
+
+def _reject_symlink_components(root, path):
+    path = Path(path)
+    if any(p.is_symlink() for p in (path, *path.parents) if p == root or root in p.parents):
+        raise PilotGateError("Symlink components are forbidden in engineering evidence")
+
+
+def _result_destination(root, output, *, require_directory=False):
+    """Validate the original destination before any evidence file is written."""
+    root, output = Path(root), Path(output)
+    if not root.is_absolute() or root.resolve(strict=True) != root:
+        raise PilotGateError("Engineering result root must be canonical")
+    try:
+        relative = output.relative_to(root)
+    except ValueError:
+        raise PilotGateError("Engineering results must remain in the Paper3 runs directory") from None
+    if len(relative.parts) < 2 or relative.parts[0] != "runs" or ".." in relative.parts:
+        raise PilotGateError("Engineering results require a runs/ subdirectory")
+    _reject_symlink_components(root, output)
+    if output.resolve() != output or (require_directory and not output.is_dir()):
+        raise PilotGateError("Engineering result directory must be a regular canonical directory")
+    return output
+
+
+def _descriptor(root, path):
+    _reject_symlink_components(root, path)
+    relative = Path(path).relative_to(root).as_posix()
+    checked = _local(root, relative)
+    if not checked.is_file() or checked.is_symlink():
+        raise PilotGateError("Engineering artifact must be a regular local file")
+    return {"path": relative, "sha256": file_digest(checked), "bytes": checked.stat().st_size}
+
+
+def _load_checkpoint(path, *, expected_sha=None, io_timings=None, deadline=None):
+    before = _io_event(io_timings, "checkpoint_sha256_before_load", path, lambda: file_digest(path), deadline=deadline)
+    if expected_sha is not None and before != expected_sha:
+        raise PilotGateError("Engineering checkpoint SHA256 differs from its committed artifact")
+    saved = _io_event(io_timings, "checkpoint_load_weights_only", path,
+                      lambda: torch.load(path, map_location="cpu", weights_only=True), deadline=deadline)
+    after = _io_event(io_timings, "checkpoint_sha256_after_load", path, lambda: file_digest(path), deadline=deadline)
+    if after != before:
+        raise PilotGateError("Engineering checkpoint changed while loading")
+    return saved
+
+
+def _validate_checkpoint(saved, identity, update, *, path, io_timings=None, deadline=None):
+    def validate():
+        if (saved.get("scope") != PREDICTION_SCOPE or saved.get("identity") != identity
+                or saved.get("identity_sha256") != digest(identity) or saved.get("update") != update):
+            raise PilotGateError("Checkpoint update/code/data/config/device identity changed")
+    _io_event(io_timings, "checkpoint_loaded_identity_validation", path, validate, deadline=deadline)
+
+
+def _resolved_dependencies(root):
+    """Validate the existing pip-list evidence without invoking pip or a shell."""
+    path = root / "audit/gpu_resolved_dependencies.json"
+    before = _descriptor(root, path)  # Reject the original alias before opening it.
+    value = json.loads(path.read_text())
+    names = {}
+    if not isinstance(value, list) or not value:
+        raise PilotGateError("Actual complete resolved dependency list is required before the pilot")
+    for row in value:
+        if (not isinstance(row, dict) or set(row) != {"name", "version"}
+                or not all(isinstance(row[k], str) and row[k] for k in ("name", "version"))
+                or re.fullmatch(r"[A-Za-z0-9_.-]+", row["name"]) is None
+                or re.fullmatch(r"[A-Za-z0-9_.+!-]+", row["version"]) is None):
+            raise PilotGateError("Resolved dependency evidence must contain only package names and versions")
+        name = re.sub(r"[-_.]+", "-", row["name"].lower())
+        if name in names:
+            raise PilotGateError("Duplicate resolved dependency package")
+        names[name] = row["version"]
+    if names.get("torch") != str(torch.__version__) or names.get("numpy") != np.__version__:
+        raise PilotGateError("Resolved dependency evidence differs from the running Torch/NumPy")
+    # A pip list that omits pinned packages is not complete deployment evidence.
+    for line in (root / "requirements-gpu.lock").read_text().splitlines():
+        if not line.strip() or line.startswith(("#", "--")):
+            continue
+        name, version = line.strip().split("==")
+        if names.get(re.sub(r"[-_.]+", "-", name.lower())) != version:
+            raise PilotGateError("Resolved dependencies do not satisfy every exact GPU profile pin")
+    after = _descriptor(root, path)
+    if before != after:
+        raise PilotGateError("Resolved dependency evidence changed while being validated")
+    return after
+
+
+def _finalize_result_manifests(root, output, receipt):
+    """Exact finite result allowlist; no discovery of data, env or configuration.
+
+    artifact manifest excludes the receipt; the final receipt binds that
+    manifest. The backup manifest then includes both, never itself.
+    """
+    output = _result_destination(root, output, require_directory=True)
+    allowed = [root / "runs/controlled_pilot_job_claim.json",
+               output / "identity.json", *(output / name for name in CHECKPOINT_NAMES),
+               *(output / name for name in PREDICTION_NAMES),
+               output / "engineering_prediction_replay.json"]
+    if receipt.get("resolved_dependencies"):
+        descriptor = _resolved_dependencies(root)
+        if descriptor != receipt["resolved_dependencies"]:
+            raise PilotGateError("Resolved dependencies changed during the engineering pilot")
+        allowed.append(root / "audit/gpu_resolved_dependencies.json")
+    if receipt.get("status") == "ENGINEERING_PILOT_COMPLETE" and (
+            not receipt.get("resolved_dependencies") or any(not path.is_file() for path in allowed)):
+        raise PilotGateError("A completed engineering pilot requires every declared result artifact")
+    files = []
+    for path in allowed:
+        if path.exists():
+            item = _descriptor(root, path)
+            files.append({**item, "role": "result", "dataset": "Paper3SourceEngineering"})
+    artifact_path = output / "engineering_artifact_manifest.json"
+    _atomic_json(artifact_path, {"schema_version": "paper3-source-engineering-artifacts-v1",
+        "scope": PREDICTION_SCOPE, "scientific_result": False, "pilot_status": receipt["status"], "files": files})
+    receipt["artifact_manifest"] = _descriptor(root, artifact_path)
+    receipt["backup_manifest_path"] = (output / "engineering_backup_manifest.json").relative_to(root).as_posix()
+    receipt["result_manifest_status"] = "LOCAL_MANIFESTS_COMPLETE_R2_NOT_ATTEMPTED"
+    receipt["backup_performed"] = False
+    receipt_path = output / "engineering_receipt.json"
+    _atomic_json(receipt_path, receipt)
+    backup_files = files + [{**_descriptor(root, path), "role": "result", "dataset": "Paper3SourceEngineering"}
+                            for path in (artifact_path, receipt_path)]
+    _atomic_json(output / "engineering_backup_manifest.json", {"schema_version": 1, "files": backup_files})
 
 
 def _same_tree(left, right):
@@ -387,6 +583,80 @@ def _updates(cache, model, optimizer, sampler, begin, stop, *, deadline, progres
             "peak_reserved_bytes": torch.cuda.max_memory_reserved(0)}
 
 
+def _prediction_replay(cache, output, identity, *, io_timings, deadline):
+    """Reload both committed 100-update states and compare source-only evals."""
+    indices, uids, labels = engineering_prediction_selection(cache)
+    batch_sha = digest({"event_uids": uids, "labels": labels})
+    outputs, descriptors = [], []
+    for checkpoint_name, prediction_name in zip(CHECKPOINT_NAMES[1::2], PREDICTION_NAMES):
+        _check_deadline(deadline)
+        checkpoint_path = output / checkpoint_name
+        checkpoint = _descriptor(cache.root, checkpoint_path)
+        _check_deadline(deadline)
+        saved = _load_checkpoint(checkpoint_path, expected_sha=checkpoint["sha256"], io_timings=io_timings, deadline=deadline)
+        _validate_checkpoint(saved, identity, 100, path=checkpoint_path, io_timings=io_timings, deadline=deadline)
+        model, optimizer, sampler = _new_state(cache.n_times)
+        _io_event(io_timings, "checkpoint_restore_model_optimizer_rng", checkpoint_path,
+                  lambda: _restore(saved, model, optimizer, sampler, identity), deadline=deadline)
+        training = model.training
+        torch.cuda.synchronize(0)
+        _check_deadline(deadline)
+        eval_start = time.monotonic()
+        try:
+            model.eval()
+            with torch.no_grad():
+                host = joint_trial_rms(torch.from_numpy(cache.batch(indices))).float()
+                logits = model(host.to("cuda:0"))
+                probabilities = torch.softmax(logits, dim=-1)
+                predictions = logits.argmax(-1)
+                torch.cuda.synchronize(0)
+                z, p = logits.cpu().numpy(), probabilities.cpu().numpy()
+                predicted = predictions.cpu().numpy()
+        finally:
+            model.train(training)
+        elapsed = time.monotonic() - eval_start
+        _check_deadline(deadline)
+        if (z.shape != (len(uids), 2) or p.shape != z.shape or not np.isfinite(z).all()
+                or not np.isfinite(p).all() or not _same_tree(model.state_dict(), saved["model"])
+                or not _same_tree(optimizer.state_dict(), saved["optimizer"])):
+            raise PilotGateError("Source engineering eval changed saved state or produced invalid logits")
+        record = {"schema_version": "paper3-source-engineering-predictions-v1",
+            "scope": PREDICTION_SCOPE, "role": "source_train", "synthetic": False,
+            "scientific_result": False, "identity_sha256": digest(identity),
+            "input_contract_sha256": cache.input_contract_sha256, "cache_manifest_sha256": cache.manifest_sha256,
+            "source_batch_sha256": batch_sha, "event_uids": uids, "labels": labels,
+            "checkpoint": checkpoint, "model_update": 100, "optimizer_updates": 0, "eval_mode": True,
+            "prediction_rule": "two_logits.argmax(-1); exact tie selects class 0",
+            "two_logits": z.tolist(), "probabilities": p.tolist(), "predictions": predicted.tolist(),
+            "metrics": engineering_prediction_metrics(labels, p, predictions=predicted),
+            "eval_monotonic_seconds": elapsed}
+        path = output / prediction_name
+        _atomic_json(path, record)
+        outputs.append(record)
+        descriptors.append({"checkpoint": checkpoint, "predictions": _descriptor(cache.root, path)})
+        del saved, model, optimizer, sampler, host, logits, probabilities, predictions
+        torch.cuda.empty_cache()
+        _check_deadline(deadline)
+    comparisons = {key: outputs[0][key] == outputs[1][key]
+                   for key in ("two_logits", "probabilities", "predictions", "labels", "metrics")}
+    # The public proof uses the conventional name logits for the two-logit comparison.
+    comparisons["logits"] = comparisons.pop("two_logits")
+    proof = {"schema_version": "paper3-source-engineering-prediction-replay-v1",
+        "scope": PREDICTION_SCOPE, "role": "source_train", "synthetic": False,
+        "scientific_result": False, "identity_sha256": digest(identity),
+        "input_contract_sha256": cache.input_contract_sha256, "cache_manifest_sha256": cache.manifest_sha256,
+        "selection_rule": PREDICTION_SELECTION_RULE, "event_uids": uids, "labels": labels,
+        "source_batch_sha256": batch_sha, "optimizer_updates_for_replay": 0,
+        "continuous": descriptors[0], "resumed": descriptors[1],
+        "comparisons": comparisons, "all_exact": all(comparisons.values())}
+    proof_path = output / "engineering_prediction_replay.json"
+    _atomic_json(proof_path, proof)
+    _check_deadline(deadline)
+    if not proof["all_exact"]:
+        raise PilotGateError("Same-device continuous/resumed source predictions or metrics differ")
+    return _descriptor(cache.root, proof_path)
+
+
 def execute_pilot(cache, output_relative, *, user_started_gpu):
     """Only explicit CLI execution calls this; never invoked by fixture tests."""
     if not user_started_gpu:
@@ -397,7 +667,7 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
     relative = Path(output_relative)
     if relative.is_absolute() or ".." in relative.parts or relative.parts[:1] != ("runs",):
         raise PilotGateError("Pilot outputs must use a new root-relative runs/ directory")
-    output = (root / relative).resolve()
+    output = _result_destination(root, root / relative)
     if not output.is_relative_to(root) or output.exists():
         raise PilotGateError("Output exists or escaped the execution root; no duplicate pilot")
     runs = root / "runs"
@@ -418,6 +688,7 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
                "user_started_gpu_attested": True, "seed": SEED, "max_jobs": 1,
                "actual_completed_updates": 0, "exact_resume_verified": False,
                "optimizer_updates_dispatched": 0,
+               "checkpoint_io_timings": [], "prediction_replay_optimizer_updates": 0,
                "completed_update_count_basis": "CUDA-synchronized complete segments; a lower bound on failure",
                "started_utc": datetime.now(timezone.utc).isoformat()}
     _atomic_json(output / "engineering_receipt.json", receipt)
@@ -426,6 +697,8 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
         from p3work.runtime_clock import collect_clock_preflight
         receipt["clock_preflight"] = collect_clock_preflight()
         _atomic_json(output / "engineering_receipt.json", receipt)
+        dependencies = _resolved_dependencies(root)
+        receipt["resolved_dependencies"] = dependencies
         if os.environ.get("CUBLAS_WORKSPACE_CONFIG", ":4096:8") not in {":4096:8", ":16:8"}:
             raise PilotGateError("CUBLAS workspace configuration is incompatible with deterministic execution")
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
@@ -461,13 +734,15 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
                     "bridge_sha256": file_digest(root / "p3work/f0_bridge.py"),
                     "geometry_sha256": file_digest(root / "p3work/spatial_geometry.py"),
                     "contracts_sha256": file_digest(root / "p3work/contracts.py")}
+        identity["resolved_dependencies"] = dependencies
         _atomic_json(output / "identity.json", identity)
         deadline = wall_start + MAX_WALL_SECONDS
+        io_timings = receipt["checkpoint_io_timings"]
         model, optimizer, sampler = _new_state(cache.n_times)
         initial = _checkpoint(model, optimizer, sampler, 0, identity)
-        _atomic_checkpoint(output / "engineering_initial.pt", initial)
+        _atomic_checkpoint(output / "engineering_initial.pt", initial, io_timings=io_timings, deadline=deadline)
         timings = [_updates(cache, model, optimizer, sampler, 0, 100, deadline=deadline, progress=receipt, phase="continuous100_primary_timing")]
-        _atomic_checkpoint(output / "engineering_continuous100.pt", _checkpoint(model, optimizer, sampler, 100, identity))
+        _atomic_checkpoint(output / "engineering_continuous100.pt", _checkpoint(model, optimizer, sampler, 100, identity), io_timings=io_timings, deadline=deadline)
         receipt.update(actual_completed_updates=100, timing_segments=timings)
         _atomic_json(output / "engineering_receipt.json", receipt)
         # Destroy the first branch before constructing the replay branch on this GPU.
@@ -475,43 +750,61 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
         torch.cuda.empty_cache()
         model, optimizer, sampler = _new_state(cache.n_times)
         fresh = _checkpoint(model, optimizer, sampler, 0, identity)
-        original = torch.load(output / "engineering_initial.pt", map_location="cpu", weights_only=True)
-        if not all(_same_tree(fresh[key], original[key]) for key in ("model", "optimizer", "sampler_rng", "torch_rng", "cuda_rng", "python_rng", "numpy_rng")):
+        original = _load_checkpoint(output / "engineering_initial.pt", io_timings=io_timings, deadline=deadline)
+        _validate_checkpoint(original, identity, 0, path=output / "engineering_initial.pt", io_timings=io_timings, deadline=deadline)
+        initial_equal = _io_event(io_timings, "checkpoint_initial_state_exact_comparison", output / "engineering_initial.pt",
+            lambda: all(_same_tree(fresh[key], original[key]) for key in ("model", "optimizer", "sampler_rng", "torch_rng", "cuda_rng", "python_rng", "numpy_rng")), deadline=deadline)
+        if not initial_equal:
             raise RuntimeError("Continuous and resume branches did not share the exact initial state")
         del fresh, original
         timings.append(_updates(cache, model, optimizer, sampler, 0, 50, deadline=deadline, progress=receipt, phase="resume_before_checkpoint"))
-        _atomic_checkpoint(output / "engineering_resume50.pt", _checkpoint(model, optimizer, sampler, 50, identity))
+        _atomic_checkpoint(output / "engineering_resume50.pt", _checkpoint(model, optimizer, sampler, 50, identity), io_timings=io_timings, deadline=deadline)
         receipt.update(actual_completed_updates=150, timing_segments=timings)
         _atomic_json(output / "engineering_receipt.json", receipt)
         del model, optimizer, sampler
         torch.cuda.empty_cache()
         model, optimizer, sampler = _new_state(cache.n_times)
         checkpoint_path = output / "engineering_resume50.pt"
-        checkpoint_sha = file_digest(checkpoint_path)
-        saved = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
-        _restore(saved, model, optimizer, sampler, identity)
-        if saved["update"] != 50 or file_digest(checkpoint_path) != checkpoint_sha:
-            raise PilotGateError("Resume checkpoint update/integrity changed")
+        saved = _load_checkpoint(checkpoint_path, io_timings=io_timings, deadline=deadline)
+        _validate_checkpoint(saved, identity, 50, path=checkpoint_path, io_timings=io_timings, deadline=deadline)
+        _io_event(io_timings, "checkpoint_restore_model_optimizer_rng", checkpoint_path,
+                  lambda: _restore(saved, model, optimizer, sampler, identity), deadline=deadline)
         del saved
         timings.append(_updates(cache, model, optimizer, sampler, 50, 100, deadline=deadline, progress=receipt, phase="resume_after_checkpoint_reload"))
-        _atomic_checkpoint(output / "engineering_resumed100.pt", _checkpoint(model, optimizer, sampler, 100, identity))
+        _atomic_checkpoint(output / "engineering_resumed100.pt", _checkpoint(model, optimizer, sampler, 100, identity), io_timings=io_timings, deadline=deadline)
         receipt.update(actual_completed_updates=TOTAL_UPDATES, timing_segments=timings)
-        continuous = torch.load(output / "engineering_continuous100.pt", map_location="cpu", weights_only=True)
-        resumed = torch.load(output / "engineering_resumed100.pt", map_location="cpu", weights_only=True)
+        continuous = _load_checkpoint(output / "engineering_continuous100.pt", io_timings=io_timings, deadline=deadline)
+        resumed = _load_checkpoint(output / "engineering_resumed100.pt", io_timings=io_timings, deadline=deadline)
+        for name, saved_state in (("engineering_continuous100.pt", continuous), ("engineering_resumed100.pt", resumed)):
+            _validate_checkpoint(saved_state, identity, 100, path=output / name, io_timings=io_timings, deadline=deadline)
         compared = ("model", "optimizer", "sampler_rng", "torch_rng", "cuda_rng", "python_rng", "numpy_rng", "update", "identity_sha256")
-        same = {key: _same_tree(continuous[key], resumed[key]) for key in compared}
+        same = _io_event(io_timings, "checkpoint_final_state_exact_comparison", output / "engineering_resumed100.pt",
+                         lambda: {key: _same_tree(continuous[key], resumed[key]) for key in compared}, deadline=deadline)
         receipt.update(resume_comparison=same, exact_resume_verified=all(same.values()))
         if not all(same.values()):
             raise RuntimeError("Same-device 100 versus 50+50 checkpoint continuation differs")
+        del continuous, resumed, model, optimizer, sampler
+        torch.cuda.empty_cache()
+        receipt["engineering_prediction_replay"] = _prediction_replay(cache, output, identity,
+            io_timings=io_timings, deadline=deadline)
         receipt["status"] = "ENGINEERING_PILOT_COMPLETE"
     except BaseException as error:
         receipt.update(status="ENGINEERING_PILOT_FAILED", failure_type=type(error).__name__,
                        failure=str(error), exact_resume_verified=bool(receipt.get("exact_resume_verified", False)))
     finally:
         receipt.update(ended_utc=datetime.now(timezone.utc).isoformat(),
-                       total_monotonic_wall_seconds=time.monotonic() - wall_start,
-                       checkpoint_files={p.name: file_digest(p) for p in output.glob("*.pt")})
-        _atomic_json(output / "engineering_receipt.json", receipt)
+                       total_monotonic_wall_seconds=time.monotonic() - wall_start)
+        try:
+            receipt["checkpoint_files"] = {}
+            for name in CHECKPOINT_NAMES:
+                path = output / name
+                if path.exists() or path.is_symlink():
+                    receipt["checkpoint_files"][name] = _descriptor(root, path)["sha256"]
+            _finalize_result_manifests(root, output, receipt)
+        except BaseException as error:
+            receipt.update(status="ENGINEERING_PILOT_FAILED", result_manifest_error_type=type(error).__name__,
+                           result_manifest_status="BLOCKED_NO_COMPLETE_BACKUP_MANIFEST")
+            _atomic_json(output / "engineering_receipt.json", receipt)
     return receipt
 
 

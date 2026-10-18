@@ -15,6 +15,7 @@ import math
 import os
 from pathlib import Path
 import random
+import re
 import sys
 import tempfile
 import time
@@ -210,17 +211,206 @@ def final_epoch_from_lodo(selected_epochs):
     return max(1, int(np.median(selected_epochs)))
 
 
+def _pilot_local(root, value):
+    if not isinstance(value, str) or not value or Path(value).is_absolute() or ".." in Path(value).parts:
+        raise SourceTrainingError("Explicit local engineering artifact path required")
+    current = root
+    for part in Path(value).parts:
+        current = current / part
+        if current.is_symlink():
+            raise SourceTrainingError("Engineering artifacts must not use symlinks")
+    try:
+        return local(root, value)
+    except OSError:
+        raise SourceTrainingError("Engineering artifact is missing or unreadable") from None
+
+
+def _pilot_replay_artifact(root, folder, item):
+    """Require a full SHA/size and a local sibling, without GPU/RNG actions."""
+    if (not isinstance(item, dict) or not isinstance(item.get("path"), str)
+            or type(item.get("bytes")) is not int or item["bytes"] <= 0):
+        raise SourceTrainingError("Engineering prediction artifact needs an explicit full SHA256/bytes descriptor")
+    path = _pilot_local(root, item["path"])
+    if file_digest(path) != item.get("sha256"):
+        raise SourceTrainingError("Engineering prediction artifact SHA256 differs")
+    if (folder is not None and path.parent != folder) or path.stat().st_size != item["bytes"]:
+        raise SourceTrainingError("Engineering prediction artifact size or pilot directory differs")
+    return path
+
+
+def _verify_engineering_prediction_replay(cache, receipt_file, receipt, identity, checkpoint_hashes):
+    """Inspect actual saved outputs, not just the writer's exactness booleans.
+
+    The same-device GPU logits are compared bit for bit across saved branches.
+    This read-only verifier does not initialize CUDA, fit or restore any RNG.
+    """
+    from tools.run_controlled_pilot import engineering_prediction_selection, engineering_prediction_metrics, _same_tree
+    if (len(cache.rows) != len(cache.labels) or {row.get("dataset") for row in cache.rows} != SOURCE_IDS
+            or any(row.get("role") != "source_train" or not isinstance(row.get("event_uid"), str)
+                   or not row["event_uid"] for row in cache.rows)
+            or len({row["event_uid"] for row in cache.rows}) != len(cache.rows)
+            or np.asarray(cache.labels).dtype.kind not in "iu" or not np.isin(cache.labels, [0, 1]).all()):
+        raise SourceTrainingError("Engineering prediction replay requires actual unique legal four-source training UIDs and labels")
+    try:
+        _, event_uids, labels = engineering_prediction_selection(cache)
+    except ValueError:
+        raise SourceTrainingError("Engineering prediction source UID/label selection is invalid") from None
+    source_batch_sha = digest({"event_uids": event_uids, "labels": labels})
+    item = receipt.get("engineering_prediction_replay")
+    proof_file = _pilot_replay_artifact(cache.root, receipt_file.parent, item)
+    proof = json.loads(proof_file.read_text())
+    if not isinstance(proof, dict):
+        raise SourceTrainingError("Engineering prediction replay must be a structured proof")
+    exact_keys = ("logits", "probabilities", "predictions", "labels", "metrics")
+    selection_rule = "each sorted registered source: first min(16,n) event_uids sorted lexically; concatenate source order"
+    common = {"scope": "ENGINEERING_SOURCE_PILOT_ONLY", "role": "source_train", "synthetic": False,
+        "identity_sha256": digest(identity), "input_contract_sha256": cache.input_contract_sha256,
+        "cache_manifest_sha256": cache.manifest_sha256, "source_batch_sha256": source_batch_sha,
+        "event_uids": event_uids, "labels": labels}
+    if (proof.get("schema_version") != "paper3-source-engineering-prediction-replay-v1"
+            or any(not _same_tree(proof.get(key), value) for key, value in common.items())
+            or proof.get("selection_rule") != selection_rule or proof.get("optimizer_updates_for_replay") != 0
+            or type(proof.get("optimizer_updates_for_replay")) is not int
+            or proof.get("all_exact") is not True
+            or any(proof.get("comparisons", {}).get(key) is not True for key in exact_keys)):
+        raise SourceTrainingError("Engineering prediction replay identity, legal fixed source batch or exactness proof is invalid")
+    outputs = []
+    prediction_descriptors = []
+    for branch, checkpoint_name in (("continuous", "engineering_continuous100.pt"),
+                                     ("resumed", "engineering_resumed100.pt")):
+        saved_branch = proof.get(branch)
+        if not isinstance(saved_branch, dict):
+            raise SourceTrainingError("Engineering prediction replay requires both actual saved branches")
+        checkpoint_item = saved_branch.get("checkpoint")
+        checkpoint_path = _pilot_replay_artifact(cache.root, receipt_file.parent, checkpoint_item)
+        if (checkpoint_path.name != checkpoint_name or checkpoint_item["sha256"] != checkpoint_hashes[checkpoint_name]):
+            raise SourceTrainingError("Engineering prediction branch checkpoint differs from the actual 100-update state")
+        prediction_item = saved_branch.get("predictions")
+        prediction_file = _pilot_replay_artifact(cache.root, receipt_file.parent, prediction_item)
+        output = json.loads(prediction_file.read_text())
+        if not isinstance(output, dict):
+            raise SourceTrainingError("Engineering predictions must be structured outputs")
+        if (output.get("schema_version") != "paper3-source-engineering-predictions-v1"
+                or any(not _same_tree(output.get(key), value) for key, value in common.items())
+                or output.get("checkpoint") != checkpoint_item or output.get("model_update") != 100
+                or type(output.get("model_update")) is not int or type(output.get("optimizer_updates")) is not int
+                or output.get("prediction_rule") != "two_logits.argmax(-1); exact tie selects class 0"
+                or output.get("eval_mode") is not True or output.get("optimizer_updates") != 0):
+            raise SourceTrainingError("Engineering prediction output identity, source labels or no-update eval state is invalid")
+        logits, probabilities = np.asarray(output.get("two_logits")), np.asarray(output.get("probabilities"))
+        predictions = output.get("predictions")
+        if (logits.shape != (len(labels), 2) or probabilities.shape != logits.shape
+                or logits.dtype.kind not in "fiu" or probabilities.dtype.kind not in "fiu"
+                or not np.isfinite(logits).all() or not np.isfinite(probabilities).all()
+                or np.any(probabilities < 0) or np.any(probabilities > 1)
+                or not isinstance(predictions, list) or len(predictions) != len(labels)
+                or any(type(value) is not int or value not in (0, 1) for value in predictions)):
+            raise SourceTrainingError("Engineering prediction arrays are missing, nonfinite or malformed")
+        stable = logits.astype(np.float64) - logits.astype(np.float64).max(axis=1, keepdims=True)
+        expected_probabilities = np.exp(stable); expected_probabilities /= expected_probabilities.sum(axis=1, keepdims=True)
+        # GPU float32 softmax need not equal CPU float64 softmax bitwise. This
+        # only checks mathematical consistency; branch replay below is exact.
+        tolerance = 4 * np.finfo(np.float32).eps
+        if (not np.allclose(probabilities, expected_probabilities, rtol=tolerance, atol=tolerance)
+                or predictions != logits.argmax(axis=1).tolist()):
+            raise SourceTrainingError("Engineering logits, probabilities and predictions disagree")
+        metrics = engineering_prediction_metrics(labels, probabilities, predictions=predictions)
+        if not _same_tree(output.get("metrics"), metrics):
+            raise SourceTrainingError("Engineering prediction metrics differ from the actual saved source outputs")
+        outputs.append(output)
+        prediction_descriptors.append(prediction_item)
+    for key in ("two_logits", "probabilities", "predictions", "labels", "metrics"):
+        if not _same_tree(outputs[0][key], outputs[1][key]):
+            raise SourceTrainingError("Engineering continuous/resumed predictions or metrics actually differ")
+    if prediction_descriptors[0]["path"] == prediction_descriptors[1]["path"]:
+        raise SourceTrainingError("Engineering prediction branches must retain separate output artifacts")
+    return {"engineering_prediction_replay": item, "prediction_artifacts": prediction_descriptors,
+            "prediction_replay_exact": True, "metric_replay_exact": True,
+            "fixed_source_batch_sha256": source_batch_sha, "fixed_source_prediction_trials": len(labels)}
+
+
+def _verify_pilot_result_manifests(cache, receipt_file, receipt, identity, prediction_proof):
+    """Recheck the finite backup-ready set; this is not an upload/GET receipt."""
+    manifest_item = receipt.get("artifact_manifest")
+    manifest_path = _pilot_replay_artifact(cache.root, receipt_file.parent, manifest_item)
+    manifest = json.loads(manifest_path.read_text())
+    paths = {receipt_file.with_name("identity.json").relative_to(cache.root).as_posix(),
+             "runs/controlled_pilot_job_claim.json", "audit/gpu_resolved_dependencies.json",
+             prediction_proof["engineering_prediction_replay"]["path"],
+             *(item["path"] for item in prediction_proof["prediction_artifacts"]),
+             *(receipt_file.with_name(name).relative_to(cache.root).as_posix() for name in receipt["checkpoint_files"])}
+    files = manifest.get("files")
+    if (manifest.get("schema_version") != "paper3-source-engineering-artifacts-v1"
+            or manifest.get("scope") != "ENGINEERING_SOURCE_PILOT_ONLY" or manifest.get("scientific_result") is not False
+            or manifest.get("pilot_status") != "ENGINEERING_PILOT_COMPLETE" or not isinstance(files, list)
+            or any(not isinstance(row, dict) for row in files)
+            or len(files) != len(paths) or {row.get("path") for row in files} != paths):
+        raise SourceTrainingError("Engineering result artifact manifest must cover exactly every actual pilot output")
+    for row in files:
+        if row.get("role") != "result" or row.get("dataset") != "Paper3SourceEngineering":
+            raise SourceTrainingError("Engineering artifact manifest role or dataset is invalid")
+        _pilot_replay_artifact(cache.root, None, row)
+    dependencies = identity.get("resolved_dependencies")
+    dependency_path = _pilot_replay_artifact(cache.root, None, dependencies)
+    if dependency_path != cache.root / "audit/gpu_resolved_dependencies.json":
+        raise SourceTrainingError("Engineering pilot must bind its actual resolved dependency evidence")
+    if receipt.get("resolved_dependencies") != dependencies:
+        raise SourceTrainingError("Engineering pilot receipt and runtime dependency identities differ")
+    resolved = json.loads(dependency_path.read_text())
+    names = {}
+    if not isinstance(resolved, list) or not resolved:
+        raise SourceTrainingError("Engineering resolved dependency evidence is missing")
+    for row in resolved:
+        if (not isinstance(row, dict) or set(row) != {"name", "version"}
+                or not all(isinstance(row[key], str) and row[key] for key in ("name", "version"))
+                or re.fullmatch(r"[A-Za-z0-9_.-]+", row["name"]) is None
+                or re.fullmatch(r"[A-Za-z0-9_.+!-]+", row["version"]) is None):
+            raise SourceTrainingError("Engineering dependencies may contain only explicit package names and versions")
+        name = re.sub(r"[-_.]+", "-", row["name"].lower())
+        if name in names:
+            raise SourceTrainingError("Engineering resolved dependencies contain duplicates")
+        names[name] = row["version"]
+    for line in (cache.root / "requirements-gpu.lock").read_text().splitlines():
+        if not line.strip() or line.startswith(("#", "--")):
+            continue
+        name, version = line.strip().split("==")
+        if names.get(re.sub(r"[-_.]+", "-", name.lower())) != version:
+            raise SourceTrainingError("Engineering resolved dependencies omit or differ from the frozen GPU pins")
+    if names.get("torch") != identity.get("torch") or names.get("numpy") != identity.get("numpy"):
+        raise SourceTrainingError("Engineering dependency versions disagree with the pilot runtime")
+    claim = json.loads((cache.root / "runs/controlled_pilot_job_claim.json").read_text())
+    if (claim.get("scope") != "ENGINEERING_SOURCE_PILOT_ONLY" or claim.get("max_jobs") != 1
+            or type(claim.get("max_jobs")) is not int
+            or claim.get("output") != receipt_file.parent.relative_to(cache.root).as_posix()):
+        raise SourceTrainingError("Engineering pilot one-job claim does not bind this output directory")
+    backup_path = _pilot_local(cache.root, receipt.get("backup_manifest_path"))
+    backup_item = {**artifact(cache.root, backup_path), "bytes": backup_path.stat().st_size}
+    _pilot_replay_artifact(cache.root, receipt_file.parent, backup_item)
+    backup = json.loads(backup_path.read_text())
+    expected_files = files + [{**item, "role": "result", "dataset": "Paper3SourceEngineering"} for item in (
+        manifest_item, {**artifact(cache.root, receipt_file), "bytes": receipt_file.stat().st_size})]
+    backed = backup.get("files")
+    if (backup.get("schema_version") != 1 or not isinstance(backed, list)
+            or any(not isinstance(row, dict) for row in backed) or len(backed) != len(expected_files)
+            or {row.get("path") for row in backed} != {row["path"] for row in expected_files}
+            or {row["path"]: row for row in backed} != {row["path"]: row for row in expected_files}):
+        raise SourceTrainingError("Engineering backup manifest is incomplete or differs from the actual outputs and final receipt")
+    return {"artifact_manifest": manifest_item, "backup_manifest": backup_item, "backup_manifest_is_upload_receipt": False}
+
+
 def verify_engineering_pilot(cache, receipt_path, *, runtime=None):
     """Verify the actual 200-update same-device engineering prerequisite."""
-    receipt_file = local(cache.root, receipt_path)
+    receipt_file = _pilot_local(cache.root, receipt_path)
     receipt = json.loads(receipt_file.read_text())
     comparisons = ("model", "optimizer", "sampler_rng", "torch_rng", "cuda_rng", "python_rng", "numpy_rng", "update", "identity_sha256")
     if (receipt.get("status") != "ENGINEERING_PILOT_COMPLETE" or receipt.get("scope") != "ENGINEERING_SOURCE_PILOT_ONLY" or
             receipt.get("training_started") is not True or receipt.get("actual_completed_updates") != 200 or
+            receipt.get("optimizer_updates_dispatched") != 200 or receipt.get("seed") != 20261018 or receipt.get("max_jobs") != 1 or
+            any(type(receipt.get(key)) is not int for key in ("actual_completed_updates", "optimizer_updates_dispatched", "seed", "max_jobs")) or
             receipt.get("exact_resume_verified") is not True or receipt.get("user_started_gpu_attested") is not True or
             any(receipt.get("resume_comparison", {}).get(key) is not True for key in comparisons)):
         raise SourceTrainingError("Actual completed 200-update engineering pilot with exact resume is required")
-    identity_file = receipt_file.with_name("identity.json")
+    identity_file = _pilot_local(cache.root, receipt_file.with_name("identity.json").relative_to(cache.root).as_posix())
     identity = json.loads(identity_file.read_text())
     required_code = {"runner_sha256": "tools/run_controlled_pilot.py", "bridge_sha256": "p3work/f0_bridge.py",
                      "geometry_sha256": "p3work/spatial_geometry.py", "contracts_sha256": "p3work/contracts.py"}
@@ -228,6 +418,9 @@ def verify_engineering_pilot(cache, receipt_path, *, runtime=None):
             identity.get("cache_manifest_sha256") != cache.manifest_sha256 or identity.get("device") != "cuda:0" or
             identity.get("tf32") is not False or identity.get("mixed_precision") is not False or
             identity.get("deterministic_algorithms") is not True or
+            identity.get("seed") != 20261018 or identity.get("batch_size") != 64 or identity.get("optimizer") != "Adam" or
+            identity.get("learning_rate") != .001 or identity.get("weight_decay") != 0 or identity.get("foreach") is not False or
+            identity.get("dropout") != .25 or
             any(identity.get(key) != file_digest(cache.root / value) for key, value in required_code.items())):
         raise SourceTrainingError("Engineering pilot code/input/precision identity differs from formal training")
     prior_artifacts = identity.get("cache_artifacts")
@@ -240,7 +433,8 @@ def verify_engineering_pilot(cache, receipt_path, *, runtime=None):
     if set(receipt.get("checkpoint_files", {})) != expected:
         raise SourceTrainingError("Engineering pilot checkpoint evidence is incomplete")
     for name, expected_sha in receipt["checkpoint_files"].items():
-        if file_digest(receipt_file.with_name(name)) != expected_sha:
+        checkpoint_path = _pilot_local(cache.root, receipt_file.with_name(name).relative_to(cache.root).as_posix())
+        if file_digest(checkpoint_path) != expected_sha:
             raise SourceTrainingError("Engineering pilot checkpoint SHA256 mismatch")
     from tools.run_controlled_pilot import _same_tree
     checkpoints = {name: torch.load(receipt_file.with_name(name), map_location="cpu", weights_only=True) for name in expected}
@@ -248,11 +442,14 @@ def verify_engineering_pilot(cache, receipt_path, *, runtime=None):
                          ("engineering_resume50.pt", 50), ("engineering_resumed100.pt", 100)):
         saved = checkpoints[name]
         if (saved.get("scope") != "ENGINEERING_SOURCE_PILOT_ONLY" or saved.get("identity") != identity or
-                saved.get("identity_sha256") != digest(identity) or saved.get("update") != update):
+                saved.get("identity_sha256") != digest(identity) or saved.get("update") != update
+                or not set(comparisons) <= set(saved)):
             raise SourceTrainingError("Engineering pilot checkpoint update/runtime identity is inconsistent")
     continuous, resumed = checkpoints["engineering_continuous100.pt"], checkpoints["engineering_resumed100.pt"]
     if any(not _same_tree(continuous.get(key), resumed.get(key)) for key in comparisons):
         raise SourceTrainingError("Engineering pilot continuous/resumed checkpoint states actually differ")
+    prediction_proof = _verify_engineering_prediction_replay(cache, receipt_file, receipt, identity, receipt["checkpoint_files"])
+    result_manifests = _verify_pilot_result_manifests(cache, receipt_file, receipt, identity, prediction_proof)
     if runtime is not None:
         mapping = {"device": "device", "device_name": "device_name", "device_uuid": "device_uuid",
                    "device_total_memory": "device_total_memory", "compute_capability": "compute_capability",
@@ -262,7 +459,7 @@ def verify_engineering_pilot(cache, receipt_path, *, runtime=None):
         if any(identity.get(key) != runtime.get(value) for key, value in mapping.items()):
             raise SourceTrainingError("Formal training runtime differs from the empirically resumed pilot device")
     return {"receipt": artifact(cache.root, receipt_file), "identity": artifact(cache.root, identity_file),
-            "actual_completed_updates": 200, "exact_resume_verified": True}
+            "actual_completed_updates": 200, "exact_resume_verified": True, **prediction_proof, **result_manifests}
 
 
 def build_training_plan(cache, *, profile="development"):

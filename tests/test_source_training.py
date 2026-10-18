@@ -38,6 +38,7 @@ def fixture_cache(tmp_path, monkeypatch):
             index = d * 4 + i
             rows.append({"dataset": dataset, "subject_id": str(i // 2 + 1),
                 "event_uid": f"MATHEMATICAL_FIXTURE/{dataset}/{i}", "role": "source_train",
+                "label": i % 2,
                 "processed_signal_sha256": __import__("hashlib").sha256(x[index].tobytes()).hexdigest()})
             y.append(i % 2)
     for relative in ("tools/run_controlled_pilot.py", "p3work/f0_bridge.py", "p3work/spatial_geometry.py", "p3work/contracts.py"):
@@ -479,16 +480,58 @@ def test_completed_fit_cannot_skip_changed_upstream_proof(complete_artifact_enve
         training.verify_complete_fit(cache, job, folder)
 
 
-def make_pilot_fixture(cache):
+def pilot_descriptor(cache, path):
+    return {**training.artifact(cache.root, path), "bytes": path.stat().st_size}
+
+
+def reseal_pilot_fixture(cache, receipt_path):
+    """Only reseal a local completion-shaped SOFTWARE_TEST_DOUBLE envelope."""
+    receipt_path = cache.root / receipt_path if not isinstance(receipt_path, Path) else receipt_path
+    folder = receipt_path.parent
+    receipt = json.loads(receipt_path.read_text())
+    receipt["engineering_prediction_replay"] = pilot_descriptor(cache, folder / "engineering_prediction_replay.json")
+    files = [cache.root / "runs/controlled_pilot_job_claim.json", cache.root / "audit/gpu_resolved_dependencies.json",
+        folder / "identity.json", *(folder / name for name in receipt["checkpoint_files"]),
+        folder / "engineering_continuous100_predictions.json", folder / "engineering_resumed100_predictions.json",
+        folder / "engineering_prediction_replay.json"]
+    rows = [{**pilot_descriptor(cache, path), "role": "result", "dataset": "Paper3SourceEngineering"} for path in files]
+    manifest = folder / "engineering_artifact_manifest.json"
+    training.atomic_json(manifest, {"schema_version": "paper3-source-engineering-artifacts-v1",
+        "scope": "ENGINEERING_SOURCE_PILOT_ONLY", "scientific_result": False,
+        "pilot_status": receipt["status"], "files": rows})
+    receipt["artifact_manifest"] = pilot_descriptor(cache, manifest)
+    receipt["backup_manifest_path"] = (folder / "engineering_backup_manifest.json").relative_to(cache.root).as_posix()
+    training.atomic_json(receipt_path, receipt)
+    training.atomic_json(folder / "engineering_backup_manifest.json", {"schema_version": 1,
+        "files": rows + [{**pilot_descriptor(cache, path), "role": "result", "dataset": "Paper3SourceEngineering"}
+                         for path in (manifest, receipt_path)]})
+
+
+def make_pilot_fixture(cache, *, omit_one_pinned_dependency=False):
+    from tools.run_controlled_pilot import engineering_prediction_selection, engineering_prediction_metrics, PREDICTION_SELECTION_RULE
     folder = cache.root / "pilot_fixture"; folder.mkdir()
+    (cache.root / "requirements-gpu.lock").write_bytes((ROOT / "requirements-gpu.lock").read_bytes())
+    dependencies = []
+    for line in (cache.root / "requirements-gpu.lock").read_text().splitlines():
+        if line.strip() and not line.startswith(("#", "--")):
+            name, version = line.split("=="); dependencies.append({"name": name, "version": version})
+    if omit_one_pinned_dependency:
+        dependencies.pop()
+    training.atomic_json(cache.root / "audit/gpu_resolved_dependencies.json", dependencies)
+    training.atomic_json(cache.root / "runs/controlled_pilot_job_claim.json", {
+        "scope": "ENGINEERING_SOURCE_PILOT_ONLY", "max_jobs": 1, "output": "pilot_fixture",
+        "fixture_scope": "SOFTWARE_TEST_DOUBLE_NOT_A_REAL_GPU_JOB"})
     runtime = {"device": "cuda:0", "device_name": "MATHEMATICAL_TEST_DOUBLE", "device_uuid": "FIXTURE_UUID",
-        "device_total_memory": 0, "compute_capability": [0, 0], "torch": "FIXTURE_TORCH", "cuda_runtime": "FIXTURE_CUDA",
-        "cudnn": 0, "driver_versions": ["FIXTURE_DRIVER"], "numpy": "FIXTURE_NUMPY", "python": "FIXTURE_PYTHON"}
+        "device_total_memory": 0, "compute_capability": [0, 0], "torch": "2.8.0+cu128", "cuda_runtime": "FIXTURE_CUDA",
+        "cudnn": 0, "driver_versions": ["FIXTURE_DRIVER"], "numpy": "2.3.5", "python": "FIXTURE_PYTHON"}
     identity = {**runtime, "driver_versions_local_nvidia_smi": runtime["driver_versions"],
         "input_contract_sha256": cache.input_contract_sha256, "cache_manifest_sha256": cache.manifest_sha256,
         "cache_artifacts": dict(cache.artifact_sha256),
         "upstream_acceptance_sha256": dict(getattr(cache, "upstream_acceptance_sha256", {})),
-        "tf32": False, "mixed_precision": False, "deterministic_algorithms": True}
+        "tf32": False, "mixed_precision": False, "deterministic_algorithms": True,
+        "seed": 20261018, "batch_size": 64, "optimizer": "Adam", "learning_rate": .001,
+        "weight_decay": 0, "foreach": False, "dropout": .25,
+        "resolved_dependencies": pilot_descriptor(cache, cache.root / "audit/gpu_resolved_dependencies.json")}
     for key, relative in {"runner_sha256": "tools/run_controlled_pilot.py", "bridge_sha256": "p3work/f0_bridge.py",
                           "geometry_sha256": "p3work/spatial_geometry.py", "contracts_sha256": "p3work/contracts.py"}.items():
         identity[key] = file_digest(cache.root / relative)
@@ -503,9 +546,38 @@ def make_pilot_fixture(cache):
         training.atomic_checkpoint(folder / name, state); hashes[name] = file_digest(folder / name)
     receipt = {"status": "ENGINEERING_PILOT_COMPLETE", "scope": "ENGINEERING_SOURCE_PILOT_ONLY", "training_started": True,
         "actual_completed_updates": 200, "exact_resume_verified": True, "user_started_gpu_attested": True,
+        "optimizer_updates_dispatched": 200, "seed": 20261018, "max_jobs": 1,
+        "resolved_dependencies": identity["resolved_dependencies"],
         "resume_comparison": {k: True for k in ("model", "optimizer", "sampler_rng", "torch_rng", "cuda_rng",
                                                    "python_rng", "numpy_rng", "update", "identity_sha256")}, "checkpoint_files": hashes}
     training.atomic_json(folder / "engineering_receipt.json", receipt)
+    _, uids, labels = engineering_prediction_selection(cache)
+    source_batch_sha = digest({"event_uids": uids, "labels": labels})
+    logits = np.asarray([[.25, -.5] if label == 0 else [-.75, .125] for label in labels], dtype=np.float32)
+    probabilities = torch.softmax(torch.from_numpy(logits), dim=1).numpy()
+    predicted = logits.argmax(1).tolist()
+    common = {"scope": "ENGINEERING_SOURCE_PILOT_ONLY", "role": "source_train", "synthetic": False,
+        "scientific_result": False, "identity_sha256": digest(identity), "input_contract_sha256": cache.input_contract_sha256,
+        "cache_manifest_sha256": cache.manifest_sha256, "source_batch_sha256": source_batch_sha,
+        "event_uids": uids, "labels": labels}
+    branches = {}
+    for branch, checkpoint_name, output_name in (("continuous", "engineering_continuous100.pt", "engineering_continuous100_predictions.json"),
+                                                 ("resumed", "engineering_resumed100.pt", "engineering_resumed100_predictions.json")):
+        checkpoint = pilot_descriptor(cache, folder / checkpoint_name)
+        output = folder / output_name
+        training.atomic_json(output, {"schema_version": "paper3-source-engineering-predictions-v1", **common,
+            "checkpoint": checkpoint, "model_update": 100, "optimizer_updates": 0, "eval_mode": True,
+            "prediction_rule": "two_logits.argmax(-1); exact tie selects class 0",
+            "two_logits": logits.tolist(), "probabilities": probabilities.tolist(), "predictions": predicted,
+            "metrics": engineering_prediction_metrics(labels, probabilities, predictions=predicted),
+            "fixture_scope": "SOFTWARE_TEST_DOUBLE_OUTPUT_NOT_FROM_A_GPU_MODEL"})
+        branches[branch] = {"checkpoint": checkpoint, "predictions": pilot_descriptor(cache, output)}
+    training.atomic_json(folder / "engineering_prediction_replay.json", {
+        "schema_version": "paper3-source-engineering-prediction-replay-v1", **common,
+        "selection_rule": PREDICTION_SELECTION_RULE, "optimizer_updates_for_replay": 0,
+        **branches, "comparisons": {key: True for key in ("logits", "probabilities", "predictions", "labels", "metrics")},
+        "all_exact": True, "fixture_scope": "SOFTWARE_TEST_DOUBLE_NOT_GPU_REPLAY_EVIDENCE"})
+    reseal_pilot_fixture(cache, folder / "engineering_receipt.json")
     return "pilot_fixture/engineering_receipt.json", runtime
 
 
@@ -552,6 +624,149 @@ def test_later_task_progress_does_not_invalidate_the_same_verified_pilot(fixture
     path, _ = make_pilot_fixture(cache)
     cache.artifact_sha256["status/tasks.json"] = "c" * 64
     assert training.verify_engineering_pilot(cache, path)["exact_resume_verified"]
+
+
+def mutate_pilot_output(cache, receipt_path, mutate):
+    """Change and fully reseal test JSON so SHA checks alone cannot pass it."""
+    folder = (cache.root / receipt_path).parent
+    proof_path = folder / "engineering_prediction_replay.json"
+    proof = json.loads(proof_path.read_text())
+    output_path = cache.root / proof["resumed"]["predictions"]["path"]
+    output = json.loads(output_path.read_text())
+    mutate(proof, output)
+    training.atomic_json(output_path, output)
+    proof["resumed"]["predictions"] = pilot_descriptor(cache, output_path)
+    training.atomic_json(proof_path, proof)
+    reseal_pilot_fixture(cache, receipt_path)
+
+
+@pytest.mark.parametrize("violation", ["missing_proof", "missing_output", "proof_wrong_sha", "output_wrong_sha",
+    "unregistered_UID", "reordered_UIDs", "labels", "source_batch_sha", "proof_scope", "proof_role",
+    "identity", "signal", "cache", "not_eval", "extra_updates", "wrong_model_update", "metrics",
+    "probabilities", "prediction_argmax", "checkpoint_branch", "fake_boolean"])
+def test_exact_model_states_do_not_replace_real_source_prediction_artifacts(fixture_cache, violation):
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache)
+    folder, receipt_path = (cache.root / path).parent, cache.root / path
+    if violation in {"missing_proof", "missing_output", "proof_wrong_sha", "output_wrong_sha"}:
+        receipt = json.loads(receipt_path.read_text())
+        if violation == "missing_proof": receipt.pop("engineering_prediction_replay"); training.atomic_json(receipt_path, receipt)
+        elif violation == "missing_output": (folder / "engineering_resumed100_predictions.json").unlink()
+        elif violation == "proof_wrong_sha": receipt["engineering_prediction_replay"]["sha256"] = "f" * 64; training.atomic_json(receipt_path, receipt)
+        else:
+            with (folder / "engineering_resumed100_predictions.json").open("ab") as stream: stream.write(b"CHANGED_SOFTWARE_TEST_DOUBLE")
+    else:
+        def change(proof, output):
+            if violation == "unregistered_UID": proof["event_uids"][0] = "FORBIDDEN_OR_NOT_A_SOURCE_TRAIN_UID"
+            elif violation == "reordered_UIDs": proof["event_uids"].reverse()
+            elif violation == "labels": output["labels"][0] = 1 - output["labels"][0]
+            elif violation == "source_batch_sha": output["source_batch_sha256"] = "f" * 64
+            elif violation == "proof_scope": proof["scope"] = "SCIENTIFIC_RESULT"
+            elif violation == "proof_role": proof["role"] = "meta_validation_query"
+            elif violation == "identity": output["identity_sha256"] = "f" * 64
+            elif violation == "signal": output["input_contract_sha256"] = "f" * 64
+            elif violation == "cache": output["cache_manifest_sha256"] = "f" * 64
+            elif violation == "not_eval": output["eval_mode"] = False
+            elif violation == "extra_updates": output["optimizer_updates"] = 1
+            elif violation == "wrong_model_update": output["model_update"] = 99
+            elif violation == "metrics": output["metrics"]["accuracy"] = .123
+            elif violation == "probabilities": output["probabilities"][0] = [.99, .01]
+            elif violation == "prediction_argmax": output["predictions"][0] = 1 - output["predictions"][0]
+            elif violation == "checkpoint_branch": proof["resumed"]["checkpoint"] = proof["continuous"]["checkpoint"]
+            elif violation == "fake_boolean": proof["comparisons"]["metrics"] = 1
+        mutate_pilot_output(cache, path, change)
+    with pytest.raises(training.SourceTrainingError):
+        training.verify_engineering_pilot(cache, path)
+
+
+def test_both_saved_prediction_branches_are_compared_even_after_consistent_resealing(fixture_cache):
+    from tools.run_controlled_pilot import engineering_prediction_metrics
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache)
+    def change(proof, output):
+        logits = np.asarray(output["two_logits"], dtype=np.float32)
+        logits[0] = [-.5, .25]
+        probabilities = torch.softmax(torch.from_numpy(logits), dim=1).numpy()
+        predicted = logits.argmax(1).tolist()
+        output.update(two_logits=logits.tolist(), probabilities=probabilities.tolist(), predictions=predicted,
+            metrics=engineering_prediction_metrics(output["labels"], probabilities, predictions=predicted))
+        assert proof["all_exact"] and all(proof["comparisons"].values())
+    mutate_pilot_output(cache, path, change)
+    with pytest.raises(training.SourceTrainingError, match="actually differ"):
+        training.verify_engineering_pilot(cache, path)
+
+
+@pytest.mark.parametrize("violation", ["missing_manifest", "missing_output_in_manifest", "extra_file", "missing_backup",
+    "backup_missing_receipt", "backup_wrong_sha", "wrong_claim", "missing_pinned_dependency"])
+def test_pilot_result_set_and_backup_plan_are_complete_but_do_not_claim_an_R2_upload(fixture_cache, violation):
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache, omit_one_pinned_dependency=violation == "missing_pinned_dependency")
+    folder, receipt_path = (cache.root / path).parent, cache.root / path
+    receipt = json.loads(receipt_path.read_text())
+    if violation == "missing_manifest": receipt.pop("artifact_manifest"); training.atomic_json(receipt_path, receipt)
+    elif violation == "missing_backup": (folder / "engineering_backup_manifest.json").unlink()
+    elif violation in {"backup_missing_receipt", "backup_wrong_sha"}:
+        backup_path = folder / "engineering_backup_manifest.json"; backup = json.loads(backup_path.read_text())
+        if violation == "backup_missing_receipt": backup["files"].pop()
+        else: backup["files"][0]["sha256"] = "f" * 64
+        training.atomic_json(backup_path, backup)
+    elif violation in {"missing_output_in_manifest", "extra_file"}:
+        manifest_path = folder / "engineering_artifact_manifest.json"; manifest = json.loads(manifest_path.read_text())
+        if violation == "missing_output_in_manifest": manifest["files"].pop()
+        else: manifest["files"].append({**manifest["files"][0], "path": "audit/unrelated.json"})
+        training.atomic_json(manifest_path, manifest)
+        receipt["artifact_manifest"] = pilot_descriptor(cache, manifest_path); training.atomic_json(receipt_path, receipt)
+    elif violation == "wrong_claim":
+        claim_path = cache.root / "runs/controlled_pilot_job_claim.json"
+        claim = json.loads(claim_path.read_text()); claim["output"] = "another_job"
+        training.atomic_json(claim_path, claim); reseal_pilot_fixture(cache, path)
+    else:
+        # The omitted dependency was absent before identity/checkpoints/output
+        # creation. Every SHA agrees, so the actual pin coverage must reject it.
+        assert violation == "missing_pinned_dependency"
+    with pytest.raises(training.SourceTrainingError):
+        training.verify_engineering_pilot(cache, path)
+
+
+def test_read_only_pilot_verifier_never_initializes_CUDA_or_restores_RNG(fixture_cache, monkeypatch):
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache)
+    before = torch.get_rng_state().clone(), copy.deepcopy(np.random.get_state()), random.getstate()
+    def forbidden(*a, **k): pytest.fail("Read-only engineering verifier attempted CUDA/RNG/model initialization")
+    monkeypatch.setattr(torch.cuda, "_lazy_init", forbidden)
+    monkeypatch.setattr(torch, "set_rng_state", forbidden)
+    monkeypatch.setattr(torch, "manual_seed", forbidden)
+    monkeypatch.setattr(np.random, "set_state", forbidden)
+    monkeypatch.setattr(random, "setstate", forbidden)
+    monkeypatch.setattr(training, "CompactEEGNet", forbidden)
+    proof = training.verify_engineering_pilot(cache, path)
+    assert proof["prediction_replay_exact"] and proof["metric_replay_exact"]
+    assert proof["backup_manifest_is_upload_receipt"] is False
+    assert torch.equal(before[0], torch.get_rng_state())
+    after = np.random.get_state(); assert before[1][0] == after[0] and np.array_equal(before[1][1], after[1]) and before[1][2:] == after[2:]
+    assert before[2] == random.getstate()
+
+
+def test_backup_manifest_file_order_is_not_a_scientific_or_replay_identity(fixture_cache):
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache)
+    backup_path = (cache.root / path).with_name("engineering_backup_manifest.json")
+    backup = json.loads(backup_path.read_text()); backup["files"].reverse(); training.atomic_json(backup_path, backup)
+    assert training.verify_engineering_pilot(cache, path)["prediction_replay_exact"]
+
+
+@pytest.mark.parametrize("violation", ["role", "uid_duplicate", "row_label"])
+def test_pilot_prediction_selection_cannot_cast_other_capabilities_as_source_training(fixture_cache, violation):
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache)
+    if violation == "role": cache.rows[0]["role"] = "meta_validation_query"
+    elif violation == "uid_duplicate": cache.rows[0]["event_uid"] = cache.rows[1]["event_uid"]
+    else: cache.rows[0]["label"] = 1 - cache.rows[0]["label"]
+    with pytest.raises(training.SourceTrainingError, match="source|UID"):
+        training.verify_engineering_pilot(cache, path)
+
+
+def test_engineering_output_symlink_is_rejected_before_reading_its_target(fixture_cache):
+    cache = fixture_cache; path, _ = make_pilot_fixture(cache)
+    output = (cache.root / path).with_name("engineering_resumed100_predictions.json")
+    outside = cache.root.parent / "OUTSIDE_SOFTWARE_FIXTURE_NOT_QUERY_DATA.json"
+    output.rename(outside); output.symlink_to(outside)
+    with pytest.raises(training.SourceTrainingError, match="symlink"):
+        training.verify_engineering_pilot(cache, path)
 
 
 def test_operational_wall_budget_amendment_preserves_fit_identity_and_resume(fixture_cache):

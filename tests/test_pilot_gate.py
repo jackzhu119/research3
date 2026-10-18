@@ -263,3 +263,383 @@ def test_pure_timing_summary_excludes_fixed_warmup_without_extra_updates():
     assert result["measured_forward_backward_step"]["p90_seconds"] == pytest.approx(.0911)
     assert result["cpu_sampling_normalization_total_seconds"] == pytest.approx(10)
     assert result["billing_time"] is False
+
+
+def test_fixed_source_prediction_selection_is_ordered_and_source_only(gate_fixture):
+    root, _, _, _, _ = gate_fixture
+    cache = pilot.verify_inputs(root)
+    indices, uids, labels = pilot.engineering_prediction_selection(cache)
+    assert len(indices) == 8
+    expected = [row["event_uid"] for dataset in sorted(SOURCE_IDS)
+                for row in sorted((r for r in cache.rows if r["dataset"] == dataset), key=lambda r: r["event_uid"])[:16]]
+    assert uids == expected
+    assert labels == [int(cache.labels[i]) for i in indices]
+    cache.rows[0]["role"] = "meta_validation_query"
+    with pytest.raises(pilot.PilotGateError, match="source_train"):
+        pilot.engineering_prediction_selection(cache)
+
+
+def test_prediction_metrics_use_actual_logit_classes_and_explicit_missing_class():
+    # SOFTWARE_TEST_DOUBLE: rounded probability tie can differ from logit argmax.
+    result = pilot.engineering_prediction_metrics([1], [[.5, .5]], predictions=[1])
+    assert result["accuracy"] == 1 and result["balanced_accuracy"] is None
+    assert result["class_counts"] == {"0": 0, "1": 1}
+    assert result["class_recall"] == {"0": None, "1": 1.0}
+    assert result["loss_cross_entropy"] == pytest.approx(np.log(2))
+    result = pilot.engineering_prediction_metrics([0, 1], [[1, 0], [1, 0]], predictions=[0, 0])
+    assert result["balanced_accuracy"] == .5 and np.isfinite(result["loss_cross_entropy"])
+    with pytest.raises(pilot.PilotGateError):
+        pilot.engineering_prediction_metrics([0], [[.7, .7]])
+
+
+def test_checkpoint_save_load_and_validation_have_separate_monotonic_timings(tmp_path):
+    # CPU tensors only, no model, optimizer, fit, or CUDA call.
+    path, events, identity = tmp_path / "TEST_DOUBLE.pt", [], {"scope": "SOFTWARE_TEST_DOUBLE"}
+    state = {"scope": pilot.PREDICTION_SCOPE, "identity": identity,
+             "identity_sha256": pilot.digest(identity), "update": 100, "tensor": torch.arange(3)}
+    pilot._atomic_checkpoint(path, state, io_timings=events)
+    loaded = pilot._load_checkpoint(path, expected_sha=file_digest(path), io_timings=events)
+    pilot._validate_checkpoint(loaded, identity, 100, path=path, io_timings=events)
+    assert pilot._same_tree(loaded, state)
+    assert [e["operation"] for e in events] == ["checkpoint_save_fsync_atomic_commit", "checkpoint_sha256_before_load",
+        "checkpoint_load_weights_only", "checkpoint_sha256_after_load", "checkpoint_loaded_identity_validation"]
+    assert all(e["monotonic_seconds"] >= 0 and e["status"] == "complete" for e in events)
+    with pytest.raises(pilot.PilotGateError, match="update"):
+        pilot._validate_checkpoint(loaded, identity, 50, path=path, io_timings=events)
+    assert events[-1]["status"] == "failed"
+
+
+def test_checkpoint_hash_mismatch_blocks_before_deserialization(tmp_path, monkeypatch):
+    path = tmp_path / "TEST_DOUBLE.pt"
+    path.write_bytes(b"SOFTWARE_TEST_DOUBLE_NOT_A_CHECKPOINT")
+    monkeypatch.setattr(torch, "load", lambda *a, **k: pytest.fail("Mismatched checkpoint was loaded"))
+    with pytest.raises(pilot.PilotGateError, match="SHA256"):
+        pilot._load_checkpoint(path, expected_sha="a" * 64)
+
+
+def dependency_evidence_fixture(root):
+    # A deliberately minimal SOFTWARE_TEST_DOUBLE dependency profile, not a GPU lock.
+    versions = {"torch": str(torch.__version__), "numpy": np.__version__}
+    (root / "requirements-gpu.lock").write_text("\n".join(f"{key}=={value}" for key, value in versions.items()) + "\n")
+    write(root / "audit/gpu_resolved_dependencies.json", [{"name": k, "version": v} for k, v in versions.items()])
+    return pilot._resolved_dependencies(root)
+
+
+@pytest.mark.parametrize("complete", [True, False])
+def test_result_manifests_cover_only_actual_allowlisted_evidence_without_cycle(tmp_path, complete):
+    root, output = tmp_path, tmp_path / "runs/TEST_DOUBLE"
+    output.mkdir(parents=True)
+    dependencies = dependency_evidence_fixture(root)
+    write(root / "runs/controlled_pilot_job_claim.json", {"scope": "SOFTWARE_TEST_DOUBLE"})
+    write(output / "identity.json", {"scope": "SOFTWARE_TEST_DOUBLE"})
+    actual = pilot.CHECKPOINT_NAMES if complete else pilot.CHECKPOINT_NAMES[:1]
+    for name in actual:
+        (output / name).write_bytes(b"SOFTWARE_TEST_DOUBLE_NO_REAL_FIT")
+    if complete:
+        for name in (*pilot.PREDICTION_NAMES, "engineering_prediction_replay.json"):
+            write(output / name, {"scope": "SOFTWARE_TEST_DOUBLE"})
+    # Unrelated config/target/temporary files must never be discovered or copied.
+    for name in (".env", "target_predictions.json", "unapproved.pt", "resume.pt.partial"):
+        (output / name).write_bytes(b"MUST_NOT_BE_DISCOVERED")
+    receipt = {"status": "ENGINEERING_PILOT_COMPLETE" if complete else "ENGINEERING_PILOT_FAILED",
+               "scope": "SOFTWARE_TEST_DOUBLE", "resolved_dependencies": dependencies}
+    pilot._finalize_result_manifests(root, output, receipt)
+    artifact = json.loads((output / "engineering_artifact_manifest.json").read_text())
+    backup = json.loads((output / "engineering_backup_manifest.json").read_text())
+    receipt_disk = json.loads((output / "engineering_receipt.json").read_text())
+    names = {Path(row["path"]).name for row in backup["files"]}
+    assert not names.intersection({".env", "target_predictions.json", "unapproved.pt", "resume.pt.partial"})
+    assert "engineering_receipt.json" not in {Path(row["path"]).name for row in artifact["files"]}
+    assert "engineering_artifact_manifest.json" in names and "engineering_receipt.json" in names
+    assert "engineering_backup_manifest.json" not in names
+    assert set(actual) <= names
+    assert not complete or set(pilot.CHECKPOINT_NAMES) | set(pilot.PREDICTION_NAMES) | {"engineering_prediction_replay.json"} <= names
+    assert receipt_disk["artifact_manifest"]["sha256"] == file_digest(output / "engineering_artifact_manifest.json")
+    from tools.r2_backup import load_manifest
+    files, _ = load_manifest(output / "engineering_backup_manifest.json", root)
+    assert len(files) == len(backup["files"])  # Local schema/SHA check only; no SDK/network.
+
+
+def test_result_manifest_rejects_symlink_even_inside_root(tmp_path):
+    root, output = tmp_path, tmp_path / "runs/TEST_DOUBLE"
+    output.mkdir(parents=True)
+    write(root / "runs/controlled_pilot_job_claim.json", {"scope": "SOFTWARE_TEST_DOUBLE"})
+    (root / "private_config.json").write_text("DO_NOT_BACK_UP")
+    (output / "identity.json").symlink_to(root / "private_config.json")
+    with pytest.raises(pilot.PilotGateError, match="Symlink"):
+        pilot._finalize_result_manifests(root, output, {"status": "ENGINEERING_PILOT_FAILED"})
+    assert not (output / "engineering_backup_manifest.json").exists()
+
+
+@pytest.mark.parametrize("destination", ["alias", "outside", "not_runs", "runs_root"])
+def test_manifest_helper_rejects_bad_destination_before_any_write(tmp_path, destination):
+    root = tmp_path / "paper3"
+    (root / "runs").mkdir(parents=True)
+    target = tmp_path / "SOFTWARE_TEST_DOUBLE_UNOWNED"
+    target.mkdir()
+    if destination == "alias":
+        output = root / "runs/linked"
+        output.symlink_to(target, target_is_directory=True)
+    elif destination == "outside":
+        output = target
+    elif destination == "not_runs":
+        output = root / "metadata"
+        output.mkdir()
+    else:
+        output = root / "runs"
+    with pytest.raises(pilot.PilotGateError):
+        pilot._finalize_result_manifests(root, output, {"status": "ENGINEERING_PILOT_FAILED"})
+    assert not list(target.iterdir())
+    assert not list(root.rglob("engineering_*manifest.json"))
+
+
+def test_resolved_dependencies_require_all_actual_pins_and_plain_package_fields(tmp_path):
+    dependency_evidence_fixture(tmp_path)
+    path = tmp_path / "audit/gpu_resolved_dependencies.json"
+    write(path, [{"name": "torch", "version": str(torch.__version__)}])
+    with pytest.raises(pilot.PilotGateError, match="Torch/NumPy"):
+        pilot._resolved_dependencies(tmp_path)
+    write(path, [{"name": "torch", "version": str(torch.__version__), "config": "DO_NOT_COPY"}])
+    with pytest.raises(pilot.PilotGateError, match="only package"):
+        pilot._resolved_dependencies(tmp_path)
+
+
+def test_resolved_dependencies_reject_internal_symlink_before_reading_payload(tmp_path, monkeypatch):
+    dependency_evidence_fixture(tmp_path)
+    path = tmp_path / "audit/gpu_resolved_dependencies.json"
+    target = tmp_path / "SOFTWARE_TEST_DOUBLE_metadata.json"
+    path.replace(target)
+    path.symlink_to(target)
+    original_read = Path.read_text
+    def reject_payload_read(self, *args, **kwargs):
+        if self in (path, target):
+            pytest.fail("Symlinked dependency payload was read")
+        return original_read(self, *args, **kwargs)
+    monkeypatch.setattr(Path, "read_text", reject_payload_read)
+    with pytest.raises(pilot.PilotGateError, match="Symlink"):
+        pilot._resolved_dependencies(tmp_path)
+
+
+@pytest.mark.parametrize("alias", ["runs", "runs/linked"])
+def test_output_symlink_is_rejected_before_claim_or_output_creation(gate_fixture, monkeypatch, alias):
+    root, _, _, _, _ = gate_fixture
+    cache = pilot.verify_inputs(root)
+    target = root / "SOFTWARE_TEST_DOUBLE_UNOWNED"
+    target.mkdir()
+    link = root / alias
+    link.parent.mkdir(parents=True, exist_ok=True)
+    link.symlink_to(target, target_is_directory=True)
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    with pytest.raises(pilot.PilotGateError, match="Symlink"):
+        pilot.execute_pilot(cache, alias + "/pilot", user_started_gpu=True)
+    assert list(target.iterdir()) == []
+    assert not (root / "runs/controlled_pilot_job_claim.json").exists()
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_prediction_replay_reloads_both_checkpoints_without_optimizer_updates(gate_fixture, monkeypatch, changed):
+    # SOFTWARE_TEST_DOUBLE: fake model/eval outputs, real CPU checkpoint JSON/SHA pipeline.
+    root, _, _, _, _ = gate_fixture
+    cache, identity = pilot.verify_inputs(root), {"scope": "SOFTWARE_TEST_DOUBLE"}
+    output = root / "runs/TEST_DOUBLE"
+    output.mkdir(parents=True)
+    for index, name in enumerate(pilot.CHECKPOINT_NAMES[1::2]):
+        state = {"scope": pilot.PREDICTION_SCOPE, "identity": identity,
+                 "identity_sha256": pilot.digest(identity), "update": 100,
+                 "model": {"value": torch.tensor(float(index if changed else 0))}, "optimizer": {}}
+        pilot._atomic_checkpoint(output / name, state)
+
+    models = []
+    class FakeModel:
+        def __init__(self):
+            self.state = None
+            self.training = True
+            models.append(self)
+        def state_dict(self):
+            return self.state
+        def eval(self):
+            self.training = False
+            return self
+        def train(self, mode=True):
+            self.training = mode
+            return self
+        def __call__(self, x):
+            assert not torch.is_grad_enabled() and not self.training
+            return torch.tensor([[float(self.state["value"]), 1.0]] * len(x))
+
+    class NoStepOptimizer:
+        def state_dict(self):
+            return {}
+        def step(self):
+            pytest.fail("Prediction replay attempted an optimizer update")
+
+    monkeypatch.setattr(pilot, "_new_state", lambda _: (FakeModel(), NoStepOptimizer(), None))
+    monkeypatch.setattr(pilot, "_restore", lambda saved, model, optimizer, sampler, ident: setattr(model, "state", saved["model"]))
+    monkeypatch.setattr(torch.cuda, "synchronize", lambda *a: None)
+    monkeypatch.setattr(torch.cuda, "empty_cache", lambda: None)
+    actual_to = torch.Tensor.to
+    monkeypatch.setattr(torch.Tensor, "to", lambda tensor, *a, **kw: tensor if a == ("cuda:0",) else actual_to(tensor, *a, **kw))
+    timings = []
+    if changed:
+        with pytest.raises(pilot.PilotGateError, match="predictions or metrics differ"):
+            pilot._prediction_replay(cache, output, identity, io_timings=timings, deadline=float("inf"))
+    else:
+        result = pilot._prediction_replay(cache, output, identity, io_timings=timings, deadline=float("inf"))
+        assert result["sha256"] == file_digest(root / result["path"])
+    proof = json.loads((output / "engineering_prediction_replay.json").read_text())
+    assert proof["all_exact"] is (not changed)
+    assert proof["optimizer_updates_for_replay"] == 0 and proof["role"] == "source_train"
+    assert len([row for row in timings if row["operation"] == "checkpoint_load_weights_only"]) == 2
+    assert all(model.training for model in models)
+    for key, name in zip(("continuous", "resumed"), pilot.CHECKPOINT_NAMES[1::2]):
+        assert proof[key]["checkpoint"]["sha256"] == file_digest(output / name)
+        prediction = json.loads((root / proof[key]["predictions"]["path"]).read_text())
+        assert prediction["eval_mode"] and prediction["optimizer_updates"] == 0
+        assert prediction["metrics"] == pilot.engineering_prediction_metrics(prediction["labels"],
+            prediction["probabilities"], predictions=prediction["predictions"])
+
+
+def test_each_checkpoint_io_stage_checks_same_deadline_after_completion(tmp_path, monkeypatch):
+    clock, calls, timings = [1.0], [], []
+    monkeypatch.setattr(pilot.time, "monotonic", lambda: clock[0])
+    def action():
+        calls.append("SOFTWARE_TEST_DOUBLE")
+        clock[0] = 6.0
+    with pytest.raises(TimeoutError, match="wall-time"):
+        pilot._io_event(timings, "checkpoint_save", tmp_path / "TEST_DOUBLE.pt", action, deadline=5)
+    assert calls == ["SOFTWARE_TEST_DOUBLE"] and timings[0]["status"] == "failed"
+    with pytest.raises(TimeoutError):
+        pilot._io_event(timings, "checkpoint_load", tmp_path / "TEST_DOUBLE.pt", action, deadline=5)
+    assert len(calls) == 1  # Expired budget never begins a new stage.
+
+
+def test_prediction_selection_caps_each_source_without_rng_or_payload_access():
+    from types import SimpleNamespace
+    import random
+    rows = [{"dataset": dataset, "event_uid": f"SOFTWARE_TEST_DOUBLE/{dataset}/{index:03}",
+             "role": "source_train", "label": index % 2}
+            for dataset in reversed(sorted(SOURCE_IDS)) for index in reversed(range(19))]
+    cache = SimpleNamespace(rows=rows, labels=np.asarray([row["label"] for row in rows]))
+    python_state, numpy_state, torch_state = random.getstate(), np.random.get_state(), torch.get_rng_state()
+    indices, uids, labels = pilot.engineering_prediction_selection(cache)
+    assert len(indices) == 64
+    assert uids == [f"SOFTWARE_TEST_DOUBLE/{dataset}/{index:03}" for dataset in sorted(SOURCE_IDS) for index in range(16)]
+    assert labels == [index % 2 for _ in SOURCE_IDS for index in range(16)]
+    assert random.getstate() == python_state and torch.equal(torch_state, torch.get_rng_state())
+    after = np.random.get_state()
+    assert numpy_state[0] == after[0] and np.array_equal(numpy_state[1], after[1]) and numpy_state[2:] == after[2:]
+
+
+def test_complete_result_manifest_requires_all_proof_files(tmp_path):
+    output = tmp_path / "runs/TEST_DOUBLE"
+    output.mkdir(parents=True)
+    dependencies = dependency_evidence_fixture(tmp_path)
+    write(tmp_path / "runs/controlled_pilot_job_claim.json", {"scope": "SOFTWARE_TEST_DOUBLE"})
+    with pytest.raises(pilot.PilotGateError, match="every declared"):
+        pilot._finalize_result_manifests(tmp_path, output,
+            {"status": "ENGINEERING_PILOT_COMPLETE", "resolved_dependencies": dependencies})
+    assert not (output / "engineering_backup_manifest.json").exists()
+
+
+@pytest.mark.parametrize("fail_before_updates,fail_final_hash", [(False, False), (True, False), (False, True)])
+def test_runner_stage_wiring_keeps_total_200_and_one_claim_with_mock_execution(gate_fixture, monkeypatch, fail_before_updates, fail_final_hash):
+    """SOFTWARE_TEST_DOUBLE execution plumbing: no model fit, CUDA or command runs."""
+    from types import SimpleNamespace
+    from p3work import runtime_clock
+    root, _, _, _, _ = gate_fixture
+    cache = pilot.verify_inputs(root)
+    dependency_evidence_fixture(root)
+    for name in ("f0_bridge.py", "spatial_geometry.py", "contracts.py"):
+        (root / "p3work" / name).write_text("# SOFTWARE_TEST_DOUBLE_NOT_PRODUCTION_CODE\n")
+
+    class FakeModel:
+        def __init__(self):
+            self.state = {"value": torch.tensor(0.0)}
+            self.training = True
+        def state_dict(self):
+            return self.state
+        def eval(self):
+            self.training = False
+        def train(self, mode=True):
+            self.training = mode
+        def __call__(self, x):
+            assert not self.training and not torch.is_grad_enabled()
+            return torch.tensor([[0.0, 1.0]] * len(x))
+
+    class NoStepOptimizer:
+        def state_dict(self):
+            return {}
+        def step(self):
+            pytest.fail("Mock plumbing invoked a real optimizer step")
+
+    monkeypatch.setattr(pilot, "_new_state", lambda _: (FakeModel(), NoStepOptimizer(), None))
+    def fake_checkpoint(model, optimizer, sampler, update, identity):
+        return {"scope": pilot.PREDICTION_SCOPE, "identity": identity, "identity_sha256": pilot.digest(identity),
+            "update": update, "model": model.state_dict(), "optimizer": {}, "sampler_rng": torch.tensor([0]),
+            "torch_rng": torch.tensor([0]), "cuda_rng": torch.tensor([0]), "python_rng": (0,), "numpy_rng": [0]}
+    monkeypatch.setattr(pilot, "_checkpoint", fake_checkpoint)
+    monkeypatch.setattr(pilot, "_restore", lambda saved, model, optimizer, sampler, ident: setattr(model, "state", saved["model"]))
+    segments = []
+    def fake_updates(cache, model, optimizer, sampler, begin, stop, *, deadline, progress, phase):
+        segments.append((begin, stop))
+        if fail_before_updates:
+            raise RuntimeError("SOFTWARE_TEST_DOUBLE_INJECTED_FAILURE_NO_REAL_FIT")
+        progress["actual_completed_updates"] += stop - begin
+        progress["optimizer_updates_dispatched"] += stop - begin
+        progress["training_started"] = True  # Component mock, not real scientific training.
+        return {"phase": phase, "actual_updates": stop - begin}
+    monkeypatch.setattr(pilot, "_updates", fake_updates)
+    monkeypatch.setattr(runtime_clock, "collect_clock_preflight", lambda: {"scope": "SOFTWARE_TEST_DOUBLE"})
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: True)
+    monkeypatch.setattr(torch.cuda, "set_device", lambda *a: None)
+    monkeypatch.setattr(torch.cuda, "synchronize", lambda *a: None)
+    monkeypatch.setattr(torch.cuda, "empty_cache", lambda: None)
+    monkeypatch.setattr(torch.cuda, "get_device_properties", lambda *a: SimpleNamespace(
+        name="SOFTWARE_TEST_DOUBLE_NOT_A_REAL_GPU", uuid="TEST_DOUBLE", total_memory=1024, major=0, minor=0))
+    monkeypatch.setattr(torch, "use_deterministic_algorithms", lambda *a: None)
+    monkeypatch.setattr(torch, "set_float32_matmul_precision", lambda *a: None)
+    for obj, name in ((torch.backends.cudnn, "benchmark"), (torch.backends.cudnn, "deterministic"),
+                      (torch.backends.cudnn, "allow_tf32"), (torch.backends.cuda.matmul, "allow_tf32")):
+        monkeypatch.setattr(obj, name, getattr(obj, name))
+    monkeypatch.setattr(pilot.subprocess, "run", lambda *a, **kw: SimpleNamespace(stdout="SOFTWARE_TEST_DOUBLE\n"))
+    monkeypatch.delenv("CUBLAS_WORKSPACE_CONFIG", raising=False)
+    actual_to = torch.Tensor.to
+    monkeypatch.setattr(torch.Tensor, "to", lambda tensor, *a, **kw: tensor if a == ("cuda:0",) else actual_to(tensor, *a, **kw))
+    if fail_final_hash:
+        finalizing = [False]
+        actual_replay, actual_digest = pilot._prediction_replay, pilot.file_digest
+        def replay_then_inject_failure(*args, **kwargs):
+            value = actual_replay(*args, **kwargs)
+            finalizing[0] = True
+            return value
+        def fail_final_checkpoint_hash(path):
+            if finalizing[0] and Path(path).name == "engineering_initial.pt":
+                raise OSError("SOFTWARE_TEST_DOUBLE_FINAL_HASH_FAILURE")
+            return actual_digest(path)
+        monkeypatch.setattr(pilot, "_prediction_replay", replay_then_inject_failure)
+        monkeypatch.setattr(pilot, "file_digest", fail_final_checkpoint_hash)
+    result = pilot.execute_pilot(cache, "runs/TEST_DOUBLE", user_started_gpu=True)
+    assert result["status"] == ("ENGINEERING_PILOT_FAILED" if fail_before_updates or fail_final_hash else "ENGINEERING_PILOT_COMPLETE")
+    assert segments == ([(0, 100)] if fail_before_updates else [(0, 100), (0, 50), (50, 100)])
+    assert result["actual_completed_updates"] == result["optimizer_updates_dispatched"] == (0 if fail_before_updates else 200)
+    assert result["prediction_replay_optimizer_updates"] == 0
+    assert result["exact_resume_verified"] is (not fail_before_updates)
+    if fail_final_hash:
+        assert result["result_manifest_status"] == "BLOCKED_NO_COMPLETE_BACKUP_MANIFEST"
+        assert result["training_started"] is True and result["actual_completed_updates"] == 200
+        saved_receipt = json.loads((root / "runs/TEST_DOUBLE/engineering_receipt.json").read_text())
+        assert saved_receipt["status"] == "ENGINEERING_PILOT_FAILED" and saved_receipt["training_started"] is True
+        assert not (root / "runs/TEST_DOUBLE/engineering_backup_manifest.json").exists()
+    else:
+        assert result["result_manifest_status"] == "LOCAL_MANIFESTS_COMPLETE_R2_NOT_ATTEMPTED"
+        from tools.r2_backup import load_manifest
+        files, _ = load_manifest(root / result["backup_manifest_path"], root)
+        names = {Path(row["path"]).name for row in files}
+        if fail_before_updates:
+            assert "engineering_initial.pt" in names
+            assert not names.intersection(set(pilot.CHECKPOINT_NAMES[1:]) | set(pilot.PREDICTION_NAMES))
+        else:
+            assert names >= set(pilot.CHECKPOINT_NAMES) | set(pilot.PREDICTION_NAMES)
+    with pytest.raises(pilot.PilotGateError, match="already claimed"):
+        pilot.execute_pilot(cache, "runs/DIFFERENT_OUTPUT", user_started_gpu=True)
+    assert len(segments) == (1 if fail_before_updates else 3)  # Changing output cannot begin a second job.

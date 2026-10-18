@@ -92,6 +92,41 @@
       "p90"
     ],
     "resume_comparison_total_actual_updates": 200,
-    "cost_note": "CUDA-event intervals are not kernel-summed time or account billing receipts; no cost is inferred without actual account price and billed duration"
+    "cost_note": "CUDA-event intervals are not kernel-summed time or account billing receipts; no cost is inferred without actual account price and billed duration",
+    "checkpoint_io_components": [
+      "atomic checkpoint save and fsync",
+      "full SHA256 before and after load",
+      "weights-only checkpoint load",
+      "checkpoint identity validation and replay state comparison",
+      "fixed source prediction replay"
+    ]
+  },
+  "engineering_prediction_replay": {
+    "role": "source_train",
+    "selection": "each sorted registered source: first min(16,n) event_uids sorted lexically; concatenate source order",
+    "optimizer_updates": 0,
+    "branches": [
+      "engineering_continuous100.pt",
+      "engineering_resumed100.pt"
+    ],
+    "outputs": [
+      "event_uids",
+      "labels",
+      "two_logits",
+      "probabilities",
+      "predictions",
+      "engineering_metrics"
+    ],
+    "required": "actual output artifacts and SHA-bound checkpoints; independent metric recomputation and exact branch comparison",
+    "scientific_performance_result": false,
+    "actual_executed": false
+  },
+  "result_backup": {
+    "local_manifest": "runs/controlled_source_pilot_seed20261018/engineering_backup_manifest.json",
+    "explicit_actual_file_allowlist": true,
+    "automatic_upload": false,
+    "manual_tool": "tools/r2_backup.py",
+    "required_verification": "actual complete GET, SHA256 and bytes; local manifest does not prove upload",
+    "actual_pilot_results_uploaded": false
   }
 }
