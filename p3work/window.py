@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from fractions import Fraction
 from math import isfinite
-from statistics import mean
 from .splits import _hash
 
 
@@ -56,6 +56,7 @@ def choose_window(rows: list[dict], split: dict, *, expected_session_manifest: d
     candidates = {}
     for duration in (3.0, 2.0):
         people = {}
+        person_retentions, person_gaps = [], []
         groups = defaultdict(list)
         for r in rows:
             groups[(r["participant_id"], r["session_id"])].append(r)
@@ -65,21 +66,31 @@ def choose_window(rows: list[dict], split: dict, *, expected_session_manifest: d
             if any(not cr for cr in by_class.values()):
                 raise ValueError(f"Cannot compute predeclared two-class exclusion gap for {person}")
             retained = lambda rr: sum(r["available_feedback_seconds"] + 1e-9 >= duration for r in rr)
-            class_rates = {str(c): 1 - retained(cr) / len(cr) for c, cr in by_class.items()}
+            # Decide from original integer counts. Rounding an exclusion rate
+            # first can turn the inclusive .10 boundary into .10000000000000009;
+            # averaging rounded person rates can similarly put exact .80 below
+            # its threshold. Fractions never enter the JSON evidence format.
+            class_rates_exact = {str(c): Fraction(len(cr) - retained(cr), len(cr)) for c, cr in by_class.items()}
+            n_retained = retained(pr)
+            retention_exact = Fraction(n_retained, len(pr))
+            gap_exact = abs(class_rates_exact["0"] - class_rates_exact["1"])
+            person_retentions.append(retention_exact)
+            person_gaps.append(gap_exact)
             people[person] = {
-                "original_lr_trials": len(pr), "retained": retained(pr),
-                "retention": retained(pr) / len(pr), "class_exclusion_rates": class_rates,
-                "absolute_class_exclusion_gap": abs(class_rates["0"] - class_rates["1"]),
+                "original_lr_trials": len(pr), "retained": n_retained,
+                "retention": float(retention_exact),
+                "class_exclusion_rates": {c: float(rate) for c, rate in class_rates_exact.items()},
+                "absolute_class_exclusion_gap": float(gap_exact),
                 "sessions": {session: {"n": len(rr), "retained": retained(rr), "retention": retained(rr) / len(rr)}
                              for (p, session), rr in sorted(groups.items()) if p == person},
             }
-        retention = mean(p["retention"] for p in people.values())
-        gap = mean(p["absolute_class_exclusion_gap"] for p in people.values())
+        retention = sum(person_retentions, Fraction(0)) / len(people)
+        gap = sum(person_gaps, Fraction(0)) / len(people)
         candidates[str(duration)] = {
             "context_seconds": [0, duration], "participants": people,
-            "participant_mean_retention": retention,
-            "participant_mean_absolute_class_exclusion_gap": gap,
-            "passes": retention >= .80 and gap <= .10,
+            "participant_mean_retention": float(retention),
+            "participant_mean_absolute_class_exclusion_gap": float(gap),
+            "passes": retention >= Fraction(4, 5) and gap <= Fraction(1, 10),
         }
     selected = "long" if candidates["3.0"]["passes"] else "short" if candidates["2.0"]["passes"] else None
     return {

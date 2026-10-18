@@ -58,14 +58,55 @@ def math_fixture(retained):
     ([(83, 93)] * 40, Fraction(22, 25), Fraction(1, 10)),
     ([(61, 61)] * 13 + [(84, 84)] * 13 + [(95, 95)] * 13 + [(80, 80)], Fraction(4, 5), Fraction(0)),
 ])
-def test_reproduces_float_threshold_errors_using_original_integer_trials(counts, retention, gap):
+def test_fixed_window_agrees_with_independent_exact_counter_at_previous_float_failures(counts, retention, gap):
     rows, split, manifest = math_fixture(counts)
     result = exact_window_counts(rows, split, expected_session_manifest=manifest)
-    assert result["floating_selected"] == "short"
-    assert result["exact_selected"] == "long" and result["selection_agrees"] is False
+    assert result["floating_selected"] == "long"
+    assert result["exact_selected"] == "long" and result["selection_agrees"] is True
     for field, value in (("participant_mean_retention", retention),
                          ("participant_mean_absolute_class_exclusion_gap", gap)):
         assert result["candidates"]["3.0"][field] == {"numerator": value.numerator, "denominator": value.denominator}
+        assert result["floating_coverage"]["candidates"]["3.0"][field] == float(value)
+    # Keep actual persisted JSON numbers compatible with the frozen contract
+    # validator, including its inclusive float threshold comparisons.
+    roundtrip = json.loads(json.dumps(result["floating_coverage"], allow_nan=False))
+    summary = roundtrip["candidates"]["3.0"]
+    assert type(summary["participant_mean_retention"]) is float
+    assert type(summary["participant_mean_absolute_class_exclusion_gap"]) is float
+    assert summary["participant_mean_retention"] >= .8
+    assert summary["participant_mean_absolute_class_exclusion_gap"] <= .1
+
+
+@pytest.mark.parametrize("counts,expected", [
+    ([(80, 80)] * 40, "long"),
+    ([(79, 79)] + [(80, 80)] * 39, "short"),
+    ([(81, 81)] + [(80, 80)] * 39, "long"),
+    ([(83, 93)] * 40, "long"),
+    ([(82, 94)] + [(83, 93)] * 39, "short"),
+    ([(84, 92)] + [(83, 93)] * 39, "long"),
+])
+def test_window_inclusive_exact_threshold_and_adjacent_integer_counts(counts, expected):
+    rows, split, manifest = math_fixture(counts)
+    selected = choose_window(rows, split, expected_session_manifest=manifest)
+    independent = exact_window_counts(rows, split, expected_session_manifest=manifest)
+    assert selected["selected"] == independent["exact_selected"] == expected
+    assert independent["selection_agrees"]
+
+
+def test_existing_per_trial_duration_tolerance_and_short_failure_are_unchanged():
+    rows, split, manifest = math_fixture([(100, 100)] * 40)
+    # This is deliberately a choose_window-only input: no native re-interpretation
+    # of provider durations is introduced by the count arithmetic correction.
+    for r in rows:
+        r["available_feedback_seconds"] = 3 - 5e-10
+    assert choose_window(rows, split, expected_session_manifest=manifest)["selected"] == "long"
+    for r in rows:
+        r["available_feedback_seconds"] = 3 - 2e-9
+    assert choose_window(rows, split, expected_session_manifest=manifest)["selected"] == "short"
+    for r in rows:
+        r["available_feedback_seconds"] = 2 - 2e-9
+    result = choose_window(rows, split, expected_session_manifest=manifest)
+    assert result["selected"] is None and result["status"] == "BLOCKED_SHORT_WINDOW_COVERAGE"
 
 
 def test_equal_person_weights_pool_all_sessions_before_class_fractions():

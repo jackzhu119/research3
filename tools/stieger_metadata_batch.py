@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import fcntl
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path
@@ -20,6 +21,7 @@ import shutil
 import sys
 import tempfile
 import time
+import urllib.error
 import urllib.request
 
 REPO = Path(__file__).resolve().parents[1]
@@ -31,10 +33,18 @@ from tools.r2_backup import run_backup, utc_now, sha256_file
 
 CHUNK = 4 * 1024 * 1024
 PREFIX = "paper3/stieger2021-v1-w1/"
+DOWNLOAD_MAX_ATTEMPTS = 4
+DOWNLOAD_MAX_RETRY_WAIT_SECONDS = 8
+DOWNLOAD_RETRY_HTTP_STATUS = frozenset({408, 425, 429, 500, 502, 503, 504})
 
 
 class BatchError(Exception):
     pass
+
+
+class _TransientDownload(Exception):
+    def __init__(self, reason, status=None):
+        self.reason, self.status = reason, status
 
 
 def official_md5(entry: dict) -> tuple[str, str]:
@@ -148,41 +158,113 @@ def check_space(path: Path, size: int) -> None:
 
 
 def download_object(entry: dict, partial: Path, final: Path) -> dict:
-    """Resume only with an exact Content-Range; never append a 200 response."""
+    """Bounded transient retries, always from the pinned original URL.
+
+    Each attempt re-reads the actual partial length. Only an exact 206 range
+    may append; fixed HTTP/byte-integrity errors never retry. Exception strings,
+    response bodies and headers are never copied into diagnostics.
+    """
+    if (type(entry.get("id")) is not int or entry["id"] <= 0
+            or entry.get("download_url") != f"https://ndownloader.figshare.com/files/{entry['id']}"
+            or type(entry.get("size")) is not int or entry["size"] <= 0):
+        raise BatchError("invalid_official_download_object")
+    expected_md5, md5_evidence = official_md5(entry)
     n = partial.stat().st_size if partial.exists() else 0
     resumed = n
     if n > entry["size"]:
         raise BatchError("partial_larger_than_expected")
     started = time.monotonic()
-    if n < entry["size"]:
+    attempts, retries = 0, []
+    while True:
+        n = partial.stat().st_size if partial.exists() else 0
+        if n > entry["size"]:
+            raise BatchError("partial_larger_than_expected")
+        if n == entry["size"]:
+            break
+        attempts += 1
+        phase, status = "open", None
         headers = {"Range": f"bytes={n}-"} if n else {}
-        with urllib.request.urlopen(urllib.request.Request(entry["download_url"], headers=headers), timeout=90) as response:
-            if n:
-                expected = f"bytes {n}-{entry['size']-1}/{entry['size']}"
-                if response.status != 206 or response.headers.get("Content-Range") != expected:
-                    raise BatchError("resume_requires_exact_206_content_range")
-            elif response.status != 200:
-                raise BatchError("initial_download_requires_200")
-            with partial.open("ab" if n else "wb") as out:
-                while block := response.read(CHUNK):
-                    n += len(block)
-                    if n > entry["size"]:
-                        raise BatchError("download_larger_than_official_size")
-                    out.write(block)
-                out.flush()
-                os.fsync(out.fileno())
+        try:
+            with urllib.request.urlopen(urllib.request.Request(entry["download_url"], headers=headers), timeout=90) as response:
+                phase, status = "headers", response.status
+                if status in DOWNLOAD_RETRY_HTTP_STATUS:
+                    raise _TransientDownload("http_retryable", status)
+                if n:
+                    expected = f"bytes {n}-{entry['size']-1}/{entry['size']}"
+                    if status != 206 or response.headers.get("Content-Range") != expected:
+                        raise BatchError(f"resume_requires_exact_206_content_range_http_{status if type(status) is int else 'unknown'}_phase_headers_attempt_{attempts}")
+                elif status != 200:
+                    raise BatchError(f"initial_download_requires_200_http_{status if type(status) is int else 'unknown'}_phase_headers_attempt_{attempts}")
+                with partial.open("ab" if n else "wb") as out:
+                    def append(block):
+                        nonlocal n, phase
+                        phase = "write"
+                        if not isinstance(block, bytes) or n + len(block) > entry["size"]:
+                            raise BatchError("download_larger_than_official_size_or_nonbytes")
+                        out.write(block)
+                        n += len(block)
+                    try:
+                        while True:
+                            phase = "read"
+                            try:
+                                block = response.read(CHUNK)
+                            except http.client.IncompleteRead as error:
+                                if error.partial:
+                                    append(error.partial)
+                                phase = "read"
+                                raise
+                            if not block:
+                                break
+                            append(block)
+                    finally:
+                        previous_phase = phase
+                        phase = "flush"
+                        out.flush()
+                        os.fsync(out.fileno())
+                        phase = previous_phase
+                phase = "read"
+                if n < entry["size"]:
+                    raise _TransientDownload("incomplete_read")
+            break
+        except urllib.error.HTTPError as error:
+            status = error.code if type(error.code) is int else None
+            error.close()
+            if status not in DOWNLOAD_RETRY_HTTP_STATUS:
+                raise BatchError(f"download_http_status_{status if status is not None else 'unknown'}_phase_{phase}_attempt_{attempts}") from None
+            reason = "http_retryable"
+        except _TransientDownload as error:
+            reason, status = error.reason, error.status
+        except http.client.IncompleteRead:
+            reason, status, phase = "incomplete_read", None, "read"
+        except urllib.error.URLError:
+            if phase not in {"open", "headers", "read"}:
+                raise BatchError(f"download_local_network_error_phase_{phase}_attempt_{attempts}") from None
+            reason, status = "network_error", None
+        except (ConnectionError, http.client.RemoteDisconnected):
+            if phase not in {"open", "headers", "read"}:
+                raise BatchError(f"download_local_connection_error_phase_{phase}_attempt_{attempts}") from None
+            reason, status = "network_connection_error", None
+        except TimeoutError:
+            if phase not in {"open", "headers", "read"}:
+                raise BatchError(f"download_local_timeout_phase_{phase}_attempt_{attempts}") from None
+            reason, status = "network_timeout", None
+        retries.append({"attempt": attempts, "phase": phase, "http_status": status,
+                        "reason": reason, "retained_partial_bytes": partial.stat().st_size if partial.exists() else 0})
+        if attempts >= DOWNLOAD_MAX_ATTEMPTS:
+            raise BatchError(f"download_retry_exhausted_{reason}_http_{status if status is not None else 'none'}_phase_{phase}_attempt_{attempts}") from None
+        time.sleep(min(2 ** (attempts - 1), DOWNLOAD_MAX_RETRY_WAIT_SECONDS))
     sha, actual = sha256_file(partial)
     md5 = hashlib.md5()
     with partial.open("rb") as f:
         while block := f.read(CHUNK):
             md5.update(block)
-    expected_md5, md5_evidence = official_md5(entry)
     if actual != entry["size"] or md5.hexdigest() != expected_md5:
         raise BatchError("official_size_or_md5_failed")
     os.replace(partial, final)
     return {"bytes": actual, "sha256": sha, "md5": md5.hexdigest(), "download_duration_s": time.monotonic()-started,
             "download_completed_utc": utc_now(), "resumed_from_bytes": resumed,
-            "official_md5_evidence": md5_evidence}
+            "official_md5_evidence": md5_evidence, "download_attempts": attempts,
+            "download_retry_events": retries}
 
 
 def verify_local(entry: dict, path: Path) -> dict:

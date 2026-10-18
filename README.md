@@ -2,7 +2,7 @@
 
 原始 `Paper3_Work_Handoff_20261018.zip` 已实际读取，529,763 bytes，整体 SHA256 为 `0398664faf34682a07fb38de4e46df9829f0e5ad050f657f905d0373dbfaf175`；包内 manifest 的 **52/52 文件逐项匹配**。原件位于 `protocol/`，后续实现位于 `p3work/`，两者分开维护。`legacy_baseline_v1` 保持原字节，只是历史基础软件，不是新算法或真实训练证据。
 
-**W0 本地核查完成；62 人资格审计和 40/11/11 分组已实际冻结，W1 的共同窗口仍待完整时长审计。** 分组 SHA256 为 `1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd`。原 CPU 协调器继续串行核验 meta-train 40 人的全部396个官方 session。阶段状态见 `status/tasks.json`，运行中的逐文件进度以本地 `status/local_preparation.json` 和 worker `batch_progress.json` 为准。只有真实 W1 完成后才能创建正式数值缓存。旧 `audit/w0_preflight.json` 记录原包尚未附加时的历史阻塞，不代表当前状态。
+**W0 本地核查完成；62 人资格审计和 40/11/11 分组已实际冻结，W1 的共同窗口仍待完整时长审计。** 分组 SHA256 为 `1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd`。唯一 CPU 协调器已从 HTTP 请求失败断点恢复，继续串行核验 meta-train 40 人的全部396个官方 session。阶段状态见 `status/tasks.json`，运行中的逐文件进度以本地 `status/local_preparation.json` 和 worker `batch_progress.json` 为准。只有真实 W1 完成后才能创建正式数值缓存。旧 `audit/w0_preflight.json` 记录原包尚未附加时的历史阻塞，不代表当前状态。
 
 ## 已完成的真实工作
 
@@ -13,7 +13,7 @@
 - 新几何/适配内核、B0–B11/P/P+PCT 注册表、真实 episode 接口、source 与 meta 可恢复训练入口及不可覆盖预测存档均已实现。Rref/G/U0 的真实估计、训练和选择仍需上游数据及真实产物验收。CPU 合成测试只验证软件；没有真实科研模型、性能结果或科研 pilot。
 - 已增加独立数据验收：完整396会话元数据的精确计数窗口门、505个 source 原档及每条原生 LR trial 的 valid/excluded 归账、实际缓存字节与 R2 完整回读证明。只读 support 接口和模型参数恢复都保留来源、角色与付费前缀约束，不能用状态标记替代真实数据。
 - CPU 依赖实际安装并锁定；CPU和 CUDA12.8 的 CPython3.12/Linux x86_64 离线 wheels 已下载。CUDA profile 仅离线解析，未在 GPU 验证；备份状态以私有回执为准。
-- 当前统一 CPU 软件回归为1055项通过，代码清单与验收范围见 `audit/software_preparation_acceptance.json`。这些测试不代表真实 EEG 拟合、GPU恢复验证或科研性能结果。
+- 当前统一 CPU 软件回归为1077项通过，代码清单与验收范围见 `audit/software_preparation_acceptance.json`。这些测试不代表真实 EEG 拟合、GPU恢复验证或科研性能结果。
 
 ## 数据、访问与公开仓库
 

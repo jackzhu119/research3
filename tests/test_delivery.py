@@ -45,6 +45,22 @@ def _fixture_receipt(root, path, artifacts):
     return path
 
 
+def _provider_evidence_fixture(root):
+    """Writer-shaped 22 descriptors; these bytes are not real provider evidence."""
+    files = []
+    names = ([f"adapter-copy-{i}.py" for i in range(6)] + [f"paper-copy-{i}.xml" for i in range(4)]
+             + [f"provider-copy-{i}.txt" for i in range(12)])
+    for name in names:
+        path = root / "audit/source_schema/evidence" / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(("SOFTWARE_TEST_DOUBLE_NOT_PROVIDER_EVIDENCE:" + name).encode())
+        files.append(path)
+    manifest = root / "audit/source_schema/evidence_manifest.json"
+    _write_json(manifest, {"files": [_descriptor(root, p) for p in files],
+                          "scope": "SOFTWARE_TEST_DOUBLE_NOT_LICENSE_OR_PROVIDER_EVIDENCE"})
+    return manifest, files
+
+
 @pytest.fixture
 def selection_fixture(tmp_path, monkeypatch):
     """Nothing is git tracked; original 52 protocol documents must still enter."""
@@ -78,15 +94,20 @@ def selection_fixture(tmp_path, monkeypatch):
 @pytest.fixture
 def cache_backup_fixture(tmp_path):
     root = tmp_path
-    artifacts = []
+    evidence_manifest, evidence_files = _provider_evidence_fixture(root)
+    artifacts = [evidence_manifest, *evidence_files]
     def artifact(relative):
         p = root / relative
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_bytes(("SOFTWARE_TEST_DOUBLE_NOT_EEG:" + relative).encode())
         artifacts.append(p)
         return _descriptor(root, p)
+    inventory = root / "manifests/raw_inventory.json"
+    _write_json(inventory, {"provider_terms_evidence": _descriptor(root, evidence_manifest),
+                            "scope": "SOFTWARE_TEST_DOUBLE_NOT_RAW_INVENTORY"})
+    artifacts.append(inventory)
     manifest = {"scope": "SOFTWARE_FIXTURE_NOT_A_SOURCE_CACHE",
-                "raw_inventory": artifact("manifests/raw_inventory.json"),
+                "raw_inventory": _descriptor(root, inventory),
                 "shards": [{key: artifact("cache/software_fixture/" + name)
                             for key, name in (("X", "X.npy"), ("y", "y.npy"), ("events", "events.json"),
                                               ("exclusions", "exclusions.json"))}],
@@ -189,6 +210,55 @@ def test_bootstrap_bytes_must_match_verified_dependency_receipt(selection_fixtur
 def test_complete_cache_receipt_covers_every_required_artifact(cache_backup_fixture):
     root, cache, _, receipt = cache_backup_fixture
     delivery.validate_cache_backup(root, cache, receipt)
+
+
+def test_exact_manifest_authorizes_provider_python_XML_copies_and_packages_all_22(selection_fixture):
+    root, _ = selection_fixture
+    evidence_manifest, evidence_files = _provider_evidence_fixture(root)
+    unrelated = root / "audit/source_schema/evidence/not-in-manifest.py"
+    unrelated.write_bytes(b"SOFTWARE_TEST_DOUBLE_UNAUTHORIZED_COPY")
+    entries = delivery.selected_files(root)
+    assert len(evidence_files) == 22
+    assert any(p.suffix == ".py" for p in evidence_files) and any(p.suffix == ".xml" for p in evidence_files)
+    for path in [evidence_manifest, *evidence_files]:
+        assert entries[path.relative_to(root).as_posix()] == path.read_bytes()
+    assert unrelated.relative_to(root).as_posix() not in entries
+
+
+@pytest.mark.parametrize("suffix", [".py", ".xml"])
+def test_unlisted_provider_copy_cannot_enter_cache_restore_receipt(cache_backup_fixture, suffix):
+    root, cache, artifacts, receipt = cache_backup_fixture
+    path = root / ("audit/source_schema/evidence/unlisted-copy" + suffix)
+    path.write_bytes(b"SOFTWARE_TEST_DOUBLE_UNAUTHORIZED_EVIDENCE_COPY")
+    _fixture_receipt(root, receipt, [*artifacts, path])
+    with pytest.raises(ValueError, match="explicit metadata"):
+        delivery.validate_cache_backup(root, cache, receipt)
+
+
+@pytest.mark.parametrize("suffix", [".py", ".xml"])
+def test_changed_evidence_SHA_rejected_even_with_resealed_R2_receipt(cache_backup_fixture, suffix):
+    root, cache, artifacts, receipt = cache_backup_fixture
+    path = next(p for p in artifacts if p.suffix == suffix)
+    path.write_bytes(b"SOFTWARE_TEST_DOUBLE_CHANGED_BYTES")
+    _fixture_receipt(root, receipt, artifacts)
+    with pytest.raises(ValueError, match="full SHA descriptor"):
+        delivery.validate_cache_backup(root, cache, receipt)
+
+
+def test_packaging_rechecks_all_provider_evidence_bytes(selection_fixture):
+    root, _ = selection_fixture
+    _, files = _provider_evidence_fixture(root)
+    files[0].write_bytes(b"SOFTWARE_TEST_DOUBLE_CHANGED_AFTER_MANIFEST")
+    with pytest.raises(ValueError, match="full SHA descriptor"):
+        delivery.selected_files(root)
+
+
+def test_cache_receipt_must_cover_exact_provider_evidence(cache_backup_fixture):
+    root, cache, artifacts, receipt = cache_backup_fixture
+    missing = next(p for p in artifacts if p.suffix == ".py")
+    _fixture_receipt(root, receipt, [p for p in artifacts if p != missing])
+    with pytest.raises(ValueError, match="does not cover"):
+        delivery.validate_cache_backup(root, cache, receipt)
 
 
 @pytest.mark.parametrize("missing", ["manifest", "raw_inventory", "X", "events", "exclusions", "no_usable_exclusions"])

@@ -47,6 +47,53 @@ def safe_member(relative):
     return p.suffix.lower() not in {".pem", ".key", ".pyc", ".partial", ".tmp", ".lock"}
 
 
+def verified_provider_evidence(root, inventory_descriptor=None):
+    """Read the 22 exact retained provider-evidence descriptors, never raw EEG.
+
+    Provider adapter source and publication XML are evidence copies. Authorize
+    their exact manifest-bound paths and bytes instead of admitting arbitrary
+    .py/.xml files in a cache receipt or untracked private metadata tree.
+    """
+    def checked(item):
+        if not isinstance(item, dict) or not isinstance(item.get("path"), str) or not safe_member(item["path"]):
+            raise ValueError("Explicit safe provider evidence descriptor required")
+        path = root / item["path"]
+        no_symlink_components(path)
+        if not path.resolve().is_relative_to(root) or not path.is_file():
+            raise ValueError("Provider evidence outside the retained root")
+        sha, size = sha256_file(path)
+        if sha != item.get("sha256") or ("bytes" in item and item["bytes"] != size):
+            raise ValueError("Provider evidence differs from its full SHA descriptor")
+        return path, {"path": path.relative_to(root).as_posix(), "sha256": sha, "bytes": size}
+
+    canonical = root / "audit/source_schema/evidence_manifest.json"
+    if inventory_descriptor is None:
+        if not canonical.exists():
+            return {}
+        no_symlink_components(canonical)
+        manifest_path = canonical
+    else:
+        inventory_path, _ = checked(inventory_descriptor)
+        inventory = json.loads(inventory_path.read_text())
+        manifest_path, _ = checked(inventory.get("provider_terms_evidence"))
+        if manifest_path != canonical:
+            raise ValueError("Canonical retained provider evidence manifest required")
+    manifest = json.loads(manifest_path.read_text())
+    items = manifest.get("files")
+    if not isinstance(items, list) or len(items) != 22:
+        raise ValueError("Complete 22-file provider evidence manifest required")
+    allowed = {}
+    for item in items:
+        path, descriptor = checked(item)
+        relative = path.relative_to(root)
+        if (relative.parts[:3] != ("audit", "source_schema", "evidence")
+                or path.suffix.lower() not in {".py", ".xml", ".html", ".pdf", ".txt", ".json"}
+                or descriptor["path"] in allowed):
+            raise ValueError("Exact retained provider evidence paths required; no raw or configuration payloads")
+        allowed[descriptor["path"]] = descriptor
+    return allowed
+
+
 def selected_files(root):
     """Only code-tracked files and specifically authorized evidence trees."""
     names = subprocess.check_output(["git", "ls-files", "-z"], cwd=root).decode().split("\0")
@@ -71,6 +118,7 @@ def selected_files(root):
         raise ValueError("All 52 original protocol entries required")
     selected.update(protocol_entries)
     selected.add("protocol/PACKAGE_CONTENTS.sha256")
+    selected.update(verified_provider_evidence(root))
     for tree in PRIVATE_TREES:
         for path in (root / tree).rglob("*"):
             if (path.is_file() and safe_member(path.relative_to(root)) and
@@ -138,8 +186,10 @@ def validate_cache_backup(root, cache, receipt_path):
     rows, _ = load_verified_receipt(receipt_path)
     backed = {row["path"]: row for row in rows}
     manifest = json.loads((root / cache.manifest_path).read_text())
+    evidence = verified_provider_evidence(root, manifest["raw_inventory"])
     required = [{"path": cache.manifest_path, "sha256": cache.manifest_sha256},
                 manifest["raw_inventory"]]
+    required.extend(evidence.values())
     for shard in manifest["shards"]:
         required.extend(shard[key] for key in ("X", "y", "events", "exclusions"))
     for person in manifest.get("participants_without_usable_trials", []):
@@ -147,11 +197,15 @@ def validate_cache_backup(root, cache, receipt_path):
     required_paths = {item["path"] for item in required}
     for row in rows:
         relative = row["path"]
+        authorized_evidence = (relative in evidence and row["sha256"] == evidence[relative]["sha256"]
+                               and row["bytes"] == evidence[relative]["bytes"])
         if (not isinstance(relative, str) or Path(relative).is_absolute() or ".." in Path(relative).parts
                 or row["role"] == "source_development_raw"
+                or (relative in evidence and row["role"] not in {"audit", "manifest", "catalog", "protocol"})
                 or (relative not in required_paths and
                     (not safe_member(relative) or row["role"] not in {"audit", "manifest", "catalog", "protocol"}
-                     or Path(relative).suffix.lower() not in {".json", ".jsonl", ".md", ".txt", ".html", ".pdf", ".sha256", ".tsv"}))):
+                     or (Path(relative).suffix.lower() not in {".json", ".jsonl", ".md", ".txt", ".html", ".pdf", ".sha256", ".tsv"}
+                         and not authorized_evidence)))):
             raise ValueError("Pilot receipt may restore only required caches and explicit metadata")
         path = root / relative
         no_symlink_components(path)

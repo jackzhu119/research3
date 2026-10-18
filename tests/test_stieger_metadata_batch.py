@@ -1,10 +1,12 @@
 """Failure-closed staging and replay without real network or credentials."""
 import hashlib
+import http.client
 import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+import urllib.error
 from unittest.mock import patch
 
 from tools import stieger_metadata_batch as batch
@@ -120,6 +122,150 @@ class MetadataBatchTest(unittest.TestCase):
                     batch.download_object(self.entry(b"abcdef"), partial, final)
             self.assertEqual(partial.read_bytes(), b"ab")
             self.assertFalse(final.exists())
+
+    @staticmethod
+    def response(data, status=200, content_range=None):
+        response = io.BytesIO(data)
+        response.status = status
+        response.headers = {} if content_range is None else {"Content-Range": content_range}
+        return response
+
+    def test_transient_5xx_retries_original_URL_then_verifies_official_bytes(self):
+        data = b"abcdef"
+        error = urllib.error.HTTPError("DO_NOT_LOG_URL", 503, "DO_NOT_LOG_BODY", {}, io.BytesIO(b"private"))
+        with tempfile.TemporaryDirectory() as d:
+            partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+            entry = self.entry(data)
+            with patch.object(batch.urllib.request, "urlopen", side_effect=[error, self.response(data)]) as opening, \
+                    patch.object(batch.time, "sleep") as sleeping:
+                result = batch.download_object(entry, partial, final)
+            self.assertEqual(final.read_bytes(), data)
+            self.assertEqual(result["md5"], entry["computed_md5"])
+            self.assertEqual(result["download_attempts"], 2)
+            self.assertEqual(result["download_retry_events"][0]["http_status"], 503)
+            self.assertEqual(result["download_retry_events"][0]["phase"], "open")
+            self.assertEqual(sleeping.call_count, 1)
+            self.assertTrue(all(call.args[0].full_url == entry["download_url"] for call in opening.call_args_list))
+            self.assertNotIn("DO_NOT_LOG", json.dumps(result))
+
+    def test_incomplete_read_keeps_exception_partial_and_recomputes_exact_range(self):
+        data = b"abcdef"
+        first = self.response(b"")
+        first.read = unittest.mock.Mock(side_effect=[b"ab", http.client.IncompleteRead(b"c", 3)])
+        second = self.response(b"def", 206, "bytes 3-5/6")
+        with tempfile.TemporaryDirectory() as d:
+            partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+            with patch.object(batch.urllib.request, "urlopen", side_effect=[first, second]) as opening, \
+                    patch.object(batch.time, "sleep"):
+                result = batch.download_object(self.entry(data), partial, final)
+            self.assertEqual(final.read_bytes(), data)
+            self.assertIsNone(opening.call_args_list[0].args[0].get_header("Range"))
+            self.assertEqual(opening.call_args_list[1].args[0].get_header("Range"), "bytes=3-")
+            self.assertEqual(result["download_retry_events"][0]["retained_partial_bytes"], 3)
+            self.assertEqual(result["download_retry_events"][0]["phase"], "read")
+
+    def test_nonretry_403_reports_only_numeric_HTTP_and_fixed_phase(self):
+        sensitive = "DO_NOT_LOG_URL_HEADER_OR_BODY"
+        error = urllib.error.HTTPError(sensitive, 403, sensitive, {"Authorization": sensitive}, io.BytesIO(sensitive.encode()))
+        with tempfile.TemporaryDirectory() as d:
+            partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+            partial.write_bytes(b"ab")
+            with patch.object(batch.urllib.request, "urlopen", side_effect=error) as opening, \
+                    patch.object(batch.time, "sleep") as sleeping:
+                with self.assertRaises(batch.BatchError) as caught:
+                    batch.download_object(self.entry(b"abcdef"), partial, final)
+            self.assertEqual(str(caught.exception), "download_http_status_403_phase_open_attempt_1")
+            self.assertNotIn(sensitive, str(caught.exception))
+            self.assertEqual(opening.call_count, 1)
+            sleeping.assert_not_called()
+            self.assertEqual(partial.read_bytes(), b"ab")
+            self.assertFalse(final.exists())
+
+    def test_midread_retry_never_appends_range_200_and_preserves_partial(self):
+        first = self.response(b"")
+        first.read = unittest.mock.Mock(side_effect=[b"ab", TimeoutError("DO_NOT_LOG")])
+        with tempfile.TemporaryDirectory() as d:
+            partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+            with patch.object(batch.urllib.request, "urlopen", side_effect=[first, self.response(b"abcdef")]) as opening, \
+                    patch.object(batch.time, "sleep") as sleeping:
+                with self.assertRaisesRegex(batch.BatchError, "exact_206.*http_200_phase_headers_attempt_2"):
+                    batch.download_object(self.entry(b"abcdef"), partial, final)
+            self.assertEqual(partial.read_bytes(), b"ab")
+            self.assertFalse(final.exists())
+            self.assertEqual(opening.call_count, 2)
+            self.assertEqual(sleeping.call_count, 1)
+
+    def test_midread_network_timeout_or_connection_interrupt_retries_only_remaining_range(self):
+        failures = [TimeoutError("PRIVATE_REASON"), ConnectionResetError("PRIVATE_REASON"),
+                    ConnectionAbortedError("PRIVATE_REASON"), BrokenPipeError("PRIVATE_REASON"),
+                    http.client.RemoteDisconnected("PRIVATE_REASON"), urllib.error.URLError("PRIVATE_REASON")]
+        for failure in failures:
+            with self.subTest(failure=type(failure).__name__), tempfile.TemporaryDirectory() as d:
+                partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+                first = self.response(b"")
+                first.read = unittest.mock.Mock(side_effect=[b"ab", failure])
+                second = self.response(b"cdef", 206, "bytes 2-5/6")
+                with patch.object(batch.urllib.request, "urlopen", side_effect=[first, second]) as opening, \
+                        patch.object(batch.time, "sleep"):
+                    result = batch.download_object(self.entry(b"abcdef"), partial, final)
+                self.assertEqual(final.read_bytes(), b"abcdef")
+                self.assertEqual(result["download_attempts"], 2)
+                self.assertEqual(result["download_retry_events"][0]["phase"], "read")
+                self.assertEqual(result["download_retry_events"][0]["retained_partial_bytes"], 2)
+                self.assertEqual(opening.call_args_list[1].args[0].get_header("Range"), "bytes=2-")
+                self.assertNotIn("PRIVATE_REASON", json.dumps(result))
+
+    def test_local_flush_timeout_or_connection_error_never_retries_network(self):
+        for failure in (TimeoutError("PRIVATE_DISK_REASON"), ConnectionResetError("PRIVATE_DISK_REASON")):
+            with self.subTest(failure=type(failure).__name__), tempfile.TemporaryDirectory() as d:
+                partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+                with patch.object(batch.urllib.request, "urlopen", return_value=self.response(b"abcdef")) as opening, \
+                        patch.object(batch.os, "fsync", side_effect=failure), patch.object(batch.time, "sleep") as sleeping:
+                    with self.assertRaisesRegex(batch.BatchError, "download_local_.*phase_flush_attempt_1") as caught:
+                        batch.download_object(self.entry(b"abcdef"), partial, final)
+                self.assertEqual(opening.call_count, 1)
+                sleeping.assert_not_called()
+                self.assertEqual(partial.read_bytes(), b"abcdef")
+                self.assertFalse(final.exists())
+                self.assertNotIn("PRIVATE_DISK_REASON", str(caught.exception))
+
+    def test_transient_retries_exhaust_at_four_attempts_with_bounded_waits(self):
+        for kind in ("http", "network", "timeout", "short_eof"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as d:
+                partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+                def opening(*args, **kwargs):
+                    if kind == "http":
+                        raise urllib.error.HTTPError("PRIVATE_URL", 429, "PRIVATE_REASON", {}, io.BytesIO())
+                    if kind == "network":
+                        raise urllib.error.URLError("PRIVATE_REASON")
+                    if kind == "timeout":
+                        raise TimeoutError("PRIVATE_REASON")
+                    return self.response(b"")
+                with patch.object(batch.urllib.request, "urlopen", side_effect=opening) as requests, \
+                        patch.object(batch.time, "sleep") as sleeping:
+                    with self.assertRaisesRegex(batch.BatchError, "download_retry_exhausted.*attempt_4") as caught:
+                        batch.download_object(self.entry(b"abcdef"), partial, final)
+                self.assertEqual(requests.call_count, 4)
+                self.assertEqual([call.args[0] for call in sleeping.call_args_list], [1, 2, 4])
+                self.assertNotIn("PRIVATE", str(caught.exception))
+                self.assertFalse(final.exists())
+
+    def test_MD5_or_size_error_and_wrong_range_are_not_retried(self):
+        for kind in ("md5", "overrun", "wrong_range"):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as d:
+                partial, final = Path(d)/"sample.partial", Path(d)/"sample.mat"
+                if kind == "wrong_range":
+                    partial.write_bytes(b"ab")
+                    response = self.response(b"cdef", 206, "bytes 1-5/6")
+                else:
+                    response = self.response(b"xxxxxx" if kind == "md5" else b"abcdefg")
+                with patch.object(batch.urllib.request, "urlopen", return_value=response) as opening, \
+                        patch.object(batch.time, "sleep") as sleeping:
+                    with self.assertRaises(batch.BatchError):
+                        batch.download_object(self.entry(b"abcdef"), partial, final)
+                self.assertEqual(opening.call_count, 1)
+                sleeping.assert_not_called()
+                self.assertFalse(final.exists())
 
     def test_verified_backup_deletion_interruption_resumes_and_reuses_across_stage(self):
         data = b"synthetic-native-fixture"
