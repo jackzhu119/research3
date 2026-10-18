@@ -2,7 +2,7 @@
 
 原始 `Paper3_Work_Handoff_20261018.zip` 已实际读取，529,763 bytes，整体 SHA256 为 `0398664faf34682a07fb38de4e46df9829f0e5ad050f657f905d0373dbfaf175`；包内 manifest 的 **52/52 文件逐项匹配**。原件位于 `protocol/`，后续实现位于 `p3work/`，两者分开维护。`legacy_baseline_v1` 保持原字节，只是历史基础软件，不是新算法或真实训练证据。
 
-**W0 本地核查完成；62 人资格审计和 40/11/11 分组已实际冻结，W1 的共同窗口仍待完整时长审计。** 分组 SHA256 为 `1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd`。唯一 CPU 协调器已完成受控断点交接，以两条文件传输流程、一个原生解析器继续核验 meta-train 40 人的全部396个官方 session。阶段状态见 `status/tasks.json`，运行中的逐文件进度以本地 `status/local_preparation.json` 和 worker `batch_progress.json` 为准。只有真实 W1 完成后才能创建正式数值缓存。旧 `audit/w0_preflight.json` 记录原包尚未附加时的历史阻塞，不代表当前状态。
+**W0 本地核查完成；62 人资格审计和 40/11/11 分组已实际冻结，共同窗口须由完整时长审计按协议冻结。** 分组 SHA256 为 `1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd`。唯一 CPU 协调器已完成受控断点交接，以两条文件传输流程、一个原生解析器继续核验 meta-train 40 人的全部396个官方 session。阶段状态见 `status/tasks.json`，运行中的逐文件进度以本地 `status/local_preparation.json` 和 worker `batch_progress.json` 为准。只有真实 W1 完成后才能创建正式数值缓存。旧 `audit/w0_preflight.json` 记录原包尚未附加时的历史阻塞，不代表当前状态。
 
 ## 已完成的真实工作
 
@@ -51,9 +51,9 @@ Stieger 执行需显式追加 `--execute`；同计划重复启动会由文件锁
 
 `tools/r2_backup.py` 和 `tools/r2_restore.py` 均默认dry-run；只有显式 `--execute` 才调用既有R2，严格使用文件manifest及完整GET/SHA。不扫描或复制环境、密钥文件及论文1/2上传配置。
 
-## 当前未完成与 GPU 边界
+## 阶段状态与 GPU 边界
 
-完整meta-train时长和共同窗口尚未完成；四source完整新缓存未生成；无有效 f0/Rref/G 科研权重。强对照代码已补齐；真实数据训练、GPU恢复与阶段验收尚未执行，W5不能标为完成，详见 `p3work/methods/STATUS.md`。source神经开发/确认分别15/25次拟合，旧数学基线10次；新版B4/B5 source bank另需6次，不能将相似配方合并计数。
+完整meta-train时长、共同窗口和四source新缓存的实际完成状态以 `status/tasks.json` 的 W1/W2 及其验收产物为准；只有两门均通过才能生成 pilot-ready 包。尚无有效 f0/Rref/G 科研权重。强对照代码已补齐；真实数据训练、GPU恢复与阶段验收尚未执行，W5不能标为完成，详见 `p3work/methods/STATUS.md`。source神经开发/确认分别15/25次拟合，旧数学基线10次；新版B4/B5 source bank另需6次，不能将相似配方合并计数。
 
 已有 RunPod 的关闭和后续开机由用户管理，当前状态未通过本任务观察或更改。所有 GPU 训练等待用户后续开机；代码和准备工作不会自动启动或重启服务器。受控source pilot只依赖真实W1/W2；W3 Stieger数值缓存及后续科研阶段仍单独验收。`build_delivery.py --checkpoint --execute` 只生成明确标注未就绪的可恢复快照；正式固定包必须通过W1/W2及完整缓存回执覆盖检查。不得运行 legacy 的全量执行入口跳过新合同。
 
