@@ -1,8 +1,9 @@
-"""Read-only exact acceptance of the existing, frozen W1 window evidence.
+"""Read-only exact acceptance of original v2 and approved v2.1 W1 evidence.
 
-This guard does not choose or freeze a replacement window. Its only decision
-statistics are Fractions of integer original-trial counts. It reads the pinned
-meta-train metadata objects, never raw EEG or another partition's session.
+This guard does not search for or freeze a replacement window. The separately
+approved v2.1 branch verifies exactly one fixed candidate. Decision statistics
+are Fractions of integer original-trial counts. It reads pinned meta-train
+metadata objects, never raw EEG or another partition's session.
 """
 from __future__ import annotations
 
@@ -363,6 +364,219 @@ def audit_duration_batch(root, *, selection_plan="plans/stieger_meta_duration_se
     return result
 
 
+def _amendment_artifact(root, value, *, path=None, sha=None):
+    from .window_amendment import _descriptor
+    _descriptor(value, path=path, sha=sha)
+    target = _local(root, value["path"])
+    # Amendment evidence is retained metadata, never an arbitrary waveform.
+    if (target.suffix.lower() not in {".json", ".md", ".sha256"}
+            or not target.is_file() or file_digest(target) != value["sha256"]
+            or target.stat().st_size != value["bytes"]):
+        _fail("approved_window_artifact_sha_or_bytes_mismatch")
+    return target
+
+
+def _approved_candidate_counts(rows):
+    """The only additional candidate: 1500 native samples, existing length rule."""
+    groups = defaultdict(lambda: {0: [], 1: []})
+    for row in rows:
+        groups[row["participant_id"]][row["label"]].append(row)
+    people, retention_total, gap_total = {}, Fraction(0), Fraction(0)
+    strict_difference = 0
+    for person in sorted(groups):
+        classes = groups[person]
+        if any(not classes[c] for c in (0, 1)):
+            _fail("approved_window_both_original_classes_required")
+        counts = {str(c): {"original": len(classes[c]),
+            "retained": sum(_native_retained(r, Fraction(3, 2)) for r in classes[c])} for c in (0, 1)}
+        original = sum(c["original"] for c in counts.values())
+        retained = sum(c["retained"] for c in counts.values())
+        retention = Fraction(retained, original)
+        gap = abs(Fraction(counts["0"]["retained"], counts["0"]["original"])
+                  - Fraction(counts["1"]["retained"], counts["1"]["original"]))
+        rr = classes[0] + classes[1]
+        sessions = defaultdict(list)
+        for row in rr:
+            sessions[row["session_id"]].append(row)
+            strict = (row["feedback_stop_exclusive_sample"] - row["analysis_anchor_sample"] >= 1500
+                      and row["triallength_reported_seconds"] >= 1.5)
+            strict_difference += strict != _native_retained(row, Fraction(3, 2))
+        people[person] = {"original_lr_trials": original, "retained": retained, "classes": counts,
+            "retention": _fraction(retention), "absolute_class_exclusion_gap": _fraction(gap),
+            "sessions": {session: {"original": len(sr),
+                "retained": sum(_native_retained(r, Fraction(3, 2)) for r in sr)}
+                for session, sr in sorted(sessions.items())}}
+        retention_total += retention
+        gap_total += gap
+    if not people:
+        _fail("approved_window_complete_original_population_required")
+    retention, gap = retention_total / len(people), gap_total / len(people)
+    return {"context_seconds": [0, 1.5], "participants": people,
+        "participant_mean_retention": _fraction(retention),
+        "participant_mean_absolute_class_exclusion_gap": _fraction(gap),
+        "passes": retention >= Fraction(4, 5) and gap <= Fraction(1, 10)}, strict_difference
+
+
+@_checked_errors
+def verify_approved_window_audit(root) -> dict:
+    """Verify the one explicitly approved v2.1 audit, without freezing W1.
+
+    The fixed approval and audit digests are trust roots, not caller arguments.
+    Original v2 counts and evidence remain independently reproducible. Every
+    original native metadata object is SHA/full-GET verified by that existing
+    audit before the additional fixed candidate is counted. No raw is opened.
+    """
+    from . import window_amendment as amendment
+    root = _root(root)
+    approval_path = _local(root, amendment.APPROVAL_PATH)
+    if not approval_path.is_file() or file_digest(approval_path) != amendment.APPROVAL_SHA256:
+        _fail("approved_window_fixed_user_approval_sha_required")
+    approval = _json(approval_path)
+    body = dict(approval)
+    if body.pop("approval_artifact_sha256", None) != _hash(body):
+        _fail("approved_window_approval_internal_digest_mismatch")
+    if (approval.get("schema_version") != amendment.APPROVAL_SCHEMA
+            or approval.get("status") != "AUTHORIZED_SINGLE_FIXED_CANDIDATE_AUDIT"
+            or approval.get("scientific_protocol_version") != "2.1"
+            or approval.get("profile") != amendment.V21_PROFILE
+            or approval.get("user_approval", {}).get("message_text") != "批准"
+            or approval.get("thresholds") != amendment.THRESHOLDS
+            or approval.get("candidate") != {"context_s": [0, 1.5], "crop_s": [.25, 1.25],
+                "sfreq_hz": 128, "n_times": 128, "native_minimum_sample_span": 1500,
+                "anchor": "verified feedback onset at cue plus 2000ms", "post_result_padding_permitted": False}
+            or approval.get("population", {}).get("partitions") != amendment.PARTITIONS
+            or approval["population"].get("complete_meta_train_objects") != amendment.EXPECTED_OBJECTS
+            or approval["population"].get("original_lr_trials") != amendment.EXPECTED_LR_TRIALS
+            or approval["population"].get("replacement_of_participants_or_trials_permitted") is not False
+            or any(approval.get(k) is not False for k in ("original_v2_files_modified", "external_payload_authorized",
+                "GPU_or_remote_start_authorized", "W7_freeze_authorized"))
+            or approval.get("original_v2_exact_artifact_sha256") != amendment.ORIGINAL_V2_ARTIFACT_SHA256):
+        _fail("approved_window_fixed_candidate_or_authorization_mismatch")
+    artifacts = {}
+    for name in ("approved_proposal", "proposal_clarification", "original_protocol", "original_package_manifest",
+                 "original_v2_exact_audit", "original_v2_window_coverage", "window_input_session_manifest",
+                 "selection_plan", "participant_split"):
+        target = _amendment_artifact(root, approval[name])
+        artifacts[target.relative_to(root).as_posix()] = file_digest(target)
+    if (approval["original_protocol"]["path"] != "protocol/EXPERIMENT_PROTOCOL.md"
+            or approval["original_package_manifest"]["path"] != "protocol/PACKAGE_CONTENTS.sha256"):
+        _fail("approved_window_original_protocol_identity_mismatch")
+    # The unchanged package manifest binds all 52 originals, not an edited
+    # substitute protocol. Only protocol-relative files can be opened here.
+    package = _local(root, approval["original_package_manifest"]["path"])
+    entries = []
+    for line in package.read_text().splitlines():
+        sha, relative = line.split(maxsplit=1)
+        relative = relative.removeprefix("*")
+        target = _local(root, "protocol/" + relative)
+        if (not _sha(sha) or not target.is_relative_to(root / "protocol")
+                or not target.is_file() or file_digest(target) != sha):
+            _fail("approved_window_original_52_protocol_files_mismatch")
+        entries.append(target.relative_to(root).as_posix())
+    if len(entries) != 52 or len(set(entries)) != 52:
+        _fail("approved_window_original_52_protocol_files_required")
+    legacy = audit_duration_batch(root)
+    if (legacy["artifact_sha256"] != amendment.ORIGINAL_V2_ARTIFACT_SHA256
+            or legacy["exact_selected"] is not None or legacy["floating_selected"] is not None
+            or _json(_local(root, approval["original_v2_exact_audit"]["path"])) != legacy
+            or legacy["complete_objects"] != amendment.EXPECTED_OBJECTS
+            or legacy["participants"] != amendment.EXPECTED_PARTICIPANTS
+            or legacy["original_lr_trials"] != amendment.EXPECTED_LR_TRIALS
+            or any(approval.get(k) != legacy[v] for k, v in (
+                ("base_selection_plan_sha256", "plan_sha256"), ("split_sha256", "split_sha256"),
+                ("raw_metadata_manifest_sha256", "raw_metadata_manifest_sha256")))):
+        _fail("approved_window_original_v2_failed_evidence_mismatch")
+    def descriptor(path):
+        return {"path": path.relative_to(root).as_posix(), "sha256": file_digest(path), "bytes": path.stat().st_size}
+    for name, key in (("selection_plan", "selection_plan"), ("participant_split", "split"),
+                      ("window_input_session_manifest", "window_input_session_manifest"),
+                      ("original_v2_window_coverage", "window_coverage")):
+        if approval[name] != descriptor(_local(root, legacy[key]["path"])):
+            _fail("approved_window_original_selection_or_split_descriptor_mismatch")
+    plan = _json(_local(root, legacy["selection_plan"]["path"]))
+    manifest = _json(_local(root, legacy["window_input_session_manifest"]["path"]))
+    expected = {(r["participant_id"], r["session_id"]): r for r in manifest["sessions"]}
+    rows = []
+    for entry in plan["files"]:
+        path = _local(root, f"audit/stieger_w1/batches/{plan['plan_sha256']}/objects/{entry['id']}/trial_metadata.json")
+        session = expected[(entry["provider_subject"], str(entry["session_ordinal"]))]
+        if file_digest(path) != session["trial_metadata_sha256"]:
+            _fail("approved_window_native_metadata_changed_after_original_verification")
+        rows.extend(r for r in _json(path) if r.get("tasknumber") == 1 and r.get("label") is not None)
+    candidate, strict_difference = _approved_candidate_counts(rows)
+    audit_path = _local(root, amendment.AUDIT_PATH)
+    if not audit_path.is_file() or file_digest(audit_path) != amendment.AUDIT_SHA256:
+        _fail("approved_window_fixed_single_audit_sha_required")
+    audit = _json(audit_path)
+    body = dict(audit)
+    semantic = body.pop("artifact_sha256", None)
+    if semantic != _hash(body) or semantic != amendment.AUDIT_ARTIFACT_SHA256:
+        _fail("approved_window_single_audit_internal_digest_mismatch")
+    approval_descriptor, audit_descriptor = descriptor(approval_path), descriptor(audit_path)
+    expected_audit = {"schema_version": amendment.AUDIT_SCHEMA, "status": "SINGLE_APPROVED_WINDOW_PASSED",
+        "approval": approval_descriptor, "original_v2_exact_artifact_sha256": amendment.ORIGINAL_V2_ARTIFACT_SHA256,
+        "base_selection_plan_sha256": legacy["plan_sha256"], "split_sha256": legacy["split_sha256"],
+        "raw_metadata_manifest_sha256": legacy["raw_metadata_manifest_sha256"],
+        "window_input_session_manifest": approval["window_input_session_manifest"],
+        "profile": amendment.V21_PROFILE, "context_s": [0, 1.5], "crop_s": [.25, 1.25], "sfreq_hz": 128, "n_times": 128,
+        "complete_objects": amendment.EXPECTED_OBJECTS, "participants": amendment.EXPECTED_PARTICIPANTS,
+        "original_lr_trials": amendment.EXPECTED_LR_TRIALS, "thresholds": amendment.THRESHOLDS,
+        "candidate": candidate, "selected_profile": amendment.V21_PROFILE if candidate["passes"] else None,
+        "cache_authorized": False, "strict_no_epsilon_difference_trials": strict_difference,
+        "new_candidates_evaluated": 1, "other_unapproved_windows_evaluated": 0,
+        "waveform_QC_used_in_denominator": False, "external_payload_accessed": False,
+        "scientific_fits_completed": 0, "GPU_or_remote_jobs_started": 0}
+    if (any(_hash(audit.get(k)) != _hash(v) for k, v in expected_audit.items())
+            or not candidate["passes"] or len(rows) != amendment.EXPECTED_LR_TRIALS):
+        _fail("approved_window_single_audit_not_exact_fixed_candidate_recomputation")
+    artifacts.update({amendment.APPROVAL_PATH: amendment.APPROVAL_SHA256, amendment.AUDIT_PATH: amendment.AUDIT_SHA256})
+    artifacts.update({legacy[k]["path"]: legacy[k]["sha256"] for k in
+        ("selection_plan", "split", "inventory", "window_input_session_manifest")})
+    proof = {"schema_version": "paper3-approved-window-acceptance-v2.1", "status": "APPROVED_SINGLE_WINDOW_AUDIT_VERIFIED",
+        "cache_authorized": False, "profile": amendment.V21_PROFILE, "selected_profile": amendment.V21_PROFILE,
+        "context_s": [0, 1.5], "crop_s": [.25, 1.25], "sfreq_hz": 128, "n_times": 128,
+        "complete_objects": amendment.EXPECTED_OBJECTS, "participants": amendment.EXPECTED_PARTICIPANTS,
+        "original_lr_trials": len(rows), "candidate": candidate, "thresholds": amendment.THRESHOLDS,
+        "strict_no_epsilon_difference_trials": strict_difference,
+        "approval": approval_descriptor, "single_candidate_audit": audit_descriptor, "window_coverage": audit_descriptor,
+        "original_v2_exact_audit": approval["original_v2_exact_audit"],
+        "original_v2_window_coverage": approval["original_v2_window_coverage"],
+        "original_v2_exact_artifact_sha256": amendment.ORIGINAL_V2_ARTIFACT_SHA256,
+        "single_candidate_artifact_sha256": semantic,
+        "base_selection_plan_sha256": legacy["plan_sha256"], "plan_sha256": legacy["plan_sha256"],
+        **{k: legacy[k] for k in ("split_sha256", "raw_metadata_manifest_sha256", "official_inventory_sha256",
+            "object_metadata_evidence_sha256")},
+        **{k: descriptor(_local(root, legacy[k]["path"])) for k in
+            ("selection_plan", "split", "inventory", "window_input_session_manifest")},
+        "artifact_files_sha256": artifacts}
+    proof["artifact_sha256"] = _hash(proof)
+    return proof
+
+
+@_checked_errors
+def verify_approved_frozen_contract(root, contract) -> dict:
+    """Read-only publication preflight, always closed to downstream caches.
+
+    The supplied candidate must equal the actual canonical contract. W1 may
+    still be in a closed transaction; only verify_frozen_window can authorize
+    caches after the final COMPLETE status has been published.
+    """
+    from .window_amendment import is_v21_contract, build_v21_window_receipt
+    root = _root(root)
+    contract_file = _local(root, "contracts/input_contract.json")
+    if not is_v21_contract(contract) or _json(contract_file) != contract:
+        _fail("approved_window_canonical_candidate_contract_required")
+    contract_sha = validate_signal_contract(contract)
+    proof = verify_approved_window_audit(root)
+    if contract.get("window_audit_receipt") != build_v21_window_receipt(proof):
+        _fail("approved_window_frozen_receipt_full_evidence_identity_mismatch")
+    proof.update(status="APPROVED_FROZEN_CONTRACT_VERIFIED", cache_authorized=False,
+        input_contract_sha256=contract_sha, input_contract_file_sha256=file_digest(contract_file))
+    proof.pop("artifact_sha256")
+    proof["artifact_sha256"] = _hash(proof)
+    return proof
+
+
 @_checked_errors
 def verify_frozen_window(root, *, contract_path="contracts/input_contract.json") -> dict:
     """Require exact counts, original coverage and the frozen contract to agree."""
@@ -378,6 +592,14 @@ def verify_frozen_window(root, *, contract_path="contracts/input_contract.json")
         contract_sha = validate_signal_contract(contract)
     except (ValueError, TypeError, KeyError):
         _fail("frozen_signal_contract_invalid")
+    from .window_amendment import is_v21_contract
+    if is_v21_contract(contract):
+        proof = verify_approved_frozen_contract(root, contract)
+        proof.update(status="EXACT_FROZEN_WINDOW_VERIFIED", cache_authorized=True,
+            input_contract_sha256=contract_sha, input_contract_file_sha256=file_digest(contract_file))
+        proof.pop("artifact_sha256")
+        proof["artifact_sha256"] = _hash(proof)
+        return proof
     proof = audit_duration_batch(root)
     selected = proof["exact_selected"]
     if selected is None or selected != proof["floating_selected"] or selected != contract["selected_profile"]:
@@ -397,6 +619,11 @@ def verify_frozen_window(root, *, contract_path="contracts/input_contract.json")
             _fail("frozen_window_receipt_summary_mismatch")
     proof.update(status="EXACT_FROZEN_WINDOW_VERIFIED", cache_authorized=True, input_contract_sha256=contract_sha,
         input_contract_file_sha256=file_digest(contract_file))
+    # This authorization wrapper publishes the already verified file identities.
+    # The historical audit_duration_batch artifact and its 6133... digest are
+    # unchanged; only the final frozen-contract proof gains an explicit map.
+    proof["artifact_files_sha256"] = {proof[k]["path"]: proof[k]["sha256"] for k in
+        ("selection_plan", "split", "inventory", "window_input_session_manifest", "window_coverage")}
     proof.pop("artifact_sha256")
     proof["artifact_sha256"] = _hash(proof)
     return proof

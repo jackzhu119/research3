@@ -115,17 +115,22 @@ def test_upstream_evidence_failure_cannot_be_bypassed_by_complete_flags(gate_fix
         pilot.verify_inputs(root)
 
 
-def test_upstream_file_map_and_exact_proof_digest_are_bound_separately(gate_fixture, monkeypatch):
-    from p3work import (window_acceptance, source_cache_acceptance, contracts,
+def upstream_proof_double(root, monkeypatch, *, approved=False):
+    """Only the upstream wrapper is doubled; actual package/file bytes are read."""
+    from p3work import (window_acceptance, window_amendment, source_cache_acceptance, contracts,
                         f0_bridge, spatial_geometry, source_training, runtime_clock)
-    root, _, _, _, _ = gate_fixture
-    cache = pilot.verify_inputs(root)
-    proof = {"artifact_sha256": "f" * 64}
+    proof = {"artifact_sha256": "f" * 64, "artifact_files_sha256": {}}
     for name in ("selection_plan", "split", "inventory", "window_input_session_manifest", "window_coverage"):
         relative = "audit/TEST_DOUBLE_ONLY_" + name + ".json"
         write(root / relative, {"scope": "SOFTWARE_COMPONENT_TEST_ONLY"})
         proof[name] = {"path": relative, "sha256": file_digest(root / relative)}
-    for module in (window_acceptance, source_cache_acceptance, contracts,
+        proof["artifact_files_sha256"][relative] = proof[name]["sha256"]
+    if approved:
+        proof["schema_version"] = "paper3-approved-window-acceptance-v2.1"
+        relative = "audit/TEST_DOUBLE_ONLY_approved_single_candidate.json"
+        write(root / relative, {"scope": "SOFTWARE_COMPONENT_TEST_ONLY", "permission": "single_fixed_candidate"})
+        proof["artifact_files_sha256"][relative] = file_digest(root / relative)
+    for module in (window_acceptance, window_amendment, source_cache_acceptance, contracts,
                    f0_bridge, spatial_geometry, source_training, runtime_clock):
         path = root / "p3work" / Path(module.__file__).name
         path.write_bytes(Path(module.__file__).read_bytes())
@@ -135,6 +140,14 @@ def test_upstream_file_map_and_exact_proof_digest_are_bound_separately(gate_fixt
     monkeypatch.setattr(window_acceptance, "verify_frozen_window", lambda r: proof)
     monkeypatch.setattr(source_cache_acceptance, "verify_source_cache_acceptance",
                         lambda c: {"artifact_sha256": {"TEST_DOUBLE_ONLY": "e" * 64}})
+    return proof
+
+
+@pytest.mark.parametrize("changed_code", ["p3work/source_training.py", "p3work/window_amendment.py"])
+def test_upstream_file_map_and_exact_proof_digest_are_bound_separately(gate_fixture, monkeypatch, changed_code):
+    root, _, _, _, _ = gate_fixture
+    cache = pilot.verify_inputs(root)
+    proof = upstream_proof_double(root, monkeypatch)
     PRODUCTION_UPSTREAM_VERIFIER(cache)
     assert cache.upstream_acceptance_sha256["exact_window"] == "f" * 64
     assert len(cache.upstream_acceptance_sha256["full_source_cache"]) == 64
@@ -142,10 +155,42 @@ def test_upstream_file_map_and_exact_proof_digest_are_bound_separately(gate_fixt
     assert proof["split"]["path"] in cache.artifact_sha256
     # A --root pointing to another code version cannot record that version's
     # SHA while actually running this process's model/training implementation.
-    with (root / "p3work/source_training.py").open("ab") as stream:
+    with (root / changed_code).open("ab") as stream:
         stream.write(b"\n# SOFTWARE_TEST_DOUBLE_DIFFERENT_PACKAGED_CODE\n")
     with pytest.raises(pilot.PilotGateError, match="differs from packaged code"):
         PRODUCTION_UPSTREAM_VERIFIER(cache)
+
+
+def test_approved_window_permission_files_are_hashed_before_any_training(gate_fixture, monkeypatch):
+    root, _, _, _, _ = gate_fixture
+    proof = upstream_proof_double(root, monkeypatch, approved=True)
+    monkeypatch.setattr(pilot, "_verify_upstream_acceptance", PRODUCTION_UPSTREAM_VERIFIER)
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: pytest.fail("Approval must be checked before CUDA"))
+    monkeypatch.setattr(pilot, "CompactEEGNet", lambda *a, **k: pytest.fail("Approval must be checked before model construction"))
+    cache = pilot.verify_inputs(root)
+    approval = "audit/TEST_DOUBLE_ONLY_approved_single_candidate.json"
+    assert cache.artifact_sha256[approval] == proof["artifact_files_sha256"][approval]
+    write(root / approval, {"scope": "SOFTWARE_COMPONENT_TEST_ONLY", "permission": "CHANGED"})
+    # Updating every legacy descriptor cannot hide a changed new approval.
+    for name in ("selection_plan", "split", "inventory", "window_input_session_manifest", "window_coverage"):
+        descriptor = proof[name]
+        write(root / descriptor["path"], {"scope": "SOFTWARE_COMPONENT_TEST_ONLY", "resealed": True})
+        descriptor["sha256"] = file_digest(root / descriptor["path"])
+        proof["artifact_files_sha256"][descriptor["path"]] = descriptor["sha256"]
+    with pytest.raises(pilot.PilotGateError, match="SHA256 mismatch"):
+        pilot.verify_inputs(root)
+
+
+@pytest.mark.parametrize("violation", ["missing", "empty", "invalid_sha"])
+def test_new_approved_window_cannot_omit_or_weaken_permission_file_map(gate_fixture, monkeypatch, violation):
+    root, _, _, _, _ = gate_fixture
+    proof = upstream_proof_double(root, monkeypatch, approved=True)
+    proof["artifact_files_sha256"] = {
+        "missing": None, "empty": {},
+        "invalid_sha": {proof["selection_plan"]["path"]: "not-a-sha256"}}[violation]
+    monkeypatch.setattr(pilot, "_verify_upstream_acceptance", PRODUCTION_UPSTREAM_VERIFIER)
+    with pytest.raises(pilot.PilotGateError):
+        pilot.verify_inputs(root)
 
 
 def test_dry_run_never_checks_cuda_or_calls_executor(gate_fixture, monkeypatch, capsys):

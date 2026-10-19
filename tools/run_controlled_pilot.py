@@ -115,9 +115,9 @@ def _verify_upstream_acceptance(cache):
     These read-only verifiers use metadata and local cache bytes only. They do
     not restore raw EEG, contact R2, construct a model or initialize CUDA.
     """
-    from p3work import (window_acceptance, source_cache_acceptance, contracts,
+    from p3work import (window_acceptance, window_amendment, source_cache_acceptance, contracts,
                         f0_bridge, spatial_geometry, source_training, runtime_clock)
-    for module in (window_acceptance, source_cache_acceptance, contracts,
+    for module in (window_acceptance, window_amendment, source_cache_acceptance, contracts,
                    f0_bridge, spatial_geometry, source_training, runtime_clock):
         relative = "p3work/" + Path(module.__file__).name
         packaged = _local(cache.root, relative)
@@ -130,6 +130,21 @@ def _verify_upstream_acceptance(cache):
     cache.artifact_sha256["tools/run_controlled_pilot.py"] = file_digest(runner)
     window = window_acceptance.verify_frozen_window(cache.root)
     source = source_cache_acceptance.verify_source_cache_acceptance(cache)
+    # Include the complete permission/provenance closure returned by the
+    # measured window verifier. In v2.1 this also binds the one-candidate
+    # approval, audit and retained original v2 failure evidence. Hash every
+    # actual file instead of trusting a map or only the original descriptors.
+    window_artifacts = window.get("artifact_files_sha256")
+    if not isinstance(window_artifacts, dict) or not window_artifacts:
+        raise PilotGateError("Complete exact-window artifact file map is required")
+    for relative, expected in window_artifacts.items():
+        path = _artifact(cache.root, {"path": relative, "sha256": expected})
+        canonical = path.relative_to(cache.root).as_posix()
+        if canonical != relative:
+            raise PilotGateError("Exact-window artifact paths must be canonical")
+        if canonical in cache.artifact_sha256 and cache.artifact_sha256[canonical] != expected:
+            raise PilotGateError("Exact-window evidence changed during input verification")
+        cache.artifact_sha256[canonical] = expected
     # The window API returns a proof digest; the source API returns a map of
     # actual file digests. Keep these distinct instead of treating a proof as
     # an artifact path or silently dropping its measured decision identity.

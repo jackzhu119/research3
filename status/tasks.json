@@ -1,7 +1,5 @@
 {
-  "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
   "W0": {
-    "status": "COMPLETE_LOCAL_SCOPE",
     "evidence": [
       "provenance/origin.json",
       "provenance/files.json",
@@ -9,92 +7,119 @@
       "audit/reuse_audit.json",
       "audit/resource_budget.json"
     ],
+    "raw_npz_reused": false,
     "remote_status": "USER_MANAGED_NOT_INSPECTED",
-    "raw_npz_reused": false
+    "status": "COMPLETE_LOCAL_SCOPE"
   },
   "W1": {
-    "status": "BLOCKED_WINDOW_COVERAGE_PROTOCOL_REVIEW_REQUIRED",
-    "manifest_verified_files": 52,
-    "source_schema_specs": 4,
-    "stieger_native_schema_sessions": 62,
-    "qualified_stieger_roster_frozen": true,
-    "window_selected": null,
+    "approved_window_acceptance_sha256": "9e1a190b5bd0b0add0def4070cb53b0decaca9bffc89007d2d701cf4cdd23711",
+    "complete_meta_train_sessions": 396,
+    "complete_meta_train_sessions_required": 396,
+    "completed_at_utc": "2026-10-19T01:22:16.017925+00:00",
+    "cpu_operational_amendment_sha256": "af72bdf444b1e2c75f81af3c8e06fea7e41357f054f7b9f7170c4c93d62e3d95",
     "evidence": [
       "audit/handoff_manifest_verification.json",
       "audit/source_schema/source_acceptance_checks.json",
       "audit/stieger_w1/adapter_audit.json",
-      "audit/stieger_w1/batches/c825be2636a5f423838816f76ededbae8cb08e92a3ddbc57032fb911db8763fa/participant_split.json"
+      "audit/stieger_w1/batches/c825be2636a5f423838816f76ededbae8cb08e92a3ddbc57032fb911db8763fa/participant_split.json",
+      "plans/window_amendment_v2_1_20261019.json",
+      "audit/stieger_w1/window_amendment_v2_1_20261019/single_candidate_audit.json",
+      "contracts/input_contract.json",
+      "audit/stieger_w1/window_amendment_v2_1_20261019/freeze_transaction.json"
     ],
-    "next": "Protocol line88 pauses main B20 because both registered windows fail. Explicit scientific window amendment/decision is required; no numerical cache, fit or pilot has started.",
-    "qualification_batch_status": "COMPLETE_62_OFFICIAL_FILES_AND_R2_FULL_GET_VERIFIED",
-    "qualification_plan": "plans/stieger_qualification.json",
-    "qualification_complete_files": 62,
-    "qualification_schema_unknown_files": 0,
-    "qualification_verified_official_bytes": 38395648006,
-    "qualification_count_snapshot_at_utc": "2026-10-18T07:29:59.188566+00:00",
-    "qualified_stieger_people": 62,
+    "exact_window_audit": {
+      "bytes": 188516,
+      "path": "audit/stieger_w1/window_exact_gate_failure_20261018.json",
+      "sha256": "f7c58673ecca0d320ed7d39a817065cadba48c5f3c23e8f0a06bba3ed711a9cc"
+    },
+    "freeze_transaction": {
+      "identity_sha256": "841159c2578c005d9203d2508b496c1fd6cd0891ca02a796eaf986771345e05a",
+      "path": "audit/stieger_w1/window_amendment_v2_1_20261019/freeze_transaction.json"
+    },
+    "input_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+    "manifest_verified_files": 52,
+    "meta_train_complete_files": 396,
+    "meta_train_duration_audit": "COMPLETE_396_OFFICIAL_FILES_AND_FULL_GET_VERIFIED",
+    "meta_train_duration_plan_sha256": "0c53f43ca0f4eb424796d3d7c83c736936bc886f92b0555c35811b4daa306c37",
+    "meta_train_original_lr_trials": 59399,
+    "meta_train_verified_official_bytes": 251064060656,
+    "next": "New source505/cache/R2 preparation under the approved signal contract; no GPU start.",
     "participant_split_counts": {
+      "internal_holdout": 11,
       "meta_train": 40,
-      "meta_validation": 11,
-      "internal_holdout": 11
+      "meta_validation": 11
     },
     "participant_split_sha256": "1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd",
-    "complete_meta_train_sessions_required": 396,
-    "meta_train_duration_plan_sha256": "0c53f43ca0f4eb424796d3d7c83c736936bc886f92b0555c35811b4daa306c37",
-    "meta_train_duration_audit": "COMPLETE_396_OFFICIAL_FILES_AND_FULL_GET_VERIFIED",
+    "qualification_batch_status": "COMPLETE_62_OFFICIAL_FILES_AND_R2_FULL_GET_VERIFIED",
+    "qualification_complete_files": 62,
+    "qualification_count_snapshot_at_utc": "2026-10-18T07:29:59.188566+00:00",
+    "qualification_plan": "plans/stieger_qualification.json",
+    "qualification_schema_unknown_files": 0,
+    "qualification_verified_official_bytes": 38395648006,
+    "qualified_stieger_people": 62,
+    "qualified_stieger_roster_frozen": true,
     "recovery": "Old CPU coordinator gracefully stopped and original locks released before the sole bounded CPU coordinator inherited cumulative wall and strictly verified prior objects",
-    "cpu_operational_amendment_sha256": "af72bdf444b1e2c75f81af3c8e06fea7e41357f054f7b9f7170c4c93d62e3d95",
-    "meta_train_complete_files": 396,
-    "meta_train_verified_official_bytes": 251064060656,
-    "meta_train_original_lr_trials": 59399,
-    "window_gate_failure_review": {
-      "path": "audit/stieger_w1/window_gate_review_20261018/review.json",
-      "sha256": "3dc0a220060c010da15274e8e151198bd30721b1df05353c2626860960a6c7c8",
-      "bytes": 4573
+    "scientific_protocol_version": "2.1",
+    "source_schema_specs": 4,
+    "status": "COMPLETE",
+    "stieger_native_schema_sessions": 62,
+    "window_amendment_approval": {
+      "bytes": 4878,
+      "path": "plans/window_amendment_v2_1_20261019.json",
+      "sha256": "2a3fcfa77b4947a49a676f4f0f611ffedc9f8b19b7233bb73c2834b589285a29"
     },
-    "exact_window_audit": {
-      "path": "audit/stieger_w1/window_exact_gate_failure_20261018.json",
-      "sha256": "f7c58673ecca0d320ed7d39a817065cadba48c5f3c23e8f0a06bba3ed711a9cc",
-      "bytes": 188516
-    }
+    "window_amendment_audit": {
+      "bytes": 57818,
+      "path": "audit/stieger_w1/window_amendment_v2_1_20261019/single_candidate_audit.json",
+      "sha256": "d43b1cf7063e731a82d55d6608669865389fe68d11119fb2b28ef6d8664ecbae"
+    },
+    "window_decision_pool": "meta_train",
+    "window_gate_failure_review": {
+      "bytes": 4573,
+      "path": "audit/stieger_w1/window_gate_review_20261018/review.json",
+      "sha256": "3dc0a220060c010da15274e8e151198bd30721b1df05353c2626860960a6c7c8"
+    },
+    "window_selected": "approved_context_1p5_v21"
   },
   "W2": {
-    "status": "NOT_STARTED_DEPENDS_ON_W1",
+    "blocking_reason": null,
     "old_npz_accepted": false,
-    "blocking_reason": "Both registered common windows fail the W1 original metadata coverage gate."
+    "status": "NOT_STARTED"
   },
   "W3": {
     "status": "NOT_STARTED_DEPENDS_ON_W1"
   },
   "W4": {
-    "status": "NOT_STARTED_USER_GPU_BOOT_REQUIRED",
-    "scientific_fits_completed": 0
+    "scientific_fits_completed": 0,
+    "status": "NOT_STARTED_USER_GPU_BOOT_REQUIRED"
   },
   "W5": {
-    "status": "SOFTWARE_IMPLEMENTED_SCIENTIFIC_VALIDATION_PENDING",
-    "software_receipt": "audit/software_preparation_acceptance.json",
-    "software_inventory": "p3work/methods/STATUS.md",
-    "scientific_fits_completed": 0,
+    "latest_unified_cpu_tests_passed": 1319,
     "remaining_data_and_gpu_gates": true,
-    "latest_unified_cpu_tests_passed": 1210
+    "scientific_fits_completed": 0,
+    "software_inventory": "p3work/methods/STATUS.md",
+    "software_receipt": "audit/software_preparation_acceptance.json",
+    "status": "SOFTWARE_IMPLEMENTED_SCIENTIFIC_VALIDATION_PENDING"
   },
   "W6": {
     "status": "NOT_STARTED"
   },
   "W7": {
+    "protocol_freeze_sha256": null,
     "status": "NOT_FROZEN"
   },
   "W8": {
-    "status": "LOCKED_NO_EXTERNAL_PAYLOAD_DOWNLOAD_OR_ACCESS",
     "HS_accessed": false,
-    "Wang_accessed": false
+    "Wang_accessed": false,
+    "status": "LOCKED_NO_EXTERNAL_PAYLOAD_DOWNLOAD_OR_ACCESS"
   },
   "W9": {
     "status": "NOT_STARTED_NO_SCIENTIFIC_PREDICTIONS"
   },
-  "gpu_training_jobs_started": 0,
-  "remote_jobs_started": 0,
-  "performance_results": null,
   "backup_scope": "Original ZIP,5 native schema raw files,110 dependency wheels have actual PUT/full-GET SHA256 receipts; per-file W1 metadata backups continue",
+  "gpu_training_jobs_started": 0,
+  "performance_results": null,
+  "recorded_at_utc": "2026-10-19T01:23:51.554754+00:00",
+  "remote_jobs_started": 0,
   "remote_server_actions": false
 }

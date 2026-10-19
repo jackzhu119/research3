@@ -45,6 +45,7 @@ POLICY_FILES = ("protocol/EXPERIMENT_PROTOCOL.md", "protocol/METHOD_SPEC.md", "p
                 "protocol/legacy_baseline_v1/configs/default.json", "protocol/legacy_baseline_v1/p3/neural.py",
                 "protocol/legacy_baseline_v1/p3/cli.py")
 CODE_FILES = ("p3work/source_training.py", "p3work/f0_bridge.py", "p3work/contracts.py",
+              "p3work/window_amendment.py",
               "p3work/spatial_geometry.py", "tools/train_source.py", "tools/run_controlled_pilot.py")
 
 

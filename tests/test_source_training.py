@@ -20,6 +20,8 @@ import torch
 from p3work import source_training as training
 from p3work.contracts import SOURCE_IDS, digest, file_digest
 
+PRODUCTION_CODE_POLICY = training._code_policy
+
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("paper3_train_source_test", ROOT / "tools/train_source.py")
 cli = importlib.util.module_from_spec(spec)
@@ -59,6 +61,26 @@ def fixture_config(**updates):
 
 def first_job(cache):
     return training.build_training_plan(cache)["jobs"][0]
+
+
+def test_formal_source_plan_pins_executed_window_amendment_before_any_fit(fixture_cache, monkeypatch):
+    cache = fixture_cache
+    for relative in training.POLICY_FILES + training.CODE_FILES:
+        destination = cache.root / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes((ROOT / relative).read_bytes())
+    monkeypatch.setattr(training, "_code_policy", PRODUCTION_CODE_POLICY)
+    plan = training.build_training_plan(cache)
+    helper = cache.root / "p3work/window_amendment.py"
+    assert plan["policy_and_code"]["code"]["p3work/window_amendment.py"] == file_digest(helper)
+    with helper.open("ab") as stream:
+        stream.write(b"\n# SOFTWARE_COMPONENT_TEST_ONLY_CHANGED_APPROVAL_VERIFIER\n")
+    monkeypatch.setattr(training, "run_fit", lambda *a, **k: pytest.fail("Changed helper reached fitting"))
+    monkeypatch.setattr(torch.cuda, "is_available", lambda: pytest.fail("Changed helper reached CUDA"))
+    output = cache.root / "MUST_NOT_CREATE_SOURCE_RUN"
+    with pytest.raises(training.SourceTrainingError, match="complete registered source plan/code/cache identity"):
+        training.execute_plan(cache, plan, output, runtime={"device": "cuda:0"}, pilot_evidence={})
+    assert not output.exists()
 
 
 def test_registered_lodo_seed_and_fit_budgets_are_plans_not_completions(fixture_cache):

@@ -1,15 +1,16 @@
 {
   "schema_version": "paper3-software-preparation-acceptance-v1",
-  "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
-  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_REAL_W1_WINDOW_GATE_BLOCKED",
+  "recorded_at_utc": "2026-10-19T01:23:51.554754+00:00",
+  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_APPROVED_V21_W1_FROZEN_SOURCE_W2_PENDING",
   "scope": "CPU_SOFTWARE_AND_SYNTHETIC_MATHEMATICAL_ACCEPTANCE_ONLY",
   "latest_completed_full_suite": {
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
-    "passed": 1210,
+    "passed": 1319,
     "failed": 0,
-    "wall_seconds": 213.95,
-    "log_sha256": "c5c3b55725be217110fc108d792aa5cb52fd6c4cd9ad68d80401d7e26260e7a8",
-    "log_path": "audit/software_tests/run_number_correction_fullsuite_1210.log",
+    "exit_code": 0,
+    "wall_seconds": 239.46,
+    "log_sha256": "d186cf28037030030c350c1766bd890139a5d26b1c3a52b56ac0f359ce717b10",
+    "log_path": "audit/software_tests/approved_window_v21_fullsuite_1319.log",
     "new_executable_changes_after_this_suite": false
   },
   "original_protocol_files_verified": 52,
@@ -29,18 +30,18 @@
     "actual engineering measurement and complete training artifacts"
   ],
   "remaining_gates": [
-    "Explicit scientific decision/amendment: both original W1 common-window candidates fail the full meta_train coverage gate",
-    "W2 full source native audit, fresh numerical cache and complete R2 GET/SHA256 proof after an actual valid window contract",
-    "User later manual GPU boot before a controlled source engineering pilot"
+    "W2 actual 505-source native audit, fresh approved-input-bound numerical cache and complete R2 GET/SHA256",
+    "Final fixed controlled-source-pilot delivery and independent cache/archive restore verification",
+    "User later manual GPU boot before the controlled source engineering pilot"
   ],
   "drift_pca_formal_estimation": "BLOCKED_UNRESOLVED_IMPLEMENTATION_PARAMETERS",
   "W9_real_analysis": "BLOCKED_W7_AND_EXTERNAL_ARCHIVED_PREDICTION_VERIFIER_PENDING",
   "W5_scientific_stage_complete": false,
   "code_manifest": {
     "path": "audit/software_code_manifest.json",
-    "sha256": "179c7b7ce58effda6ee881904f0f57479a4896a9bb836a05703f84732486aa2a",
-    "bytes": 16409,
-    "python_files": 100
+    "sha256": "caed085b55c4f751bbddbec7f4a7a9067319c92a20c99410c48eebedc03d676c",
+    "bytes": 17564,
+    "python_files": 107
   },
   "source_control_counts": {
     "core_neural_development": 15,
@@ -99,6 +100,41 @@
       "status": "BOTH_ORIGINAL_WINDOWS_FAIL_REAL_COVERAGE",
       "exact_audit_artifact_sha256": "6133022119d6497e87f3f08bc5373c4714a14bc7f4a99969a0c9ff716b6ec8e9",
       "meta_train_duration_verified_official_bytes": 251064060656
+    },
+    "approved_v21_window": {
+      "status": "ACTUALLY_FROZEN_EXACTLY_VERIFIED",
+      "approval": {
+        "path": "plans/window_amendment_v2_1_20261019.json",
+        "sha256": "2a3fcfa77b4947a49a676f4f0f611ffedc9f8b19b7233bb73c2834b589285a29",
+        "bytes": 4878
+      },
+      "audit": {
+        "path": "audit/stieger_w1/window_amendment_v2_1_20261019/single_candidate_audit.json",
+        "sha256": "d43b1cf7063e731a82d55d6608669865389fe68d11119fb2b28ef6d8664ecbae",
+        "bytes": 57818
+      },
+      "frozen_window_proof": {
+        "path": "audit/stieger_w1/window_amendment_v2_1_20261019/frozen_window_verification.json",
+        "sha256": "ea7bd24c06ccaab734de54ac1e81ae4bdc758197417fe6dbaa729509e429b15b",
+        "bytes": 61442
+      },
+      "input_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+      "window_acceptance_sha256": "cf9c246cce77ac4274fea5ea34e72913d426e6fe0f92618de8cd1a5913d5c20a",
+      "participant_mean_retention": 0.8212698053916975,
+      "participant_mean_absolute_class_exclusion_gap": 0.04386125281436398,
+      "retained_original_lr_trials": 48871,
+      "original_lr_trials": 59399,
+      "context_s": [
+        0,
+        1.5
+      ],
+      "crop_s": [
+        0.25,
+        1.25
+      ],
+      "n_times": 128,
+      "original_v2_evidence_preserved": true,
+      "W7_frozen": false
     }
   },
   "real_development_profiles_completed": 0,
@@ -152,7 +188,8 @@
     "current_active_coordinators": 0,
     "maximum_simultaneous_coordinators": 1,
     "sequential_coordinator_starts_under_same_plan": 5,
-    "original_parallel_cutover_count": 1
+    "original_parallel_cutover_count": 1,
+    "scope": "historical completed Stieger396 metadata job; not current source execution"
   },
   "previous_0c11e8f_completed_full_suite": {
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
@@ -214,7 +251,7 @@
     "new_executable_changes_after_this_suite": true,
     "scope": "historical_pilot_evidence_extension_before_real_native_run_number_correction"
   },
-  "resumed_worker_dependency_comparison_scope": "Current bytes versus the earlier restart: native reader was corrected only after all 396 objects completed and coordinator exited; old af72 plan remains immutable completed history and must not be restarted with changed code.",
+  "resumed_worker_dependency_comparison_scope": "Historical restart comparison before v2.1; current dependency identity is the complete107-file manifest. Old af72 is completed immutable history, never restarted with new code.",
   "real_native_run_number_correction": {
     "status": "SOFTWARE_FIXED_SYNTHETIC_ACCEPTANCE_PASSED",
     "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
@@ -252,5 +289,33 @@
     "scientific_window_result_changed": false,
     "real_fits_completed": 0,
     "real_GPU_jobs_started": 0
+  },
+  "previous_0c8fac4_completed_full_suite": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
+    "passed": 1210,
+    "failed": 0,
+    "wall_seconds": 213.95,
+    "log_sha256": "c5c3b55725be217110fc108d792aa5cb52fd6c4cd9ad68d80401d7e26260e7a8",
+    "log_path": "audit/software_tests/run_number_correction_fullsuite_1210.log",
+    "new_executable_changes_after_this_suite": true,
+    "scope": "historical_0c8fac4_before_approved_v21_profile"
+  },
+  "approved_v21_software_extension": {
+    "unified_tests_passed": 1319,
+    "original_protocol_files_preserved": 52,
+    "approval_fixed_SHA": "2a3fcfa77b4947a49a676f4f0f611ffedc9f8b19b7233bb73c2834b589285a29",
+    "single_candidate_audit_fixed_SHA": "d43b1cf7063e731a82d55d6608669865389fe68d11119fb2b28ef6d8664ecbae",
+    "legacy_v2_exact_artifact_sha256": "6133022119d6497e87f3f08bc5373c4714a14bc7f4a99969a0c9ff716b6ec8e9",
+    "public_window_gate_requires_W1_complete": true,
+    "transaction_precommit_gate_cache_authorized": false,
+    "post_freeze_public_window_gate_cache_authorized": true,
+    "all_upstream_window_artifact_SHA_bound_to_pilot_and_source": true,
+    "R2_approval_audit_backup": {
+      "path": "audit/stieger_w1/window_amendment_v2_1_20261019/r2_backup_receipt.json",
+      "sha256": "500e35c2e0020ffe0ec80b7784c606f86e6c4f0fd3fc552335c74d66c7e14723",
+      "bytes": 3206
+    },
+    "real_scientific_or_engineering_fits": 0,
+    "GPU_or_RunPod_actions": false
   }
 }

@@ -3,6 +3,7 @@ from hashlib import sha256
 import json
 import re
 from pathlib import Path
+from .window_amendment import is_v21_contract, validate_v21_contract
 
 SOURCE_IDS = frozenset(("BNCI2014_001", "Cho2017", "Lee2019_MI", "PhysionetMI"))
 DEVELOPMENT_ID = "Stieger2021"
@@ -36,6 +37,11 @@ def validate_signal_contract(contract):
         raise ValueError("W1 window is not frozen; numerical caches and source fitting are blocked")
     if contract.get("channels") != list(CHANNELS) or contract.get("sfreq_hz") != 128:
         raise ValueError("Signal montage/sampling contract mismatch")
+    if is_v21_contract(contract):
+        # Structure only: the separate read-only window gate checks the pinned
+        # approval/audit bytes and every original meta-train metadata object.
+        validate_v21_contract(contract)
+        return digest(contract)
     profile = contract.get("selected_profile")
     windows = {"long": ([0, 3], [0.5, 2.5], 256), "short": ([0, 2], [0.5, 1.5], 128)}
     if profile not in windows:
