@@ -1,0 +1,470 @@
+{
+  "schema_version": "paper3-prospective-car3-sensitivity-design-v1",
+  "status": "CPU_CACHE_PREPARED_PROSPECTIVE_DESIGN_NOT_TRAINING_READY",
+  "created_at_utc": "2026-10-19T08:53:35.416592+00:00",
+  "scope": "Separate secondary sensitivity to actual common-reference C3/Cz/C4 measurements; preserve primary clinic11 H1/HS protocol and source roster.",
+  "design_only": true,
+  "training_ready": false,
+  "GPU_training_entry_implemented": false,
+  "actual_fits": 0,
+  "scientific_fits": 0,
+  "engineering_GPU_pilots": 0,
+  "current_allowed_GPU_hours": 0,
+  "training_started": false,
+  "external_payload_access_authorized_by_this_file": false,
+  "external_query_unseal_authorized_by_this_file": false,
+  "W7_algorithm_seal_sha256": null,
+  "cohort_family_seal_sha256": null,
+  "primary_comparison_unchanged": {
+    "input_contract_semantic_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+    "clinic11_H1_unchanged": true,
+    "HS_main_external_unchanged": true,
+    "three_channel_results_enter_primary_H1": false,
+    "legacy_baseline_v1_is_new_algorithm": false
+  },
+  "actual_CPU_preparation": {
+    "parent_manifest": {
+      "path": "cache/source_v2/source_cache.json",
+      "bytes": 437657,
+      "sha256": "bfc204577dfe51c1fc798c1241391ab63509fc2ad9ebfb267ba09254e01ae644"
+    },
+    "car3_manifest": {
+      "path": "cache/source_c3czc4_v1/source_cache3.json",
+      "bytes": 327933,
+      "sha256": "001d1e9c3810140c8b71b367c223bf61204c83e569971eb88de1cdffac7d9492"
+    },
+    "contract": {
+      "path": "contracts/sensitivity_car3_v1.json",
+      "bytes": 2483,
+      "sha256": "979905b370ba03fe25bf5021f6bf0a70382a837a77f1095c06ae678906984af4"
+    },
+    "contract_semantic_sha256": "b9c1b07f24915cb9359c5443a6d483859d3764a5e723e7010779be614c278dae",
+    "conversion_receipt": {
+      "path": "audit/external_expansion_20261019/round2/car3_preparation/conversion_receipt.json",
+      "bytes": 3054,
+      "sha256": "53d362ede2de85cc034df74b1172840ef5257c4c9806df90117d8a4193a96c88"
+    },
+    "independent_local_reread": {
+      "path": "audit/external_expansion_20261019/round2/car3_preparation/independent_output_reread.json",
+      "bytes": 1909,
+      "sha256": "0a0e71dabddf86dbd5fded11f74353e136f8208c156e661dbfdccd556fdb885a"
+    },
+    "targeted_tests_receipt": {
+      "path": "audit/external_expansion_20261019/round2/car3_preparation/targeted_tests_receipt.json",
+      "bytes": 1097,
+      "sha256": "a794d916eba3b2c69b64db41529bc4beee07ac45f099c0f84f0ebff21511bf52"
+    },
+    "source_provider_participant_ids": 224,
+    "source_valid_trials": 28830,
+    "source_excluded_trials": 0,
+    "dataset_counts": {
+      "BNCI2014_001": {
+        "provider_participant_ids": 9,
+        "valid_trials": 2592
+      },
+      "Cho2017": {
+        "provider_participant_ids": 52,
+        "valid_trials": 10520
+      },
+      "Lee2019_MI": {
+        "provider_participant_ids": 54,
+        "valid_trials": 10800
+      },
+      "PhysionetMI": {
+        "provider_participant_ids": 109,
+        "valid_trials": 4918
+      }
+    },
+    "same_source_UIDs_and_labels": true,
+    "new_independent_participants": 0,
+    "provenance_interpretation": "Same224 provider IDs and28830 original source trials transformed to a separate montage. Not additional subjects, trials or independent training evidence.",
+    "stage": "pre_rms_car3_temporal_demeaned_from_verified_float32_car11",
+    "normalization_applied": false,
+    "source_QC": "Exactly inherited original accepted11-channel QC/exclusions; no new native3-channel amplitude, person or cohort qualification.",
+    "mathematical_derivation": "LetS select C3,Cz,C4 andPn=I−11^T/n. Use P3 S on verified pre-RMS float32 CAR11 arrays. P3 S P11=P3 S in exact arithmetic; common linear temporal operators commute. Input/output float32 rounding remains. No re-filter/re-sample/re-crop or reconstruction of pre-cast nativefloat64.",
+    "actual_fit_claim": false,
+    "this_document_performs_network_or_R2": false
+  },
+  "physical_input_contract": {
+    "channels": [
+      "C3",
+      "Cz",
+      "C4"
+    ],
+    "native_measurement": "Actual monopolar/common-reference potentials on all three electrodes; common reference must be documented.",
+    "reference_after_selection": "CAR of exactly C3,Cz,C4",
+    "bipolar_derivations_allowed": false,
+    "BCIIV2b_allowed": false,
+    "BCIIV2b_reason": "Its three named signals are physical bipolar derivations. Matching labels C3/Cz/C4 and reapplyingCAR cannot reconstruct missing monopolar common-reference measurements.",
+    "missing_channel_interpolation_or_reference_relabeling_allowed": false,
+    "sfreq_hz": 128,
+    "context_s": [
+      0,
+      1.5
+    ],
+    "crop_s": [
+      0.25,
+      1.25
+    ],
+    "n_times": 128,
+    "band_hz": [
+      8,
+      30
+    ],
+    "unit": "V after authoritative native scale verification",
+    "normalization": "Future training path must implement the separately frozen jointRMS stage; numerical cache remains pre-RMS.",
+    "external_QC": "Freeze all native three-channel QC rules before opening external payloads; no threshold or montage selection from query outcomes."
+  },
+  "geometry_and_grid_design": {
+    "C": 3,
+    "d": 2,
+    "Q_shape": [
+      3,
+      2
+    ],
+    "Rref_shape": [
+      2,
+      2
+    ],
+    "traceless_generator_shape": [
+      2,
+      2
+    ],
+    "full_traceless_coordinate_dimension": 3,
+    "symmetric_traceless_coordinate_dimension": 2,
+    "skew_symmetric_coordinate_dimension": 1,
+    "full_learned_dictionary_shape": "3×r_full",
+    "full_generator_dimensions_proposed": [
+      1,
+      2
+    ],
+    "symmetric_generator_dimensions_proposed": [
+      1,
+      2
+    ],
+    "skew_generator_dimensions_proposed": [
+      1
+    ],
+    "CSP_components_maximum": 2,
+    "CSP_component_choices_proposed": [
+      1,
+      2
+    ],
+    "LoRA_rank_maximum": 2,
+    "LoRA_rank_choices_proposed": [
+      1,
+      2
+    ],
+    "original_dimension4_or8_accepted": false,
+    "original_LoRA_rank4_accepted": false,
+    "reuse_11channel_G_Rref_or_f0_allowed": false,
+    "grid_status": "Prospective feasible dimensional design only. Exact radius/learning rates/grids/seeds, selection rules, budgets and dimensional fairness must be independently registered using source/development only, then W7sealed. None selected by external performance.",
+    "dimension_interpretation": "r_full is dictionary coordinate dimension, not rank(exp(M)−I). Symmetric and skew paths retain their own feasible spaces; no silent full/symmetric/skew substitution."
+  },
+  "required_independent_scientific_implementation": {
+    "source3_f0": "Implement manifest-bound3channel source neural training/resume, actual training-only and LODO split/seed receipts and architecture identity. No11channel f0 transfer presented as an independently trained3channel model.",
+    "source3_Rref": "Estimate separate2×2 hierarchical source-training-only reference with source3 cache/UID/split receipts; never target/query covariance.",
+    "source3_G": "Train separate3channel generators/dictionaries and additive/metaLoRA artifacts against source3 f0/Rref. G not random in place of learnedG.",
+    "strong_controls_required_method_ids": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "B4",
+      "B5",
+      "B6",
+      "B7",
+      "B8",
+      "B9",
+      "B10",
+      "B11",
+      "P",
+      "P+PCT"
+    ],
+    "all_controls_use_same_three_channel_input": true,
+    "classical_controls": "Fit separate source3 CSP/rLDA and reference banks, with components<=2; no11channel sourcebank reuse.",
+    "parameter_controls": "Re-register all feasible lowrank/metaLoRA/additive/random/sym/skew comparisons and match adaptation budget/cost reporting; LoRA<=2; do not reuse oldrank4 or dimension4/8 grids.",
+    "real_episode_and_permissions": "Implement native orderedB20 support/later complete realrun or trulycontinuousblock interface, immutable UIDs/cohort map, capability-limited payload/query access and fixed prediction receipts.",
+    "evaluator_and_statistics": "Independent3channel method binding/evaluator, development-only selection, frozen cohort and multiple-testingfamily before predictions; maintain participant-level and dataset-level interpretation.",
+    "currently_implemented_training_and_GPU_entry": false,
+    "current_11channel_training_entry_accepted_for_this_design": false,
+    "required_software_mathematical_checks": [
+      "CAR3/Q/basis/Rref dimensions and float64 generator identity",
+      "full/symmetric/skew feasible rank guards including hard rejection4/8",
+      "CSP<=2 andLoRA<=2 enforcement",
+      "independent source/cache/reference/learned-artifact binding",
+      "real chronology, support-only capabilities, complete query-run membership",
+      "restart/resume and immutableprediction/cost/fit receipts"
+    ],
+    "CPU_cache_tests_are_scientific_training_evidence": false
+  },
+  "qualification_candidates": [
+    {
+      "dataset_id": "Leeuwis2021",
+      "reported_N": 55,
+      "eligible_N": null,
+      "status": "PRIORITY_LOCKED_CAR3_NATIVE_QUALIFICATION_CANDIDATE",
+      "payload_access_allowed": false,
+      "evidence": [
+        {
+          "path": "audit/external_expansion_20261019/round2/remaining_lr/findings.json",
+          "bytes": 83000,
+          "sha256": "11cb33f995bbfb5c35b15fcae9a2f5d7e5c705199945fed07e4d0f565cd81f76"
+        },
+        {
+          "path": "audit/external_expansion_20261019/round2/remaining_lr/evidence/leeuwis_readme.html",
+          "bytes": 1232,
+          "sha256": "9c311b90c1756ebd96b917cee49981d2c76c8369c93aa21ce4dd98d1aff3c1a4"
+        },
+        {
+          "path": "audit/external_expansion_20261019/round2/remaining_lr/evidence/leeuwis_data_report.pdf",
+          "bytes": 213294,
+          "sha256": "5eb4af657348f3b54715cd83520a223c41609e2d8244d4458aef60357f92f647"
+        }
+      ],
+      "native_layout_report": "16 actual EEG channels include C3/Cz/C4; common right-earlobe reference, AFz ground, 250 Hz, g.Nautilus and original g.BSanalyze calibration/feedback design.",
+      "native_units_status": "Only pinned secondary loader says microvolts→volts. Author README/Data Report do not explicitly establish numerical unit; native scale remains a gate.",
+      "column_binding": "Bind exact native CSV column names; author README and pinned MOABB place FC1/FC5 in different positions. Do not substitute MOABB positional channel order. Actual CSV header not yet read.",
+      "native_labels_and_time": "Author README: timestamp −3..5 s, cue 0, trial1..40, class−1 left/+1 right. No actual label vector read.",
+      "episode_prospect": "One calibration then three feedback runs,40 original trials/run,20 per hand by design. Freeze first20 original LR support with actual class coverage and later complete real run(s); retain original operator/feedback state distinctions, subject40 naming irregularity and actual global order.",
+      "remaining_gates": [
+        "native_header_and_units",
+        "cross_project_exposure_and_identity",
+        "first20_support_coverage_without_class_resampling",
+        "genuine_later_full_run",
+        "frozen_native_QC_and_clock",
+        "W7_algorithm_seal_then_authorized_qualification_then_cohort_family_seal"
+      ]
+    },
+    {
+      "dataset_id": "Kodera2023",
+      "reported_N": 29,
+      "eligible_N": null,
+      "status": "SCHEMA_AND_IDENTITY_CHRONOLOGY_RESERVE",
+      "payload_access_allowed": false,
+      "evidence": [
+        {
+          "path": "audit/external_expansion_20261019/round2/remaining_lr/findings.json",
+          "bytes": 83000,
+          "sha256": "11cb33f995bbfb5c35b15fcae9a2f5d7e5c705199945fed07e4d0f565cd81f76"
+        }
+      ],
+      "native_layout_report": "Pinned navigation reports nine shared electrodes including C3/Cz/C4 across16ch500Hz and9ch1000Hz cohorts; native header not inspected.",
+      "remaining_gates": [
+        "Original(date,person-token)29 groups are not verified independent biological subjects.",
+        "Single-class files do not establish first20 LR support with both classes; require genuine cross-file acquisition timestamps/run boundaries without class interleaving or filename sorting.",
+        "Native common-reference, units, marker clock, QC, access and statistical-family seals remain unresolved."
+      ]
+    },
+    {
+      "dataset_id": "MILimbEEG",
+      "reported_N": 60,
+      "eligible_N": null,
+      "status": "REPEATED_MI_RECORD_AND_TRUE_ORDER_RESERVE",
+      "payload_access_allowed": false,
+      "evidence": [
+        {
+          "path": "audit/external_expansion_20261019/round2/remaining_lr/findings.json",
+          "bytes": 83000,
+          "sha256": "11cb33f995bbfb5c35b15fcae9a2f5d7e5c705199945fed07e4d0f565cd81f76"
+        },
+        {
+          "path": "audit/external_expansion_20261019/round2/remaining_lr/evidence/milimb_author_OpenBCI_Data_Acquisition_AcquisitionProgram_main.py.txt",
+          "bytes": 7526,
+          "sha256": "e9aeb475c04a3533ef4f84fb3011d4b7ccd3ae73e35b82939f5cd1c986843dd2"
+        }
+      ],
+      "native_layout_report": "Original16-channel montage has C3/Cz/C4;125Hz,4s per trial, task2/3 = imagined closing left/right only when filename typeI; typeM is executed action.",
+      "conditional_B20_design": "If original protocol explicitly supports cross-record prefix support, >=3 genuine MI records could provide first2 complete records20LR support and a later complete10LR query record. One run10LR is not a permanent exclusion, but this design is unverified.",
+      "remaining_gates": [
+        "OriginalTable1 says only one participant did up to4 experiment repetitions, not that >=3 complete MI records are proven for that person or session.",
+        "Author acquisition code discards LSL timestamps; filenames retain task-specific ordinal, not true global cross-task trial order. Need original logs/validated archive metadata. Never construct chronology by class sorting.",
+        "Verify protocol cross-record support permission and genuine same-session/record identity before accepting any episode.",
+        "Heterogeneous amputee/hydrocephalus/post-COVID groups are not a newly qualified stroke cohort."
+      ]
+    }
+  ],
+  "other_reserves_not_auto_admitted": [
+    {
+      "dataset_id": "Liu2024",
+      "reported_N": 50,
+      "population_reported": "acute ischemic stroke, reported 1–30 days",
+      "status": "CLINICAL_SCHEMA_QUALIFICATION_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/clinical/clinical_findings.json",
+        "sha256": "72eb9681b999bcf6589f95faf8db8efd8dd2320d89ccc7ac49c63a8a9b2cb6eb"
+      },
+      "remaining_gates": [
+        "Native C3/Cz/C4/common-reference header and units; raw→EDF identity; ambiguous trial count/anchor; genuine ordered B20 and later run."
+      ]
+    },
+    {
+      "dataset_id": "HefmiIch2025",
+      "reported_N": 37,
+      "population_reported": {
+        "intracerebral_hemorrhage": 20,
+        "healthy": 17
+      },
+      "status": "CLINICAL_SCHEMA_AND_CLOCK_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/recent/recent_findings.json",
+        "sha256": "8835cfb12f601af05d3d9e46a915bfb5462a932e6eee0adf30cffa91e491e380"
+      },
+      "remaining_gates": [
+        "Original channel-table/header conflict, file→person/session mapping and fNIRS-based marker repair provenance; keep healthy and ICH strata distinct."
+      ]
+    },
+    {
+      "dataset_id": "Farabbi2020",
+      "reported_N": 12,
+      "population_reported": "reported healthy",
+      "status": "MONTAGE_AND_NATIVE_ORDER_QUALIFICATION_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/additional/additional_findings.json",
+        "sha256": "0ded1caff15cef88e5f87ca693a221a37d9f654ee6b95b64c3d32cdea3128f80"
+      },
+      "remaining_gates": [
+        "Actual native common-reference electrode list and units, authorized source provenance and genuine ordered B20/later query."
+      ]
+    },
+    {
+      "dataset_id": "Batista2022",
+      "reported_N": 20,
+      "population_reported": "reported cohort; qualified population not frozen",
+      "status": "MONTAGE_AND_NATIVE_ORDER_QUALIFICATION_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/additional/additional_findings.json",
+        "sha256": "0ded1caff15cef88e5f87ca693a221a37d9f654ee6b95b64c3d32cdea3128f80"
+      },
+      "remaining_gates": [
+        "Actual header/common-reference provenance, source identities and true run chronology."
+      ]
+    },
+    {
+      "dataset_id": "Vagaja2023",
+      "reported_N": 26,
+      "population_reported": "reported cohort; qualified population not frozen",
+      "status": "MONTAGE_AND_NATIVE_ORDER_QUALIFICATION_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/additional/additional_findings.json",
+        "sha256": "0ded1caff15cef88e5f87ca693a221a37d9f654ee6b95b64c3d32cdea3128f80"
+      },
+      "remaining_gates": [
+        "Actual header/common-reference provenance, source identities and true run chronology."
+      ]
+    },
+    {
+      "dataset_id": "Zhou2016",
+      "reported_N": 4,
+      "population_reported": "reported healthy",
+      "status": "SMALL_COHORT_NATIVE_QUALIFICATION_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/benchmarks/benchmark_qualification_registry.json",
+        "sha256": "880e5c71e4b24ae9f46c8aadc8c17f28b84bfccb06f2309cc2ecad285fbdc610"
+      },
+      "remaining_gates": [
+        "Native common-reference montage and clock, ordered B20/later complete run, prior P1/P2 exposure and biological identity audit."
+      ]
+    },
+    {
+      "dataset_id": "Alawieh2025",
+      "reported_N": 27,
+      "population_reported": {
+        "healthy": 25,
+        "spinal_cord_injury": 2
+      },
+      "status": "INTERVENTION_AND_POPULATION_SENSITIVITY_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/recent/recent_findings.json",
+        "sha256": "8835cfb12f601af05d3d9e46a915bfb5462a932e6eee0adf30cffa91e491e380"
+      },
+      "remaining_gates": [
+        "32/64-channel subgroup header matching, MI/feedback/TESS or rest/crossover provenance and clock; two SCI participants do not form an ordinary stroke cohort."
+      ]
+    },
+    {
+      "dataset_id": "SEFMEID2026",
+      "reported_N": 50,
+      "population_reported": "reported healthy",
+      "status": "CONTROLLED_ACCESS_DUA_RESERVE",
+      "eligible_N": null,
+      "new_independent_N": null,
+      "payload_access_allowed": false,
+      "selection_use_allowed": false,
+      "evidence": {
+        "path": "audit/external_expansion_20261019/recent/recent_findings.json",
+        "sha256": "8835cfb12f601af05d3d9e46a915bfb5462a932e6eee0adf30cffa91e491e380"
+      },
+      "remaining_gates": [
+        "Actual DUA approval and authorized terms first; then native header/common-reference, clocks and run/order audit. No access approval is inferred and no application/email is sent."
+      ]
+    }
+  ],
+  "candidate_count_interpretation": {
+    "eligible_external_people": null,
+    "eligible_external_datasets": null,
+    "reported_N_sum_intentionally_omitted": true,
+    "reason": "Nominal enrollment differs from retainedB20/query qualification, physicalmeasurement compatibility, priorproject exposure, crosslibraryidentity and independent study cluster. Source224 are existing providerIDs, not new independent validationN."
+  },
+  "phase_order_and_gates": [
+    {
+      "phase": 1,
+      "name": "SOURCE_DEVELOPMENT_IMPLEMENTATION_AND_USER_CONTROLLED_GPU_READINESS",
+      "requirements": "Implement separate3channel paths, source-onlyRref/G/strongcontrols and mathematical/permission tests; actual GPU pilot/fit needs later usermanualboot and independently authorized nonzero budget. Currentbudget0."
+    },
+    {
+      "phase": 2,
+      "name": "W7_ALGORITHM_AND_ANALYSIS_SEAL",
+      "requirements": "Freeze3channel scientific contract, source/development artifacts, complete feasible grids, rank choices, criteria, fixed externalnativeQC and permittedqualification scope; produceimmutableSHA. Noquery-driven selection."
+    },
+    {
+      "phase": 3,
+      "name": "CONTROLLED_NATIVE_QUALIFICATION",
+      "requirements": "Only after phase2and actual accesspermission, permit explicitly scoped native header/units/clock/identity/order/B20 qualification and fixedQC. Keep predictions and sealedquery/outcome access disabled except strictly authorizedqualificationmechanism; this document grants none."
+    },
+    {
+      "phase": 4,
+      "name": "COHORT_AND_STATISTICAL_FAMILY_SEAL",
+      "requirements": "Freeze actualeligibleparticipants, originalrun/block boundaries, duplicatecluster/exposure decisions, excludedparticipantswithreasons, endpoints andmultiplicityfamily BEFORE predictions. NominalN never substitutes for thisseal."
+    },
+    {
+      "phase": 5,
+      "name": "FIXED_PREDICTIONS_AND_FULL_RECEIPTS",
+      "requirements": "Execute only the sealed fixed3channel sensitivity protocol, store originalUIDpredictions/costs and actualbackup/fullGETverification; no data-dependent reranking or promoting sensitivity into primaryH1."
+    }
+  ],
+  "minimal_remaining_gaps": [
+    "Separate3channel source training/GPU entry and source3 model/reference/learnedG/allstrongcontrol implementations with matching dimensions and safe artifact gates.",
+    "Actual native unit, common-reference, identity and trueB20/later-query qualification; Leeuwis first, Kodera/MILimb remain conditional reserves.",
+    "Source/development-only scientific modelselection, source3 scientific artifact generation and W7algorithmseal; then authorizednativequalification and cohort/familyseal before predictions.",
+    "Later usermanualGPUboot and explicit nonzero3channel trainingbudget. No training orqueryunseal follows from thisprospectivedesign."
+  ]
+}
