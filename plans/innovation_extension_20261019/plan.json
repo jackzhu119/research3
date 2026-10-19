@@ -1,0 +1,212 @@
+{
+  "schema_version": "paper3-prospective-innovation-evidence-extension-v1",
+  "created_utc": "2026-10-19T09:24:23.616176+00:00",
+  "status": "DESIGN_PREPARED_NOT_EXECUTED",
+  "main_H1_changed": false,
+  "main_H1": {
+    "dataset": "HSStroke2026_v6",
+    "contrast": "P_vs_frozen_Bstar",
+    "acquired_budget": 20
+  },
+  "original_input_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+  "external_registry_sha256": "3610ad80c7ce290e2a0ee3fb3226e9c291b1c5b4f0015975500f02e05c1d4e4a",
+  "scope": "main clinic11 source/development mechanisms only; not a CAR3 training amendment",
+  "execution_entry_implemented": false,
+  "GPU_execution_authorized_by_this_file": false,
+  "current_extension_GPU_hours": 0,
+  "actual_fits": 0,
+  "actual_results": null,
+  "external_query_access_allowed": false,
+  "novelty_claim_verified": false,
+  "W7_algorithm_seal_sha256": null,
+  "candidate_extensions": [
+    {
+      "id": "I1",
+      "priority": 1,
+      "name": "reciprocal direction-and-map mechanism panel",
+      "category": "new controlled mechanism extension of existing H2; not a new primary endpoint",
+      "question": "Does the learned low-dimensional direction restriction explain benefit beyond a favourable synthetic corruption family or independently tuned learned-additive adaptation?",
+      "reuse": [
+        "same frozen f0 and source-only Rref",
+        "actual independently learned P and B8 dictionaries",
+        "original B20 support UIDs and fixed future query UIDs",
+        "same method-specific frozen configurations and original heads"
+      ],
+      "anchors": [
+        "P_dictionary",
+        "B8_dictionary"
+      ],
+      "mapping_families": {
+        "exp": {
+          "corruption": "exp(-a H)",
+          "known_input_replay_correction": "exp(a H)"
+        },
+        "additive": {
+          "corruption": "solve(I+a H, I)",
+          "known_input_replay_correction": "I+a H"
+        }
+      },
+      "directions": [
+        "unit-Frobenius in-anchor-span",
+        "unit-Frobenius orthogonal-to-anchor-span with matched symmetric/skew energy when feasible"
+      ],
+      "dose_fraction_of_frozen_radius": [
+        0.5,
+        1.0
+      ],
+      "unperturbed_cell": "one shared zero-dose cell; do not duplicate by family/anchor",
+      "cell_count_per_episode_per_pipeline": 17,
+      "radius_rule": "Exactly one common perturbation radius min(rho_P,rho_B8), obtained from the unique already-frozen native P and B8 configurations. Apply the two listed dose fractions only; never traverse the registered rho grid again. Original method-specific fit radii stay unchanged; all methods receive the identical corruption for a cell.",
+      "reference_frame": "same explicit whitened effective 10D coordinates and Q/Rref; inject after original preprocessing and before joint trial RMS",
+      "matched_energy_rule": "equal generator norm and symmetric/skew fractions within each pair; report visible conditioning and actual signal changes. If complementary subspace cannot match, retain unavailable cell and reason; do not silently use an easier direction.",
+      "cross_family_rule": "coefficient dose is not equal signal or singular-value distortion across exp/additive; report both and refrain from claiming matched physical perturbation",
+      "method_ids": [
+        "B0",
+        "B1",
+        "B6",
+        "B8",
+        "B9",
+        "P",
+        "actual_frozen_Bstar"
+      ],
+      "method_id_semantics": {
+        "B4": "classical CSP transfer, not LoRA",
+        "B5": "classical tangent-space transfer",
+        "B6": "free spatial LoRA",
+        "B8": "independently trained learned-additive basis",
+        "B9": "random-generator exp"
+      },
+      "fairness": "All methods receive exactly the same corrupted support/query and acquired B20 ledger for a cell. Apply teacher/PCT contracts consistently if extra PCT arms are later registered. A repeated synthetic view is neither a new participant nor another independent clinical replicate.",
+      "analysis": "aggregate sessions/directions/cells and five fixed pipelines within participant before paired participant summaries; show anchor x family x in/out x dose rather than one favourable cell",
+      "pilot_plan": {
+        "planned_max_development_people": 2,
+        "planned_pipelines": 1,
+        "metadata_only_choice": "first eligible validation IDs and first eligible physical session in the frozen metadata order, first original frozen pipeline seed; no internal holdout or external data",
+        "engineering_advance_rule": "only provenance, input replay, finite outputs, budget accounting and measured resource bounds; never an accuracy advantage criterion",
+        "static_target_fit_upper_bound": 204,
+        "static_inner_gradient_step_upper_bound": 2040
+      },
+      "full_panel_static_upper_bounds": {
+        "planned_max_validation_people": 11,
+        "planned_pipelines": 5,
+        "cells_per_episode": 17,
+        "max_adaptive_methods_after_deduplication": 6,
+        "target_fits": 5610,
+        "inner_gradient_steps_at_original_10_per_fit": 56100,
+        "extra_source_or_meta_training_fits": 0,
+        "is_a_resource_estimate_not_measured_cost": true,
+        "actual_number_requires_frozen_native_episode_roster": true,
+        "planned_max_episodes_per_person_per_pipeline": 1,
+        "total_max_episodes": 55
+      },
+      "important_limits": [
+        "An exact inverse is an input-replay control, not an accuracy upper bound or feasible deployment oracle.",
+        "Orthogonal generator direction does not imply functionally uncorrectable EEG: data stabilizers, normalization and head adaptation can yield equivalent predictions.",
+        "Generating shifts in a learned span is a capacity test; it does not prove the span matches natural cross-session shifts or real electrode movement.",
+        "Synthetic drift may distort labels physiologically; retained labels are a simulation assumption, not a newly validated clinical task."
+      ],
+      "falsifiers": [
+        "P wins only on P-anchor/exp cells and the advantage reverses on B8-anchor/additive cells.",
+        "B8 matches P on native data; then no empirical matrix-exp advantage may be claimed.",
+        "Random directions or head-only adaptation explain the same recovery."
+      ],
+      "paired_map_replay_diagnostic": {
+        "scope": "development-only counterfactual forward diagnostic; not a replacement for independently optimized B8",
+        "anchors": [
+          "actual P-fitted M and target head",
+          "actual B8-fitted M and target head"
+        ],
+        "procedure": "Within each anchor keep M, target head, source network, input, normalization and reference identical; replay exp(M) and I+M, retaining both directions of the comparison.",
+        "extra_fits": 0,
+        "extra_inference_cost": "measure actual forward passes/time; not free",
+        "interpretation": "fixed-M local mapping effect, not a causal guarantee or fair end-to-end ranking between separately trained algorithms"
+      }
+    },
+    {
+      "id": "I2",
+      "priority": 2,
+      "name": "support-only observable shift proxy and benefit boundary",
+      "category": "exploratory new moderator; not complete correctability, a causal mechanism or an admission rule",
+      "question": "Is a pre-outcome, support-only locally covariance-visible direction score associated with later participant-level P-minus-Bstar benefit?",
+      "inputs": "same pre-RMS support prefix only, fixed source/development-only reference and frozen learned dictionary; no query covariance or labels; no extra labels",
+      "mathematical_requirement": "Use an explicitly derived observable push-forward (G C+C G^T), including trace/shape normalization derivative where used, and project the same-frame observed covariance contrast onto its SVD image. Do not project log covariance directly onto the full generator span. An averaged post-trial-RMS covariance is not generally T C T^T.",
+      "mandatory_visibility_counterexample": "At C=I, every skew generator has G C+C G^T=0; rotations may be invisible. A zero image or unmeasurable contrast is undefined/not identifiable, never a fabricated zero score.",
+      "controls": [
+        "raw observed shift magnitude",
+        "observable image rank and matched random-dictionary image dimension",
+        "source reference and covariance-estimator descriptors fixed before evaluation",
+        "gauge-rotation invariance of any subspace score"
+      ],
+      "analysis": "continuous participant-level secondary summaries with uncertainty and no query-derived thresholds; development-only implementation and validation first. No new gate, method switch, exclusion or promise to predict individual patient benefit.",
+      "implementation_status": "requires a validated observation map and estimators; not implemented by this plan",
+      "falsifiers": [
+        "association absent or unstable after participant aggregation",
+        "only covariance magnitude or observable dimension explains association",
+        "skew/normalization counterexamples invalidate the chosen proxy"
+      ]
+    },
+    {
+      "id": "I3",
+      "priority": 3,
+      "name": "robust benefit summaries from already planned predictions",
+      "category": "analysis enhancement; not a new algorithm or claim that budget curves/negative flips are new",
+      "proposals": [
+        "paired P-minus-Bstar integral over the originally fixed 4/8/12/16/20-label curve, if and only if the registered budget entry produces real gated predictions",
+        "leave-one-participant-out influence on cohort mean differences and intervals",
+        "participant-level simultaneous positive contrast versus B8, B9 and Bstar with ties/unknowns retained"
+      ],
+      "budget_qualification": "same future query beyond acquired B20; hiding labels does not reduce acquired trials or waiting time. Current formal episode/evaluator remains B20; smaller-budget mathematical kernels do not establish an accepted budget-curve transaction.",
+      "statistical_qualification": "no p-values until the complete analysis family and actual cohorts are frozen; no pooling trials/sessions/seeds as people; no changing H1 or deleting influential participants",
+      "training_cost": "no extra fits for influence and simultaneous-contrast summaries if original predictions exist; budget-curve fits and counterfactual predictions have their own actual cost",
+      "falsifiers": [
+        "mean advantage depends on one participant",
+        "gain exists only against random or weak methods",
+        "apparent low-label efficiency disappears under actual acquired-trial accounting"
+      ]
+    }
+  ],
+  "nearest_neighbour_policy": {
+    "required": "Reconcile recent spatial low-rank and matrix-exp/congruence adaptation literature before any first/unique claim.",
+    "mapping": "B6/B10/B8 are family controls; do not call them faithful reproductions of a new paper without verified mathematical/code mapping.",
+    "transductive_limit": "A nearest method using whole-target unlabeled statistics cannot access this protocol sealed query; a support-only port must be named as a port, never an exact original replication.",
+    "body_code_discrepancy": "If a paper abstract asserts a low-rank adapter but body/code lacks the parameterization, record the implementation gap instead of inventing it."
+  },
+  "phase_gates": [
+    "finish actual native source/development W1-W6 artifacts before any model-dependent diagnostic",
+    "seal extension choice, formulas, dose/method cells, provenance and resource ledger before its first result",
+    "retain failed/unavailable cells and negative outcomes",
+    "no new scientific run until later user manual GPU boot and valid run-specific positive budget",
+    "no external prediction until W7 algorithm seal and native qualification plus actual cohort/family seal",
+    "prepare all counterfactual predictions before any external label reveal if later formally included; W9 summaries cannot silently rerun a changed model"
+  ],
+  "prohibited_novelty_claims": [
+    "first matrix exponential or invertible spatial EEG adaptation",
+    "first low-rank spatial adapter or first low-label prefix calibration",
+    "individual G components as identifiable causal neurophysiology",
+    "guaranteed accuracy improvement or patient safety from invertibility/bounds",
+    "new independent people from source cache derivatives or synthetic views"
+  ],
+  "review_evidence": [
+    {
+      "path": "audit/innovation_extension_20261019/mathematical_review.json",
+      "sha256": "a646ed946b646e348f7ac40396f5a06b95035d40feb265375d477bf4a9f17180",
+      "bytes": 13525
+    },
+    {
+      "path": "audit/innovation_extension_20261019/design_review.json",
+      "sha256": "056219360cfd165704932941921afef7ede50a3cec6808936bde1ae32dd18be1",
+      "bytes": 24006
+    },
+    {
+      "path": "audit/innovation_extension_20261019/literature/findings.json",
+      "sha256": "a74442a451477db3d5ddc316c0a9a8ed04f1b7ed528fba625b4a817505d85c1d",
+      "bytes": 27648
+    },
+    {
+      "path": "audit/innovation_extension_20261019/literature/sources_index.json",
+      "sha256": "22cfac095ea939b937fe8d5f080478b18021ccad335541ba9bf06f215452873e",
+      "bytes": 9606
+    }
+  ],
+  "external_registry_path": "plans/external_expansion_20261019_round2/registry.json"
+}
