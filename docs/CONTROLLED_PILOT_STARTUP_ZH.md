@@ -1,6 +1,6 @@
 # 论文3固定包：受控 source pilot 启动说明
 
-此说明供未来交付的真实 READY 包使用，不表示当前 W2 或 READY 已完成。完整命令以**包内 `STARTUP.md`** 为准。正式科研 fits 尚未发生，W7 尚未冻结；外测 query 保持封存。
+此说明适用于通过实际交付验收的 READY 包。就绪以外层最终交付回执及 `BUILD.json.ready_for_user_boot_pilot` 为准；包内 `status/delivery.json` 是打包前快照。完整命令以**包内 `STARTUP.md`** 为准。正式科研 fits 尚未发生，W7 尚未冻结；外测 query 保持封存。
 
 1. 确认实际交付状态为 `READY_WAITING_USER_GPU_BOOT`，包的 SHA256 与随附校验文件一致，且 `BUILD.json` 中 `ready_for_user_boot_pilot` 为 `true`。标有 CHECKPOINT 的包不能开训。解压后进入 `paper3/`，先核验 `EXECUTION_MANIFEST.sha256`。
 2. 仅由用户本人手动开机。使用 CPython 3.12、Linux x86_64 和全新虚拟环境；驱动与固定 CUDA12.8 profile 的实际兼容性、GPU 恢复和计时均须开机后实测。工具不会启动或重启 RunPod。
