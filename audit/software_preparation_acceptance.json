@@ -1,16 +1,16 @@
 {
   "schema_version": "paper3-software-preparation-acceptance-v1",
-  "recorded_at_utc": "2026-10-19T01:23:51.554754+00:00",
-  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_APPROVED_V21_W1_FROZEN_SOURCE_W2_PENDING",
+  "recorded_at_utc": "2026-10-19T03:47:34.628471+00:00",
+  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_SMALL_EDF_SCHEDULER_SOURCE_W2_PENDING",
   "scope": "CPU_SOFTWARE_AND_SYNTHETIC_MATHEMATICAL_ACCEPTANCE_ONLY",
   "latest_completed_full_suite": {
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
-    "passed": 1319,
+    "passed": 1371,
     "failed": 0,
     "exit_code": 0,
-    "wall_seconds": 239.46,
-    "log_sha256": "d186cf28037030030c350c1766bd890139a5d26b1c3a52b56ac0f359ce717b10",
-    "log_path": "audit/software_tests/approved_window_v21_fullsuite_1319.log",
+    "wall_seconds": 264.81,
+    "log_sha256": "d5c3e817019e7f052cb302f9c8baa4448abdcbde4d3a5b3615f2ff0bab4df279",
+    "log_path": "audit/software_tests/small_edf_fullsuite_1371.log",
     "new_executable_changes_after_this_suite": false
   },
   "original_protocol_files_verified": 52,
@@ -39,9 +39,9 @@
   "W5_scientific_stage_complete": false,
   "code_manifest": {
     "path": "audit/software_code_manifest.json",
-    "sha256": "caed085b55c4f751bbddbec7f4a7a9067319c92a20c99410c48eebedc03d676c",
-    "bytes": 17564,
-    "python_files": 107
+    "sha256": "b47678b0784d2f4ffb99ba8409d7cd8196213af51e926667865205bc395e7c7e",
+    "bytes": 17919,
+    "python_files": 109
   },
   "source_control_counts": {
     "core_neural_development": 15,
@@ -73,7 +73,8 @@
     "unknown staging, missing journal, corrupt retained receipts, and blocked clocks stop new dispatch and drain inflight files",
     "same-device future engineering pilot must retain fixed source-only checkpoint-reloaded predictions and independently recomputed metrics; CPU synthetic verification only",
     "exact finite pilot result manifest and manual full-GET backup instructions retain failed status and actual update lower bounds",
-    "pilot dependency and output paths reject symlinks before any read or write; checkpoint finalization failure cannot erase actual training state"
+    "pilot dependency and output paths reject symlinks before any read or write; checkpoint finalization failure cannot erase actual training state",
+    "small EDF scheduling: serial nonPhysio gate, cross-scope 16 durable leases, full staging cap, startup/pre-body cgroup checks, retained partial failure stops dispatch and drains peer; synthetic recovery only"
   ],
   "deferred_software": [
     "drift-PCA frozen implementation choices and formal estimator",
@@ -317,5 +318,41 @@
     },
     "real_scientific_or_engineering_fits": 0,
     "GPU_or_RunPod_actions": false
+  },
+  "small_edf_operational_preparation": {
+    "recorded_at_utc": "2026-10-19T03:47:34.628471+00:00",
+    "status": "CPU_SOFTWARE_AND_SYNTHETIC_RECOVERY_ACCEPTED",
+    "previous_worker_drained": true,
+    "new_worker_started": false,
+    "same_505_plan": true,
+    "same_cumulative_source_journals": true,
+    "scientific_selection_changed": false,
+    "max_file_lifecycles": 16,
+    "max_concurrent_body_transfers": 16,
+    "max_small_raw_bytes": 16777216,
+    "parallel_native_parsers": 1,
+    "serial_nonphysio_objects_required": 178,
+    "physio_objects": 327,
+    "additional_synthetic_tests_passed": 52,
+    "full_suite_passed": 1371,
+    "old_code_files_byte_identical": 107,
+    "production_module_sha256": "57fafa150c158c9c7cea8c94e260e86dd0fe50819010f6c130372d6cc3924fc8",
+    "test_sha256": "1aa2ef83951281d2d9a3bb27ca5dbf8f8c10e353104a3b758f66debb32126ee6",
+    "drain_confirmation": "audit/source_preparation/small_file_handoff_20261019/drain_confirmation.json",
+    "measured_official_small_file_download_seconds": [
+      232.41339347499888,
+      236.69051024800137
+    ],
+    "scope": "operational CPU scheduling only; same 505 scientific selection, original cumulative byte/wall journals and limits; no real fits/GPU"
+  },
+  "previous_c6b6bc1_completed_full_suite": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
+    "passed": 1319,
+    "failed": 0,
+    "exit_code": 0,
+    "wall_seconds": 239.46,
+    "log_sha256": "d186cf28037030030c350c1766bd890139a5d26b1c3a52b56ac0f359ce717b10",
+    "log_path": "audit/software_tests/approved_window_v21_fullsuite_1319.log",
+    "new_executable_changes_after_this_suite": true
   }
 }
