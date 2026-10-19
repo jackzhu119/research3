@@ -351,6 +351,7 @@ def software_scheduler(tmp_path, monkeypatch):
     monkeypatch.setattr(base, "aggregate_inventory", aggregate)
     client = SimpleNamespace(close=lambda: setattr(state, "close_count", state.close_count+1))
     def run(**kwargs):
+        kwargs.setdefault("audit_fn", native)
         for entry in plan["files"]:
             if entry["object_id"] in state.completed:
                 path = tmp_path / "audit/source_preparation/batches" / plan["plan_sha256"] / "objects" / entry["object_id"] / "state.json"

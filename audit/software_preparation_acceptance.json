@@ -1,16 +1,16 @@
 {
   "schema_version": "paper3-software-preparation-acceptance-v1",
-  "recorded_at_utc": "2026-10-19T03:47:34.628471+00:00",
-  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_SMALL_EDF_SCHEDULER_SOURCE_W2_PENDING",
+  "recorded_at_utc": "2026-10-19T04:28:20.996435+00:00",
+  "status": "CPU_SOFTWARE_ACCEPTANCE_PASSED_VERSIONED_PHYSIONET_TRANSPORT_AND_CLOCK_SOURCE_W2_PENDING",
   "scope": "CPU_SOFTWARE_AND_SYNTHETIC_MATHEMATICAL_ACCEPTANCE_ONLY",
   "latest_completed_full_suite": {
     "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=. OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q",
-    "passed": 1371,
+    "passed": 1544,
     "failed": 0,
     "exit_code": 0,
-    "wall_seconds": 264.81,
-    "log_sha256": "d5c3e817019e7f052cb302f9c8baa4448abdcbde4d3a5b3615f2ff0bab4df279",
-    "log_path": "audit/software_tests/small_edf_fullsuite_1371.log",
+    "wall_seconds": 301.43,
+    "log_sha256": "8134493b6a9a88deaaa263f24f6839afe175bd54e769778d87e2fef794385a38",
+    "log_path": "audit/software_tests/physionet_revision_fullsuite.log",
     "new_executable_changes_after_this_suite": false
   },
   "original_protocol_files_verified": 52,
@@ -39,9 +39,9 @@
   "W5_scientific_stage_complete": false,
   "code_manifest": {
     "path": "audit/software_code_manifest.json",
-    "sha256": "b47678b0784d2f4ffb99ba8409d7cd8196213af51e926667865205bc395e7c7e",
-    "bytes": 17919,
-    "python_files": 109
+    "sha256": "87e2cd22f37f8d96aebd020daa6f57872526f60b6b904fefbc3ce47d373ce3a0",
+    "bytes": 19291,
+    "python_files": 117
   },
   "source_control_counts": {
     "core_neural_development": 15,
@@ -74,7 +74,11 @@
     "same-device future engineering pilot must retain fixed source-only checkpoint-reloaded predictions and independently recomputed metrics; CPU synthetic verification only",
     "exact finite pilot result manifest and manual full-GET backup instructions retain failed status and actual update lower bounds",
     "pilot dependency and output paths reject symlinks before any read or write; checkpoint finalization failure cannot erase actual training state",
-    "small EDF scheduling: serial nonPhysio gate, cross-scope 16 durable leases, full staging cap, startup/pre-body cgroup checks, retained partial failure stops dispatch and drains peer; synthetic recovery only"
+    "small EDF scheduling: serial nonPhysio gate, cross-scope 16 durable leases, full staging cap, startup/pre-body cgroup checks, retained partial failure stops dispatch and drains peer; synthetic recovery only",
+    "versioned original EDF TAL inward sample boundaries retain clipped MNE and original annotation evidence with unchanged UIDs",
+    "explicit official unsigned mirror keeps all canonical identities and requires whole-file official SHA before native parse and aggregate",
+    "immutable failed-attempt snapshots and exact-code retry revisions preserve original body/wall budget and native three-object R2 evidence",
+    "completed retry state and canonical index remain consistent after a legitimate owned-cache restore interruption"
   ],
   "deferred_software": [
     "drift-PCA frozen implementation choices and formal estimator",
@@ -258,24 +262,24 @@
     "recorded_at_utc": "2026-10-18T15:32:02.634183+00:00",
     "files": [
       {
+        "bytes": 11199,
         "path": "p3work/adapters/stieger_native.py",
-        "sha256": "9f39dfc66e20c60afb342e41a6ff517808af977a9c2059ebc6a6fecb95c3182e",
-        "bytes": 11199
+        "sha256": "9f39dfc66e20c60afb342e41a6ff517808af977a9c2059ebc6a6fecb95c3182e"
       },
       {
+        "bytes": 43688,
         "path": "p3work/episodes.py",
-        "sha256": "348604283251b8d50a34c5b0545a895afb7bbaa024ff82d7c62be11e30504a65",
-        "bytes": 43688
+        "sha256": "348604283251b8d50a34c5b0545a895afb7bbaa024ff82d7c62be11e30504a65"
       },
       {
+        "bytes": 11872,
         "path": "tests/test_stieger_native.py",
-        "sha256": "128c1b8c19336d227428c385733ce2b7f9711efe337b5966c239f7f065230773",
-        "bytes": 11872
+        "sha256": "128c1b8c19336d227428c385733ce2b7f9711efe337b5966c239f7f065230773"
       },
       {
+        "bytes": 47494,
         "path": "tests/test_episodes.py",
-        "sha256": "d8a9e92acfeeacdfeb4552cde21d483741d29a8e6e5dd72e8cc52f04cb1608cd",
-        "bytes": 47494
+        "sha256": "d8a9e92acfeeacdfeb4552cde21d483741d29a8e6e5dd72e8cc52f04cb1608cd"
       }
     ],
     "targeted_native_cache_metadata_tests_passed": 41,
@@ -354,5 +358,15 @@
     "log_sha256": "d186cf28037030030c350c1766bd890139a5d26b1c3a52b56ac0f359ce717b10",
     "log_path": "audit/software_tests/approved_window_v21_fullsuite_1319.log",
     "new_executable_changes_after_this_suite": true
+  },
+  "actual_source_clock_diagnostic": {
+    "path": "audit/source_preparation/official_mirror_handoff_20261019/S100R08_tal_v1_bounded_context_audit_geometry.json",
+    "sha256": "f743990976e06ce920afb20a9a788a329f8502f5ca73a7370e950250c6520aef",
+    "real_contexts_read": 12,
+    "native_context_shape": [
+      11,
+      192
+    ],
+    "scope": "CPU_NATIVE_READER_DIAGNOSTIC_ONLY_NOT_PRODUCTION_CACHE_OR_FIT"
   }
 }

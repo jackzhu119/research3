@@ -20,7 +20,8 @@ import numpy as np
 
 from .contracts import CHANNELS, SOURCE_IDS, digest, file_digest, validate_signal_contract
 from .training_state import local_path
-from tools.prepare_source_cache import expected_source_objects
+from tools.prepare_source_cache import (SourceCacheGateError, expected_source_objects,
+    verify_native_reader_provenance)
 from tools.r2_restore import load_verified_receipt
 from tools.r2_restore import backup as _backup
 from tools.source_preparation_batch import VERSIONS
@@ -37,6 +38,7 @@ _LABELS = {"BNCI2014_001": {1: "left_hand", 2: "right_hand"},
     "Lee2019_MI": {1: "right_hand", 2: "left_hand"}, "PhysionetMI": {"T1": "left_hand", "T2": "right_hand"}}
 _EXCLUSIONS = {"insufficient_original_task_context", "Nonfinite context", "Zero/nonfinite trial energy"}
 _SI_FACTORS = {"V": 1.0, "uV": 1e-6, "µV": 1e-6, "mV": 1e-3}
+_READER_FIELDS = ("native_reader_revision", "physionet_tal_reader_sha256", "source_dispatch_sha256")
 
 
 def _validate_context_and_qc(row, original, contract, signal_sha, stored_signal):
@@ -177,7 +179,7 @@ def verify_source_cache_acceptance(cache):
     adapter_path = local_path(root, "p3work/adapters/source_native.py")
     adapter_sha = file_digest(adapter_path)
     artifacts[adapter_path.relative_to(root).as_posix()] = adapter_sha
-    native, people = {}, set()
+    native, people, reader_revisions, person_reader_revisions = {}, set(), {}, {}
     raw_receipt_descriptors, raw_catalog_objects = {}, {}
     for item, ident in zip(files, identities):
         dataset, subject, session, name = ident
@@ -210,6 +212,15 @@ def verify_source_cache_acceptance(cache):
                 or audit.get("adapter_file_sha256") != adapter_sha
                 or audit.get("label_counts") != dict(Counter(r.get("canonical_label") for r in rows))):
             raise SourceCacheAcceptanceError("native_metadata_and_fixed_adapter_audit_count_identity_mismatch")
+        try:
+            revision = verify_native_reader_provenance(root, dataset, rows, audit)
+        except (SourceCacheGateError, OSError, ValueError, KeyError, TypeError) as error:
+            raise SourceCacheAcceptanceError("native_registered_reader_revision_or_row_audit_binding_mismatch") from error
+        if revision is not None:
+            reader_revisions[revision["revision_sha256"]] = revision
+            person_reader_revisions.setdefault((dataset, subject), {})[revision["revision_sha256"]] = revision
+            for key in ("base_adapter", "variant_reader", "dispatcher"):
+                checked(revision[key])
         for row in rows:
             uid = row.get("trial_uid")
             if (row.get("dataset") != dataset or row.get("role") != "source"
@@ -225,6 +236,18 @@ def verify_source_cache_acceptance(cache):
                     or any(k not in row for k in _UID_KEYS) or uid != digest({k: row[k] for k in _UID_KEYS}) or uid in native):
                 raise SourceCacheAcceptanceError("native_original_trial_UID_source_class_or_provenance_mismatch")
             native[uid] = row
+    expected_revisions = [reader_revisions[key] for key in sorted(reader_revisions)]
+    if expected_revisions or any(key in manifest for key in ("native_reader_revisions", "reader_dispatcher_code")):
+        if manifest.get("native_reader_revisions") != expected_revisions:
+            raise SourceCacheAcceptanceError("cache_manifest_reader_revisions_must_match_all_native_objects")
+        dispatcher = manifest.get("reader_dispatcher_code")
+        if not isinstance(dispatcher, dict) or dispatcher.get("path") != "p3work/adapters/source_dispatch.py":
+            raise SourceCacheAcceptanceError("cache_manifest_actual_reader_dispatcher_code_required")
+        dispatcher_path = checked(dispatcher)
+        from .adapters import source_dispatch
+        if (dispatcher.get("bytes") != dispatcher_path.stat().st_size
+                or dispatcher["sha256"] != file_digest(Path(source_dispatch.__file__))):
+            raise SourceCacheAcceptanceError("packaged_reader_dispatcher_differs_from_actual_executed_code")
     catalog_path = checked({"path": w2.get("raw_r2_receipts_catalog"), "sha256": w2.get("raw_r2_receipts_catalog_sha256")}, cache_backup=True)
     catalog = json.loads(catalog_path.read_text())
     objects = catalog.get("objects", [])
@@ -248,6 +271,17 @@ def verify_source_cache_acceptance(cache):
         if person not in people or person in seen_people:
             raise SourceCacheAcceptanceError("source_participant_shards_must_cover_exact_official_roster_once")
         seen_people.add(person)
+        expected_person_revisions = person_reader_revisions.get(person, {})
+        expected_person_revisions = [expected_person_revisions[key] for key in sorted(expected_person_revisions)]
+        if expected_person_revisions or "native_reader_revisions" in shard:
+            if shard.get("native_reader_revisions") != expected_person_revisions:
+                raise SourceCacheAcceptanceError("source_shard_reader_revisions_must_match_its_original_metadata")
+        for key, expected_path in (("adapter_code", "p3work/adapters/source_native.py"),
+                                   ("processing_code", "p3work/preprocess.py")):
+            if key in shard:
+                if not isinstance(shard[key], dict) or shard[key].get("path") != expected_path:
+                    raise SourceCacheAcceptanceError("source_shard_exact_adapter_or_processing_code_path_required")
+                checked(shard[key])
         exclusions = json.loads(checked(shard.get("exclusions"), cache_backup=True).read_text())
         if not isinstance(exclusions, list):
             raise SourceCacheAcceptanceError("explicit_original_source_exclusions_required")
@@ -274,6 +308,8 @@ def verify_source_cache_acceptance(cache):
             else:
                 if (uid not in cache_rows_by_uid or row != cache_rows_by_uid[uid][0]
                         or any(row.get(k) != v for k, v in original.items() if k != "role")
+                        or any((key in row) != (key in original) or row.get(key) != original.get(key)
+                               for key in _READER_FIELDS)
                         or row.get("role") != "source_train" or row.get("raw_sha256") != original["source_file_sha256"]
                         or row.get("original_trial_id") != original["original_trial_index"]
                         or row.get("label") != {"left_hand": 0, "right_hand": 1}[original["canonical_label"]]):

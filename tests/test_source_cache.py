@@ -60,7 +60,8 @@ def partial_fixture(tmp_path):
     root = tmp_path
     write(root / "status/tasks.json", {"W1": {"status": "COMPLETE"}, "W2": {"status": "NOT_STARTED"}})
     write(root / "contracts/input_contract.json", frozen_contract())
-    for relative in ("p3work/adapters/source_native.py", "p3work/preprocess.py"):
+    for relative in ("p3work/adapters/source_native.py", "p3work/preprocess.py",
+                     "p3work/adapters/source_dispatch.py", "p3work/adapters/physionet_tal_v1.py"):
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes((ROOT / relative).read_bytes())

@@ -12,6 +12,7 @@ import argparse
 from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, wait
 from functools import partial
 import fcntl
+import gc
 import json
 import os
 from pathlib import Path
@@ -24,6 +25,8 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 from tools import source_preparation_parallel as parallel
 from tools import r2_backup
+from tools import physionet_official_transport as official
+from p3work.adapters import source_dispatch
 
 base = parallel.base
 SMALL_LIMIT = 16 * 1024**2
@@ -86,12 +89,13 @@ class SmallOfficialOpener:
     checks. An earlier admission HEAD cannot authorize a subsequently larger
     object, a different URL or a GET without a fresh HEAD in this lifecycle.
     """
-    def __init__(self, entry, *, max_small_raw_bytes=SMALL_LIMIT):
+    def __init__(self, entry, *, max_small_raw_bytes=SMALL_LIMIT, opener=None):
         _limits(1, max_small_raw_bytes)
         base.validate_entry(entry)
         if entry["dataset"] != "PhysionetMI" or not entry["file"].endswith(".edf"):
             raise base.BatchError("small_parallel_pool_is_PhysionetMI_EDF_only")
         self.entry, self.limit, self.head_seen = entry, max_small_raw_bytes, False
+        self._opener = opener if opener is not None else base.urllib.request.urlopen
 
     def __call__(self, request, **kwargs):
         method = request.get_method()
@@ -99,7 +103,7 @@ class SmallOfficialOpener:
             raise base.BatchError("small_source_request_must_match_exact_official_object")
         if method == "GET" and not self.head_seen:
             raise base.BatchError("small_source_GET_requires_this_lifecycle_fresh_HEAD")
-        response = base.urllib.request.urlopen(request, **kwargs)
+        response = self._opener(request, **kwargs)
         try:
             length = response.headers.get("Content-Length")
             if (not isinstance(length, str) or re.fullmatch(r"[1-9][0-9]*", length) is None
@@ -186,24 +190,42 @@ def resource_preflight(root, measured_raw_bytes, *, max_file_workers):
 
 
 class BoundedNativeAudit:
-    def __init__(self, root, max_file_workers=MAX_WORKERS):
+    def __init__(self, root, max_file_workers=MAX_WORKERS, *, audit_fn=None):
         _limits(max_file_workers, SMALL_LIMIT)
         self.root, self.workers, self._lock = root, max_file_workers, threading.Lock()
-        self._audit = parallel.SingleNativeAudit(root)
+        self._audit = audit_fn if audit_fn is not None else source_dispatch.audit_native_source
 
     def __call__(self, dataset, path, **kwargs):
+        failure, result = None, None
         with self._lock:
             try:
                 resource_preflight(self.root, path.stat().st_size,
                     max_file_workers=self.workers if dataset == "PhysionetMI" else 1)
-            except parallel.ResourcePreflightPause:
-                raise
-            except Exception:
-                raise parallel.ResourcePreflightPause("source_small_native_resource_preflight_pause") from None
-            return self._audit(dataset, path, **kwargs)
+                result = self._audit(dataset, path, **kwargs)
+                parallel._plain_metadata(result)
+            except BaseException as error:
+                failure = error
+                # A failed native parser can own a decoded recording through
+                # its traceback. Release it while the single-parser lock holds.
+                seen, current = set(), error
+                while current is not None and id(current) not in seen:
+                    seen.add(id(current))
+                    following = current.__cause__ or current.__context__
+                    current.__traceback__ = None
+                    current.__cause__ = current.__context__ = None
+                    current.args = (str(current),) if isinstance(current, base.BatchError) and re.fullmatch(r"[A-Za-z0-9_]+", str(current)) else ()
+                    current.__dict__.clear()
+                    current = following
+                result = None
+            finally:
+                gc.collect()
+        if failure is not None:
+            raise failure from None
+        return result
 
 
-def operational_amendment(plan, contract_sha256, snapshot, *, max_file_workers, max_small_raw_bytes):
+def operational_amendment(plan, contract_sha256, snapshot, *, max_file_workers, max_small_raw_bytes,
+                          catalog=None, reader_revision=None, attempt_revision=None):
     record = parallel.operational_amendment(plan, contract_sha256, snapshot)
     record.pop("amendment_sha256")
     record.update(schema_version="paper3-source-small-file-operational-amendment-v1",
@@ -221,6 +243,11 @@ def operational_amendment(plan, contract_sha256, snapshot, *, max_file_workers, 
         global_staging_min_free_disk_bytes=4 * plan["max_single_raw_bytes"] + 1024**3 + 2 * max_file_workers * max_small_raw_bytes,
         max_small_stream_buffer_bytes=max_file_workers * (base.CHUNK + r2_backup.CHUNK_SIZE),
         training_started=False)
+    record.update(physionet_transport="official-s3" if catalog is not None else "canonical",
+        official_transport_helper=base.descriptor(REPO, Path(official.__file__)) if catalog is not None else None,
+        official_source_evidence={name: dict(item) for name, item in catalog.evidence.items()} if catalog is not None else None,
+        official_complete_file_SHA256SUMS_required=catalog is not None,
+        native_reader_revision=reader_revision, attempt_revision=attempt_revision)
     record["amendment_sha256"] = base.digest(record)
     return record
 
@@ -259,11 +286,18 @@ def _occupied(root, plan, entry):
 
 def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, client=None, bucket=None,
                  operational_limits=None, operational_amendment_note=None,
-                 max_file_workers=MAX_WORKERS, max_small_raw_bytes=SMALL_LIMIT):
+                 max_file_workers=MAX_WORKERS, max_small_raw_bytes=SMALL_LIMIT,
+                 official_physionet_mirror=False, attempt_revision=None, audit_fn=None):
     _limits(max_file_workers, max_small_raw_bytes)
     base.validate_plan(plan)
     root = Path(root).resolve(strict=True)
     contract_sha = base.execution_gate(root)  # Before SDK, staging or journal changes.
+    if type(official_physionet_mirror) is not bool:
+        raise base.BatchError("official_PhysionetMI_mirror_option_must_be_boolean")
+    catalog = official.load_official_catalog(root) if official_physionet_mirror else None
+    reader_revision = source_dispatch.current_revision() if official_physionet_mirror else None
+    selected_audit = audit_fn if audit_fn is not None else partial(
+        source_dispatch.audit_native_source, revision=reader_revision)
     if client is None and threading.current_thread() is not threading.main_thread():
         raise base.BatchError("source_shared_SDK_client_must_be_created_in_main_thread")
     if max_new_files is not None and (type(max_new_files) is not int or max_new_files < 1):
@@ -291,6 +325,12 @@ def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, client=
         except BlockingIOError:
             raise base.BatchError("source_batch_already_active") from None
         parallel._require_accounting_pair(root, batch_dir)
+        processor = base.process_file
+        revision_descriptor = None
+        if attempt_revision is not None:
+            from tools.source_attempt_revision import RevisionProcessor
+            processor = RevisionProcessor(attempt_revision, root=root, plan=plan, contract_sha256=contract_sha)
+            revision_descriptor = processor.descriptor
         staged_large, staged_small = inspect_staging(root, plan, batch_dir, contract_sha256=contract_sha,
             max_file_workers=max_file_workers, max_small_raw_bytes=max_small_raw_bytes)
         operational_limits = operational_limits or {}
@@ -307,13 +347,14 @@ def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, client=
                 raise base.BatchError("missing_existing_r2_bucket")
             shared_client = client if client is not None else base.create_client()
             amendment = operational_amendment(plan, contract_sha, budget.snapshot(),
-                max_file_workers=max_file_workers, max_small_raw_bytes=max_small_raw_bytes)
+                max_file_workers=max_file_workers, max_small_raw_bytes=max_small_raw_bytes,
+                catalog=catalog, reader_revision=reader_revision, attempt_revision=revision_descriptor)
             path = batch_dir / ("small_files_operational_amendment_" + amendment["amendment_sha256"] + ".json")
             _immutable_json(path, amendment)
             return _execute(plan, root, batch_dir, contract_sha, budget,
-                BoundedNativeAudit(root, max_file_workers=max_file_workers), shared_client, fixed_bucket,
+                BoundedNativeAudit(root, max_file_workers=max_file_workers, audit_fn=selected_audit), shared_client, fixed_bucket,
                 max_new_files, base.descriptor(root, path), staged_large, staged_small,
-                max_file_workers, max_small_raw_bytes)
+                max_file_workers, max_small_raw_bytes, catalog=catalog, processor=processor)
         finally:
             try:
                 budget.close()  # Every future is drained before control reaches here.
@@ -323,7 +364,9 @@ def execute_plan(plan, *, root=REPO, batch_dir=None, max_new_files=None, client=
 
 
 def _execute(plan, root, batch_dir, contract_sha, budget, audit, client, bucket,
-             max_new_files, amendment, staged_large, staged_small, workers, small_limit):
+             max_new_files, amendment, staged_large, staged_small, workers, small_limit,
+             *, catalog=None, processor=None):
+    processor = processor if processor is not None else base.process_file
     counts = {"new_objects_attempted": 0, "archived_schema_verified": 0, "schema_blocked": 0,
               "failed": 0, "admission_failed": 0}
     occupied = {e["object_id"] for e in staged_large + staged_small}
@@ -332,7 +375,7 @@ def _execute(plan, root, batch_dir, contract_sha, budget, audit, client, bucket,
     admission_path = batch_dir / "small_file_admission_attempts" / (run_id + ".json")
     if admission_path.exists():
         raise base.BatchError("source_small_admission_run_identity_collision")
-    status, phase = "ALL_CANDIDATES_ATTEMPTED", "SERIAL_NONPHYSIO_178"
+    status, phase = "RUNNING", "SERIAL_NONPHYSIO_178"
     nonphysio = [e for e in plan["files"] if e["dataset"] != "PhysionetMI"]
     physio = [e for e in plan["files"] if e["dataset"] == "PhysionetMI"]
     if len(nonphysio) != 178 or len(physio) != 327:
@@ -352,10 +395,26 @@ def _execute(plan, root, batch_dir, contract_sha, budget, audit, client, bucket,
             counts["new_objects_attempted"] += 1
         return complete
 
+    transports, transport_lock = {}, threading.Lock()
+
+    def transport_for(entry, *, create=True):
+        if catalog is None or entry["dataset"] != "PhysionetMI":
+            return None
+        with transport_lock:
+            uid = entry["object_id"]
+            if create and uid not in transports:
+                transports[uid] = official.OfficialPhysionetTransport(root, entry,
+                    catalog=catalog, max_bytes=small_limit)
+            return transports.get(uid)
+
+    checked_audit = official.ProviderChecksumAudit(audit, catalog,
+        transport_lookup=lambda entry: transport_for(entry, create=False)) if catalog is not None else audit
+
     def process(entry, *, small=False):
-        kwargs = {"opener": SmallOfficialOpener(entry, max_small_raw_bytes=small_limit)} if small else {}
-        return base.process_file(entry, root=root, batch_dir=batch_dir, plan=plan,
-            contract_sha256=contract_sha, budget=budget, audit_fn=audit, client=client, bucket=bucket, **kwargs)
+        kwargs = {"opener": SmallOfficialOpener(entry, max_small_raw_bytes=small_limit,
+            opener=transport_for(entry))} if small else {}
+        return processor(entry, root=root, batch_dir=batch_dir, plan=plan,
+            contract_sha256=contract_sha, budget=budget, audit_fn=checked_audit, client=client, bucket=bucket, **kwargs)
 
     # Recover any existing large file first so no extra large staging is added.
     large_ids = {e["object_id"] for e in staged_large}
@@ -423,7 +482,9 @@ def _execute(plan, root, batch_dir, contract_sha, budget, audit, client, bucket,
                             status, stopped = "PARTIAL_BATCH_LIMIT_NO_STAGE_ADVANCE", True
                             break
                         if not complete:
-                            observed = _small_observation(base.head_object(entry, timeout=budget.timeout()), small_limit)
+                            opener = transport_for(entry)
+                            observed = _small_observation(base.head_object(entry, timeout=budget.timeout(),
+                                **({"opener": opener} if opener is not None else {})), small_limit)
                             resource_preflight(root, observed["bytes"], max_file_workers=workers)
                     except parallel.ResourcePreflightPause:
                         status, stopped = "SMALL_ADMISSION_CGROUP_PAUSE_NO_STAGE_ADVANCE", True
@@ -463,11 +524,23 @@ def _execute(plan, root, batch_dir, contract_sha, budget, audit, client, bucket,
                 budget.checkpoint()
                 progress()
     budget.check()
+    # This is outside all per-object exception handlers: an old canonical
+    # COMPLETE cannot authorize W2 if its whole-file SHA disagrees with the
+    # retained official checksum catalogue. No raw waveform or network is read.
+    provider_verification = None
+    if catalog is not None:
+        try:
+            provider_verification = official.verify_all_completed_provider_checksums(root, plan, batch_dir, catalog)
+        except official.TransportError:
+            raise base.BatchError("official_PhysionetMI_completed_file_checksum_oracle_failed") from None
     inventory = base.aggregate_inventory(plan, root=root, batch_dir=batch_dir, budget=budget)
+    if status == "RUNNING":
+        status = "ALL_CANDIDATES_ATTEMPTED"
     snapshot = budget.snapshot()
     result = {"status": status, "phase": phase, "inventory_status": inventory["status"], **counts,
         "actual_verified_objects": inventory["actual_verified_objects"], "required_target_object_count": 505,
         "plan_sha256": plan["plan_sha256"], "operational_amendment": amendment,
+        "official_provider_checksum_verification": provider_verification,
         "download_bytes_read": snapshot["download_bytes_read"], "download_bytes_charged": snapshot["download_bytes_charged"],
         "byte_scopes": {name: {key: ledger[key] for key in ("observed_bytes", "charged_bytes", "limit_bytes")}
                         for name, ledger in snapshot["byte_scopes"].items()},
@@ -487,12 +560,15 @@ def main(argv=None):
     parser.add_argument("--progress", default="audit/source_full/progress.json")
     parser.add_argument("--max-file-workers", type=int, default=MAX_WORKERS)
     parser.add_argument("--max-small-raw-bytes", type=int, default=SMALL_LIMIT)
+    parser.add_argument("--official-physionet-mirror", action="store_true")
+    parser.add_argument("--attempt-revision", help="Explicit immutable failed-attempt registration within root")
     parser.add_argument("--execute", action="store_true")
     args = parser.parse_args(argv)
     try:
         _limits(args.max_file_workers, args.max_small_raw_bytes)
         result = pipeline.prepare_all(args.root, contract=args.contract, progress=args.progress, execute=args.execute,
-            raw_fn=partial(execute_plan, max_file_workers=args.max_file_workers, max_small_raw_bytes=args.max_small_raw_bytes))
+            raw_fn=partial(execute_plan, max_file_workers=args.max_file_workers, max_small_raw_bytes=args.max_small_raw_bytes,
+                official_physionet_mirror=args.official_physionet_mirror, attempt_revision=args.attempt_revision))
         print(json.dumps(result))
         return 0 if result.get("status") == "W2_COMPLETE_CACHE_AND_R2_VERIFIED" or not args.execute else 2
     except Exception as error:

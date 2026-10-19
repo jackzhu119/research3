@@ -26,11 +26,12 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from p3work.adapters.source_native import iter_native_contexts
+from p3work.adapters import source_dispatch, source_native
+from p3work.adapters.source_dispatch import iter_native_contexts
 from p3work.contracts import CHANNELS, SOURCE_IDS, digest, file_digest, validate_signal_contract
 from p3work.preprocess import prepare_trial
 from p3work.window_acceptance import WindowAcceptanceError, verify_frozen_window
-from tools.r2_backup import create_client, write_receipt
+from tools.r2_backup import BackupError, create_client, write_receipt
 from tools.r2_restore import load_verified_receipt, no_symlink_components, run_restore
 _NATIVE_RESTORE_IMPLEMENTATION = run_restore
 
@@ -88,6 +89,58 @@ def _artifact(root, value):
     if not path.is_file() or file_digest(path) != value["sha256"]:
         raise SourceCacheGateError("Artifact does not match its complete SHA256 receipt")
     return path
+
+
+_READER_ROW_FIELDS = ("native_reader_revision", "physionet_tal_reader_sha256", "source_dispatch_sha256")
+_READER_AUDIT_FIELDS = (*_READER_ROW_FIELDS, "active_variant_file_sha256", "adapter_role")
+
+
+def verify_native_reader_provenance(root, dataset, rows, audit=None):
+    """Metadata-only registered-reader gate, including the packaged code bytes.
+
+    Historical rows without revision fields retain their original reader. A
+    partial/unknown revision cannot be treated as historical metadata. No raw
+    payload is opened, and this function does not establish a native read.
+    """
+    marked = any(any(key in row for key in _READER_ROW_FIELDS) for row in rows)
+    audit_marked = audit is not None and any(key in audit for key in _READER_AUDIT_FIELDS)
+    if not marked and not audit_marked:
+        return None
+    if not rows or dataset != "PhysionetMI":
+        raise SourceCacheGateError("registered_Physio_reader_revision_required")
+    try:
+        revision = source_dispatch.validate_revision(rows[0].get("native_reader_revision"))
+        for key in ("base_adapter", "variant_reader", "dispatcher"):
+            component = revision[key]
+            no_symlink_components(Path(root) / component["path"])
+            path = _artifact(root, component)
+            if path.stat().st_size != component["bytes"]:
+                raise SourceCacheGateError("registered_reader_component_size_mismatch")
+    except (BackupError, OSError, ValueError, KeyError, TypeError) as error:
+        raise SourceCacheGateError("registered_reader_revision_or_packaged_code_mismatch") from error
+    expected = {"native_reader_revision": revision,
+        "physionet_tal_reader_sha256": revision["variant_reader"]["sha256"],
+        "source_dispatch_sha256": revision["dispatcher"]["sha256"]}
+    if any(any(row.get(key) != value for key, value in expected.items()) for row in rows):
+        raise SourceCacheGateError("native_rows_reader_revision_or_component_mismatch")
+    if audit is not None:
+        expected_audit = {**expected, "adapter_file_sha256": revision["base_adapter"]["sha256"],
+            "active_variant_file_sha256": revision["variant_reader"]["sha256"],
+            "adapter_role": "frozen_shared_metadata_helpers_component"}
+        if any(audit.get(key) != value for key, value in expected_audit.items()):
+            raise SourceCacheGateError("native_row_audit_reader_revision_mismatch")
+    return revision
+
+
+def _used_reader_revisions(records):
+    """Canonical distinct revisions, independent of scientific file order."""
+    selected = {}
+    for _, _, rows in records:
+        for row in rows:
+            revision = row.get("native_reader_revision")
+            if revision is not None:
+                selected[revision["revision_sha256"]] = revision
+    return [selected[key] for key in sorted(selected)]
 
 
 def _remote_raw_receipt(root, item):
@@ -367,6 +420,12 @@ def verify_preparation(root, inventory_path, *, partial_scope=False):
                            row.get("source_version") != item.get("version")
                            for row in rows):
             raise SourceCacheGateError("Native metadata differs from verified source object identity")
+        audit = None
+        if "adapter_audit" in item:
+            audit = json.loads(_artifact(root, item["adapter_audit"]).read_text())
+        if any(any(key in row for key in _READER_ROW_FIELDS) for row in rows) and audit is None:
+            raise SourceCacheGateError("versioned_native_rows_require_their_retained_adapter_audit")
+        verify_native_reader_provenance(root, item["dataset"], rows, audit)
         prepared_files.append((item, raw, rows))
     return root, contract, contract_sha, manifest_path, manifest, prepared_files, complete
 
@@ -379,7 +438,8 @@ def _prepare_shard(root, destination, temporary, *, dataset, subject, records,
             resource_budget.check()
         with _available_raw(root, item, raw, restore_backed_raw=restore_backed_raw,
                             resource_budget=resource_budget) as available:
-            for native in iter_native_contexts(dataset, available, rows=rows, contract=contract, expected_sha256=item["sha256"]):
+            for native in iter_native_contexts(dataset, available, rows=rows, contract=contract,
+                    expected_sha256=item["sha256"], revision=rows[0].get("native_reader_revision")):
                 row = native["row"]
                 if native.get("excluded"):
                     exclusions.append({"event_uid": row["trial_uid"], "reason": native["excluded"], "original_metadata": row})
@@ -414,13 +474,15 @@ def _prepare_shard(root, destination, temporary, *, dataset, subject, records,
                              "sha256": file_digest(temporary / name)}
     if not x:
         return {"dataset": dataset, "subject_id": subject, "excluded_original_trials": len(exclusions),
-                "reason": "no_valid_trials_under_frozen_contract", "exclusions": artifact("exclusions.json")}
+                "reason": "no_valid_trials_under_frozen_contract", "exclusions": artifact("exclusions.json"),
+                "native_reader_revisions": _used_reader_revisions(records)}
     np.save(temporary / "X.npy", np.stack(x), allow_pickle=False)
     np.save(temporary / "y.npy", np.asarray(labels, dtype=np.int64), allow_pickle=False)
     (temporary / "events.json").write_text(json.dumps(events, indent=2, allow_nan=False) + "\n")
     return {"dataset": dataset, "subject_id": subject, "role": "source_train",
             "stage": "pre_rms_car11_temporal_demeaned", "input_contract_sha256": contract_sha,
             "adapter_code": adapter, "processing_code": processing,
+            "native_reader_revisions": _used_reader_revisions(records),
             "X": artifact("X.npy"), "y": artifact("y.npy"), "events": artifact("events.json"),
             "exclusions": artifact("exclusions.json"), "original_trials_processed": len(events) + len(exclusions),
             "valid_trials": len(events), "excluded_trials": len(exclusions)}
@@ -442,11 +504,19 @@ def _prepare_cache(root, inventory_path="manifests/source_native_inventory.json"
     if not restore_backed_raw and any(not raw.exists() for _, raw, _ in files):
         raise SourceCacheGateError("R2-only source preparation requires explicit --restore-backed-raw")
     adapter_path, processing_path = root / "p3work/adapters/source_native.py", root / "p3work/preprocess.py"
-    if (adapter_path.read_bytes() != Path(sys.modules[iter_native_contexts.__module__].__file__).read_bytes() or
+    dispatcher_path = root / "p3work/adapters/source_dispatch.py"
+    try:
+        no_symlink_components(dispatcher_path)
+    except BackupError as error:
+        raise SourceCacheGateError("packaged_reader_dispatcher_symlink_forbidden") from error
+    if (adapter_path.read_bytes() != Path(source_native.__file__).read_bytes() or
+            dispatcher_path.read_bytes() != Path(source_dispatch.__file__).read_bytes() or
             processing_path.read_bytes() != Path(sys.modules[prepare_trial.__module__].__file__).read_bytes()):
         raise SourceCacheGateError("Executed adapter/processing code differs from packaged provenance")
     descriptor = lambda path: {"path": str(path.relative_to(root)), "sha256": file_digest(path)}
     adapter, processing = descriptor(adapter_path), descriptor(processing_path)
+    dispatcher = {**descriptor(dispatcher_path), "bytes": dispatcher_path.stat().st_size}
+    reader_revisions = _used_reader_revisions(files)
     shard_files = defaultdict(list)
     seen = set()
     for item, raw, rows in files:
@@ -457,6 +527,7 @@ def _prepare_cache(root, inventory_path="manifests/source_native_inventory.json"
         shard_files[item["dataset"], str(item["provider_subject"])].append((item, raw, rows))
     identity = {"input_contract_sha256": contract_sha, "inventory": descriptor(inventory_file),
                 "adapter_code": adapter, "processing_code": processing, "partial_scope": partial_scope,
+                "reader_dispatcher_code": dispatcher, "native_reader_revisions": reader_revisions,
                 "cache_builder_sha256": file_digest(__file__)}
     state_path = destination / "build_state.json"
     if destination.exists():
@@ -476,6 +547,7 @@ def _prepare_cache(root, inventory_path="manifests/source_native_inventory.json"
                 "full_source_inventory_verified": complete and not partial_scope,
                 "exact_window_acceptance_scope": "engineering_partial_not_formal_W2" if partial_scope else "complete_frozen_W1_verified",
                 "raw_inventory": descriptor(inventory_file), "shards": [], "participants_without_usable_trials": [],
+                "reader_dispatcher_code": dispatcher, "native_reader_revisions": reader_revisions,
                 "training_started": False, "normalization_applied": False}
     for (dataset, subject), records in sorted(shard_files.items()):
         if resource_budget:
