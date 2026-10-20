@@ -186,13 +186,17 @@ def _trials(native, *, run_phase=None):
         raise ValueError("Original run markers and forty balanced native MI trials required")
     trial_region_end = stop_index
     if any(counts[code] for code in ONLINE_POST_TRIAL_CONTROLS):
-        if (run_phase == "acquisition" or any(counts[code] != 1 for code in ONLINE_POST_TRIAL_CONTROLS)
+        # These documented session/training controls also occur in original
+        # acquisition files (for example provider02 R1). Their position and
+        # order, rather than the filename's phase, establish that they lie
+        # outside all forty complete MI trials.
+        if (any(counts[code] != 1 for code in ONLINE_POST_TRIAL_CONTROLS)
                 or [e["description"] for e in annotations[stop_index-2:stop_index]] != list(ONLINE_POST_TRIAL_CONTROLS)
                 or annotations[stop_index-3]["description"] != "800"
                 or not annotations[stop_index-3]["onset"] < annotations[stop_index-2]["onset"]
                 or not annotations[stop_index-2]["onset"] < annotations[stop_index-1]["onset"]
                     < annotations[stop_index]["onset"]):
-            raise ValueError("Only ordered online post-trial EndOfSession/Train before ExperimentStop is allowed")
+            raise ValueError("Only ordered post-trial EndOfSession/Train before ExperimentStop is allowed")
         trial_region_end -= 2
     starts = [i for i, e in enumerate(annotations) if e["description"] == "768"]
     rows = []

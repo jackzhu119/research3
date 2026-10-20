@@ -143,20 +143,21 @@ def with_online_controls(native):
     return native
 
 
-def test_documented_online_post_trial_controls_do_not_change_any_native_MI_binding(native_fixture):
+@pytest.mark.parametrize("phase", ["acquisition", "online"])
+def test_documented_post_trial_controls_do_not_change_any_native_MI_binding(native_fixture, phase):
     original=adapter._read_native_metadata(native_fixture)
-    before=adapter._trials(original,run_phase="online")
-    after=adapter._trials(with_online_controls(deepcopy(original)),run_phase="online")
+    before=adapter._trials(original,run_phase=phase)
+    after=adapter._trials(with_online_controls(deepcopy(original)),run_phase=phase)
     assert before==after and len(after)==40
     assert [r["original_annotation_index"]for r in after]==list(range(4,240,6))
     assert [r["label"]for r in after]==[0,1]*20
 
 
 @pytest.mark.parametrize("bad",["middle","duplicate","missing_half","wrong_order","before_last_end",
-                                 "same_time_as_last_end","after_stop","outside_file","acquisition_phase"])
-def test_online_control_suffix_is_strictly_posttrial_and_ordered(native_fixture,bad):
+                                 "same_time_as_last_end","after_stop","outside_file"])
+@pytest.mark.parametrize("phase", ["acquisition", "online"])
+def test_control_suffix_is_strictly_posttrial_and_ordered(native_fixture,bad,phase):
     native=with_online_controls(adapter._read_native_metadata(native_fixture));rows=native["annotations"]
-    phase="online"
     if bad=="middle":rows.insert(40,rows.pop(-3))
     elif bad=="duplicate":rows.insert(-2,dict(rows[-2]))
     elif bad=="missing_half":del rows[-2]
@@ -165,7 +166,6 @@ def test_online_control_suffix_is_strictly_posttrial_and_ordered(native_fixture,
     elif bad=="same_time_as_last_end":rows[-3]["onset"]=rows[-4]["onset"]
     elif bad=="after_stop":rows[-2]["onset"]=rows[-1]["onset"]+1
     elif bad=="outside_file":rows[-3]["onset"]=Fraction(native["n_times"],512)+1
-    else:phase="acquisition"
     with pytest.raises(ValueError,match="post-trial"):
         adapter._trials(native,run_phase=phase)
 
