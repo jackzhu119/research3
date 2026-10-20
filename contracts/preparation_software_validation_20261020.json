@@ -1,68 +1,164 @@
 {
-  "schema_version": "paper3-preparation-software-validation-v1",
+  "schema_version": "paper3-preparation-software-validation-v2",
   "status": "SOFTWARE_AND_OFFLINE_COMPONENT_CHECKS_PASSED_DATA_GATES_REMAIN",
-  "recorded_at_utc": "2026-10-20T07:26:59.815423+00:00",
+  "historical_v4_validation": {
+    "inventory": {
+      "path": "audit/data_plan_20261020/software_regression/historical_v4_validation/snapshot_inventory.json",
+      "sha256": "2b7ace8653210ca41c79d1ccb96febd79d635cb770e183fe616535a7df43d22b",
+      "bytes": 3596
+    },
+    "additional_transition_inventory": {
+      "path": "audit/data_plan_20261020/software_regression/historical_v4_validation/additional_v5_transition_snapshots.json",
+      "sha256": "a64d32416281174502d97703920b269ebd1748f8ef90a195a8c66ed32c15668d",
+      "bytes": 2032
+    },
+    "historical_bodies_are_opaque_not_current_runtime_dependencies": true,
+    "old_actual_full_suite_passed": 2502,
+    "old_actual_targeted_passed": 172,
+    "old_counts_are_historical_not_V5_results": true
+  },
   "full_suite": {
-    "passed": 2502,
-    "seconds": 397.75,
+    "status": "PASS_ACTUAL_FINAL_FROZEN_SOFTWARE",
+    "passed": 3264,
+    "seconds": 454.09,
     "log": {
-      "path": "audit/data_plan_20261020/software_regression/full_suite.log",
-      "sha256": "6a27cd0ae0035554eb2063f0e22eae8922b1c1e0b841a29161451a1fbbeced0e",
-      "bytes": 2833
+      "path": "audit/data_plan_20261020/software_regression/full_suite_v5_attempt03_20261020.log",
+      "sha256": "c19fe79e9d10fd17fdb0088969824ee07aa25a62b83705f9d55885ad9bb34f6f",
+      "bytes": 3713
+    },
+    "exact_frozen_input_inventory": {
+      "path": "audit/data_plan_20261020/software_regression/full_suite_v5_attempt03_input_inventory.json",
+      "sha256": "c80a93388e7221b5da196d902c7a6ec4a72c4b8a5bbf52d1922e3f77b390f46f",
+      "bytes": 31441
+    },
+    "software_inputs_rehashed_unchanged_after_test_run": 185,
+    "compatibility_helper_and_independent_guard_validation": {
+      "passed": 28,
+      "seconds": 0.9,
+      "executed_by": "deployment_bootstrap_agent",
+      "scope": "original27 archived fixtures plus independent actual frozen V5 native rejection guard",
+      "validation_contract": {
+        "path": "contracts/dreyer_qualification_transport_20261020.json",
+        "sha256": "f1cc8381df6561771acb05c5609dcf70173e70c272dbd9362f8b220ef951b59c",
+        "bytes": 5653
+      },
+      "overlaps_full_suite_not_additive": true
     }
   },
   "final_new_preparation_tools_targeted": {
-    "passed": 172,
-    "seconds": 4.64,
-    "overlaps_full_suite_not_additive": true,
-    "log": {
-      "path": "audit/data_plan_20261020/software_regression/final_preparation_targeted.log",
-      "sha256": "30302199728488a59fdc7f0774d18e5ce922c291fa69e1a90924fa1f66452427",
-      "bytes": 260
+    "status": "ACTUAL_COMPONENT_RUNS_PASSED_COUNTS_NOT_ADDITIVE",
+    "runs": [
+      {
+        "name": "root_final_wrapper",
+        "passed": 263,
+        "seconds": 12.39,
+        "log": {
+          "path": "audit/data_plan_20261020/dreyer_structure_case_review/root_final_wrapper_263pass.log",
+          "sha256": "9ccffcc7d99c9974e2a8bb74d4b4a0a0d27d127d5367056cfc009abeeff898a9",
+          "bytes": 341
+        },
+        "overlaps_full_suite_not_additive": true
+      },
+      {
+        "name": "bridge_auditor_wide",
+        "passed": 541,
+        "seconds": 15.7,
+        "log": {
+          "path": "audit/data_plan_20261020/software_regression/bridge_auditor_v5_final_wide_suite.log",
+          "sha256": "75b6058325b05ad44936c97f63db9a70417bdcad04d0c53a6f5bc55b3f9edc6c",
+          "bytes": 661
+        },
+        "overlaps_full_suite_not_additive": true
+      },
+      {
+        "name": "Yang_V2_root",
+        "passed": 98,
+        "seconds": 11.72,
+        "log": {
+          "path": "audit/data_plan_20261020/yang_transport_recovery_v2/root_targeted_98pass.log",
+          "sha256": "8483cb2b17f2330d913dc3f4186de24d01e3ef7245d2e922a46a35be3d550421",
+          "bytes": 180
+        },
+        "overlaps_full_suite_not_additive": true
+      },
+      {
+        "name": "canonical_historical_fixture_compatibility_and_actual_V5_guard",
+        "passed": 28,
+        "seconds": 0.9,
+        "executed_by": "deployment_bootstrap_agent",
+        "scope": "original27 archived fixtures plus independent actual frozen V5 native rejection guard",
+        "validation_contract": {
+          "path": "contracts/dreyer_qualification_transport_20261020.json",
+          "sha256": "f1cc8381df6561771acb05c5609dcf70173e70c272dbd9362f8b220ef951b59c",
+          "bytes": 5653
+        },
+        "overlaps_full_suite_not_additive": true
+      }
+    ],
+    "overlapping_test_counts_must_not_be_added": true,
+    "historical_aa1c_fixture_validation": {
+      "passed": 27,
+      "seconds": 1.05,
+      "contract_opaque_at_execution": {
+        "path": "audit/data_plan_20261020/software_regression/dreyer_transport_fixture_history/first_fixture_repair_contract_e1c3d3a0.json.txt",
+        "sha256": "e1c3d3a0dcd80e6f5f95c199ad902fa734fd20912fa5c73406fc0ef338a1c39c",
+        "bytes": 3694
+      },
+      "test_sha_at_execution": "aa1c7fe7574ef326509357267026665d20268f28e3677ac15c431cacc0831e3d",
+      "applies_to_current_canonical_89080_test": false,
+      "not_final_full_suite_proof": true
     }
   },
   "component_review_and_actual_offline_acceptance": [
     {
-      "path": "audit/data_plan_20261020/dreyer_acquisition_control_fix/v4_frozen_software_validation.json",
-      "sha256": "2c631decd05bba09c6b85aeda09c28b135c60bbb2a3a852bed77aa9046161f51",
-      "bytes": 7294
+      "evidence": {
+        "path": "audit/data_plan_20261020/software_regression/bridge_auditor_v5_final_software_review.json",
+        "sha256": "e32f56519f737ea248e8fe29b810ad7bf421c21ecf992cad28be191cab78f2c8",
+        "bytes": 6790
+      },
+      "scope": "final bridge/auditor frozen software and new Ma125 read-only report"
     },
     {
-      "path": "audit/data_plan_20261020/source_bridge_v4/software_freeze_receipt.json",
-      "sha256": "d7ef09d61bee3fb1cf4b06de28b6e6134dc1c14ad3940406f6534b1faf3e4ff7",
-      "bytes": 4098
+      "evidence": {
+        "path": "audit/data_plan_20261020/dreyer_structure_case_review/v5_yang_v2_provider_nocache_final_software_review.json",
+        "sha256": "3775fef359f9ce0fd5a6120cd25254591840922a85ea7745732f129f67f75402",
+        "bytes": 5897
+      },
+      "scope": "final V5 wrapper/YangV2/provider-no-cache isolated software review"
     },
     {
-      "path": "audit/data_plan_20261020/completion_auditor/software_acceptance.json",
-      "sha256": "6c25c246974fe10c6ef121c0f9c2735587500c0dde5d374c58466bff9012ed6a",
-      "bytes": 3178
+      "evidence": {
+        "path": "audit/data_plan_20261020/stieger_verifier_preflight/receipt.json",
+        "sha256": "42429b054fa6f2ca247ddf19dd5126a4873c81f829dae25a2d95490b528cd5df",
+        "bytes": 2863
+      },
+      "retained_current_scope": "existing_W3_verifier_software_preflight_only_not_new_all598_data_audit",
+      "requires_reexecution_for_bridge_auditor_native_V5_only_changes": false
     },
     {
-      "path": "audit/data_plan_20261020/stieger_verifier_preflight/receipt.json",
-      "sha256": "42429b054fa6f2ca247ddf19dd5126a4873c81f829dae25a2d95490b528cd5df",
-      "bytes": 2863
+      "evidence": {
+        "path": "audit/data_plan_20261020/bootstrap_sdk_acceptance_frozen/receipt.json",
+        "sha256": "3b830e22720f9e62f6b61f8b39a8cc46276330468bd0140a13fc2b7f2c550dd9",
+        "bytes": 3059
+      },
+      "retained_current_scope": "actual_frozen_a1f_bootstrap_portable_eight_SDK_offline_and_same_identity_resume_CPU_proof",
+      "requires_reexecution_for_bridge_auditor_native_V5_only_changes": false
     },
     {
-      "path": "audit/data_plan_20261020/bootstrap_sdk_acceptance_frozen/receipt.json",
-      "sha256": "3b830e22720f9e62f6b61f8b39a8cc46276330468bd0140a13fc2b7f2c550dd9",
-      "bytes": 3059
-    },
-    {
-      "path": "audit/data_plan_20261019/python_runtime/portable_cpu_acceptance_20261020/acceptance_receipt.json",
-      "sha256": "edfd1774e0fc3af8a6a3ee79145145a3989948c21daeac47c1581ecb92161b4a",
-      "bytes": 6500
+      "evidence": {
+        "path": "audit/data_plan_20261019/python_runtime/portable_cpu_acceptance_20261020/acceptance_receipt.json",
+        "sha256": "edfd1774e0fc3af8a6a3ee79145145a3989948c21daeac47c1581ecb92161b4a",
+        "bytes": 6500
+      },
+      "retained_current_scope": "actual_100_pin_110_wheel_offline_install_and_CPU_import_proof_GPU_still_unchecked",
+      "requires_reexecution_for_bridge_auditor_native_V5_only_changes": false
     }
   ],
   "frozen_preparation_implementations": [
     {
       "path": "p3work/source_extension_bridge.py",
-      "sha256": "2b35d5b3e3367d2533c564dabd7e0fd4cb01b3d6b1620ef555c57959c6a869b4",
-      "bytes": 48305
-    },
-    {
-      "path": "p3work/source_extension_training.py",
-      "sha256": "903c9c9ad512cf52f6acec85dbce4045b24806fe74c7a8d1c5ea45b0f27cc3f9",
-      "bytes": 27374
+      "sha256": "4590359dae8b61051f9eaebe30b45495eca5dbbc71ac9400b7a5df7ccb154da0",
+      "bytes": 48735
     },
     {
       "path": "p3work/source_extension_downstream.py",
@@ -70,9 +166,24 @@
       "bytes": 156625
     },
     {
-      "path": "tools/run_source_extension_downstream.py",
-      "sha256": "7e8039420e975f7e97eba49fc09ef9b84c49fc06fba280f2d2b4ea0ec51bac5b",
-      "bytes": 4338
+      "path": "p3work/source_extension_training.py",
+      "sha256": "903c9c9ad512cf52f6acec85dbce4045b24806fe74c7a8d1c5ea45b0f27cc3f9",
+      "bytes": 27374
+    },
+    {
+      "path": "p3work/source_extensions/dreyer2023.py",
+      "sha256": "5c31e969eeabd17634864f6783d8473a0a79f1888faf274d758cd9c5ba4cef77",
+      "bytes": 38175
+    },
+    {
+      "path": "tools/audit_completed_stieger_w3.py",
+      "sha256": "0f1dffe53ad7f2ebd00ce49d109a575e663b46d5462c51d35dc141500a397f70",
+      "bytes": 25109
+    },
+    {
+      "path": "tools/audit_source_extension_completion.py",
+      "sha256": "a94929fdd3d2ef534d459044b587c1c497a4dc2f236f7e1703ce7d5185d3680c",
+      "bytes": 26241
     },
     {
       "path": "tools/bootstrap_data_plan.py",
@@ -85,24 +196,19 @@
       "bytes": 56983
     },
     {
-      "path": "tools/audit_source_extension_completion.py",
-      "sha256": "d43fcf8134389a2132a4c6929acdaf383e2ff8215dbb8b83dd94bbcf8a47b32a",
-      "bytes": 23751
+      "path": "tools/prepare_dreyer_source_cpu_v5.py",
+      "sha256": "c604a0189993ec6e77dd4af0dfb6812b38d69791e691f066b83278eff06b7126",
+      "bytes": 65911
     },
     {
-      "path": "tools/audit_completed_stieger_w3.py",
-      "sha256": "0f1dffe53ad7f2ebd00ce49d109a575e663b46d5462c51d35dc141500a397f70",
-      "bytes": 25109
+      "path": "tools/resume_yang_source_transport_v2.py",
+      "sha256": "2ae1e75e47a75032155da44c1cb45afa78a1ec82da3ecd11d6f85ec60e1c0f71",
+      "bytes": 28618
     },
     {
-      "path": "tools/prepare_dreyer_source_cpu_v4.py",
-      "sha256": "3bdfd19d9d1596f92b689121f8231d8b2403449ecbc26dd0b27c0f7ddee59a1a",
-      "bytes": 35169
-    },
-    {
-      "path": "p3work/source_extensions/dreyer2023.py",
-      "sha256": "ec2f7dbc10903c308cd30564c30b04c4653c64173fdb0331ede318fd1c3b1489",
-      "bytes": 23437
+      "path": "tools/run_source_extension_downstream.py",
+      "sha256": "7e8039420e975f7e97eba49fc09ef9b84c49fc06fba280f2d2b4ea0ec51bac5b",
+      "bytes": 4338
     }
   ],
   "downstream_review": {
@@ -117,14 +223,185 @@
       "BASE4_PLUS_DREYER"
     ]
   },
-  "uncompleted_data_gates_at_recording": [
-    "Stieger2021",
-    "Yang2025",
-    "Dreyer2023"
-  ],
+  "additional_permission_gates": {
+    "Ma2022_scientific_pool_assignment_frozen": false,
+    "Ma2022_source_training_allowed": false,
+    "requires_user_manual_GPU_boot": true,
+    "sealed_external_source_development_separation_preserved": true
+  },
   "actual_scientific_fits": 0,
   "GPU_actions": 0,
   "RunPod_actions": 0,
   "external_query_accessed": false,
-  "final_deployment_ready_claimed": false
+  "final_deployment_ready_claimed": false,
+  "candidate_prepared_at_utc": "2026-10-20T09:54:22.356655+00:00",
+  "historical_full_suite_attempt01": {
+    "status": "FAILED_TWO_HISTORICAL_QUALIFIER_FIXTURES",
+    "passed": 3261,
+    "failed": 2,
+    "log": {
+      "path": "audit/data_plan_20261020/software_regression/full_suite_v5_frozen_20261020.log",
+      "sha256": "7dd7fe2f6a7beabd5a42070a4ae0ac83f3e575d3a062d86b021cdb5799777775",
+      "bytes": 7169
+    },
+    "input_inventory_opaque": {
+      "path": "audit/data_plan_20261020/software_regression/full_suite_v5_attempt01_input_inventory.json.txt",
+      "sha256": "0d7356ec6ff7e4336fc6f3b6dd9fda9ac505016149c41b5e7359012e143d5751",
+      "bytes": 30809
+    }
+  },
+  "historical_full_suite_attempt02": {
+    "status": "PASSED_AA1C_FIXTURE_SCOPE_SUPERSEDED_BY_FINAL_CANONICAL_TEST_IDENTITY_PRESERVATION",
+    "passed": 3263,
+    "seconds": 461.49,
+    "log": {
+      "path": "audit/data_plan_20261020/software_regression/full_suite_v5_attempt02_20261020.log",
+      "sha256": "9af6cced1e596aebe2a75fef066c53b359b6edc468c971ff57205d6fd7cc93ea",
+      "bytes": 3713
+    },
+    "input_inventory_opaque": {
+      "path": "audit/data_plan_20261020/software_regression/historical_full_suite_attempt02/full_suite_v5_attempt02_input_inventory.json.txt",
+      "sha256": "bdac214e55b679f90e09330510b8dbcb2122b262562132451694b7b8c093627a",
+      "bytes": 31184
+    },
+    "original_input_file_count": 183,
+    "old_aa1c_test_SHA_is_historical_not_current": true
+  },
+  "frozen_component_tests": [
+    {
+      "path": "tests/test_source_extension_training.py",
+      "sha256": "9e40c4a43ea2490bdc4de023a9a6a408f26d7e9ee1adbf3b54e084b4f9452f3b",
+      "bytes": 49173
+    },
+    {
+      "path": "tests/test_audit_source_extension_completion.py",
+      "sha256": "5faa22626df552289297b375c5c90f475f4c92b34b43063dab285abcde7412f6",
+      "bytes": 21266
+    },
+    {
+      "path": "tests/test_dreyer_native_v5_candidate.py",
+      "sha256": "bd7352945a451caff29a9b8b0533cda5629363680f22f89dc00e093e8e124851",
+      "bytes": 14369
+    },
+    {
+      "path": "tests/test_dreyer_native_v5_adversarial.py",
+      "sha256": "7c54a77b3f23ffb49d98a3a7703423731ab299b8a15f8472ab4d2867c399ba78",
+      "bytes": 16069
+    },
+    {
+      "path": "tests/test_prepare_dreyer_source_cpu_v5.py",
+      "sha256": "39c7b01c8cb0eed773b4efccbe5066aeae6825820da96ef7858474951a4f7373",
+      "bytes": 84728
+    },
+    {
+      "path": "tests/test_resume_yang_source_transport_v2.py",
+      "sha256": "fd95fb79f2e3900d376cb81d69fb362968dfcfeaaede1f1818c0daaa4cb7a70c",
+      "bytes": 13285
+    },
+    {
+      "path": "tests/test_resume_dreyer_qualification_transport.py",
+      "sha256": "89080cf4680b096d1e7912dd5a2047d8de84f19290d7e76749a67488d3528b57",
+      "bytes": 15407
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "368aa31c9ffbee05392b74db672fcf6dab436dd8c23d01251f666c677d4dfd07",
+      "bytes": 1278
+    },
+    {
+      "path": "tests/test_guard_dreyer_qualification_native_identity.py",
+      "sha256": "0107dbe7215da2c538c871afd8678e19357c65537a49136a111581e9fa26bb66",
+      "bytes": 1516
+    }
+  ],
+  "canonical_qualifier_fixture_compatibility": {
+    "historical_test_body_restored_exact": {
+      "path": "tests/test_resume_dreyer_qualification_transport.py",
+      "sha256": "89080cf4680b096d1e7912dd5a2047d8de84f19290d7e76749a67488d3528b57",
+      "bytes": 15407
+    },
+    "pending_compatibility_helper_and_independent_current_native_rejection_guard": false,
+    "compatibility_helper_and_guard_descriptors": [
+      {
+        "path": "tests/conftest.py",
+        "sha256": "368aa31c9ffbee05392b74db672fcf6dab436dd8c23d01251f666c677d4dfd07",
+        "bytes": 1278
+      },
+      {
+        "path": "tests/test_guard_dreyer_qualification_native_identity.py",
+        "sha256": "0107dbe7215da2c538c871afd8678e19357c65537a49136a111581e9fa26bb66",
+        "bytes": 1516
+      }
+    ],
+    "actual_compatibility_validation": {
+      "passed": 28,
+      "seconds": 0.9,
+      "executed_by": "deployment_bootstrap_agent",
+      "scope": "original27 archived fixtures plus independent actual frozen V5 native rejection guard",
+      "validation_contract": {
+        "path": "contracts/dreyer_qualification_transport_20261020.json",
+        "sha256": "f1cc8381df6561771acb05c5609dcf70173e70c272dbd9362f8b220ef951b59c",
+        "bytes": 5653
+      },
+      "overlaps_full_suite_not_additive": true
+    },
+    "production_qualifier_native_plan_or_completion_proof_modified": false
+  },
+  "final_V5_standard_history_amendment": {
+    "path": "audit/data_plan_20261020/dreyer_structure_case_review/v5_historical_code/budget_conservation_amendment.json",
+    "sha256": "0dfe9e5a92658f47fab83bb5ab3cc088d6853f840f10a6f05011f312839a3328",
+    "bytes": 3452
+  },
+  "new_current_Ma125_readonly_completion": {
+    "path": "audit/data_plan_20261020/ma_complete_independent/completion_v5_tool.json",
+    "sha256": "7d5051c18ae60087906573bab26615514eb6b64e728c236b8ba6831e18e54c15",
+    "bytes": 249241
+  },
+  "Ma_training_or_scientific_pool_permission_granted": false,
+  "actual_CPU_operational_execution_history_opaque": [
+    {
+      "original_source_relative_path": "audit/data_plan_20261020/dreyer_structure_case_review/actual_V5_CPU_cache_pilot01.json",
+      "opaque_actual_execution_record": {
+        "path": "audit/data_plan_20261020/software_regression/actual_cpu_operational_history/actual_V5_CPU_cache_pilot01.json.txt",
+        "sha256": "c6eff90123588fa18f2fce7a9392300dad966a44e11f80ccbe195bc6344912a3",
+        "bytes": 2551
+      },
+      "actual_execution_scope": "one real new CPU record and bitwise V4 comparison; not all520 cache completion",
+      "software_fixture_tests_do_not_substitute_for_actual_execution": true,
+      "original_live_state_dependencies_not_recursed_in_software_contract": true
+    },
+    {
+      "original_source_relative_path": "audit/data_plan_20261020/dreyer_structure_case_review/actual_V5_CPU_cache_pilot01_independent_review.json",
+      "opaque_actual_execution_record": {
+        "path": "audit/data_plan_20261020/software_regression/actual_cpu_operational_history/actual_V5_CPU_cache_pilot01_independent_review.json.txt",
+        "sha256": "03bb605090f21f3feb1a9456637c91dbc0a836e2cf92e982a9d4f7d0217ea28a",
+        "bytes": 29619
+      },
+      "actual_execution_scope": "independent numerical/full-GET verification of that one record; not all128 regressions",
+      "software_fixture_tests_do_not_substitute_for_actual_execution": true,
+      "original_live_state_dependencies_not_recursed_in_software_contract": true
+    },
+    {
+      "original_source_relative_path": "audit/data_plan_20261020/stieger_network_recovery/attempt01/actual_resume02_review.json",
+      "opaque_actual_execution_record": {
+        "path": "audit/data_plan_20261020/software_regression/actual_cpu_operational_history/actual_resume02_review.json.txt",
+        "sha256": "60cddb9822166b0c8886af67fb856822f96d07c374bc4b75ca8ea8176fba6976",
+        "bytes": 4460
+      },
+      "actual_execution_scope": "one real S47 session recovery; no raw redownload and no whole598 completion",
+      "software_fixture_tests_do_not_substitute_for_actual_execution": true,
+      "original_live_state_dependencies_not_recursed_in_software_contract": true
+    }
+  ],
+  "uncompleted_data_gates_from_root_coordination_no_live_reads": [
+    "Stieger2021",
+    "Yang2025",
+    "Dreyer2023"
+  ],
+  "all598_W3_completion_claimed": false,
+  "all520_Dreyer_completion_claimed": false,
+  "all153_Yang_completion_claimed": false,
+  "recorded_at_utc": "2026-10-20T10:01:59.688414+00:00",
+  "validation_scope": "software and offline CPU component snapshot before actual all-data completion; scientific fits remain gated",
+  "data_gates_are_independently_audited_after_this_software_snapshot": true
 }

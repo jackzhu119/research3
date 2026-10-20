@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -175,3 +176,173 @@ def test_Ma_rejects_unverified_units_recovered_ordinals_and_future_access(change
     elif change=="normalization":event["normalization_applied"]=True
     elif change=="energy":event["pre_RMS_joint_rms_volts"]*=2
     with pytest.raises(audit.CompletionAuditError):audit.ma_units_and_bounds(native,unit,events,x)
+
+
+def source_summary_fixture(root, monkeypatch, dataset="Dreyer2023"):
+    """Software control-flow fixture; capability/state gates are explicitly mocked.
+
+    The real bridge native-row parser and this auditor's artifact/ledger readers
+    run on small local JSON files. No real completion or scientific fit is made.
+    """
+    spec=deepcopy(audit.SPECS[dataset]);spec["records"]=1
+    count=32 if dataset=="Dreyer2023" else 4
+    spec["native_trials"]=count
+    audit_dir=root/"audit/software_source_fixture"
+    record={"record_id":"one","subject_id":"person1","session_id":"session1"}
+    raw_paths=[root/"raw/software_source_fixture/signal.edf"]
+    if dataset=="Yang2025":raw_paths.append(root/"raw/software_source_fixture/events.bdf")
+    for i,path in enumerate(raw_paths):
+        path.parent.mkdir(parents=True,exist_ok=True)
+        path.write_bytes(f"software fixture {i} only; not EEG".encode())
+    raw_files=[audit.bridge.descriptor(root,path) for path in raw_paths]
+    originals=[{"trial_uid":f"trial{i}","dataset":dataset,"source_file_sha256":raw_files[0]["sha256"],
+        "label":0 if i<14 else 1} for i in range(count)]
+    prefix={"reason":"terminal_start_fixation_prefix_without_native_MI_cue_or_paired800",
+        "cue_present":False,"paired800_present":False,"canonical_label_available":False,
+        "original_annotation_indices":[193,194]}
+    if dataset=="Dreyer2023":
+        metadata={"dataset":dataset,"source_file_sha256":raw_files[0]["sha256"],
+            "waveform_QC_applied":False,"trials":originals,
+            "acquisition_control":{"terminal_incomplete_prefixes":[prefix],
+                "incomplete_prefixes_are_not_MI_trials":True}}
+    else:
+        for i,row in enumerate(originals):
+            row.update(event_uid=row.pop("trial_uid"),original_event_index=i,
+                label=[0,1,0,None][i],context_start_sample=i*1000,
+                context_stop_sample_exclusive=i*1000+1500)
+        metadata={"dataset_id":"Yang2025_2C","derived_before_waveform_preprocessing":True,
+            "events":originals,"raw_files":{"signal":raw_files[0],"event":raw_files[1]}}
+    native_path=root/"cache/software_source_fixture/native.json";write(native_path,metadata)
+    excluded_indices={0,count-1} if dataset=="Dreyer2023" else {3}
+    retained=[{"event_uid":row.get("trial_uid",row.get("event_uid")),"dataset":dataset,
+        "label":row["label"]} for i,row in enumerate(originals) if i not in excluded_indices]
+    exclusions=[{"event_uid":row.get("trial_uid",row.get("event_uid")),
+        "exclusion_reason":"software_QC_fixture"} for i,row in enumerate(originals) if i in excluded_indices]
+    exclusion_path=root/"cache/software_source_fixture/exclusions.json";write(exclusion_path,exclusions)
+    shard={**record,"native_metadata":audit.bridge.descriptor(root,native_path),
+        "exclusions":audit.bridge.descriptor(root,exclusion_path),"raw_files":raw_files,
+        "raw_sha256":raw_files[0]["sha256"],"raw_backup_receipt":"raw_receipt_fixture"}
+    if dataset=="Yang2025":
+        profile={"schema_version":"paper3-yang-source-profile-v1","dataset_id":"Yang2025_2C",
+            "source_only":True,"MI_onset_verified":False,"context_from_marker_s":[2.25,3.75],
+            "crop_from_marker_s":[2.5,3.5],"input_contract_sha256":audit.bridge.INPUT_SHA,
+            "native_unit_policy":"common_gain_numeric_unresolved_no_absolute_QC"}
+        profile_path=root/"cache/software_source_fixture/profile.json";write(profile_path,profile)
+        shard["native_profile"]=audit.bridge.descriptor(root,profile_path)
+    artifacts=[shard["native_metadata"],shard["exclusions"]]
+    write(audit_dir/"one/state.json",{"shard":shard,"artifacts":artifacts})
+    manifest={"shards":[shard],"valid_trials":len(retained)}
+    manifest_path=root/"cache/software_source_fixture/source_cache.json";write(manifest_path,manifest)
+    final_rows=[{"path":f"audit/software_source_fixture/final{i}.json","sha256":"f"*64,
+        "bytes":1,"role":"audit","dataset":dataset} for i in range(spec["final_full_GET_objects"])]
+    raw_rows=[{**item,"role":"source_development_raw","dataset":dataset} for item in raw_files]
+    def receipt_entries(_root,item,_closure):
+        assert _root==root
+        if item=="raw_receipt_fixture":return deepcopy(raw_rows)
+        assert item=="final_receipt_fixture"
+        return deepcopy(final_rows)
+    monkeypatch.setattr(audit.bridge,"_receipt_entries",receipt_entries)
+    monkeypatch.setattr(audit.bridge,"load_extension_cache",lambda *a,**k:
+        SimpleNamespace(rows=retained,artifact_sha256={}))
+    monkeypatch.setattr(audit.coordinator,"_state_verified",lambda *a:True)
+    plan={"plan_sha256":"a"*64,"records":[record],"record_count":1,
+        "budgets":{"provider_body_bytes":1000000,"r2_get_body_bytes":1000000,"wall_seconds":10}}
+    required=sum(item["bytes"] for item in raw_files+artifacts)+len(final_rows)
+    ledger={"schema_version":"paper3-source-extension-budget-ledger-v1","plan_sha256":plan["plan_sha256"],
+        "charged":{"provider_body_bytes":0,"r2_get_body_bytes":required},"elapsed_seconds":1,
+        "history":[{"kind":"r2_get_body_bytes","reserved_bytes":required,"verified_bytes":required,
+            "status":"SUCCESS_FULL_BODY_VERIFIED"}]}
+    write(audit_dir/"budget_ledger.json",ledger)
+    status={"backup_receipt":"final_receipt_fixture"}
+    return SimpleNamespace(root=root,dataset=dataset,spec=spec,plan=plan,manifest=manifest,
+        manifest_path=manifest_path,audit_dir=audit_dir,status=status,retained=retained,
+        native_path=native_path,exclusion_path=exclusion_path,final_rows=final_rows)
+
+
+def summarize_source(fixture):
+    return audit.source_summary(fixture.root,fixture.dataset,fixture.spec,fixture.plan,
+        fixture.manifest,fixture.manifest_path,fixture.audit_dir,fixture.status,{})
+
+
+def test_Dreyer_dynamic_32_native_trials_14_18_before_QC_prefix_has_no_UID(tmp_path,monkeypatch):
+    fixture=source_summary_fixture(tmp_path,monkeypatch)
+    result=summarize_source(fixture)
+    assert result["native_trials"]==result["unique_native_trial_UIDs"]==32
+    assert result["native_binary_labels"]=={"0":14,"1":18}
+    assert result["retained_labels"]=={"0":13,"1":17}
+    assert result["retained_trials"]==30 and result["excluded_trials"]==2
+    assert result["native_non_binary_events"]==0 and result["final_full_GET_objects"]==7
+    assert result["native_UIDs_sorted_sha256"]==audit.digest(sorted(f"trial{i}" for i in range(32)))
+    prefix=audit.read(fixture.native_path)["acquisition_control"]["terminal_incomplete_prefixes"][0]
+    assert not {"trial_uid","event_uid","label","cache_index"}&prefix.keys()
+
+
+def test_Yang_keeps_153_record_registration_and_five_final_objects(tmp_path,monkeypatch):
+    assert audit.SPECS["Yang2025"]["records"]==153
+    assert audit.SPECS["Yang2025"]["sha"]=="ab9a075ff1fa84548bfe958d3c4b6d6897d6b9dbc29d0ed49d807ec3d4b2b609"
+    result=summarize_source(source_summary_fixture(tmp_path,monkeypatch,"Yang2025"))
+    assert result["native_trials"]==4 and result["native_binary_labels"]=={"0":2,"1":1}
+    assert result["native_non_binary_events"]==1 and result["final_full_GET_objects"]==5
+
+
+@pytest.mark.parametrize("dataset,count",[("Dreyer2023",5),("Dreyer2023",6),("Dreyer2023",8),
+    ("Yang2025",4),("Yang2025",6),("Yang2025",7)])
+def test_current_source_final_GET_count_is_exact(tmp_path,monkeypatch,dataset,count):
+    fixture=source_summary_fixture(tmp_path,monkeypatch,dataset)
+    while len(fixture.final_rows)<count:fixture.final_rows.append(deepcopy(fixture.final_rows[-1]))
+    del fixture.final_rows[count:]
+    with pytest.raises(audit.CompletionAuditError,match="exact_current_final_full_GET"):
+        summarize_source(fixture)
+
+
+@pytest.mark.parametrize("change",["invented_prefix_exclusion","duplicate_exclusion","retained_exclusion",
+    "missing_exclusion","missing_reason","duplicate_retained","unknown_retained","native_total","nonbinary_Dreyer"])
+def test_native_pre_QC_UID_denominator_cannot_be_replaced_by_counts(tmp_path,monkeypatch,change):
+    fixture=source_summary_fixture(tmp_path,monkeypatch)
+    exclusions=audit.read(fixture.exclusion_path)
+    if change=="invented_prefix_exclusion":exclusions[0]["event_uid"]="invented_terminal_prefix_UID"
+    elif change=="duplicate_exclusion":exclusions[1]=deepcopy(exclusions[0])
+    elif change=="retained_exclusion":exclusions[0]["event_uid"]=fixture.retained[0]["event_uid"]
+    elif change=="missing_exclusion":exclusions.pop()
+    elif change=="missing_reason":exclusions[0].pop("exclusion_reason")
+    elif change=="duplicate_retained":fixture.retained[1]["event_uid"]=fixture.retained[0]["event_uid"]
+    elif change=="unknown_retained":fixture.retained[0]["event_uid"]="unknown"
+    elif change=="native_total":fixture.spec["native_trials"]=40
+    elif change=="nonbinary_Dreyer":
+        value=audit.read(fixture.native_path);value["trials"][0]["label"]=None
+        write(fixture.native_path,value)
+        fixture.manifest["shards"][0]["native_metadata"]=audit.bridge.descriptor(tmp_path,fixture.native_path)
+    if change in {"invented_prefix_exclusion","duplicate_exclusion","retained_exclusion","missing_exclusion","missing_reason"}:
+        write(fixture.exclusion_path,exclusions)
+        fixture.manifest["shards"][0]["exclusions"]=audit.bridge.descriptor(tmp_path,fixture.exclusion_path)
+    # Keep synthetic descriptors/state consistent to reach the semantic check.
+    shard=fixture.manifest["shards"][0]
+    write(fixture.audit_dir/"one/state.json",{"shard":shard,"artifacts":[shard["native_metadata"],shard["exclusions"]]})
+    with pytest.raises(audit.CompletionAuditError):summarize_source(fixture)
+
+
+def test_Dreyer_only_current_V5_status_is_considered_not_old_V4(tmp_path,monkeypatch):
+    spec=audit.SPECS["Dreyer2023"]
+    assert spec["sha"]=="afc8dd0d2d873f455e901c6f702fc2d5649fde15f76873c40a24424c10d48e5a"
+    assert spec["plan"].endswith("plan_after_all520_native_review_v5.json")
+    assert spec["native_trials"]==20792 and spec["final_full_GET_objects"]==7
+    old="971c1a1272fdb25b0f21e7d69c4e7349593d352341bdaa2eaa0725b600dbc1d1"
+    write(tmp_path/f"audit/source_extensions_20261019/Dreyer2023/{old}/coordinator_status.json",
+        {"status":spec["completion"]})
+    monkeypatch.setattr(audit,"read",lambda _:pytest.fail("old completion must not be opened"))
+    assert audit.audit_completion(tmp_path,"Dreyer2023")["status"]=="PENDING_COMPLETE_DATA_GATE"
+
+
+def test_old_V4_plan_cannot_be_substituted_at_current_V5_path(tmp_path,monkeypatch):
+    spec=audit.SPECS["Dreyer2023"]
+    status=tmp_path/f"audit/source_extensions_20261019/Dreyer2023/{spec['sha']}/coordinator_status.json"
+    write(status,{"status":spec["completion"]})
+    write(tmp_path/spec["plan"],{"plan_sha256":"971c1a1272fdb25b0f21e7d69c4e7349593d352341bdaa2eaa0725b600dbc1d1",
+        "dataset":"Dreyer2023","role":"source_train"})
+    original=audit.read;seen=[]
+    def record_reads(path):
+        seen.append(Path(path));return original(path)
+    monkeypatch.setattr(audit,"read",record_reads)
+    with pytest.raises(audit.CompletionAuditError,match="exact_current_frozen_dataset_plan"):
+        audit.audit_completion(tmp_path,"Dreyer2023")
+    assert seen==[status,tmp_path/spec["plan"]]

@@ -30,12 +30,15 @@ SPECS = {
         "sha": "ab9a075ff1fa84548bfe958d3c4b6d6897d6b9dbc29d0ed49d807ec3d4b2b609",
         "records": 153, "role": "source_train", "arm": "BASE4_PLUS_YANG",
         "completion": "SOURCE_EXTENSION_CACHE_COMPLETE",
+        "final_full_GET_objects": 5,
     },
     "Dreyer2023": {
-        "plan": "audit/source_extensions_20261019/Dreyer2023/plan_after_acquisition_control_review.json",
-        "sha": "971c1a1272fdb25b0f21e7d69c4e7349593d352341bdaa2eaa0725b600dbc1d1",
+        "plan": "audit/source_extensions_20261019/Dreyer2023/plan_after_all520_native_review_v5.json",
+        "sha": "afc8dd0d2d873f455e901c6f702fc2d5649fde15f76873c40a24424c10d48e5a",
+        "plan_file_sha256": "440c78ca7d1d2a3be685041924bdfe1fbcdd5ad9683592f97c39d50184ad2967",
         "records": 520, "role": "source_train", "arm": "BASE4_PLUS_DREYER",
         "completion": "SOURCE_EXTENSION_CACHE_COMPLETE",
+        "native_trials": 20792, "final_full_GET_objects": 7,
     },
     "Ma2022": {
         "plan": "catalog/source_extensions_20261019/Ma2022/development_plan_native_v2.json",
@@ -145,7 +148,15 @@ def source_summary(root, dataset, spec, plan, manifest, manifest_path, audit, st
         output=f"audit/completion_readonly_capability/{dataset}")
     closure.update(cache.artifact_sha256)
     retained = [r for r in cache.rows if r["dataset"] == dataset]
+    retained_by_uid = {}
+    for row in retained:
+        uid = row.get("event_uid")
+        if not isinstance(uid, str) or not uid or uid in retained_by_uid:
+            raise CompletionAuditError("retained_native_UID_must_be_present_and_unique")
+        retained_by_uid[uid] = row
     native_uids, raw_files, subjects, sessions, labels = set(), {}, set(), set(), Counter()
+    native_labels = Counter()
+    native_non_binary = 0
     excluded = 0
     cache_bytes = 0
     for shard in manifest["shards"]:
@@ -160,7 +171,30 @@ def source_summary(root, dataset, spec, plan, manifest, manifest_path, audit, st
         cache_bytes += sum(item["bytes"] for item in state["artifacts"])
         native = bridge._native_rows(root, shard, dataset, closure)
         add_unique_uids(native_uids, native)
-        excluded += len(read(checked(root, shard["exclusions"], closure)))
+        # Native metadata contains genuine original events before waveform QC.
+        # Dreyer V5's terminal no-cue prefix is control metadata, outside trials;
+        # it receives no UID, label, cache row or waveform exclusion.
+        for original in native.values():
+            label = original.get("label")
+            if type(label) is int and label in (0, 1):
+                native_labels[str(label)] += 1
+            elif dataset == "Dreyer2023":
+                raise CompletionAuditError("Dreyer_native_MI_binary_labels_required")
+            else:
+                native_non_binary += 1
+        exclusions = read(checked(root, shard["exclusions"], closure))
+        if not isinstance(exclusions, list):
+            raise CompletionAuditError("explicit_native_exclusion_inventory_required")
+        excluded_uids = set()
+        for row in exclusions:
+            uid = row.get("event_uid") if isinstance(row, dict) else None
+            if (uid not in native or uid in excluded_uids or uid in retained_by_uid
+                    or not row.get("reason", row.get("exclusion_reason"))):
+                raise CompletionAuditError("native_retained_and_excluded_UIDs_must_partition_each_record")
+            excluded_uids.add(uid)
+        if set(native) != (set(native) & retained_by_uid.keys()) | excluded_uids:
+            raise CompletionAuditError("native_retained_and_excluded_UIDs_must_partition_each_record")
+        excluded += len(excluded_uids)
         subjects.add(shard["subject_id"])
         sessions.add((shard["subject_id"], shard["session_id"]))
         for item in shard["raw_files"]:
@@ -177,12 +211,18 @@ def source_summary(root, dataset, spec, plan, manifest, manifest_path, audit, st
             or len(native_uids) != len(retained)+excluded
             or subjects != {r["subject_id"] for r in plan["records"]}):
         raise CompletionAuditError("native_retained_excluded_denominators_disagree")
+    if "native_trials" in spec and len(native_uids) != spec["native_trials"]:
+        raise CompletionAuditError("exact_current_native_pre_QC_trial_total_required")
     final_rows = bridge._receipt_entries(root, status["backup_receipt"], closure)
+    if len(final_rows) != spec["final_full_GET_objects"]:
+        raise CompletionAuditError("exact_current_final_full_GET_object_count_required")
     required = sum(n for _,n in raw_files.values()) + cache_bytes + sum(r["bytes"] for r in final_rows)
     ledger = closed_ledger(root, audit/"budget_ledger.json", plan, required, closure)
     return {"provider_participant_ids":len(subjects), "provider_subject_ids_sha256":digest(sorted(subjects)),
         "provider_sessions":len(sessions), "records":len(records),
         "native_trials":len(native_uids), "retained_trials":len(retained), "excluded_trials":excluded,
+        "native_binary_labels":dict(sorted(native_labels.items())),
+        "native_non_binary_events":native_non_binary,
         "unique_native_trial_UIDs":len(native_uids), "native_UIDs_sorted_sha256":digest(sorted(native_uids)),
         "retained_labels":dict(sorted(labels.items())), "raw_objects":len(raw_files),
         "raw_bytes":sum(n for _,n in raw_files.values()), "cache_artifact_bytes":cache_bytes,
@@ -330,7 +370,9 @@ def audit_completion(root, dataset):
     plan_path = bridge.local(root,spec["plan"])
     plan = read(plan_path)
     if (plan.get("plan_sha256") != spec["sha"] or digest({k:v for k,v in plan.items() if k != "plan_sha256"}) != spec["sha"]
-            or plan.get("dataset") != dataset or plan.get("role") != spec["role"]):
+            or plan.get("dataset") != dataset or plan.get("role") != spec["role"]
+            or ("plan_file_sha256" in spec
+                and bridge.descriptor(root,plan_path)["sha256"] != spec["plan_file_sha256"])):
         raise CompletionAuditError("exact_current_frozen_dataset_plan_required")
     frozen = read(bridge.local(root,(audit/"frozen_plan.json").relative_to(root).as_posix()))
     if frozen != plan:

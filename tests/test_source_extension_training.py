@@ -366,83 +366,92 @@ def test_final_R2_proof_must_include_the_completed_manifest(preparation_proof_fi
 
 
 def parallel_evidence_fixture(root, monkeypatch):
-    audit="audit/source_extensions_20261019/Dreyer2023/"+bridge.PARALLEL_DREYER_PLAN_SHA
-    for relative in (bridge.PARALLEL_WRAPPER, bridge.PARALLEL_PARENT_WRAPPER):
-        target=root/relative
-        target.parent.mkdir(parents=True,exist_ok=True)
-        shutil.copyfile(ROOT/relative,target)
-    wrapper=bridge.descriptor(root,root/bridge.PARALLEL_WRAPPER)
-    history_sources,rows=[],[]
-    totals={"provider_body_bytes":0,"r2_get_body_bytes":0}
-    walls=[]
-    original={"provider_body_bytes":1000,"r2_get_body_bytes":2000,"wall_seconds":100}
-    for i,(label,plan_path,ledger_path,_) in enumerate(bridge.PARALLEL_PRIOR_SOURCES,1):
-        budgets=dict(original)
-        if label == "V3":
-            # A prior ceiling can retain fractional rounding reserve.
-            budgets["wall_seconds"]=92
-        plan={"schema_version":"SYNTHETIC_SOFTWARE_HISTORY_ONLY","budgets":budgets,"source":label}
-        plan_sha=digest(plan);plan["plan_sha256"]=plan_sha
-        pdesc=write(root,plan_path,plan)
-        charged={"provider_body_bytes":i*10,"r2_get_body_bytes":i*20}
-        wall=i+.25
-        ledger={"schema_version":"paper3-source-extension-budget-ledger-v1","plan_sha256":plan_sha,
-            "charged":charged,"elapsed_seconds":wall,"history":[
-                {"kind":kind,"reserved_bytes":value+5,"verified_bytes":value,"status":"SUCCESS_FULL_BODY_VERIFIED"}
-                for kind,value in charged.items()]}
-        ldesc=write(root,ledger_path,ledger)
-        rows.append({"source":label,"plan":pdesc,"closed_ledger":ldesc,"plan_sha256":plan_sha,
-                     "charged_body_bytes":charged,"elapsed_seconds":wall})
-        history_sources.append((label,plan_path,ledger_path,plan_sha));walls.append(wall)
-        for kind,value in charged.items():totals[kind]+=value
-    # Only expected historical fixture hashes change. Production always uses
-    # the four immutable release/audit plan hashes declared in the bridge.
-    monkeypatch.setattr(bridge,"PARALLEL_PRIOR_SOURCES",tuple(history_sources))
-    original_remaining={k:original[k]-v for k,v in totals.items()}
-    original_remaining["wall_seconds"]=original["wall_seconds"]-math.ceil(math.fsum(walls))
-    parent_remaining={k:budgets[k]-v for k,v in charged.items()}
-    parent_remaining["wall_seconds"]=math.floor(budgets["wall_seconds"]-wall)
-    remaining={k:min(v,parent_remaining[k]) for k,v in original_remaining.items()}
-    parent={"source":"V3","authorized_caps":{k:budgets[k] for k in (*totals,"wall_seconds")},
-        "actual_charged_body_bytes":charged,"actual_elapsed_seconds":wall,"remaining_caps":parent_remaining}
-    prior={"accounting_schema":"paper3-dreyer-four-ledger-budget-v1","original_caps":original,
-        "closed_history_sources":rows,"deducted_body_bytes":totals,"deducted_elapsed_seconds":math.fsum(walls),
-        "deducted_wall_seconds":math.ceil(math.fsum(walls)),"wall_rounding":"ceil_sum_actual_elapsed_once",
-        "original_caps_minus_all_actual_usage":original_remaining,"immediate_parent_conservation_bound":parent,
-        "remaining_cap_policy":"minimum_of_initial_caps_minus_all_actual_usage_and_immediate_parent_caps_minus_its_actual_usage",
-        "wall_remaining_rounding":"minimum_of_original_minus_ceil_cumulative_and_floor_parent_minus_actual",
-        "retained_prior_wall_rounding_seconds":original_remaining["wall_seconds"]-remaining["wall_seconds"],
-        "remaining_caps":remaining,"uses_original_caps_not_V2_or_V3_remaining_caps":True,
-        "carried_over_verified_R2_body_bytes":0,"old_cache_or_receipts_adopted_as_new_records":False}
-    write(root,audit+"/frozen_plan.json",{"plan_sha256":bridge.PARALLEL_DREYER_PLAN_SHA,"budgets":remaining})
-    declaration={"schema_version":"paper3-dreyer-parallel-root-declaration-v1","dataset":"Dreyer2023",
-        "plan_sha256":bridge.PARALLEL_DREYER_PLAN_SHA,"concurrent_yang_plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA,
-        "wrapper_implementation":wrapper,"only_dreyer_entrypoint":bridge.PARALLEL_WRAPPER,
-        "ordinary_dreyer_prepare_forbidden":True,"GPU_actions":0,"actual_fits":0,
-        "sealed_external_access_allowed":False,"limits":bridge.PARALLEL_LIMITS,
-        "root_authorization":bridge.PARALLEL_AUTHORIZATION,"prior_budget_evidence":prior,
-        "new_record_namespace":"cache/source_extensions_20261019/Dreyer2023/"+bridge.PARALLEL_DREYER_PLAN_SHA,
-        "initial_yang_process":{"pid":2026,"starttime_ticks":42,"boot_id":"abbddfa5-6cc8-471e-8519-0a488f6ef2bb",
-            "command_sha256":"d"*64,"plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA}}
+    """Bridge dispatch fixtures only; the frozen wrapper has its own real math tests."""
+    wrapper_file=root/bridge.PARALLEL_WRAPPER
+    wrapper_file.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copyfile(ROOT/bridge.PARALLEL_WRAPPER,wrapper_file)
+    wrapper_ref=bridge.descriptor(root,wrapper_file)
+    records=[{"record_id":f"software-{i}"} for i in range(520)]
+    plan={"schema_version":"SYNTHETIC_SOFTWARE_BRIDGE_ONLY","records":records}
+    plan_sha=digest(plan);plan["plan_sha256"]=plan_sha
+    monkeypatch.setattr(bridge,"PARALLEL_DREYER_PLAN_SHA",plan_sha)
+    plan_ref=write(root,bridge.PARALLEL_DREYER_PLAN,plan)
+    monkeypatch.setattr(bridge,"PARALLEL_DREYER_PLAN_FILE_SHA",plan_ref["sha256"])
+    audit="audit/source_extensions_20261019/Dreyer2023/"+plan_sha
+    write(root,audit+"/frozen_plan.json",plan)
+    refs={}
+    for i,r in enumerate(records):
+        write(root,audit+"/"+r["record_id"]+"/state.json",{"software_fixture":True,"record_id":r["record_id"]})
+        if i<128:
+            refs[r["record_id"]]=write(root,"audit/old128/"+r["record_id"]+".json",{"software_fixture":True})
+            write(root,audit+"/"+r["record_id"]+"/v4_numeric_regression.json",{"software_fixture":True})
+    labels=["V1","V2","auxiliary_schema_review","V3","V4","native_qualification"]
+    history=[]
+    for label in labels:
+        history.append({"source":label,"plan":write(root,"audit/history/"+label+"/plan.json",{"software_fixture":True}),
+                        "closed_ledger":write(root,"audit/history/"+label+"/ledger.json",{"software_fixture":True})})
+    prior={"accounting_schema":"paper3-dreyer-six-ledger-budget-v1","closed_history_sources":history}
+    alias=write(root,"audit/old_code/adapter.json",{"historical_software_fixture":True})
+    qualification={"historical_code_aliases":{"p3work/source_extensions/dreyer2023.py":alias},
+                   "reference_states":refs,"completion_proof":write(root,"audit/qualification/proof.json",{"software_fixture":True})}
+    declaration={"software_fixture":True,"prior_budget_evidence":prior,"qualification_evidence":qualification,
+        "initial_yang_process":{"mode":"concurrent_no_cache_wrapper_v2",
+            "plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA,
+            "closed_ledger":{"path":"audit/source_extensions_20261019/Yang2025/LIVE/budget_ledger.json",
+                             "sha256":"a"*64,"bytes":1}}}
     decl=write(root,audit+"/parallel_root_declaration.json",declaration)
-    evidence={"schema_version":"paper3-dreyer-parallel-cpu-execution-v1",
+    comparisons=[{"record_id":records[i]["record_id"],"old_reference_state":refs[records[i]["record_id"]]}
+                 for i in range(128)]
+    regressions={"reference_records":128,"verified_records":128,"comparisons":comparisons,
+                 "embedded_in_final_GET_backed_operational_evidence":True}
+    limits={"software_fixture":True}
+    evidence={"schema_version":"paper3-dreyer-parallel-cpu-execution-v5",
         "status":"RECORDS_VERIFIED_FINAL_BACKUP_PENDING","dataset":"Dreyer2023",
-        "plan_sha256":bridge.PARALLEL_DREYER_PLAN_SHA,
-        "concurrent_yang_plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA,"record_count":520,
-        "record_ids_sha256":digest([f"software-{i}" for i in range(520)]),
-        "scientific_kernel_unchanged":True,"GPU_actions":0,"actual_fits":0,
-        "external_payload_accessed":False,"carried_over_verified_R2_body_bytes":0,
-        "root_declaration":decl,"wrapper_implementation":wrapper,"server_actions":False,"limits":bridge.PARALLEL_LIMITS}
+        "plan_sha256":plan_sha,"concurrent_yang_plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA,
+        "record_count":520,"record_ids_sha256":digest([r["record_id"]for r in records]),
+        "wrapper_implementation":wrapper_ref,"root_declaration":decl,"scientific_kernel_unchanged":True,
+        "qualification_evidence":qualification,"old128_numerical_regression":regressions,
+        "yang_peer_coordination":{"schema_version":"paper3-dreyer-yang-peer-coordination-v1",
+            "initial_yang_process":declaration["initial_yang_process"],
+            "last_verified_live_peer":declaration["initial_yang_process"],
+            "global_lock_takeover":False,"completed_yang_proof":None},
+        "GPU_actions":0,"actual_fits":0,"external_payload_accessed":False,
+        "carried_over_verified_R2_body_bytes":0,"server_actions":False,"limits":limits}
     item=write(root,audit+"/parallel_execution_receipt.json",evidence)
-    manifest={"dataset":"Dreyer2023","plan_sha256":bridge.PARALLEL_DREYER_PLAN_SHA,"operational_evidence":item,
-        "shards":[{"record_id":f"software-{i}"} for i in range(520)]}
-    return audit,manifest,{"operational_evidence":item},evidence
+    manifest={"dataset":"Dreyer2023","plan_sha256":plan_sha,"operational_evidence":item,"shards":records}
+    status={"operational_evidence":item}
+    calls=[]
+    class MockFrozenWrapper:
+        class WrapperError(ValueError):pass
+        LIMITS=limits
+        def verify_declaration(self,r,path,p):
+            calls.append("verify_declaration")
+            actual=json.loads((r/path).read_text())
+            if actual!=declaration:raise self.WrapperError("mock_original_frozen_declaration_changed")
+            return copy.deepcopy(declaration),bridge.descriptor(r,r/path)
+        def verified_completion(self,r,p,d):
+            calls.append("verified_completion")
+            return copy.deepcopy(status)
+        def prior_budget_evidence(self,r,p):
+            calls.append("prior_budget_evidence")
+            return copy.deepcopy(prior)
+    verifier=MockFrozenWrapper()
+    monkeypatch.setattr(bridge,"_v5_wrapper",lambda r,c:verifier)
+    return audit,manifest,status,evidence,verifier,calls
 
 
-def test_parallel_CPU_proofs_are_additional_GET_objects_not_extra_training_permission(tmp_path,monkeypatch):
-    audit,manifest,status,_=parallel_evidence_fixture(tmp_path,monkeypatch)
-    extra=bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
+def test_parallel_v5_requires_actual_offline_verifier_and_two_extra_final_GET_objects(tmp_path,monkeypatch):
+    audit,manifest,status,_,_,calls=parallel_evidence_fixture(tmp_path,monkeypatch)
+    before={p:p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    closure={};extra=bridge._parallel_evidence(tmp_path,manifest,status,audit,closure)
     assert len(extra)==2 and all(role=="audit" for _,role in extra)
+    assert calls==["verify_declaration","verified_completion","prior_budget_evidence"]
+    assert before=={p:p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    assert all(f"audit/history/{label}/ledger.json" in closure for label in
+        ("V1","V2","auxiliary_schema_review","V3","V4","native_qualification"))
+    assert len([p for p in closure if p.startswith(audit+"/software-") and p.endswith("/state.json")])==520
+    assert len([p for p in closure if p.endswith("/v4_numeric_regression.json")])==128
+    assert not any("Yang2025" in p for p in closure)
     assert bridge._parallel_evidence(tmp_path,{"dataset":"Yang2025"},{},"unused",{})==[]
     with pytest.raises(bridge.ExtensionGateError,match="seven_GET_objects_required"):
         bridge._parallel_evidence(tmp_path,{"dataset":"Dreyer2023"},{},"unused",{})
@@ -450,9 +459,10 @@ def test_parallel_CPU_proofs_are_additional_GET_objects_not_extra_training_permi
 
 @pytest.mark.parametrize("key,value",[("GPU_actions",1),("actual_fits",1),
     ("external_payload_accessed",True),("carried_over_verified_R2_body_bytes",1),
-    ("concurrent_yang_plan_sha256","f"*64)])
-def test_parallel_CPU_proof_never_expands_data_GPU_or_budget_authority(tmp_path,monkeypatch,key,value):
-    audit,manifest,status,evidence=parallel_evidence_fixture(tmp_path,monkeypatch)
+    ("concurrent_yang_plan_sha256","f"*64),("schema_version","paper3-dreyer-parallel-cpu-execution-v1"),
+    ("record_count",519),("scientific_kernel_unchanged",1),("GPU_actions",False)])
+def test_parallel_V5_scope_types_and_old_schema_cannot_expand_authority(tmp_path,monkeypatch,key,value):
+    audit,manifest,status,evidence,_,_=parallel_evidence_fixture(tmp_path,monkeypatch)
     evidence[key]=value
     item=write(tmp_path,audit+"/parallel_execution_receipt.json",evidence)
     manifest["operational_evidence"]=status["operational_evidence"]=item
@@ -460,105 +470,154 @@ def test_parallel_CPU_proof_never_expands_data_GPU_or_budget_authority(tmp_path,
         bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
 
 
-def rewrite_parallel_declaration(root,audit,manifest,status,evidence,declaration):
-    evidence["root_declaration"]=write(root,audit+"/parallel_root_declaration.json",declaration)
-    item=write(root,audit+"/parallel_execution_receipt.json",evidence)
-    manifest["operational_evidence"]=status["operational_evidence"]=item
+@pytest.mark.parametrize("failure",["qualification","actual128numeric","final7GET","closedledger"])
+def test_parallel_V5_forwards_real_proof_failure_without_permitting_fit(tmp_path,monkeypatch,failure):
+    audit,manifest,status,_,verifier,calls=parallel_evidence_fixture(tmp_path,monkeypatch)
+    def blocked(*a):raise verifier.WrapperError(failure)
+    monkeypatch.setattr(verifier,"verified_completion",blocked)
+    with pytest.raises(bridge.ExtensionGateError,match="actual_qualification_numeric_and_complete_GET"):
+        bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
+    assert calls==["verify_declaration"]
 
 
-def test_parallel_v4_binds_four_closed_histories_and_never_reads_live_process(tmp_path,monkeypatch):
-    audit,manifest,status,_=parallel_evidence_fixture(tmp_path,monkeypatch)
-    read=Path.read_text
-    def no_live_process(path,*args,**kwargs):
-        assert not str(path).startswith("/proc/")
-        return read(path,*args,**kwargs)
-    monkeypatch.setattr(Path,"read_text",no_live_process)
-    before={p:p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
-    closure={};bridge._parallel_evidence(tmp_path,manifest,status,audit,closure)
-    assert before=={p:p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
-    assert all(p in closure and q in closure for _,p,q,_ in bridge.PARALLEL_PRIOR_SOURCES)
-    assert bridge.PARALLEL_WRAPPER in closure and bridge.PARALLEL_PARENT_WRAPPER in closure
-
-
-@pytest.mark.parametrize("change",["missing_aux","missing_v3","duplicate_parent","refund_failed_transfer",
-    "unclosed_wall","open_transfer","NaN_wall","old_remaining_cap","round_each_wall",
-    "refund_prior_rounding","omit_parent_bound","refund_parent_bytes"])
-def test_parallel_v4_prior_usage_cannot_be_lost_or_refunded(tmp_path,monkeypatch,change):
-    audit,manifest,status,evidence=parallel_evidence_fixture(tmp_path,monkeypatch)
-    declaration=json.loads((tmp_path/evidence["root_declaration"]["path"]).read_text())
-    prior=declaration["prior_budget_evidence"];rows=prior["closed_history_sources"]
-    if change=="missing_aux":rows.pop(2)
-    elif change=="missing_v3":rows.pop()
-    elif change=="duplicate_parent":rows[2]=copy.deepcopy(rows[1])
-    elif change=="omit_parent_bound":prior.pop("immediate_parent_conservation_bound")
-    elif change=="refund_parent_bytes":
-        prior["immediate_parent_conservation_bound"]["remaining_caps"]["provider_body_bytes"]+=1
-    elif change=="refund_prior_rounding":
-        prior["remaining_caps"]["wall_seconds"]=prior["original_caps_minus_all_actual_usage"]["wall_seconds"]
-        prior["retained_prior_wall_rounding_seconds"]=0
-        plan=json.loads((tmp_path/audit/"frozen_plan.json").read_text())
-        plan["budgets"]["wall_seconds"]=prior["remaining_caps"]["wall_seconds"]
-        write(tmp_path,audit+"/frozen_plan.json",plan)
-    elif change=="old_remaining_cap":
-        prior["remaining_caps"]["provider_body_bytes"]+=1
-        plan=json.loads((tmp_path/audit/"frozen_plan.json").read_text())
-        plan["budgets"]["provider_body_bytes"]+=1;write(tmp_path,audit+"/frozen_plan.json",plan)
-    elif change=="round_each_wall":
-        prior["deducted_wall_seconds"]=sum(math.ceil(row["elapsed_seconds"]) for row in rows)
-        prior["remaining_caps"]["wall_seconds"]=prior["original_caps"]["wall_seconds"]-prior["deducted_wall_seconds"]
-        plan=json.loads((tmp_path/audit/"frozen_plan.json").read_text())
-        plan["budgets"]["wall_seconds"]=prior["remaining_caps"]["wall_seconds"]
-        write(tmp_path,audit+"/frozen_plan.json",plan)
-    else:
-        row=rows[0];path=row["closed_ledger"]["path"];ledger=json.loads((tmp_path/path).read_text())
-        if change=="refund_failed_transfer":ledger["history"][0].update(status="FAILURE_FULL_RESERVATION_CONSUMED",verified_bytes=0)
-        elif change=="unclosed_wall":ledger["wall_intent"]={}
-        elif change=="open_transfer":ledger["active_transfer"]={}
-        elif change=="NaN_wall":ledger["elapsed_seconds"]=float("nan")
-        row["closed_ledger"]=write(tmp_path,path,ledger)
-    rewrite_parallel_declaration(tmp_path,audit,manifest,status,evidence,declaration)
-    with pytest.raises(bridge.ExtensionGateError):
+def test_parallel_V5_missing_actual_complete_cache_cannot_adopt_metadata_qualification(tmp_path,monkeypatch):
+    audit,manifest,status,_,verifier,_=parallel_evidence_fixture(tmp_path,monkeypatch)
+    monkeypatch.setattr(verifier,"verified_completion",lambda *a:None)
+    with pytest.raises(bridge.ExtensionGateError,match="actual_qualification_numeric_and_complete_GET"):
         bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
 
 
-def test_parallel_v4_retains_immediate_parent_rounding_reserve(tmp_path,monkeypatch):
-    audit,manifest,status,evidence=parallel_evidence_fixture(tmp_path,monkeypatch)
-    declaration=json.loads((tmp_path/evidence["root_declaration"]["path"]).read_text())
-    prior=declaration["prior_budget_evidence"]
-    assert prior["original_caps_minus_all_actual_usage"]["wall_seconds"]==89
-    assert prior["immediate_parent_conservation_bound"]["remaining_caps"]["wall_seconds"]==87
-    assert prior["retained_prior_wall_rounding_seconds"]==2
-    assert prior["remaining_caps"]["wall_seconds"]==87
-    bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
-
-
-def test_parallel_v4_rejects_old_plan_and_old_wrapper_even_with_matching_fixture_descriptors(tmp_path,monkeypatch):
-    audit,manifest,status,evidence=parallel_evidence_fixture(tmp_path,monkeypatch)
-    old=bridge.PARALLEL_PRIOR_SOURCES[1][3]
-    manifest["plan_sha256"]=old
-    with pytest.raises(bridge.ExtensionGateError,match="exact_declared"):
-        bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
-    manifest["plan_sha256"]=bridge.PARALLEL_DREYER_PLAN_SHA
-    evidence["wrapper_implementation"]=bridge.descriptor(tmp_path,tmp_path/bridge.PARALLEL_PARENT_WRAPPER)
-    item=write(tmp_path,audit+"/parallel_execution_receipt.json",evidence)
-    manifest["operational_evidence"]=status["operational_evidence"]=item
-    with pytest.raises(bridge.ExtensionGateError,match="declared_Dreyer_CPU_wrapper"):
-        bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
-
-
-def test_parallel_v4_stale_ledger_SHA_and_resource_caps_are_rejected(tmp_path,monkeypatch):
-    audit,manifest,status,evidence=parallel_evidence_fixture(tmp_path,monkeypatch)
-    declaration=json.loads((tmp_path/evidence["root_declaration"]["path"]).read_text())
-    row=declaration["prior_budget_evidence"]["closed_history_sources"][0]
-    path=row["closed_ledger"]["path"];ledger=json.loads((tmp_path/path).read_text())
-    ledger["elapsed_seconds"]+=.1;write(tmp_path,path,ledger)
+@pytest.mark.parametrize("filename",["state.json","v4_numeric_regression.json"])
+def test_parallel_V5_state_and_numeric_report_snapshots_cannot_change_during_verification(tmp_path,monkeypatch,filename):
+    audit,manifest,status,_,verifier,_=parallel_evidence_fixture(tmp_path,monkeypatch)
+    def changed(*a):
+        write(tmp_path,audit+"/software-0/"+filename,{"changed_during_verification":True})
+        return copy.deepcopy(status)
+    monkeypatch.setattr(verifier,"verified_completion",changed)
     with pytest.raises(bridge.ExtensionGateError,match="SHA_or_size"):
         bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
-    evidence["limits"]={**bridge.PARALLEL_LIMITS,"cpu_threads":2}
+
+
+@pytest.mark.parametrize("change",["short_list","unverified","not_embedded","float_count"])
+def test_parallel_V5_all128_actual_regressions_required(tmp_path,monkeypatch,change):
+    audit,manifest,status,evidence,_,_=parallel_evidence_fixture(tmp_path,monkeypatch)
+    regressions=evidence["old128_numerical_regression"]
+    if change=="short_list":regressions["comparisons"].pop()
+    elif change=="unverified":regressions["verified_records"]=127
+    elif change=="float_count":regressions["verified_records"]=128.0
+    else:regressions["embedded_in_final_GET_backed_operational_evidence"]=False
     item=write(tmp_path,audit+"/parallel_execution_receipt.json",evidence)
     manifest["operational_evidence"]=status["operational_evidence"]=item
-    with pytest.raises(bridge.ExtensionGateError,match="scope_or_budget"):
+    with pytest.raises(bridge.ExtensionGateError,match="all128_actual_numeric"):
         bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
+
+
+def test_parallel_V5_old_plan_and_old_wrapper_never_impersonate_current(tmp_path,monkeypatch):
+    audit,manifest,status,evidence,_,_=parallel_evidence_fixture(tmp_path,monkeypatch)
+    current=manifest["plan_sha256"];manifest["plan_sha256"]="971c1a1272fdb25b0f21e7d69c4e7349593d352341bdaa2eaa0725b600dbc1d1"
+    with pytest.raises(bridge.ExtensionGateError,match="exact_declared_Dreyer_V5"):
+        bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
+    manifest["plan_sha256"]=current
+    evidence["wrapper_implementation"]["path"]=bridge.PARALLEL_PARENT_WRAPPER
+    item=write(tmp_path,audit+"/parallel_execution_receipt.json",evidence)
+    manifest["operational_evidence"]=status["operational_evidence"]=item
+    with pytest.raises(bridge.ExtensionGateError,match="declared_Dreyer_V5_CPU_wrapper"):
+        bridge._parallel_evidence(tmp_path,manifest,status,audit,{})
+
+
+def test_V5_frozen_verifier_loader_checks_all_six_release_bindings_without_live_Yang(tmp_path):
+    refs=((bridge.PARALLEL_WRAPPER,bridge.PARALLEL_WRAPPER_SHA),
+          (bridge.PARALLEL_PARENT_WRAPPER,bridge.PARALLEL_PARENT_WRAPPER_SHA),
+          (bridge.PARALLEL_DREYER_PLAN,bridge.PARALLEL_DREYER_PLAN_FILE_SHA),
+          (bridge.DREYER_NATIVE,bridge.DREYER_NATIVE_SHA),
+          (bridge.DREYER_QUALIFICATION,bridge.DREYER_QUALIFICATION_SHA),
+          (bridge.DREYER_ADMISSION,bridge.DREYER_ADMISSION_SHA))
+    for path,_ in refs:
+        target=tmp_path/path;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(ROOT/path,target)
+    closure={};module=bridge._v5_wrapper(tmp_path,closure)
+    assert module.DREYER_PLAN_SHA==bridge.PARALLEL_DREYER_PLAN_SHA
+    assert set(closure)=={p for p,_ in refs}
+    for path,_ in refs:
+        target=tmp_path/path;original=target.read_bytes();target.write_bytes(original+b" ")
+        with pytest.raises(bridge.ExtensionGateError,match="SHA_or_size"):
+            bridge._v5_wrapper(tmp_path,{})
+        target.write_bytes(original)
+
+
+def test_provenance_closure_preserves_original_alias_and_never_demands_raw_payload(tmp_path):
+    original="p3work/source_extensions/dreyer2023.py"
+    old=write(tmp_path,"audit/historical/native.json",{"historical_adapter":True})
+    write(tmp_path,original,{"current_new_adapter":True})
+    raw={"path":"data/source_extensions_20261019/Dreyer2023/not_restored.edf","sha256":"b"*64,"bytes":42}
+    dependent=write(tmp_path,"audit/dependent.json",{"old_adapter":{**old,"path":original},"raw_files":[raw]})
+    closure={};bridge._provenance_closure(tmp_path,dependent,closure,aliases={original:old})
+    assert set(closure)=={dependent["path"],old["path"]}
+    assert original not in closure and not (tmp_path/raw["path"]).exists()
+    (tmp_path/old["path"]).write_text("tamper")
+    with pytest.raises(bridge.ExtensionGateError,match="SHA_or_size"):
+        bridge._provenance_closure(tmp_path,dependent,{},aliases={original:old})
+
+
+def peer_coordination_fixture(root, *, already_complete=False):
+    """Small peer-schema fixture; no claim of real Yang qualification is made."""
+    snapshot=write(root,"audit/software_peer/closed_snapshot.json",{"software_fixture":True})
+    mapping={snapshot["path"]:snapshot["sha256"]}
+    complete={"mode":"already_complete","plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA,
+        "transport_history":{"provenance_closure":dict(mapping)},
+        "transport_completion_proof":{"status":"SOURCE_EXTENSION_CACHE_COMPLETE",
+            "already_complete_offline_verified":True,"verified_records":153,
+            "provenance_closure":dict(mapping)}}
+    live={"mode":"concurrent_no_cache_wrapper_v2","plan_sha256":bridge.PARALLEL_YANG_PLAN_SHA,
+          "pid":2026,"command_sha256":"d"*64}
+    initial=complete if already_complete else live
+    coordination={"schema_version":"paper3-dreyer-yang-peer-coordination-v1",
+        "initial_yang_process":copy.deepcopy(initial),
+        "last_verified_live_peer":None if already_complete else copy.deepcopy(initial),
+        "global_lock_takeover":True,"completed_yang_proof":complete}
+    return {"initial_yang_process":initial},coordination,snapshot
+
+
+def test_still_live_Yang_never_dereferences_its_recorded_objects(tmp_path,monkeypatch):
+    declaration,coordination,_=peer_coordination_fixture(tmp_path)
+    initial=declaration["initial_yang_process"]
+    initial["closed_ledger"]={"path":"audit/Yang2025/live/budget_ledger.json","sha256":"b"*64,"bytes":1}
+    coordination.update(initial_yang_process=copy.deepcopy(initial),last_verified_live_peer=copy.deepcopy(initial),
+                        global_lock_takeover=False,completed_yang_proof=None)
+    monkeypatch.setattr(bridge,"artifact",lambda *a:pytest.fail("must not inspect any live Yang artifact"))
+    closure={};bridge._peer_coordination_closure(tmp_path,declaration,coordination,closure)
+    assert closure=={}
+
+
+@pytest.mark.parametrize("already_complete",[False,True])
+def test_Yang_closed_takeover_binds_both_actual_provenance_maps(tmp_path,already_complete):
+    declaration,coordination,snapshot=peer_coordination_fixture(tmp_path,already_complete=already_complete)
+    closure={};bridge._peer_coordination_closure(tmp_path,declaration,coordination,closure)
+    assert closure=={snapshot["path"]:snapshot["sha256"]}
+    (tmp_path/snapshot["path"]).write_text("tampered closed proof")
+    with pytest.raises(bridge.ExtensionGateError,match="SHA_or_size"):
+        bridge._peer_coordination_closure(tmp_path,declaration,coordination,{})
+
+
+@pytest.mark.parametrize("change",["missing","integer_takeover","old_mode","changed_lastlive",
+    "missing_completion","claim_while_live","missing_history_map","missing_full_map",
+    "missing153","float153","unverified","changed_initial","extra_field"])
+def test_peer_observation_cannot_be_upgraded_to_a_completed_Yang_claim(tmp_path,change):
+    declaration,coordination,_=peer_coordination_fixture(tmp_path)
+    if change=="missing":coordination=None
+    elif change=="integer_takeover":coordination["global_lock_takeover"]=1
+    elif change=="old_mode":coordination["last_verified_live_peer"]["mode"]="concurrent_no_cache_wrapper"
+    elif change=="changed_lastlive":coordination["last_verified_live_peer"]["pid"]=7
+    elif change=="missing_completion":coordination["completed_yang_proof"]=None
+    elif change=="claim_while_live":coordination["global_lock_takeover"]=False
+    elif change=="missing_history_map":coordination["completed_yang_proof"]["transport_history"]["provenance_closure"]={}
+    elif change=="missing_full_map":coordination["completed_yang_proof"]["transport_completion_proof"]["provenance_closure"]={}
+    elif change=="missing153":coordination["completed_yang_proof"]["transport_completion_proof"]["verified_records"]=152
+    elif change=="float153":coordination["completed_yang_proof"]["transport_completion_proof"]["verified_records"]=153.0
+    elif change=="unverified":coordination["completed_yang_proof"]["transport_completion_proof"]["already_complete_offline_verified"]=False
+    elif change=="changed_initial":coordination["initial_yang_process"]["pid"]=7
+    else:coordination["unexpected_permission"]=True
+    with pytest.raises(bridge.ExtensionGateError):
+        bridge._peer_coordination_closure(tmp_path,declaration,coordination,{})
 
 
 def test_common_gain_unknown_SI_is_allowed_but_unknown_relative_gain_is_not(tmp_path):

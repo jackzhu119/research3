@@ -1,5 +1,5 @@
 {
-  "schema_version": "paper3-source-native-qualification-transport-validation-v1",
+  "schema_version": "paper3-source-native-qualification-transport-validation-v3",
   "dataset": "Dreyer2023",
   "scope": "same_source_metadata_qualification_plan_transport_only",
   "amendment": {
@@ -17,11 +17,6 @@
     "sha256": "89080cf4680b096d1e7912dd5a2047d8de84f19290d7e76749a67488d3528b57",
     "bytes": 15407
   },
-  "actual_root_tests": {
-    "command": "python -B -m pytest -q tests/test_resume_dreyer_qualification_transport.py",
-    "passed": 27,
-    "duration_seconds": 0.93
-  },
   "qualification_plan_semantic_sha256": "f39a24a3d26c6eb3de6e286e2efb8afc032397b91626f84fd647ae2c182b5efd",
   "scientific_rules_changed": false,
   "original_budget_or_clock_reset": false,
@@ -32,11 +27,89 @@
   "scientific_fits": 0,
   "GPU_actions": 0,
   "external_payload_accessed": false,
-  "independent_review": {
-    "path": "audit/data_plan_20261020/dreyer_qualification_network_recovery/no_cache_wrapper_independent_review.json",
-    "sha256": "28fe615377c74f8c2d243e02344ae54407207c00ca2a72fb106dab28e0632cab",
-    "bytes": 2443
-  },
   "operational_scope": "single_current_source_metadata_continuation_then_archived_never_redispatched_after_completion",
-  "not_a_GPU_or_deployment_training_entrypoint": true
+  "not_a_GPU_or_deployment_training_entrypoint": true,
+  "actual_targeted_tests": {
+    "command": "python -B -m pytest -q tests/test_resume_dreyer_qualification_transport.py tests/test_guard_dreyer_qualification_native_identity.py",
+    "passed": 28,
+    "duration_seconds": 0.9,
+    "executed_by": "deployment_bootstrap_agent",
+    "scope": "pure_temporary_software_fixtures_no_real_network_ledger_worker_or_native_data_parse"
+  },
+  "historical_validation": {
+    "scope": "original_v1_contract_original_27_tests_and_independent_review_at_their_exact_historical_bytes_only",
+    "original_contract_opaque": {
+      "path": "audit/data_plan_20261020/software_regression/dreyer_transport_fixture_history/dreyer_qualification_transport_20261020.json.txt",
+      "sha256": "0a6679ff18cd01882a5ec361497437e65e380a8171ad435c9f95c5730929e6e7",
+      "bytes": 1770
+    },
+    "original_tests_opaque": {
+      "path": "audit/data_plan_20261020/software_regression/dreyer_transport_fixture_history/test_resume_dreyer_qualification_transport.py.txt",
+      "sha256": "89080cf4680b096d1e7912dd5a2047d8de84f19290d7e76749a67488d3528b57",
+      "bytes": 15407
+    },
+    "original_independent_review_opaque": {
+      "path": "audit/data_plan_20261020/software_regression/dreyer_transport_fixture_history/no_cache_wrapper_independent_review.json.txt",
+      "sha256": "28fe615377c74f8c2d243e02344ae54407207c00ca2a72fb106dab28e0632cab",
+      "bytes": 2443
+    },
+    "prior_actual_root_tests": {
+      "passed": 27,
+      "duration_seconds": 0.93,
+      "applies_to_original_tests_sha256": "89080cf4680b096d1e7912dd5a2047d8de84f19290d7e76749a67488d3528b57"
+    },
+    "old_independent_review_does_not_claim_updated_test_bytes": true,
+    "withdrawn_first_fixture_repair": {
+      "status": "WITHDRAWN_TO_PRESERVE_IMMUTABLE_ALL520_PROOF_TEST_IDENTITY",
+      "reason": "The immutable all520 proof binds original test89080. Its canonical bytes remain exact; compatibility is provided only in temporary fixtures by a separately bound helper.",
+      "tests_opaque": {
+        "path": "audit/data_plan_20261020/software_regression/dreyer_transport_fixture_history/first_fixture_repair_aa1c7fe.py.txt",
+        "sha256": "aa1c7fe7574ef326509357267026665d20268f28e3677ac15c431cacc0831e3d",
+        "bytes": 16150
+      },
+      "contract_opaque": {
+        "path": "audit/data_plan_20261020/software_regression/dreyer_transport_fixture_history/first_fixture_repair_contract_e1c3d3a0.json.txt",
+        "sha256": "e1c3d3a0dcd80e6f5f95c199ad902fa734fd20912fa5c73406fc0ef338a1c39c",
+        "bytes": 3694
+      },
+      "prior_actual_targeted_tests": {
+        "passed": 27,
+        "duration_seconds": 1.05,
+        "applies_to_tests_sha256": "aa1c7fe7574ef326509357267026665d20268f28e3677ac15c431cacc0831e3d"
+      }
+    }
+  },
+  "fixture_correction": {
+    "scope": "preserve_original_89080_test_bytes_and_only_restore_exact_ec2f_into_its_two_temporary_guard_fixtures",
+    "historical_native": {
+      "path": "audit/data_plan_20261020/dreyer_structure_case_review/v5_historical_code/dreyer2023.py",
+      "sha256": "ec2f7dbc10903c308cd30564c30b04c4653c64173fdb0331ede318fd1c3b1489",
+      "bytes": 23437
+    },
+    "current_native_rejected_by_historical_qualifier": {
+      "path": "p3work/source_extensions/dreyer2023.py",
+      "sha256": "5c31e969eeabd17634864f6783d8473a0a79f1888faf274d758cd9c5ba4cef77",
+      "bytes": 38175
+    },
+    "real_frozen_qualifier_or_transport_core_or_native_code_changed": false,
+    "scientific_data_evidence_changed": false,
+    "compatibility_applies_only_to": {
+      "module": "tests/test_resume_dreyer_qualification_transport.py",
+      "test_originalname": "test_real_load_rejects_changed_frozen_qualifier_and_native_bytes",
+      "parametrized_cases": 2
+    },
+    "other_tests_are_noop_without_reading_scientific_data": true,
+    "canonical_historical_test_bytes_unchanged": true,
+    "original_all520_qualification_proof_unchanged": true
+  },
+  "compatibility_fixture": {
+    "path": "tests/conftest.py",
+    "sha256": "368aa31c9ffbee05392b74db672fcf6dab436dd8c23d01251f666c677d4dfd07",
+    "bytes": 1278
+  },
+  "independent_current_native_guard_test": {
+    "path": "tests/test_guard_dreyer_qualification_native_identity.py",
+    "sha256": "0107dbe7215da2c538c871afd8678e19357c65537a49136a111581e9fa26bb66",
+    "bytes": 1516
+  }
 }

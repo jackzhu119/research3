@@ -31,35 +31,20 @@ INPUT_SHA = "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872"
 ARMS = {"BASE4_PLUS_YANG": "Yang2025", "BASE4_PLUS_DREYER": "Dreyer2023"}
 SEEDS = tuple(range(20261018, 20261023))
 STAGE = "pre_rms_car11_temporal_demeaned"
-PARALLEL_DREYER_PLAN_SHA = "971c1a1272fdb25b0f21e7d69c4e7349593d352341bdaa2eaa0725b600dbc1d1"
+PARALLEL_DREYER_PLAN_SHA = "afc8dd0d2d873f455e901c6f702fc2d5649fde15f76873c40a24424c10d48e5a"
+PARALLEL_DREYER_PLAN = "audit/source_extensions_20261019/Dreyer2023/plan_after_all520_native_review_v5.json"
+PARALLEL_DREYER_PLAN_FILE_SHA = "440c78ca7d1d2a3be685041924bdfe1fbcdd5ad9683592f97c39d50184ad2967"
 PARALLEL_YANG_PLAN_SHA = "ab9a075ff1fa84548bfe958d3c4b6d6897d6b9dbc29d0ed49d807ec3d4b2b609"
-PARALLEL_WRAPPER = "tools/prepare_dreyer_source_cpu_v4.py"
-PARALLEL_WRAPPER_SHA = "3bdfd19d9d1596f92b689121f8231d8b2403449ecbc26dd0b27c0f7ddee59a1a"
-PARALLEL_PARENT_WRAPPER = "tools/prepare_dreyer_source_cpu_v3.py"
-PARALLEL_PARENT_WRAPPER_SHA = "78a34973804875bc66b1a667627619d1828285cd813cf27e6fb4f9b519d9b1a6"
-PARALLEL_PRIOR_SOURCES = (
-    ("V1", "audit/source_extensions_20261019/Dreyer2023/c19448093361767715840f162297173951e064bae9e5e3f52075cf5bfee56b20/frozen_plan.json",
-     "audit/source_extensions_20261019/Dreyer2023/c19448093361767715840f162297173951e064bae9e5e3f52075cf5bfee56b20/budget_ledger.json",
-     "c19448093361767715840f162297173951e064bae9e5e3f52075cf5bfee56b20"),
-    ("V2", "audit/source_extensions_20261019/Dreyer2023/8a3b924f83e545de17f3529edbcd7f840424fcfa39f0ca56416a4f9f86bc5112/frozen_plan.json",
-     "audit/source_extensions_20261019/Dreyer2023/8a3b924f83e545de17f3529edbcd7f840424fcfa39f0ca56416a4f9f86bc5112/budget_ledger.json",
-     "8a3b924f83e545de17f3529edbcd7f840424fcfa39f0ca56416a4f9f86bc5112"),
-    ("auxiliary_schema_review", "audit/data_plan_20261019/dreyer/all_run_schema_review/plan.json",
-     "audit/data_plan_20261019/dreyer/all_run_schema_review/budget_ledger.json",
-     "7446e8688214951ed56c7bd24ebb80f23aa7c3271d7abe3a5a758fb99c1024d3"),
-    ("V3", "audit/source_extensions_20261019/Dreyer2023/0fbc5d8d5fc6181649ea1c2ac87bc570294ee9264f45da234116a9f5876463ed/frozen_plan.json",
-     "audit/source_extensions_20261019/Dreyer2023/0fbc5d8d5fc6181649ea1c2ac87bc570294ee9264f45da234116a9f5876463ed/budget_ledger.json",
-     "0fbc5d8d5fc6181649ea1c2ac87bc570294ee9264f45da234116a9f5876463ed"),
-)
-PARALLEL_LIMITS = {"cache_bytes": 512*1024**2, "minimum_free_disk_bytes": 4*1024**3,
-    "maximum_anon_plus_kernel_bytes": 12*1024**3, "cpu_threads": 1, "nice": 10,
-    "other_inflight_raw_bytes": 935203397+626191826, "dreyer_peak_memory_reserve_bytes": 512*1024**2}
-PARALLEL_AUTHORIZATION = (
-    "Root authorized this version 4 standalone Dreyer CPU worker beside the unique frozen Yang worker "
-    "and the existing Stieger worker. Dreyer uses this entrypoint only; ordinary Dreyer "
-    "prepare is forbidden until this worker finishes. Original budgets and prior charges "
-    "are retained. GPU, fit, sealed external data and remote server actions are forbidden."
-)
+PARALLEL_WRAPPER = "tools/prepare_dreyer_source_cpu_v5.py"
+PARALLEL_WRAPPER_SHA = "c604a0189993ec6e77dd4af0dfb6812b38d69791e691f066b83278eff06b7126"
+PARALLEL_PARENT_WRAPPER = "tools/prepare_dreyer_source_cpu_v4.py"
+PARALLEL_PARENT_WRAPPER_SHA = "3bdfd19d9d1596f92b689121f8231d8b2403449ecbc26dd0b27c0f7ddee59a1a"
+DREYER_NATIVE = "p3work/source_extensions/dreyer2023.py"
+DREYER_NATIVE_SHA = "5c31e969eeabd17634864f6783d8473a0a79f1888faf274d758cd9c5ba4cef77"
+DREYER_QUALIFICATION = "audit/data_plan_20261020/dreyer_structure_case_review/all520_closed_qualification_proof.json"
+DREYER_QUALIFICATION_SHA = "585ade4a3d6101c3d922466fbcacbc89ddac907ff6978a9a0f608c834737d35e"
+DREYER_ADMISSION = "audit/data_plan_20261020/dreyer_structure_case_review/v5_native_admission.json"
+DREYER_ADMISSION_SHA = "560ec9bdd0ddba53f5b926beaebdd153c61fa0ca8de1e2033273f9d8d022eed9"
 _ISSUER = object()
 
 
@@ -340,159 +325,220 @@ def _completed_preparation(root, manifest, manifest_file, closure):
         raise ExtensionGateError("source_coordinator_R2_ledger_below_required_full_GET_bytes")
 
 
-def _parallel_prior_budget(root, value, current_plan, closure):
-    """Independently rebuild all four historical charges, without live IO.
+def _v5_wrapper(root, closure):
+    """Load only the frozen V5 read-only verifier; never its live scheduler."""
+    import importlib.util
+    references = ((PARALLEL_WRAPPER, PARALLEL_WRAPPER_SHA),
+        (PARALLEL_PARENT_WRAPPER, PARALLEL_PARENT_WRAPPER_SHA),
+        (PARALLEL_DREYER_PLAN, PARALLEL_DREYER_PLAN_FILE_SHA),
+        (DREYER_NATIVE, DREYER_NATIVE_SHA),
+        (DREYER_QUALIFICATION, DREYER_QUALIFICATION_SHA),
+        (DREYER_ADMISSION, DREYER_ADMISSION_SHA))
+    for name, sha in references:
+        artifact(root, {"path": name, "sha256": sha}, closure)
+    path = local(root, PARALLEL_WRAPPER)
+    spec = importlib.util.spec_from_file_location("_p3_extension_V5_offline_verifier", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    expected = {"DREYER_PLAN_SHA": PARALLEL_DREYER_PLAN_SHA,
+        "NATIVE_ADAPTER_SHA": DREYER_NATIVE_SHA,
+        "QUALIFICATION_COMPLETION_SHA": DREYER_QUALIFICATION_SHA,
+        "ADMISSION_REVIEW_SHA": DREYER_ADMISSION_SHA,
+        "YANG_PLAN_SHA": PARALLEL_YANG_PLAN_SHA,
+        "ENTRY": PARALLEL_WRAPPER, "PLAN_PATH": PARALLEL_DREYER_PLAN,
+        "INTERSECT_QUALIFICATION_STAGE_CAP": False}
+    if any(digest(getattr(module, key, None)) != digest(value) for key, value in expected.items()):
+        raise ExtensionGateError("exact_frozen_Dreyer_V5_readonly_verifier_required")
+    return module
 
-    Old files remain historical evidence: their old adapter paths are not
-    imported, and no mutable writer Ledger is instantiated during validation.
+
+def _provenance_closure(root, values, closure, *, aliases=None):
+    """Track scientific proof dependencies, preserving historical code aliases.
+
+    Provider EDF payloads need full-GET receipts, not another local raw copy.
+    Historical plan code is covered by the explicit qualification code aliases;
+    following its original mutable canonical paths would confuse V4 with V5.
+    A recorded Yang process is audit context, never a live-ledger dependency.
     """
-    if not isinstance(value, dict):
-        raise ExtensionGateError("Dreyer_four_actual_prior_ledgers_required")
-    rows = value.get("closed_history_sources")
-    if not isinstance(rows, list) or len(rows) != 4:
-        raise ExtensionGateError("Dreyer_four_actual_prior_ledgers_required")
-    rebuilt, total, walls, original = [], {"provider_body_bytes": 0, "r2_get_body_bytes": 0}, [], None
-    if [r[0] for r in PARALLEL_PRIOR_SOURCES] != ["V1", "V2", "auxiliary_schema_review", "V3"]:
-        raise ExtensionGateError("Dreyer_all_four_original_history_sources_required_once")
-    continuation_parent = None
-    seen_ledgers = set()
-    for row, (label, plan_path, ledger_path, plan_sha) in zip(rows, PARALLEL_PRIOR_SOURCES):
-        if ledger_path in seen_ledgers:
-            raise ExtensionGateError("Dreyer_duplicate_prior_ledger_would_double_count_usage")
-        seen_ledgers.add(ledger_path)
-        if (not isinstance(row, dict) or row.get("source") != label or row.get("plan_sha256") != plan_sha
-                or not isinstance(row.get("plan"), dict) or row["plan"].get("path") != plan_path
-                or not isinstance(row.get("closed_ledger"), dict) or row["closed_ledger"].get("path") != ledger_path):
-            raise ExtensionGateError("Dreyer_exact_four_history_sources_once_in_order_required")
-        plan_file, ledger_file = artifact(root, row["plan"], closure), artifact(root, row["closed_ledger"], closure)
-        plan, ledger = read_json(plan_file), read_json(ledger_file)
-        if (plan.get("plan_sha256") != plan_sha
-                or digest({k:v for k,v in plan.items() if k != "plan_sha256"}) != plan_sha
-                or ledger.get("schema_version") != "paper3-source-extension-budget-ledger-v1"
-                or ledger.get("plan_sha256") != plan_sha or "wall_intent" in ledger or "active_transfer" in ledger):
-            raise ExtensionGateError("Dreyer_actual_closed_prior_plan_and_ledger_required")
-        budgets, charged, history, wall = plan.get("budgets"), ledger.get("charged"), ledger.get("history"), ledger.get("elapsed_seconds")
-        if (not isinstance(budgets, dict) or not isinstance(charged, dict) or set(charged) != set(total)
-                or not isinstance(history, list) or type(wall) not in (int, float) or not math.isfinite(wall)
-                or type(budgets.get("wall_seconds")) is not int or not 0 <= wall <= budgets["wall_seconds"]
-                or budgets["wall_seconds"] <= 0
-                or any(type(budgets.get(k)) is not int or budgets[k] <= 0
-                    or type(v) is not int or not 0 <= v <= budgets[k] for k,v in charged.items())):
-            raise ExtensionGateError("Dreyer_closed_prior_usage_must_fit_original_authorization")
-        counted = dict.fromkeys(total, 0)
-        for transfer in history:
-            if (not isinstance(transfer, dict) or transfer.get("kind") not in counted
-                    or type(transfer.get("reserved_bytes")) is not int or transfer["reserved_bytes"] < 0):
-                raise ExtensionGateError("Dreyer_prior_transfer_history_invalid")
-            reserved, kind = transfer["reserved_bytes"], transfer["kind"]
-            if transfer.get("status") == "SUCCESS_FULL_BODY_VERIFIED":
-                amount = transfer.get("verified_bytes")
-                if type(amount) is not int or not 0 <= amount <= reserved:
-                    raise ExtensionGateError("Dreyer_prior_transfer_history_invalid")
-            elif transfer.get("status") in {"FAILURE_FULL_RESERVATION_CONSUMED", "HARD_INTERRUPTION_FULL_RESERVATION_CONSUMED"}:
-                amount = reserved
-            else:
-                raise ExtensionGateError("Dreyer_prior_transfer_not_closed")
-            counted[kind] += amount
-        if counted != charged:
-            raise ExtensionGateError("Dreyer_prior_charges_must_equal_full_transfer_history")
-        if original is None:
-            original = {k:budgets[k] for k in (*total, "wall_seconds")}
-        for kind, amount in charged.items():
-            total[kind] += amount
-        walls.append(wall)
-        if label == "V3":
-            continuation_parent = {"source":label,
-                "authorized_caps":{k:budgets[k] for k in (*total, "wall_seconds")},
-                "actual_charged_body_bytes":dict(charged), "actual_elapsed_seconds":wall}
-        rebuilt.append({"source":label, "plan":descriptor(root, plan_file),
-            "closed_ledger":descriptor(root, ledger_file), "plan_sha256":plan_sha,
-            "charged_body_bytes":charged, "elapsed_seconds":wall})
-    elapsed_total = math.fsum(walls)
-    rounded = math.ceil(elapsed_total)
-    original_remaining = {k:original[k]-v for k,v in total.items()}
-    original_remaining["wall_seconds"] = original["wall_seconds"]-rounded
-    parent_remaining = {k:continuation_parent["authorized_caps"][k]-v
-        for k,v in continuation_parent["actual_charged_body_bytes"].items()}
-    parent_remaining["wall_seconds"] = math.floor(
-        continuation_parent["authorized_caps"]["wall_seconds"]-continuation_parent["actual_elapsed_seconds"])
-    remaining = {k:min(v,parent_remaining[k]) for k,v in original_remaining.items()}
-    expected = {"accounting_schema":"paper3-dreyer-four-ledger-budget-v1", "original_caps":original,
-        "closed_history_sources":rebuilt, "deducted_body_bytes":total, "deducted_elapsed_seconds":elapsed_total,
-        "deducted_wall_seconds":rounded, "wall_rounding":"ceil_sum_actual_elapsed_once",
-        "original_caps_minus_all_actual_usage":original_remaining,
-        "immediate_parent_conservation_bound":continuation_parent | {"remaining_caps":parent_remaining},
-        "remaining_cap_policy":"minimum_of_initial_caps_minus_all_actual_usage_and_immediate_parent_caps_minus_its_actual_usage",
-        "wall_remaining_rounding":"minimum_of_original_minus_ceil_cumulative_and_floor_parent_minus_actual",
-        "retained_prior_wall_rounding_seconds":original_remaining["wall_seconds"]-remaining["wall_seconds"],
-        "remaining_caps":remaining, "uses_original_caps_not_V2_or_V3_remaining_caps":True,
-        "carried_over_verified_R2_body_bytes":0, "old_cache_or_receipts_adopted_as_new_records":False}
-    if (value != expected or any(v <= 0 for v in remaining.values())
-            or not isinstance(current_plan.get("budgets"), dict)
-            or any(current_plan["budgets"].get(k) != v for k,v in remaining.items())):
-        raise ExtensionGateError("Dreyer_four_ledger_conserved_original_and_parent_caps_must_match_current_plan")
+    aliases = aliases or {}
+    seen = set()
+
+    def visit(value, field=None):
+        if isinstance(value, dict):
+            if {"path", "sha256", "bytes"} <= set(value):
+                relative = value["path"]
+                if not isinstance(relative, str):
+                    raise ExtensionGateError("source_extension_artifact_descriptor_required")
+                if relative.startswith("data/"):
+                    return
+                candidate = value
+                alias = aliases.get(relative)
+                if alias is not None and all(alias.get(k) == value.get(k) for k in ("sha256", "bytes")):
+                    candidate = alias
+                key = (candidate["path"], candidate["sha256"])
+                if key in seen:
+                    return
+                path = artifact(root, candidate, closure)
+                seen.add(key)
+                if path.suffix == ".json":
+                    visit(read_json(path))
+                return
+            for name, item in value.items():
+                if name not in {"code", "initial_yang_process"}:
+                    visit(item, name)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                visit(item, field)
+
+    visit(values)
+
+
+def _parallel_prior_budget(root, value, current_plan, closure, *, wrapper=None):
+    """All six original closed journals, verified by the immutable V5 checker."""
+    wrapper = wrapper or _v5_wrapper(root, closure)
+    try:
+        expected = wrapper.prior_budget_evidence(root, current_plan)
+    except wrapper.WrapperError as exc:
+        raise ExtensionGateError("Dreyer_six_actual_conserved_closed_histories_required") from exc
+    if (not isinstance(value, dict) or digest(value) != digest(expected)
+            or value.get("accounting_schema") != "paper3-dreyer-six-ledger-budget-v1"
+            or [r.get("source") for r in value.get("closed_history_sources", [])]
+                != ["V1", "V2", "auxiliary_schema_review", "V3", "V4", "native_qualification"]):
+        raise ExtensionGateError("Dreyer_six_actual_conserved_closed_histories_required")
+    _provenance_closure(root, expected, closure)
+
+
+def _peer_coordination_closure(root, declaration, coordination, closure):
+    """Bind completed Yang proofs only after the V5 verifier proves takeover.
+
+    A live fingerprint is an observation. Its nested objects never authorize
+    reading a live Yang ledger, acquiring its lock, or opening a payload.
+    """
+    keys = {"schema_version", "initial_yang_process", "last_verified_live_peer",
+            "global_lock_takeover", "completed_yang_proof"}
+    initial = declaration.get("initial_yang_process")
+    if (not isinstance(coordination, dict) or set(coordination) != keys
+            or coordination.get("schema_version") != "paper3-dreyer-yang-peer-coordination-v1"
+            or type(coordination.get("global_lock_takeover")) is not bool
+            or not isinstance(initial, dict)
+            or digest(coordination.get("initial_yang_process")) != digest(initial)):
+        raise ExtensionGateError("Dreyer_V5_recorded_Yang_peer_coordination_required")
+    mode = initial.get("mode")
+    last_live = initial if mode == "concurrent_no_cache_wrapper_v2" else None
+    if (mode not in {"concurrent_no_cache_wrapper_v2", "already_complete"}
+            or digest(coordination["last_verified_live_peer"]) != digest(last_live)):
+        raise ExtensionGateError("Dreyer_V5_last_verified_Yang_fingerprint_changed")
+    completed = coordination["completed_yang_proof"]
+    if not coordination["global_lock_takeover"]:
+        if mode != "concurrent_no_cache_wrapper_v2" or completed is not None:
+            raise ExtensionGateError("Dreyer_V5_live_Yang_must_not_claim_closed_completion")
+        return
+    if (not isinstance(completed, dict) or completed.get("mode") != "already_complete"
+            or completed.get("plan_sha256") != PARALLEL_YANG_PLAN_SHA
+            or mode == "already_complete" and digest(completed) != digest(initial)):
+        raise ExtensionGateError("Dreyer_V5_takeover_requires_complete_Yang_proof")
+    history = completed.get("transport_history")
+    proof = completed.get("transport_completion_proof")
+    if (not isinstance(history, dict) or not isinstance(proof, dict)
+            or proof.get("status") != "SOURCE_EXTENSION_CACHE_COMPLETE"
+            or proof.get("already_complete_offline_verified") is not True
+            or type(proof.get("verified_records")) is not int or proof["verified_records"] != 153):
+        raise ExtensionGateError("Dreyer_V5_full_Yang153_transport_proof_required")
+    for value in (history.get("provenance_closure"), proof.get("provenance_closure")):
+        if not isinstance(value, dict) or not value:
+            raise ExtensionGateError("Dreyer_V5_completed_Yang_provenance_closure_required")
+        for relative, sha in value.items():
+            artifact(root, {"path": relative, "sha256": sha}, closure)
+    _provenance_closure(root, completed, closure)
 
 
 def _parallel_evidence(root, manifest, status, audit, closure):
-    """Only the separately declared CPU scheduler; it grants no new data role."""
+    """Require real V5 numeric recomputation and seven final complete GETs.
+
+    Only fixed, offline wrapper methods run here. In particular fixed_plans,
+    current_yang, build_declaration, PeerGuard and execute are never called.
+    """
     item = manifest.get("operational_evidence")
     if item is None:
         if status.get("operational_evidence") is not None:
             raise ExtensionGateError("source_parallel_evidence_manifest_status_mismatch")
         if manifest.get("dataset") == "Dreyer2023":
-            raise ExtensionGateError("Dreyer_v4_operational_proof_and_seven_GET_objects_required")
+            raise ExtensionGateError("Dreyer_v5_operational_proof_and_seven_GET_objects_required")
         return []
-    if (not isinstance(item, dict) or manifest["dataset"] != "Dreyer2023" or manifest.get("plan_sha256") != PARALLEL_DREYER_PLAN_SHA
+    if (not isinstance(item, dict) or manifest.get("dataset") != "Dreyer2023"
+            or manifest.get("plan_sha256") != PARALLEL_DREYER_PLAN_SHA
             or status.get("operational_evidence") != item
             or item.get("path") != audit+"/parallel_execution_receipt.json"):
-        raise ExtensionGateError("exact_declared_Dreyer_CPU_schedule_required")
+        raise ExtensionGateError("exact_declared_Dreyer_V5_CPU_schedule_required")
+    wrapper = _v5_wrapper(root, closure)
     evidence = read_json(artifact(root, item, closure))
-    expected = {"schema_version": "paper3-dreyer-parallel-cpu-execution-v1",
+    implementation = {"path": PARALLEL_WRAPPER, "sha256": PARALLEL_WRAPPER_SHA}
+    if (not isinstance(evidence.get("wrapper_implementation"), dict)
+            or any(evidence["wrapper_implementation"].get(k) != v for k,v in implementation.items())):
+        raise ExtensionGateError("declared_Dreyer_V5_CPU_wrapper_required")
+    declaration = evidence.get("root_declaration")
+    if not isinstance(declaration, dict) or declaration.get("path") != audit+"/parallel_root_declaration.json":
+        raise ExtensionGateError("Dreyer_V5_parallel_root_declaration_required")
+    root_value = read_json(artifact(root, declaration, closure))
+    plan_file = artifact(root, {"path": PARALLEL_DREYER_PLAN,
+        "sha256": PARALLEL_DREYER_PLAN_FILE_SHA}, closure)
+    plan = read_json(plan_file)
+    frozen = read_json(artifact(root, descriptor(root, local(root, audit+"/frozen_plan.json")), closure))
+    if (frozen != plan or plan.get("plan_sha256") != PARALLEL_DREYER_PLAN_SHA
+            or digest({k:v for k,v in plan.items() if k != "plan_sha256"}) != PARALLEL_DREYER_PLAN_SHA):
+        raise ExtensionGateError("Dreyer_exact_current_V5_frozen_plan_required")
+    # Bind the direct-read state/report files before the expensive verifier.
+    # A concurrent edit cannot become a newly sealed, unverified dependency.
+    states, reports = [], []
+    for record in plan["records"]:
+        state_file = local(root, audit+"/"+record["record_id"]+"/state.json")
+        state_ref = descriptor(root, state_file)
+        artifact(root, state_ref, closure)
+        states.append(state_ref)
+        if record["record_id"] in root_value["qualification_evidence"]["reference_states"]:
+            regression_file = local(root, audit+"/"+record["record_id"]+"/v4_numeric_regression.json")
+            report_ref = descriptor(root, regression_file)
+            artifact(root, report_ref, closure)
+            reports.append(report_ref)
+    try:
+        verified_root, verified_ref = wrapper.verify_declaration(root, declaration["path"], plan)
+        complete = wrapper.verified_completion(root, plan, declaration)
+    except wrapper.WrapperError as exc:
+        raise ExtensionGateError("Dreyer_V5_actual_qualification_numeric_and_complete_GET_proofs_required") from exc
+    if verified_root != root_value or verified_ref != declaration or complete is None:
+        raise ExtensionGateError("Dreyer_V5_actual_qualification_numeric_and_complete_GET_proofs_required")
+    if any(digest(complete.get(k)) != digest(value) for k,value in status.items()):
+        raise ExtensionGateError("Dreyer_V5_verified_completion_must_match_exact_global_status")
+    expected = {"schema_version": "paper3-dreyer-parallel-cpu-execution-v5",
         "status": "RECORDS_VERIFIED_FINAL_BACKUP_PENDING", "dataset": "Dreyer2023",
         "plan_sha256": PARALLEL_DREYER_PLAN_SHA,
         "concurrent_yang_plan_sha256": PARALLEL_YANG_PLAN_SHA, "record_count": 520,
         "record_ids_sha256": digest([r["record_id"] for r in manifest["shards"]]),
-        "scientific_kernel_unchanged": True, "GPU_actions": 0, "actual_fits": 0,
-        "external_payload_accessed": False, "carried_over_verified_R2_body_bytes": 0,
-        "server_actions": False, "limits": PARALLEL_LIMITS}
-    if not isinstance(evidence, dict) or any(evidence.get(k) != v for k,v in expected.items()):
-        raise ExtensionGateError("Dreyer_parallel_CPU_evidence_scope_or_budget_changed")
-    implementation = evidence.get("wrapper_implementation")
-    if (not isinstance(implementation, dict) or implementation.get("path") != PARALLEL_WRAPPER
-            or implementation.get("sha256") != PARALLEL_WRAPPER_SHA):
-        raise ExtensionGateError("declared_Dreyer_CPU_wrapper_required")
-    artifact(root, implementation, closure)
-    parent = descriptor(root, local(root, PARALLEL_PARENT_WRAPPER))
-    if parent["sha256"] != PARALLEL_PARENT_WRAPPER_SHA:
-        raise ExtensionGateError("Dreyer_frozen_parent_wrapper_must_remain_unchanged")
-    artifact(root, parent, closure)
-    declaration = evidence.get("root_declaration")
-    if not isinstance(declaration, dict) or declaration.get("path") != audit+"/parallel_root_declaration.json":
-        raise ExtensionGateError("Dreyer_parallel_root_declaration_required")
-    root_value = read_json(artifact(root, declaration, closure))
-    expected_declaration = {"schema_version": "paper3-dreyer-parallel-root-declaration-v1",
-        "dataset": "Dreyer2023", "plan_sha256": PARALLEL_DREYER_PLAN_SHA,
-        "concurrent_yang_plan_sha256": PARALLEL_YANG_PLAN_SHA,
-        "wrapper_implementation": implementation, "only_dreyer_entrypoint": PARALLEL_WRAPPER,
-        "ordinary_dreyer_prepare_forbidden": True, "GPU_actions": 0, "actual_fits": 0,
-        "sealed_external_access_allowed": False, "limits": PARALLEL_LIMITS,
-        "root_authorization": PARALLEL_AUTHORIZATION,
-        "new_record_namespace": f"cache/source_extensions_20261019/Dreyer2023/{PARALLEL_DREYER_PLAN_SHA}"}
-    if not isinstance(root_value, dict) or any(root_value.get(k) != v for k,v in expected_declaration.items()):
-        raise ExtensionGateError("Dreyer_CPU_root_declaration_must_match_actual_schedule")
-    peer = root_value.get("initial_yang_process")
-    if (not isinstance(peer, dict) or set(peer) != {"pid", "starttime_ticks", "boot_id", "command_sha256", "plan_sha256"}
-            or peer.get("plan_sha256") != PARALLEL_YANG_PLAN_SHA
-            or type(peer.get("pid")) is not int or peer["pid"] <= 0
-            or type(peer.get("starttime_ticks")) is not int or peer["starttime_ticks"] < 0
-            or re.fullmatch(r"[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", str(peer.get("boot_id"))) is None
-            or re.fullmatch(r"[0-9a-f]{64}", str(peer.get("command_sha256"))) is None):
-        raise ExtensionGateError("Dreyer_recorded_peer_process_identity_required_no_live_process_lookup")
-    current_plan_file = local(root, audit+"/frozen_plan.json")
-    current_plan = read_json(artifact(root, descriptor(root, current_plan_file), closure))
-    if current_plan.get("plan_sha256") != PARALLEL_DREYER_PLAN_SHA:
-        raise ExtensionGateError("Dreyer_exact_parallel_plan_required")
-    _parallel_prior_budget(root, root_value.get("prior_budget_evidence"), current_plan, closure)
+        "wrapper_implementation": descriptor(root, local(root, PARALLEL_WRAPPER)),
+        "root_declaration": declaration, "scientific_kernel_unchanged": True,
+        "qualification_evidence": root_value.get("qualification_evidence"),
+        "old128_numerical_regression": evidence.get("old128_numerical_regression"),
+        "yang_peer_coordination": evidence.get("yang_peer_coordination"),
+        "GPU_actions": 0, "actual_fits": 0, "external_payload_accessed": False,
+        "carried_over_verified_R2_body_bytes": 0, "server_actions": False, "limits": wrapper.LIMITS}
+    if digest(evidence) != digest(expected):
+        raise ExtensionGateError("Dreyer_V5_parallel_CPU_evidence_scope_or_budget_changed")
+    _peer_coordination_closure(root, root_value, evidence.get("yang_peer_coordination"), closure)
+    regressions = evidence.get("old128_numerical_regression")
+    if (not isinstance(regressions, dict)
+            or type(regressions.get("reference_records")) is not int or regressions["reference_records"] != 128
+            or type(regressions.get("verified_records")) is not int or regressions["verified_records"] != 128
+            or not isinstance(regressions.get("comparisons"), list) or len(regressions["comparisons"]) != 128
+            or regressions.get("embedded_in_final_GET_backed_operational_evidence") is not True):
+        raise ExtensionGateError("Dreyer_V5_all128_actual_numeric_regressions_required")
+    _parallel_prior_budget(root, root_value.get("prior_budget_evidence"), plan, closure, wrapper=wrapper)
+    aliases = root_value["qualification_evidence"]["historical_code_aliases"]
+    _provenance_closure(root, [root_value["qualification_evidence"], regressions], closure, aliases=aliases)
+    # Recheck snapshots after numeric verification, then bind each state's
+    # artifacts and the full actual old/new numeric reports to freshness.
+    for report_ref in reports:
+        artifact(root, report_ref, closure)
+    _provenance_closure(root, states, closure, aliases=aliases)
     return [(item, "audit"), (declaration, "audit")]
 
 
