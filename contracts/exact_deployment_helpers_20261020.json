@@ -1,0 +1,53 @@
+{
+  "schema_version": "paper3-exact-deployment-helper-validation-v1",
+  "scope": "CPU_local_packaging_and_receipt_selection_only",
+  "implementations": [
+    {
+      "path": "audit/data_plan_20261020/deployment_finalize_review/prepare_finalize_plan.py",
+      "sha256": "6d40cb72f60470ed0fbd3401dbe711628d4820c72d5cb1255a222c9a2c0314fa",
+      "bytes": 11374
+    },
+    {
+      "path": "audit/data_plan_20261020/deployment_finalize_review/build_exact_archive.py",
+      "sha256": "c1d6682b446c006ffdcd0a6047172e23de3b632cc5a4d794f672977fb8701daf",
+      "bytes": 12848
+    }
+  ],
+  "test_sources": [
+    {
+      "path": "audit/data_plan_20261020/deployment_finalize_review/test_finalize_planner.py",
+      "sha256": "6f9ef0d00b1b792382f3b2f71e3edb406c2729daf73ea3630c7113e241858742",
+      "bytes": 7696
+    },
+    {
+      "path": "audit/data_plan_20261020/deployment_finalize_review/test_exact_archive.py",
+      "sha256": "790fda8a052b955638dfc9664082e07d8d80a0002ca1d138930f855dd77ea3a4",
+      "bytes": 9305
+    }
+  ],
+  "independent_review": {
+    "path": "audit/data_plan_20261020/deployment_finalize_review/independent_review.json",
+    "sha256": "da43ada27dd39d289f724d4252916280b1ddd3137439df626a62e3b792403597",
+    "bytes": 4634
+  },
+  "root_runbook": {
+    "path": "audit/data_plan_20261020/deployment_finalize_review/ROOT_FINALIZE_RUNBOOK_ZH.md",
+    "sha256": "462c12ee022dee134fc8fa9ce859fc9f10d371c3efac956e2c33b9006d2d8c67",
+    "bytes": 18023
+  },
+  "actual_root_tests": {
+    "command": "python -B -m pytest -q audit/data_plan_20261020/deployment_finalize_review/test_exact_archive.py audit/data_plan_20261020/deployment_finalize_review/test_finalize_planner.py",
+    "passed": 29,
+    "duration_seconds": 0.85
+  },
+  "new_receipts_before_historical_mixed_receipts": true,
+  "original_protocol_ZIP_and_new_DOCX_required": true,
+  "all_selected_objects_require_real_PUT_and_full_GET_SHA256": true,
+  "archive_safe_exact_members_and_no_appended_payload": true,
+  "independent_fresh_GET_required_after_archive_creation": true,
+  "late_controls_backed_up_separately_no_self_reference": true,
+  "actual_deployment_complete": false,
+  "scientific_fits": 0,
+  "GPU_actions": 0,
+  "external_payload_accessed": false
+}
