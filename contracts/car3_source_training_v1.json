@@ -1,0 +1,112 @@
+{
+  "schema_version": "paper3-car3-source-f0-execution-contract-v1",
+  "status": "SEPARATE_SOURCE_F0_EXECUTION_POLICY_ONLY_NOT_META_OR_EXTERNAL_READY",
+  "channels": [
+    "C3",
+    "Cz",
+    "C4"
+  ],
+  "reference": "CAR_exact_C3_Cz_C4",
+  "native_reference_requirement": "monopolar_common_reference_only",
+  "bipolar_derivations_accepted": false,
+  "BCIIV2b_accepted": false,
+  "C": 3,
+  "centered_dimension_d": 2,
+  "Rref_shape": [
+    2,
+    2
+  ],
+  "future_spatial_rank_choices": [
+    1,
+    2
+  ],
+  "future_LoRA_rank_choices": [
+    1,
+    2
+  ],
+  "future_CSP_pairs": 1,
+  "original_r4_r8_accepted": false,
+  "sfreq_hz": 128,
+  "context_s": [
+    0,
+    1.5
+  ],
+  "crop_s": [
+    0.25,
+    1.25
+  ],
+  "n_times": 128,
+  "input_stage": "pre_rms_car3_temporal_demeaned_from_verified_float32_car11",
+  "cache_manifest": {
+    "path": "cache/source_c3czc4_v1/source_cache3.json",
+    "sha256": "001d1e9c3810140c8b71b367c223bf61204c83e569971eb88de1cdffac7d9492"
+  },
+  "parent_cache_sha256": "bfc204577dfe51c1fc798c1241391ab63509fc2ad9ebfb267ba09254e01ae644",
+  "preparation_contract_semantic_sha256": "b9c1b07f24915cb9359c5443a6d483859d3764a5e723e7010779be614c278dae",
+  "source_datasets": [
+    "BNCI2014_001",
+    "Cho2017",
+    "Lee2019_MI",
+    "PhysionetMI"
+  ],
+  "source_provider_ids": 224,
+  "source_trial_uids": 28830,
+  "same_source_people_and_UIDs": true,
+  "new_independent_people": 0,
+  "Ma2022_in_source": false,
+  "primary11_checkpoint_accepted": false,
+  "architecture": "compact_eegnet_v1_car3_independent",
+  "normalization": "float64_joint_trial_RMS_then_float32_no_floor",
+  "source_selection": "four_source_LODO_dataset_then_participant_equal_mean_clipped_cross_entropy",
+  "epochs": 80,
+  "steps_per_epoch": 64,
+  "batch_size": 64,
+  "final_epochs": "max(1,int(median(four_completed_same_seed_LODO_selected_epochs)))",
+  "seed_profiles": {
+    "development": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "confirmation": [
+      20261018,
+      20261019,
+      20261020,
+      20261021,
+      20261022
+    ]
+  },
+  "execution_requires": [
+    "--execute",
+    "--user-started-gpu",
+    "own_CAR3_GPU_exact_resume_engineering_pilot_receipt"
+  ],
+  "engineering_pilot": {
+    "scope": "CAR3_SOURCE_ENGINEERING_ONLY",
+    "continuous_updates": 8,
+    "split_updates": [
+      4,
+      4
+    ],
+    "expected_total_optimizer_calls": 16,
+    "max_observed_plus_uncertain_optimizer_calls": 32,
+    "max_invocations": 8,
+    "default_wall_seconds": 1800,
+    "independent_from_main11_200update_pilot": true,
+    "fixed_leg_interruption_policy": "Each 0to8,0to4,4to8 leg must complete in one kernel invocation with immutable start/end/call-count/checkpoint-SHA evidence. An intermediate committed cursor cannot be resealed as the fixed uninterrupted leg; preserve evidence and require a separately explicit version."
+  },
+  "f0_receipt_status": "CAR3_SOURCE_F0_COMPLETE",
+  "source_Rref_training_prerequisite_only": true,
+  "Rref_export_implemented": false,
+  "independent_3G_meta_training_implemented": false,
+  "all14_methods_implemented": false,
+  "W7_external_two_seals_required": true,
+  "external_payload_access_allowed": false,
+  "RunPod_or_server_boot_allowed": false,
+  "initial_actual_fits": 0,
+  "initial_GPU_resume_pilot_verified": false,
+  "numerical_limitation": "Derived from accepted float32 CAR11 cache; native float64 pre-cast preprocessing and independent native CAR3 QC are not reconstructed.",
+  "old_preparation_contract_training_ready": false,
+  "old_preparation_contract_modified": false,
+  "completion_resource_policy": "No final completion after observed wall overrun. Real f0 and CAR3 engineering receipts bind immutable closed-wall and optimizer-ledger snapshots; prior seed snapshots survive explicit confirmation extension."
+}

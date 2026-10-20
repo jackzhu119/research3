@@ -39,7 +39,7 @@ from ..contracts import SOURCE_IDS, digest, file_digest, validate_signal_contrac
 from ..spatial_geometry import helmert_rows
 
 
-IMPLEMENTATION_VERSION = "paper3-classical-v2.0.2"
+IMPLEMENTATION_VERSION = "paper3-classical-v2.0.3"
 B4_GRID = tuple((alpha, m) for alpha in (0.0, 0.5, 1.0) for m in (1, 2, 3))
 B5_GRID = tuple((shrink, l2) for shrink in (0.01, 0.05, 0.1) for l2 in (0.01, 0.1, 1.0))
 _Q = helmert_rows().numpy().copy()  # exactly the main method's saved coordinates
@@ -81,7 +81,17 @@ def _trials(x, *, allow_empty=False) -> np.ndarray:
     scale = np.max(np.abs(x), axis=(1, 2)) if len(x) else np.empty(0)
     if (scale <= 0).any():
         raise ValueError("zero-energy trial")
-    tolerance = scale * (2e-6 if x.dtype.itemsize <= 4 else 1e-10)
+    # Episode capabilities promote the frozen float32 cache to float64. That
+    # promotion preserves the original rounding; it cannot restore exact CAR
+    # or temporal means. Recognize only an exact float32 round trip, retaining
+    # the strict float64 check for genuinely higher-precision inputs. No signal
+    # is rounded, rereferenced or demeaned here.
+    cache_precision = x.dtype.itemsize <= 4
+    if not cache_precision and np.issubdtype(x.dtype, np.floating):
+        with np.errstate(over="ignore", invalid="ignore"):
+            restored = x.astype(np.float32).astype(x.dtype)
+        cache_precision = np.array_equal(restored, x)
+    tolerance = scale * (2e-6 if cache_precision else 1e-10)
     if len(x) and ((np.max(np.abs(np.mean(x, axis=1)), axis=1) > tolerance).any()
                    or (np.max(np.abs(np.mean(x, axis=2)), axis=1) > tolerance).any()):
         raise ValueError("input must already follow CAR11 and temporal demeaning")

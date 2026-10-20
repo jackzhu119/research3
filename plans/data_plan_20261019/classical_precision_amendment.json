@@ -1,0 +1,35 @@
+{
+  "schema_version": "paper3-classical-precision-compatibility-amendment-v1",
+  "trigger": "Verified float32 CAR11/temporally demeaned cache is promoted exactly to float64 by the episode interface; dtype-only residual tolerance incorrectly rejected the unchanged samples.",
+  "changed_Paper3_code": {
+    "path": "p3work/methods/classical.py",
+    "sha256": "0422c73d00b74c659f744657539a142aecff0977aac22552dcafe84818fdfe2e",
+    "bytes": 33480
+  },
+  "original_code": {
+    "path": "audit/data_plan_20261020/classical_precision_fix/original_classical.py",
+    "sha256": "6dc2adc5cbf29e26e766ae92ea52e42f7e5c7b25c3c81800e26ae800ad6d91a6",
+    "bytes": 32839
+  },
+  "original_117_manifest": {
+    "path": "audit/data_plan_20261020/classical_precision_fix/original_software_code_manifest.json",
+    "sha256": "87e2cd22f37f8d96aebd020daa6f57872526f60b6b904fefbc3ce47d373ce3a0",
+    "bytes": 19291
+  },
+  "native_read_only_regression": {
+    "path": "audit/data_plan_20261020/classical_precision_fix/native_regression.json",
+    "sha256": "bbccad5e0efa9ac1daac3c423a4530dc33d7205dba97f40deb2ae9e90ac22fcf",
+    "bytes": 675
+  },
+  "software_tests": {
+    "classical_precision_controls_training_and_registry_passed": 163,
+    "real_scientific_fits": 0
+  },
+  "behavior": "Use the existing float32 residual tolerance only for exact float32 roundtrip values; genuine higher precision retains original strict tolerance. No rounding, rereferencing, demeaning, covariance formula, hyperparameter, source roster or split change.",
+  "P1_P2_code_modified": false,
+  "legacy_baseline_relabelled_as_new_algorithm": false,
+  "old_fixed_archives_unchanged": true,
+  "original_protocol_52_unchanged": true,
+  "GPU_actions": 0,
+  "scientific_fits": 0
+}
