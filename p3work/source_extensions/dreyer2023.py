@@ -33,6 +33,73 @@ ALLOWED_MARKERS = frozenset({"32769", "32770", "768", "786", "33282", "769", "77
                              *ONLINE_POST_TRIAL_CONTROLS})
 
 
+# This registry comes only from the all-520 native TAL qualification, exact
+# 522-object full-GET receipt and closed conserved body ledger. These are
+# previously exposed source records, never new unseen external evaluation.
+QUALIFICATION_PLAN_SHA256 = "f39a24a3d26c6eb3de6e286e2efb8afc032397b91626f84fd647ae2c182b5efd"
+QUALIFICATION_REVIEW_SHA256 = "2a769a20353f1f478a57fd06333c6b1745938e99b820d88e417df96891d5cc37"
+MISSING_STOP_RECORDS = {('081bff4ccbae4e0cc436d8c54b33947f91d53cd2e3c8fdc90db2025bd1be4180', 'sub-85_task-R6online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('19d41e3d2d8f9bc6152bfdf77176547f018c4d3455da51f6968ed682324b9947', 'sub-85_task-R4online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('1f06d2a046ca15e6f22dcd33ee67682120e33106b0c27d41c4a7b7b69275f66b', 'sub-31_task-R6online_eeg.edf'): ('1010',
+                                                                                                        '33281'),
+ ('2034bc4029a0a601694e0ae0e8b28b8e9f12ccf40af8ec26f6d3b2f8dd6ba69e', 'sub-43_task-R3online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('3265baded70e0817b71b1b5cab57327b7c9a2d36b447c514395e9ec738e7c004', 'sub-22_task-R3online_eeg.edf'): ('1010',
+                                                                                                        '33281'),
+ ('352342d2a9c645330fe3329c604d1fc4586474ab39293376482f3e05b45ff3d3', 'sub-43_task-R2acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('35f01dd89d93f958ce2035a3d68d5c20686cf41b0c5c7ebc51bd415941147454', 'sub-48_task-R1acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('3cffe5bd3a7518d815b0688a6a5fd25c36e0247feb2cff55ad20d5a1612623ef', 'sub-33_task-R2acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('420ba3d3142d2e96da72b8284b35fa7dfb9fb77d0a7324450d49ba5ada50d153', 'sub-45_task-R5online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('430e00b8e2aa9bb606433ec3469c36b14fbb8a420fcd8abae2221cd0e9736d3c', 'sub-48_task-R6online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('56e36b6a38477c6cde54825ebb0d14ec4a3cd7e226649f6d1c749f8888d57891', 'sub-25_task-R2acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('5877201a8b119119137061be7aaebcfdea55c1acb381b87f0225fad065f8f3b3', 'sub-31_task-R5online_eeg.edf'): ('1010',
+                                                                                                        '33281'),
+ ('625da7061cad74793cb3a35e51569cde96a1c94a5814017c4b2eb1e6fc948944', 'sub-22_task-R4online_eeg.edf'): ('1010',),
+ ('662f950163c5339ad044f1c94669999a2988973b84ff32fb9ecbb84fb562a43c', 'sub-27_task-R1acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('783a36d13235e3e50566c8ac76119632b580b6432d57d46e1fb12ccc773b468e', 'sub-43_task-R4online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('8352114acc4c59f3c4128039fb2b237cf279405bf125f28f5e5327bbd18c1efa', 'sub-27_task-R3online_eeg.edf'): ('1010',
+                                                                                                        '33281'),
+ ('b4e1ff3656bd04016f0d27149465850f115b36028f5dc55345d73fbda754f1bd', 'sub-27_task-R5online_eeg.edf'): ('1010',
+                                                                                                        '33281'),
+ ('bf936fa35701c71c593278f65703ae63bd5bb808ba549992ba6a98bcd3393cfd', 'sub-33_task-R1acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('c899d7baa090cc4a08aeb0917deab17a1bf2db5f0261d4da8ab093a0c92e267d', 'sub-48_task-R3online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284'),
+ ('dd3626c31d6b305a0cf2dcd6dbb20b44eb6ab4720a7a95acadb506a02edf9b1a', 'sub-59_task-R2acquisition_eeg.edf'): ('1010',
+                                                                                                             '33281'),
+ ('ed30d90d15dacdedc9fdfd2a99e7c9a26f09918cdc56b5b7564286ce5ae6591d', 'sub-29_task-R5online_eeg.edf'): ('1010',
+                                                                                                        '33281'),
+ ('f85500929531dabe5b0dbd018fc92617ad83a70e5037d047146ec6f1c7c9b102', 'sub-48_task-R5online_eeg.edf'): ('1010',
+                                                                                                        '33281',
+                                                                                                        '33284')}
+PARTIAL_SOURCE_SHA256 = "204dc887c651676b4bfd9f0c9c664de78004637c30d9657d33655690502d7b21"
+PARTIAL_SOURCE_RECORD_ID = "sub-40_task-R3online_eeg.edf"
+PARTIAL_SOURCE_BYTES = 11648932
+# Only these two qualified raw objects contain the zero-width EndOfFile
+# exactly at the physical recording end. It remains bookkeeping, never data.
+MISSING_STOP_EOF_AT_FILE_END_RECORDS = frozenset({
+    ("19d41e3d2d8f9bc6152bfdf77176547f018c4d3455da51f6968ed682324b9947", "sub-85_task-R4online_eeg.edf"),
+    ("081bff4ccbae4e0cc436d8c54b33947f91d53cd2e3c8fdc90db2025bd1be4180", "sub-85_task-R6online_eeg.edf"),
+})
+
+
 def _number(token):
     try:
         value = Decimal(token)
@@ -168,7 +235,7 @@ def _read_native_metadata(path):
         "selected_indices": selected, "annotations": annotations}
 
 
-def _trials(native, *, run_phase=None):
+def _legacy_trial_layout(native, *, run_phase=None):
     annotations = native["annotations"]
     counts = Counter(e["description"] for e in annotations)
     stop_index = len(annotations)-1
@@ -199,6 +266,87 @@ def _trials(native, *, run_phase=None):
             raise ValueError("Only ordered post-trial EndOfSession/Train before ExperimentStop is allowed")
         trial_region_end -= 2
     starts = [i for i, e in enumerate(annotations) if e["description"] == "768"]
+    return starts, trial_region_end
+
+
+def _qualified_annotations(native):
+    annotations = native["annotations"]
+    if (not annotations or type(native.get("n_times")) is not int or native["n_times"] <= 0
+            or [e["original_annotation_index"] for e in annotations] != list(range(len(annotations)))
+            or any(e["description"] not in ALLOWED_MARKERS or e["onset"] < 0
+                or e["duration"] < 0 or e["duration"] > Fraction(2,512)
+                or e["onset"]+e["duration"] > Fraction(native["n_times"],512) for e in annotations)
+            or any(b["onset"] < a["onset"] for a,b in zip(annotations,annotations[1:]))):
+        raise ValueError("Qualified source requires original ordered, bounded native annotations")
+    return annotations
+
+
+def _missing_stop_layout(native, *, source_sha256, source_record_id):
+    expected = MISSING_STOP_RECORDS.get((source_sha256,source_record_id))
+    if expected is None:
+        raise ValueError("Missing ExperimentStop requires an exact qualified raw SHA256 and original record identity")
+    annotations = _qualified_annotations(native)
+    codes = [e["description"] for e in annotations]
+    counts = Counter(codes)
+    starts = [i for i,e in enumerate(annotations) if e["description"] == "768"]
+    trial_region_end = 241
+    if (len(annotations) != trial_region_end+len(expected) or codes[:1] != ["32769"]
+            or counts["32769"] != 1 or counts["32770"] != 0
+            or starts != list(range(1,241,6)) or counts["769"] != 20 or counts["770"] != 20
+            or tuple(codes[trial_region_end:]) != expected
+            or annotations[trial_region_end-1]["description"] != "800"):
+        raise ValueError("Qualified missing-stop record must retain forty complete balanced MI blocks and its exact observed tail")
+    suffix = annotations[trial_region_end:]
+    if (not annotations[trial_region_end-1]["onset"] < suffix[0]["onset"]
+            or any(b["onset"] <= a["onset"] for a,b in zip(suffix,suffix[1:]))):
+        raise ValueError("Qualified post-trial bookkeeping tail must be strictly ordered after the last paired800")
+    if expected[-1] == TERMINAL_EOF:
+        file_end = Fraction(native["n_times"],512)
+        exact_end_allowed = (source_sha256,source_record_id) in MISSING_STOP_EOF_AT_FILE_END_RECORDS
+        if (suffix[-1]["duration"] != 0 or suffix[-1]["onset"] > file_end
+                or (suffix[-1]["onset"] == file_end and not exact_end_allowed)):
+            raise ValueError("Only the qualified terminal zero-width EndOfFile clock is allowed")
+    return starts, trial_region_end
+
+
+def _partial_trial_layout(native, *, source_sha256, source_record_id):
+    if (source_sha256,source_record_id) != (PARTIAL_SOURCE_SHA256,PARTIAL_SOURCE_RECORD_ID):
+        raise ValueError("Partial source eligibility requires the exact reviewed raw SHA256 and original record identity")
+    annotations = _qualified_annotations(native)
+    counts = Counter(e["description"] for e in annotations)
+    starts = [i for i,e in enumerate(annotations) if e["description"] == "768"]
+    prefix = annotations[193:]
+    prefix_fields = [(e["original_annotation_index"],e["onset_token"],e["duration_token"],e["description"])
+                     for e in prefix]
+    if (native["n_times"] != 181248 or native.get("record_count") != 354
+            or len(annotations) != 195 or annotations[0]["description"] != "32769"
+            or counts != Counter({"32769":1,"768":33,"786":33,"33282":32,
+                                  "769":14,"770":18,"781":32,"800":32})
+            or starts != list(range(1,194,6))
+            or prefix_fields != [(193,"+352","0.0019","768"),(194,"+352","0.0019","786")]
+            or any(e["onset"] != Fraction(352) or e["duration"] != Fraction(19,10000) for e in prefix)
+            or annotations[192]["description"] != "800" or not annotations[192]["onset"] < Fraction(352)):
+        raise ValueError("Reviewed sub40R3 requires exactly32 genuine MI blocks and its original terminal no-cue768/786 prefix")
+    # The terminal prefix is never passed into the MI trial loop, labelled,
+    # assigned an MI UID, padded, balanced, or mixed with waveform QC exclusions.
+    return starts[:-1], 193
+
+
+def _trial_layout(native, *, run_phase=None, source_sha256=None, source_record_id=None):
+    special_sha = {key[0] for key in MISSING_STOP_RECORDS}
+    special_record = {key[1] for key in MISSING_STOP_RECORDS}
+    if source_sha256 == PARTIAL_SOURCE_SHA256 or source_record_id == PARTIAL_SOURCE_RECORD_ID:
+        return _partial_trial_layout(native,source_sha256=source_sha256,source_record_id=source_record_id)
+    if (source_sha256 in special_sha or source_record_id in special_record
+            or not any(e["description"] == "32770" for e in native["annotations"])):
+        return _missing_stop_layout(native,source_sha256=source_sha256,source_record_id=source_record_id)
+    return _legacy_trial_layout(native,run_phase=run_phase)
+
+
+def _trials(native, *, run_phase=None, source_sha256=None, source_record_id=None):
+    annotations = native["annotations"]
+    starts, trial_region_end = _trial_layout(native,run_phase=run_phase,
+        source_sha256=source_sha256,source_record_id=source_record_id)
     rows = []
     tolerance = Fraction(2, 512)
     for trial, begin in enumerate(starts, 1):
@@ -239,6 +387,32 @@ def _trials(native, *, run_phase=None):
     return rows
 
 
+
+def _native_eligibility(native, rows, *, source_sha256, source_record_id):
+    partial = (source_sha256,source_record_id) == (PARTIAL_SOURCE_SHA256,PARTIAL_SOURCE_RECORD_ID)
+    is_registered_missing_stop = (source_sha256,source_record_id) in MISSING_STOP_RECORDS
+    terminal_prefixes = []
+    if partial:
+        terminal_prefixes.append({"reason":"terminal_start_fixation_prefix_without_native_MI_cue_or_paired800",
+            "original_annotations":[{k:e[k] for k in ("original_annotation_index","data_record","onset_token",
+                "duration_token","description")} for e in native["annotations"][193:]],
+            "cue_present":False,"paired800_present":False,"canonical_label_available":False,
+            "MI_trial_UID_available":False,"included_in_MI_trials":False,"included_in_waveform_QC_exclusions":False})
+    return {"schema_version":"paper3-dreyer-original-native-MI-eligibility-v1",
+        "policy":"exact_source_identity_terminal_prefix_review" if partial else
+            "exact_source_identity_observed_missing_stop_tail" if is_registered_missing_stop else "unchanged_legacy_complete_MI_grammar",
+        "qualification_plan_sha256":QUALIFICATION_PLAN_SHA256,"qualification_review_sha256":QUALIFICATION_REVIEW_SHA256,
+        "source_file_sha256":source_sha256,"source_record_id":source_record_id,
+        "native_original_trial_start_markers":sum(e["description"] == "768" for e in native["annotations"]),
+        "eligible_original_MI_trials":len(rows),"eligible_original_class_counts":dict(Counter(r["canonical_label"] for r in rows)),
+        "experiment_stop_observed":any(e["description"] == "32770" for e in native["annotations"]),
+        "post_trial_bookkeeping_suffix":[{k:e[k] for k in ("original_annotation_index","onset_token","duration_token","description")}
+            for e in native["annotations"][241:]] if not partial else [],
+        "terminal_incomplete_prefixes":terminal_prefixes,"incomplete_prefixes_are_not_MI_trials":True,
+        "labels_or_trials_synthesized":False,"padding_applied":False,"class_balancing_applied":False,
+        "waveform_QC_applied_to_eligibility":False}
+
+
 def audit_native(raw_path, *, expected_sha256, profile):
     """Issue native header/TAL trial evidence without reading EEG sample arrays.
 
@@ -252,6 +426,8 @@ def audit_native(raw_path, *, expected_sha256, profile):
     if (not isinstance(expected_sha256, str) or re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None
             or file_digest(path) != expected_sha256):
         raise ValueError("Complete native EDF SHA256 differs from its declared object")
+    if expected_sha256 == PARTIAL_SOURCE_SHA256 and (subject,run,run_id,path.stat().st_size) != (40,3,"R3online",PARTIAL_SOURCE_BYTES):
+        raise ValueError("Reviewed partial source requires its original subject/run identity and full EDF byte count")
     native = _read_native_metadata(path)
     # Every original marker must lie in the physically recorded file clock,
     # including the non-MI controls that follow the final complete trial.
@@ -259,7 +435,8 @@ def audit_native(raw_path, *, expected_sha256, profile):
         raise ValueError("Original annotation lies outside the physical EDF clock")
     adapter_sha = file_digest(__file__)
     rows = []
-    for original in _trials(native,run_phase="acquisition" if run <= 2 else "online"):
+    for original in _trials(native,run_phase="acquisition" if run <= 2 else "online",
+            source_sha256=expected_sha256,source_record_id=path.name):
         row = dict(original, dataset="Dreyer2023", role="exposed_source_extension",
             provider_subject=str(subject), provider_subject_id=str(subject), session_id="provider_single_day",
             source_version=SOURCE_VERSION, source_file_sha256=expected_sha256, source_file_bytes=path.stat().st_size,
@@ -281,7 +458,8 @@ def audit_native(raw_path, *, expected_sha256, profile):
         "native_signal_order": native["signal_labels"], "native_signal_units": native["signal_units"],
         "selected_channel_order": list(CHANNELS), "original_trials": len(rows),
         "native_marker_counts": dict(Counter(e["description"] for e in native["annotations"])),
-        "non_task_marker_policy": "optional_ordered_online_EndOfSession_Train_after_last_trial_before_ExperimentStop_then_optional_terminal_zero_width_EndOfFile",
+        "non_task_marker_policy": "unchanged_legacy_stop_tail_or_exact_SHA_record_bound_observed_missing_stop_tail_or_reviewed_terminal_no_cue_prefix",
+        "native_eligibility": _native_eligibility(native,rows,source_sha256=expected_sha256,source_record_id=path.name),
         "post_trial_control_annotation_indices": [e["original_annotation_index"] for e in native["annotations"]
             if e["description"] in ONLINE_POST_TRIAL_CONTROLS],
         "terminal_eof_annotation_indices": [e["original_annotation_index"] for e in native["annotations"]
@@ -365,6 +543,7 @@ def materialize(raw_path, *, expected_sha256, profile):
         "signal_contract_sha256": CONTRACT_SHA256, "native_profile_sha256": digest(profile),
         "adapter_sha256": adapter_sha, "preprocess_file_sha256": file_digest(Path(__file__).parents[1]/"preprocess.py"),
         "independent_native_metadata_semantic_sha256": digest(independent),
+        "native_eligibility": independent["native_eligibility"],
         "stage": "pre_rms_car11_temporal_demeaned", "normalization_applied": False,
         "synthetic": False, "old_NPZ_reused": False, "fit_started": False, "actual_fits": 0,
         "GPU_actions": 0, "network_operations": 0, "R2_operations": 0}
