@@ -1,0 +1,35 @@
+{
+  "schema_version": "paper3-source-transport-recovery-validation-v1",
+  "dataset": "Yang2025",
+  "scope": "same_source_plan_transport_only",
+  "frozen_science_plan_semantic_sha256": "ab9a075ff1fa84548bfe958d3c4b6d6897d6b9dbc29d0ed49d807ec3d4b2b609",
+  "amendment": {
+    "path": "plans/data_plan_20261019/yang_transport_recovery_amendment.json",
+    "sha256": "8939d9555114a76bfacc67e5fe253286ce8651171ba002fe81dcb081bc06654a",
+    "bytes": 2394
+  },
+  "implementation": {
+    "path": "tools/resume_yang_source_transport.py",
+    "sha256": "932ef34b5e9880ef54bf046cfae3e31ffdcb7ad8dcda32d9feb08de52d294f1e",
+    "bytes": 24101
+  },
+  "tests": {
+    "path": "tests/test_resume_yang_source_transport.py",
+    "sha256": "c924ec200b39538c0bf6f2bf91b5c837dfd0aba956211f9c75ee98abf0bf762e",
+    "bytes": 19893
+  },
+  "actual_root_validation": {
+    "command": "python -B -m pytest -q tests/test_resume_yang_source_transport.py tests/test_source_extension_coordinator.py",
+    "passed": 73,
+    "duration_seconds": 3.66,
+    "new_wrapper_tests": 44,
+    "existing_coordinator_tests": 29
+  },
+  "original_budget_and_clock_reset": false,
+  "R2_GET_requirement_unchanged": true,
+  "source_trial_or_signal_rules_changed": false,
+  "scientific_fits": 0,
+  "GPU_actions": 0,
+  "external_payload_accessed": false,
+  "metadata_receipt_alone_is_not_data_completion": true
+}
