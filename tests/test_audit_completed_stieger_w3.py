@@ -36,7 +36,26 @@ class AuditCompletedStiegerTests(unittest.TestCase):
             ('original_classical.py','original_software_code_manifest.json','native_regression.json'))
         for relative in paths:
             target=self.root/relative;target.parent.mkdir(parents=True,exist_ok=True)
-            shutil.copyfile(REPO/relative,target)
+            source=REPO/relative
+            if relative=='p3work/episodes.py':
+                # This fixture exercises the unchanged historical 0f1 verifier.
+                # The new canonical compatibility runtime is tested separately.
+                import hashlib
+                historical=[r for r in manifest['files'] if r['path']==relative]
+                expected={'path':relative,'sha256':'348604283251b8d50a34c5b0545a895afb7bbaa024ff82d7c62be11e30504a65','bytes':43688}
+                self.assertEqual(historical,[expected])
+                source=REPO/'audit/data_plan_20261020/episode_descriptor_compatibility_fix/original_episodes_348604.py.txt'
+                body=source.read_bytes()
+                self.assertEqual({'path':relative,'sha256':hashlib.sha256(body).hexdigest(),'bytes':len(body)},expected)
+            elif relative=='p3work/prediction_store.py':
+                import hashlib
+                historical=[r for r in manifest['files'] if r['path']==relative]
+                expected={'path':relative,'sha256':'e1af634b84bc234bc71394c6fff222d4cd67b2d4ce7f88bc2da5a40b4abde5ab','bytes':32085}
+                self.assertEqual(historical,[expected])
+                source=REPO/'audit/data_plan_20261020/episode_descriptor_compatibility_fix/original_prediction_store_e1af63.py.txt'
+                body=source.read_bytes()
+                self.assertEqual({'path':relative,'sha256':hashlib.sha256(body).hexdigest(),'bytes':len(body)},expected)
+            shutil.copyfile(source,target)
         self.plan=json.loads((self.root/'audit/data_plan_20261019/stieger/cache_plan.json').read_bytes())
 
     def write(self,path,value):

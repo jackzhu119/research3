@@ -62,7 +62,7 @@ The unchanged `protocol/legacy_baseline_v1` is historical source material.
   analysis until W7 and a verified external prediction transaction exist.
 - `tools/prepare_stieger_cache.py`: frozen-window, full-registry CPU cache plan,
   serial resource bounds, interruption recovery and complete R2 GET verification.
-  It is not running before its W1 gate.
+  The real W1 gate and all598-session CPU cache/independent quality checks have passed; this has not run a scientific fit or GPU pilot.
 - `window_acceptance.py` and `source_cache_acceptance.py`: independent read-only
   acceptance of all 396 meta-train session metadata and all 505 source objects.
   Window thresholds use integer counts and exact rational arithmetic. A
@@ -89,3 +89,5 @@ The final clinical evaluator, W7 freeze production and external execution remain
 separate future technical gates. Sealed external
 payloads remain untouched, and `protocol_freeze_sha256` remains null. No test,
 import, status flag or input-contract hash can replace those technical gates.
+
+The final current software regression passed3641 tests in557.99 seconds, with all197 software inputs rehashed after the real exit. See the current software acceptance referenced by `contracts/data_plan_final_validation_20261020.json`; original117/189 inventories remain historical evidence. W5 scientific validation remains pending actual user-started GPU execution.

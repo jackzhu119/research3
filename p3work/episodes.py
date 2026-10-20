@@ -67,11 +67,15 @@ def _local(root: Path, relative: str, *, must_exist=True) -> Path:
 
 
 def _artifact(root: Path, descriptor: Mapping, *, suffix=None) -> Path:
-    if not isinstance(descriptor, Mapping) or set(descriptor) != {"path", "sha256"}:
+    if (not isinstance(descriptor, Mapping)
+            or set(descriptor) not in ({"path", "sha256"}, {"path", "sha256", "bytes"})):
         raise EpisodeGateError("artifact_path_and_sha256_required")
+    if "bytes" in descriptor and (type(descriptor["bytes"]) is not int or descriptor["bytes"] < 0):
+        raise EpisodeGateError("artifact_nonnegative_integer_bytes_required")
     expected = _sha(descriptor["sha256"])
     path = _local(root, descriptor["path"])
     if (not path.is_file() or (suffix is not None and path.suffix != suffix)
+            or ("bytes" in descriptor and path.stat().st_size != descriptor["bytes"])
             or file_digest(path) != expected):
         raise EpisodeGateError("artifact_sha256_or_type_mismatch")
     return path

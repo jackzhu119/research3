@@ -35,6 +35,13 @@ PARALLEL_DREYER_PLAN_SHA = "afc8dd0d2d873f455e901c6f702fc2d5649fde15f76873c40a24
 PARALLEL_DREYER_PLAN = "audit/source_extensions_20261019/Dreyer2023/plan_after_all520_native_review_v5.json"
 PARALLEL_DREYER_PLAN_FILE_SHA = "440c78ca7d1d2a3be685041924bdfe1fbcdd5ad9683592f97c39d50184ad2967"
 PARALLEL_YANG_PLAN_SHA = "ab9a075ff1fa84548bfe958d3c4b6d6897d6b9dbc29d0ed49d807ec3d4b2b609"
+YANG_MEMBER_PLAN = f"audit/source_extensions_20261019/Yang2025/{PARALLEL_YANG_PLAN_SHA}/frozen_plan.json"
+YANG_MEMBER_PLAN_FILE_SHA = "55c7a36d339e2923d0c3fec45072d660127ff84f9a65dfbc3805f9259d3b3fe6"
+YANG_MEMBER_TRANSPORT = "tools/resume_yang_source_transport_v2.py"
+YANG_MEMBER_TRANSPORT_SHA = "2ae1e75e47a75032155da44c1cb45afa78a1ec82da3ecd11d6f85ec60e1c0f71"
+YANG_MEMBER_HISTORY = "audit/data_plan_20261019/yang/single_session_download_receipt.json"
+YANG_MEMBER_HISTORY_SHA = "2c90692b775985ab5fb68d2e92ea31513ab9e88b3318dfc9f6daa8b1edd08c9f"
+YANG_MEMBER_ORIGINAL_ROOT = "/workspace/research3"
 PARALLEL_WRAPPER = "tools/prepare_dreyer_source_cpu_v5.py"
 PARALLEL_WRAPPER_SHA = "c604a0189993ec6e77dd4af0dfb6812b38d69791e691f066b83278eff06b7126"
 PARALLEL_PARENT_WRAPPER = "tools/prepare_dreyer_source_cpu_v4.py"
@@ -352,7 +359,164 @@ def _v5_wrapper(root, closure):
     return module
 
 
-def _provenance_closure(root, values, closure, *, aliases=None):
+def _yang_member_catalog(root, completed, closure):
+    """Authorize archive identities from the frozen plan and real closed proof.
+
+    ZIP member names describe provider bytes, not files to restore beside this
+    program. The original offline verifier still proves every raw/cache GET,
+    all five final GETs, and the eight issued calls before this classification.
+    """
+    import importlib
+
+    plan_file = artifact(root, {"path": YANG_MEMBER_PLAN,
+        "sha256": YANG_MEMBER_PLAN_FILE_SHA}, closure)
+    plan = read_json(plan_file)
+    if (plan.get("plan_sha256") != PARALLEL_YANG_PLAN_SHA
+            or digest({k:v for k,v in plan.items() if k != "plan_sha256"}) != PARALLEL_YANG_PLAN_SHA
+            or plan.get("dataset") != "Yang2025" or plan.get("role") != "source_train"
+            or plan.get("source_only") is not True or plan.get("task_subset") != "2C"
+            or plan.get("record_count") != 153 or len(plan.get("records", [])) != 153):
+        raise ExtensionGateError("exact_frozen_Yang153_member_plan_required")
+    wrapper_file = artifact(root, {"path": YANG_MEMBER_TRANSPORT,
+        "sha256": YANG_MEMBER_TRANSPORT_SHA}, closure)
+    transport = importlib.import_module("tools.resume_yang_source_transport_v2")
+    if Path(transport.__file__).read_bytes() != wrapper_file.read_bytes():
+        raise ExtensionGateError("frozen_Yang_member_transport_verifier_required")
+    actual = transport.verify_complete_transport_history(root, plan)
+    proof = completed.get("transport_completion_proof") if isinstance(completed, dict) else None
+    history = actual.get("transport_history") if isinstance(actual, dict) else None
+    if (not isinstance(actual, dict) or actual.get("status") != "SOURCE_EXTENSION_CACHE_COMPLETE"
+            or actual.get("already_complete_offline_verified") is not True
+            or type(actual.get("verified_records")) is not int or actual["verified_records"] != 153
+            or not isinstance(history, dict) or type(history.get("calls_used")) is not int
+            or history["calls_used"] != 8 or digest(proof) != digest(actual)
+            or completed.get("mode") != "already_complete"
+            or completed.get("plan_sha256") != PARALLEL_YANG_PLAN_SHA
+            or digest(completed.get("transport_history")) != digest(history)
+            or completed.get("manifest") != actual.get("manifest")
+            or completed.get("backup_receipt") != actual.get("backup_receipt")):
+        raise ExtensionGateError("actual_Yang153_five_GET_eight_closed_calls_required_for_members")
+    if len(_receipt_entries(root, actual["backup_receipt"], closure)) != 5:
+        raise ExtensionGateError("actual_Yang_five_final_full_GET_objects_required_for_members")
+    manifest = read_json(artifact(root, actual["manifest"], closure))
+    if (actual["manifest"]["path"] != f"cache/source_extensions_20261019/Yang2025/{PARALLEL_YANG_PLAN_SHA}/source_cache.json"
+            or manifest.get("dataset") != "Yang2025" or manifest.get("role") != "source_train"
+            or manifest.get("source_only") is not True
+            or not isinstance(manifest.get("shards"), list) or len(manifest["shards"]) != 153):
+        raise ExtensionGateError("canonical_completed_Yang_member_manifest_required")
+    shards = {s.get("record_id"):s for s in manifest["shards"]}
+    records, members = {}, set()
+    for record in plan["records"]:
+        rid, subject, session = (record.get(k) for k in ("record_id", "subject_id", "session_id"))
+        if (not isinstance(rid, str) or re.fullmatch(r"sub-\d{3}_ses-\d{2}", rid) is None
+                or rid != f"{subject}_{session}" or rid not in shards
+                or not isinstance(record.get("raw_files"), list) or len(record["raw_files"]) != 2):
+            raise ExtensionGateError("exact_Yang_member_record_roster_required")
+        shard = shards[rid]
+        native_path = f"audit/source_extensions_20261019/Yang2025/{PARALLEL_YANG_PLAN_SHA}/{rid}/native_metadata.json"
+        if (native_path in records or shard.get("subject_id") != subject or shard.get("session_id") != session
+                or shard.get("raw_files") != record["raw_files"]
+                or not isinstance(shard.get("native_metadata"), dict)
+                or shard["native_metadata"].get("path") != native_path):
+            raise ExtensionGateError("canonical_Yang_member_record_metadata_required")
+        for raw, filename in zip(record["raw_files"], ("data.bdf", "evt.bdf")):
+            member = raw.get("download", {}).get("member")
+            expected = f"WBCIC_SHU Motor Imagery dataset/sourcedata/2C dataset/{subject}/{session}/eeg/{filename}"
+            if (member != expected or raw.get("download", {}).get("kind") != "zip_range"
+                    or type(raw.get("bytes")) is not int or raw["bytes"] <= 0
+                    or re.fullmatch(r"[0-9a-f]{64}", str(raw.get("sha256"))) is None):
+                raise ExtensionGateError("exact_official_Yang_member_identity_required")
+            identity = (member, raw["sha256"], raw["bytes"])
+            if identity in members:
+                raise ExtensionGateError("unique_306_Yang_archive_members_required")
+            members.add(identity)
+        records[native_path] = (record, shard)
+    if len(records) != 153 or len(shards) != 153 or len(members) != 306:
+        raise ExtensionGateError("unique_153_records_and_306_Yang_members_required")
+    historical = {"path": YANG_MEMBER_HISTORY, "sha256": YANG_MEMBER_HISTORY_SHA, "bytes": 8929}
+    if plan.get("historical_get_evidence") != [historical]:
+        raise ExtensionGateError("exact_Yang_historical_download_receipt_required")
+    return {"records": records, "historical": historical}
+
+
+def _yang_raw_member_get(root, record, shard, closure):
+    rows = _receipt_entries(root, shard["raw_backup_receipt"], closure)
+    fields = ("path", "sha256", "bytes", "role", "dataset")
+    expected = [{"path":r["path"], "sha256":r["sha256"], "bytes":r["bytes"],
+        "role":"source_development_raw", "dataset":"Yang2025"} for r in record["raw_files"]]
+    if (len(rows) != 2 or {tuple(r.get(k) for k in fields) for r in rows}
+            != {tuple(r[k] for k in fields) for r in expected}):
+        raise ExtensionGateError("both_Yang_native_members_require_exact_raw_full_GET_proofs")
+
+
+def _yang_native_members(root, item, metadata, catalog, closure):
+    """Classify only the two bound raw fields in canonical native metadata."""
+    pair = catalog["records"].get(item["path"])
+    if pair is None:
+        raise ExtensionGateError("canonical_Yang_native_member_metadata_required")
+    record, shard = pair
+    if (any(item.get(k) != shard["native_metadata"].get(k) for k in ("path", "sha256", "bytes"))
+            or not isinstance(metadata, dict)
+            or metadata.get("schema_version") != "paper3-yang-native-inventory-record-v1"
+            or metadata.get("dataset_id") != "Yang2025_2C"
+            or type(metadata.get("dataset_version")) is not int or metadata["dataset_version"] != 5
+            or type(metadata.get("subject")) is not int
+            or metadata["subject"] != int(record["subject_id"].split("-")[1])
+            or type(metadata.get("session")) is not int
+            or metadata["session"] != int(record["session_id"].split("-")[1])
+            or metadata.get("participant_id") != "Yang2025_2C:"+record["subject_id"]
+            or ("record_id" in metadata and metadata["record_id"] != record["record_id"])
+            or metadata.get("source_record_id") != record["raw_files"][0]["download"]["member"]
+            or not isinstance(metadata.get("raw_files"), dict)
+            or set(metadata["raw_files"]) != {"signal", "event"}):
+        raise ExtensionGateError("exact_Yang_native_schema_record_and_member_pair_required")
+    references = []
+    for name, raw in zip(("signal", "event"), record["raw_files"]):
+        value = metadata["raw_files"][name]
+        if (not isinstance(value, dict) or value.get("path") != raw["download"]["member"]
+                or value.get("sha256") != raw["sha256"] or type(value.get("bytes")) is not int
+                or value["bytes"] != raw["bytes"]):
+            raise ExtensionGateError("exact_Yang_native_member_SHA_size_and_record_required")
+        references.append(value)
+    _yang_raw_member_get(root, record, shard, closure)
+    return {id(value) for value in references}
+
+
+def _yang_historical_members(root, item, receipt, catalog, closure):
+    """Classify the pinned producer's two historical absolute raw identities.
+
+    The recorded producer root is immutable historical context. It is compared
+    literally, never resolved, rewritten to a restore root, or opened.
+    """
+    if (any(item.get(k) != catalog["historical"].get(k) for k in ("path", "sha256", "bytes"))
+            or not isinstance(receipt, dict) or type(receipt.get("schema_version")) is not int
+            or receipt["schema_version"] != 1 or receipt.get("status") != "ONE_SESSION_NATIVE_VERIFIED"
+            or type(receipt.get("subject")) is not int or receipt["subject"] != 1
+            or type(receipt.get("session")) is not int or receipt["session"] != 1
+            or not isinstance(receipt.get("objects"), list) or len(receipt["objects"]) != 2):
+        raise ExtensionGateError("exact_pinned_Yang_historical_member_receipt_required")
+    native_path = f"audit/source_extensions_20261019/Yang2025/{PARALLEL_YANG_PLAN_SHA}/sub-001_ses-01/native_metadata.json"
+    record, shard = catalog["records"][native_path]
+    download = record["raw_files"][0]["download"]
+    target = f"{YANG_MEMBER_ORIGINAL_ROOT}/data/source_extensions_20261019/Yang2025/sub-001/ses-01"
+    if (receipt.get("source_url") != download["url"] or receipt.get("archive_bytes") != download["archive_bytes"]
+            or receipt.get("raw_target_directory") != target):
+        raise ExtensionGateError("exact_original_Yang_historical_producer_required")
+    references = []
+    for value, raw in zip(receipt["objects"], record["raw_files"]):
+        if (not isinstance(value, dict) or value.get("path") != f"{YANG_MEMBER_ORIGINAL_ROOT}/{raw['path']}"
+                or value.get("archive_member") != raw["download"]["member"]
+                or value.get("sha256") != raw["sha256"] or type(value.get("bytes")) is not int
+                or value["bytes"] != raw["bytes"] or value.get("crc32") != raw["crc32"]
+                or value.get("compressed_bytes") != raw["download"]["compressed_bytes"]
+                or value.get("status") != "FRESH_NATIVE_FULL_SHA_CRC_VERIFIED"):
+            raise ExtensionGateError("exact_Yang_historical_member_path_SHA_size_and_record_required")
+        references.append(value)
+    _yang_raw_member_get(root, record, shard, closure)
+    return {id(value) for value in references}
+
+
+def _provenance_closure(root, values, closure, *, aliases=None, yang_completion=None):
     """Track scientific proof dependencies, preserving historical code aliases.
 
     Provider EDF payloads need full-GET receipts, not another local raw copy.
@@ -362,9 +526,17 @@ def _provenance_closure(root, values, closure, *, aliases=None):
     """
     aliases = aliases or {}
     seen = set()
+    member_catalog = None
 
-    def visit(value, field=None):
+    def visit(value, field=None, provider_references=frozenset()):
+        nonlocal member_catalog
         if isinstance(value, dict):
+            if id(value) in provider_references:
+                # Preserve every other dependency nested in this descriptor.
+                for name, item in value.items():
+                    if name not in {"path", "sha256", "bytes"}:
+                        visit(item, name, provider_references)
+                return
             if {"path", "sha256", "bytes"} <= set(value):
                 relative = value["path"]
                 if not isinstance(relative, str):
@@ -381,19 +553,31 @@ def _provenance_closure(root, values, closure, *, aliases=None):
                 path = artifact(root, candidate, closure)
                 seen.add(key)
                 if path.suffix == ".json":
-                    visit(read_json(path))
+                    body = read_json(path)
+                    references = frozenset()
+                    if (yang_completion is not None and re.fullmatch(
+                            rf"audit/source_extensions_20261019/Yang2025/{PARALLEL_YANG_PLAN_SHA}/sub-\d{{3}}_ses-\d{{2}}/native_metadata\.json",
+                            candidate["path"])):
+                        if member_catalog is None:
+                            member_catalog = _yang_member_catalog(root, yang_completion, closure)
+                        references = _yang_native_members(root, candidate, body, member_catalog, closure)
+                    elif yang_completion is not None and candidate["path"] == YANG_MEMBER_HISTORY:
+                        if member_catalog is None:
+                            member_catalog = _yang_member_catalog(root, yang_completion, closure)
+                        references = _yang_historical_members(root, candidate, body, member_catalog, closure)
+                    visit(body, provider_references=references)
                 return
             for name, item in value.items():
                 if name not in {"code", "initial_yang_process"}:
-                    visit(item, name)
+                    visit(item, name, provider_references)
         elif isinstance(value, (list, tuple)):
             for item in value:
-                visit(item, field)
+                visit(item, field, provider_references)
 
     visit(values)
 
 
-def _parallel_prior_budget(root, value, current_plan, closure, *, wrapper=None):
+def _parallel_prior_budget(root, value, current_plan, closure, *, wrapper=None, aliases=None):
     """All six original closed journals, verified by the immutable V5 checker."""
     wrapper = wrapper or _v5_wrapper(root, closure)
     try:
@@ -405,7 +589,7 @@ def _parallel_prior_budget(root, value, current_plan, closure, *, wrapper=None):
             or [r.get("source") for r in value.get("closed_history_sources", [])]
                 != ["V1", "V2", "auxiliary_schema_review", "V3", "V4", "native_qualification"]):
         raise ExtensionGateError("Dreyer_six_actual_conserved_closed_histories_required")
-    _provenance_closure(root, expected, closure)
+    _provenance_closure(root, expected, closure, aliases=aliases)
 
 
 def _peer_coordination_closure(root, declaration, coordination, closure):
@@ -449,7 +633,7 @@ def _peer_coordination_closure(root, declaration, coordination, closure):
             raise ExtensionGateError("Dreyer_V5_completed_Yang_provenance_closure_required")
         for relative, sha in value.items():
             artifact(root, {"path": relative, "sha256": sha}, closure)
-    _provenance_closure(root, completed, closure)
+    _provenance_closure(root, completed, closure, yang_completion=completed)
 
 
 def _parallel_evidence(root, manifest, status, audit, closure):
@@ -531,8 +715,10 @@ def _parallel_evidence(root, manifest, status, audit, closure):
             or not isinstance(regressions.get("comparisons"), list) or len(regressions["comparisons"]) != 128
             or regressions.get("embedded_in_final_GET_backed_operational_evidence") is not True):
         raise ExtensionGateError("Dreyer_V5_all128_actual_numeric_regressions_required")
-    _parallel_prior_budget(root, root_value.get("prior_budget_evidence"), plan, closure, wrapper=wrapper)
+    # The frozen declaration verifier above authenticated these snapshots.
     aliases = root_value["qualification_evidence"]["historical_code_aliases"]
+    _parallel_prior_budget(root, root_value.get("prior_budget_evidence"), plan, closure,
+        wrapper=wrapper, aliases=aliases)
     _provenance_closure(root, [root_value["qualification_evidence"], regressions], closure, aliases=aliases)
     # Recheck snapshots after numeric verification, then bind each state's
     # artifacts and the full actual old/new numeric reports to freshness.

@@ -75,12 +75,16 @@ def _local(root, relative, *, exists=True):
 
 
 def _reference(root, value, *, suffix=None):
-    if not isinstance(value, dict) or set(value) != {"path", "sha256"}:
+    if (not isinstance(value, dict)
+            or set(value) not in ({"path", "sha256"}, {"path", "sha256", "bytes"})):
         raise PredictionStoreError("explicit_path_sha256_reference_required")
+    if "bytes" in value and (type(value["bytes"]) is not int or value["bytes"] < 0):
+        raise PredictionStoreError("referenced_artifact_nonnegative_integer_bytes_required")
     _sha(value["sha256"])
     path = _local(root, value["path"])
     suffixes = (suffix,) if isinstance(suffix, str) else suffix
     if (not path.is_file() or (suffixes is not None and path.suffix not in suffixes)
+            or ("bytes" in value and path.stat().st_size != value["bytes"])
             or file_digest(path) != value["sha256"]):
         raise PredictionStoreError("referenced_artifact_full_sha256_or_type_mismatch")
     return path
@@ -137,9 +141,14 @@ def _validate_plan(root, plan, references):
             raise PredictionStoreError("episode_plan_original_uid_audit_mismatch")
     if plan.query_rule not in {"future_complete_physical_runs", "verified_continuous_original_trial_block"}:
         raise PredictionStoreError("registered_future_query_rule_required")
-    if any(not isinstance(ref, dict) or set(ref) != {"path", "sha256"} or not isinstance(ref["path"], str)
+    if any(not isinstance(ref, dict)
+           or set(ref) not in ({"path", "sha256"}, {"path", "sha256", "bytes"})
+           or not isinstance(ref["path"], str)
            for ref in references.values()):
         raise PredictionStoreError("explicit_path_sha256_reference_required")
+    if any("bytes" in ref and (type(ref["bytes"]) is not int or ref["bytes"] < 0)
+           for ref in references.values()):
+        raise PredictionStoreError("referenced_artifact_nonnegative_integer_bytes_required")
     for ref in references.values():
         _local(root, ref["path"], exists=False)  # Path-only checks never read a body.
     if not references["method_code"]["path"].startswith("p3work/"):

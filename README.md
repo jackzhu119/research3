@@ -1,61 +1,52 @@
-# Paper3 — v2.0 协议与获批 v2.1 窗口修订
+# Paper3 protocol implementation
 
-原始 `Paper3_Work_Handoff_20261018.zip` 已实际读取，529,763 bytes，整体 SHA256 为 `0398664faf34682a07fb38de4e46df9829f0e5ad050f657f905d0373dbfaf175`；包内 manifest 的 **52/52 文件逐项匹配**。原件位于 `protocol/`，后续实现位于 `p3work/`，两者分开维护。`legacy_baseline_v1` 保持原字节，只是历史基础软件，不是新算法或真实训练证据。
+本仓库在独立研究分支实现论文3协议及可恢复科研流程。原始协议 ZIP 的52份 manifest 文件已逐一 SHA256 核验；`protocol/legacy_baseline_v1` 保留为旧基线，不作为新算法。实验输入以已获授权的 v2.1 信号合同和冻结角色为准。
 
-**W0、W1 已实际完成；62 人资格审计、40/11/11 分组及获批 v2.1 共同窗口均已冻结。** 分组 SHA256 为 `1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd`。完整时长审计覆盖已冻结 meta-train 40 人的全部396个官方 session。原 v2.0 的两个固定候选均未通过保留率门；经用户批准，只增加并审计一个 v2.1 固定候选：反馈起点不变，上下文 `[0,1.5)` 秒、裁切 `[0.25,1.25)` 秒、128 Hz、128点。该候选通过原80%保留率和10个百分点类别排除差门；原协议52文件和失败证据均保留。W2 按冻结505候选清单推进，始终只有一个 source CPU 协调器和一个原生解析器；小 EDF 入口的并发限制见下。阶段状态见 `status/tasks.json`，活动进度以私有 `audit/source_full/progress.json` 及 source worker 的 `batch_progress.json` 为准。W2 只有在实际数值缓存及 R2 完整回读均验收后才能完成。旧 `audit/w0_preflight.json` 记录原包尚未附加时的历史阻塞，不代表当前状态。
+## 当前数据与软件验收
 
-## 已完成的真实工作
+source4、Stieger、Yang、Dreyer、Ma 和 CAR3 数值缓存均已完成原生解析、缓存校验及原生产 R2 完整 GET/SHA256 验证。各数据的实际覆盖、有效 trial 数量、单位限制和用途见[真实缓存与训练分工](plans/data_plan_20261019/VERIFIED_DATA_ZH.md)。provider ID 不代表已核实的跨库独立自然人总数；CAR3 来自相同 source4 trial，不增加独立 N。
 
-- 四 source 各一份原生 schema 样本：BNCI 144、Cho 200、OpenBMI offline train 100、PhysioNet 15，共459条原始 LR 元数据；不是完整 source 队列或最终合格训练数。
-- Stieger S1/Session1：450个混合任务 trial，150个纯水平 LR trial；保留 task/run/trial、原始时间、反馈终点、实测通道与 µV 转换。样本覆盖不能代替 meta-train 全体选窗。
-- 全62人资格原档、原生元数据与解析审计均完成官方校验及 R2 完整 GET/SHA256 核验，原档共38,395,648,006 bytes。396个 meta-train session 的完整时长审计亦已完成，原始纯 LR 分母为59,399；获批 v2.1 候选保留48,871条，按参与者等权的保留率为82.12698%、类别排除率绝对差为4.38613个百分点。以上为波形 QC 前的元数据时长门，不是最终有效缓存数量或训练结果。
-- W2 已由真实数据完成：505份 source 原档共77,165,283,329 bytes；冻结 v2.1 输入下224个 provider 命名空间均生成缓存，共28,830条有效 LR trial、0条波形 QC 排除。缓存及元数据1,428个对象、314,364,508 bytes已实际R2完整GET/SHA256核验。本地受控 source pilot 只读门已通过，固定包仍须独立恢复验收；224个标识不代表已核实跨库生物身份独立。GPU训练和科研 fits仍为0。
-- 原始协议 ZIP 与5个 schema 原档已通过现有 R2 条件 PUT、完整 GET、字节数和 SHA256 校验。没有用 ETag 或 HEAD 冒充回读验收。
-- 新几何/适配内核、B0–B11/P/P+PCT 注册表、真实 episode 接口、source 与 meta 可恢复训练入口及不可覆盖预测存档均已实现。Rref/G/U0 的真实估计、训练和选择仍需上游数据及真实产物验收。CPU 合成测试只验证软件；没有真实科研模型、性能结果或科研 pilot。
-- 已增加独立数据验收：完整396会话元数据的精确计数窗口门、505个 source 原档及每条原生 LR trial 的 valid/excluded 归账、实际缓存字节与 R2 完整回读证明。只读 support 接口和模型参数恢复都保留来源、角色与付费前缀约束，不能用状态标记替代真实数据。
-- CPU 依赖实际安装并锁定；CPU和 CUDA12.8 的 CPython3.12/Linux x86_64 离线 wheels 已下载。GPU profile 已在独立临时环境实际离线安装，pip check、100个版本与Torch CPU导入/小矩阵检查均通过；仍未验证GPU或驱动。安装日志及审计已实际R2完整GET核验，临时环境验证后回收，原环境和wheels保留。
-- 当前统一 CPU 软件回归为1544项通过，117份 Python 代码的清单与验收范围见 `audit/software_preparation_acceptance.json`。这些测试不代表真实 EEG 拟合、GPU恢复验证或科研性能结果。
+最终 CPU 软件回归实际通过 **3641项测试**，耗时557.99秒；197项软件输入（196份 Python 文件及 `pyproject.toml`）在真实退出后全部复核 SHA/bytes。软件 acceptance、完整 stdout 和原117/189份历史清单分别保留。当前软件验收不表示真实模型已拟合。
 
-本地 CPU 双文件传输协调器在确认退出、锁释放后，才可交接给小 EDF 专用入口；它们共用原计划、原字节/wall累计账本、对象状态和阶段门，不能同时运行。小文件入口先串行复核或恢复178个非 PhysioNet 对象，再处理327个 PhysioNet EDF；每份 EDF 的 fresh HEAD 与 GET 都须检查大小不超过16 MiB，全局既有暂存和新任务合计最多16个，始终单原生解析器。下载前检查容器内存和磁盘，解析前复查；失败留下原档或 partial 时停止补充新任务并排空在途文件。实际单一进程及逐文件状态以私有运行进度为准。可选官方镜像与版本化 EDF 原始注释修订见 [来源说明](docs/SOURCE_CLOCK_REVISION_ZH.md)，整文件官方 SHA、旧失败尝试与累计预算均保留。
+Stieger 全62人598会话的独立质量审计实际通过，固定40/11/11人、396/97/105会话；全部训练开发和验证会话具备真实 B20/future-query资格，没有跨分组完全相同信号。内部105会话只核缓存 SHA，没有调用内部 episode 或进行内部科学检验。最终数据契约见 `contracts/data_plan_final_validation_20261020.json`；部署回读与固定包验收另以最终交付回执为准。
 
-## 数据、访问与公开仓库
+此阶段科研 fit、GPU训练、内部科学检验及科研性能结果均为0。用户本人开启已有云服务器后，按固定包的[启动说明](plans/data_plan_20261019/STARTUP_ZH.md)恢复缓存与离线依赖，先运行唯一受控 GPU 恢复 pilot。真实检查点、预测/数值恢复、预算和阶段门通过后，才继续主线及两条独立 source 增强支路。脚本不启动或重启 RunPod，不创建实例。
 
-当前 GitHub 仓库为 PUBLIC。因此新增 EEG、逐trial清单、官方数据catalog、R2回执及批处理状态仅保存在本地与用户现有 R2。公开分支保留代码、用户授权导入的协议和汇总验收，不公开新增数据或凭据。完整固定包在用户现有 R2 及本地共享交付目录中生成。
+## 科研边界
 
-- `protocol/`：原始只读研究规格及52文件校验来源。
-- `p3work/`：新原生适配、权限/信号合同、方法、可恢复训练和预测存档。
-- `contracts/input_contract.json`：已冻结的 v2.1 信号合同；其余未到阶段的科研参数继续保持 null。
-- `data/`：本次独立下载的原档和依赖 wheels；不复用论文1旧 NPZ。
-- `data_catalog/`、`audit/source_schema/`、`audit/stieger_w1/`：私有原生证据及逐事件记录。
-- `manifests/geometry_constants/`：实际固定 Q/E 数学数组及 SHA；不是 EEG 缓存或模型。
+主线使用固定四source、11通道合同及 Stieger 40/11/11。Yang 和 Dreyer 各自与 source4 组成一条独立五source支路，不合并为默认六库。Dreyer 在论文1已有暴露，不能作新盲法外测。比较方法共享各支路真实 f0/Rref、seed、校准/未来query与选择预算；不能把来源变化单独解释成人数增加的因果效应。
 
-Stieger 分组必须先于选窗，时长决策只读已冻结 meta-train 的完整 session 元数据。HS/Wang 外测不下载、不解封；内部留出不用于方法选择。Cho按类别存储的顺序不能作为采集顺序。三个source MAT的固定loader单位证据与原生header证据分开记录，不授权绝对幅值QC或猜测物理run。
+Ma 分组未冻结，不进入 fit；原删除 trial 的采集位置未知，不能还原原始付费 B20。完整三通道 Rref/G/方法比较有独立门禁。HS、Wang、Leeuwis、MILimbEEG 等封存外测遵循 W7 权限，当前未下载或解封其 query。未完成的科学参数保持 null，软件示例不作为估计或训练结果。
 
-## 已实现的准备命令
+受控 source pilot 比较100次连续更新与50次更新后保存/重载再更新50次，总计200次；之后只对固定source训练UID重放预测及指标。任何失败保留原 claim、预算、检查点及结果，不能换目录重复 fit。GPU驱动兼容性及数值恢复等待用户开机后实际检验。
+
+## 交付与启动
+
+正式固定包必须同时具有冻结 index、cache-only manifest、archive PUT/full-GET回执、archive独立完整回读与成员SHA证明、全部 index 对象独立完整 GET/SHA256证明、fresh目录只读启动验收及 late-control 完整 GET回执。历史 preparation checkpoint 是可恢复快照，不是训练就绪包。
+
+用户将最终固定包校验SHA并解压至新的论文3目录，保留原有R2环境变量，然后执行：
 
 ```bash
-python -m p3work doctor
-python -m p3work status
-python -m p3work pilot-plan
-python tools/check_pilot_readiness.py --require-ready
-python tools/source_schema_audit.py --raw-root data/source_schema
-python tools/stieger_metadata_batch.py --plan plans/stieger_qualification.json
-python tools/train_source.py --help
-python tools/train_classical_source.py --help
-python tools/train_meta.py --help
-python tools/prepare_stieger_cache.py --help
-python tools/verify_window_gate.py --audit-duration-batch
-python tools/evaluate_development.py --help
+python3 tools/bootstrap_data_plan.py --index audit/data_plan_20261020/final_deployment/bootstrap_index.json
 ```
 
-Stieger 资格与完整时长批次已结束，保留原计划、累计预算、原档校验、原生审计及 R2 完整回读证据；不要重新启动历史协调器。source 小 EDF 入口为 `tools/source_preparation_small_files.py`，原双路入口为 `tools/source_preparation_parallel.py`；两者默认只读，实际执行须显式追加 `--execute`。同计划重复启动由相同文件锁拒绝；活动进程结束后，同一命令可按原状态及累计预算恢复，已完成对象经证据校验后复用。入口只执行 source 原档准备、原生审计、新合同数值缓存及 R2 完整回读；不运行评估或训练，也不自动生成最终交付包。候选清单固定505份原档，最终合格人数及缓存条数由实际完整审计决定，不以候选数冒充结果。
+默认只读；用户开机并决定开始受控pilot及后续阶段后：
 
-`tools/r2_backup.py` 和 `tools/r2_restore.py` 均默认dry-run；只有显式 `--execute` 才调用既有R2，严格使用文件manifest及完整GET/SHA。不扫描或复制环境、密钥文件及论文1/2上传配置。
+```bash
+python3 tools/bootstrap_data_plan.py --index audit/data_plan_20261020/final_deployment/bootstrap_index.json --execute --launch-training --user-started-gpu
+```
 
-## 阶段状态与 GPU 边界
+固定包携带原协议 ZIP、新数据方案 DOCX、代码/元数据、CPython3.12.15原归档及最小SDK wheel；完整固定依赖与数值缓存从已有R2按 exact paths恢复。100个固定依赖已完成独立CPU离线安装、版本/pip check及CPU导入验收；这不证明GPU兼容。启动器不自动训练未冻结的Ma/CAR3或进入W7外测。
 
-完整meta-train时长、共同窗口和四source新缓存的实际完成状态以 `status/tasks.json` 的 W1/W2 及其验收产物为准；只有两门均通过才能生成 pilot-ready 包。尚无有效 f0/Rref/G 科研权重。强对照代码已补齐；真实数据训练、GPU恢复与阶段验收尚未执行，W5不能标为完成，详见 `p3work/methods/STATUS.md`。source神经开发/确认分别15/25次拟合，旧数学基线10次；新版B4/B5 source bank另需6次，不能将相似配方合并计数。
+## 仓库与隐私
 
-已有 RunPod 的关闭和后续开机由用户管理，当前状态未通过本任务观察或更改。所有 GPU 训练等待用户后续开机；代码和准备工作不会自动启动或重启服务器。受控source pilot只依赖真实W1/W2；W3 Stieger数值缓存及后续科研阶段仍单独验收。`build_delivery.py --checkpoint --execute` 只生成明确标注未就绪的可恢复快照；正式固定包必须通过W1/W2及完整缓存回执覆盖检查。不得运行 legacy 的全量执行入口跳过新合同。
+GitHub仓库为PUBLIC。公开分支保留代码、授权导入协议和汇总验收；新增EEG、逐trial清单、原生catalog、R2回执及批处理状态仅保存在本地与用户已有R2。固定包不包含完整原始EEG、旧NPZ、论文1/2配置、旧权重或凭据。
 
-受控 pilot 固定比较100次连续更新与50次更新后保存/重载再更新50次，总计200次；随后仅对固定四source训练UID批次重放预测和指标，不增加优化器更新。验收检查实际检查点、预测、指标、依赖清单及其SHA。运行后生成显式结果备份manifest，成功和失败产物均由独立手动R2命令上传并完整GET核验；本地manifest不代表已上传。单次job claim保留，不会因失败而自动重启。GPU实际恢复、预测一致性和计时结果均待用户后续开机实测。
+- `protocol/`：原始研究规格和52文件校验来源。
+- `p3work/`：原生适配、方法、可恢复训练、真实episode及预测存档。
+- `contracts/input_contract.json`：冻结的v2.1信号合同。
+- `status/tasks.json`：已完成准备门与待完成科学阶段。
+- `plans/data_plan_20261019/`：数据分工、限制和固定启动说明。
+- `p3work/methods/STATUS.md`：方法软件实现范围，W5科学验证仍待实际执行。
+
+R2工具默认dry-run，只有显式 `--execute` 才使用已有配置，按明确manifest执行条件PUT和完整GET/SHA256；不扫描或复制密钥。已完成的数据协调器不应重启。运行结果只有实际上传并回读通过后才报告已备份。
