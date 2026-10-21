@@ -148,8 +148,73 @@ def process_tree(pid, proc_root=Path('/proc')):
     return owned, sum(values.get(child, (0, 0))[1] for child in owned)
 
 
+def process_cpu(owned_pids, proc_root=Path('/proc'), clock_ticks=None):
+    """Sample CPU counters, including reaped-child time, without reading cmdline.
+
+    These are asynchronous tree observations, not a substitute for final wait4
+    accounting. A missing/unreadable process makes the whole sample unavailable;
+    its CPU time is never silently replaced with zero.
+    """
+    unavailable = {'available': False, 'sampled_tree_cpu_seconds': None,
+                   'process_identities': {}, 'status': 'PROCESS_STAT_UNAVAILABLE'}
+    try:
+        ticks = os.sysconf('SC_CLK_TCK') if clock_ticks is None else clock_ticks
+        if type(ticks) is not int or ticks <= 0 or not owned_pids:
+            return unavailable
+        total, identities = 0, {}
+        for pid in owned_pids:
+            value = (proc_root / str(pid) / 'stat').read_text()
+            # comm can contain spaces and ')' characters. Fields after its
+            # final ')' start at field 3 (state); no command text is published.
+            end = value.rfind(')')
+            if end < 0 or int(value[:value.index('(')].strip()) != pid:
+                return unavailable
+            fields = value[end+1:].split()
+            counters = [int(fields[index]) for index in (11, 12, 13, 14)]
+            start = int(fields[19])
+            if start < 0 or any(counter < 0 for counter in counters):
+                return unavailable
+            total += sum(counters)
+            identities[str(pid)] = start
+        return {'available': True, 'sampled_tree_cpu_seconds': total / ticks,
+                'process_identities': identities, 'status': 'CPU_COUNTERS_OBSERVED'}
+    except (OSError, ValueError, IndexError, TypeError):
+        return unavailable
+
+
+def cpu_interval(current, previous, now, previous_time, allocated_cpus):
+    """Only derive a rate from two complete, stable-identity tree samples."""
+    result = {'used_cpu_cores': None, 'allocated_CPU_util_percent': None,
+              'cpu_sample_status': current.get('status', 'PROCESS_STAT_UNAVAILABLE')}
+    if current.get('available') is not True:
+        return result
+    if previous is None:
+        return {**result, 'cpu_sample_status': 'FIRST_SAMPLE_RATE_UNAVAILABLE'}
+    if previous.get('available') is not True:
+        return {**result, 'cpu_sample_status': 'PREVIOUS_SAMPLE_UNAVAILABLE'}
+    identities, before = current['process_identities'], previous['process_identities']
+    if set(before) != set(identities):
+        return {**result, 'cpu_sample_status': 'PROCESS_SET_CHANGED_RATE_UNAVAILABLE'}
+    if identities != before:
+        return {**result, 'cpu_sample_status': 'PROCESS_IDENTITY_CHANGED_RATE_UNAVAILABLE'}
+    elapsed = now - previous_time
+    delta = current['sampled_tree_cpu_seconds'] - previous['sampled_tree_cpu_seconds']
+    if elapsed <= 0 or not math.isfinite(elapsed) or delta < 0 or not math.isfinite(delta):
+        return {**result, 'cpu_sample_status': 'COUNTER_OR_INTERVAL_CHANGED_RATE_UNAVAILABLE'}
+    cores = delta / elapsed
+    result.update(used_cpu_cores=cores, cpu_sample_status='CPU_INTERVAL_OBSERVED')
+    if type(allocated_cpus) is int and allocated_cpus > 0:
+        result['allocated_CPU_util_percent'] = cores / allocated_cpus * 100
+    return result
+
+
 def query_gpu(owned_pids, runner=subprocess.run):
-    """Measure only compute PIDs descended from this task, not neighbor jobs."""
+    """Owned-process memory plus overall utilization of their shared devices.
+
+    Device utilization can include neighboring jobs; it is not an attributed
+    utilization measurement for this task. Only the process memory is filtered
+    by the owned PID set.
+    """
     try:
         response = runner(['nvidia-smi', '--query-compute-apps=gpu_uuid,pid,used_gpu_memory',
                            '--format=csv,noheader,nounits'], stdin=subprocess.DEVNULL,
@@ -258,7 +323,8 @@ def _limits(root):
 
 def run_stage(command, root, stage, output, *, environ=None, hostname=None,
               popen=subprocess.Popen, waiter=os.wait4, gpu_query=query_gpu,
-              process_query=process_tree, clock=time.monotonic, sleep=time.sleep, interval=10):
+              process_query=process_tree, cpu_query=process_cpu,
+              clock=time.monotonic, sleep=time.sleep, interval=10):
     """Run one owned command. Unit fixtures inject wait4/Popen, never a fit."""
     _need(stage in STAGES and command, 'RESOURCE_STAGE_AND_COMMAND_REQUIRED')
     root, output = _safe_path(root), _safe_path(output)
@@ -284,21 +350,34 @@ def run_stage(command, root, stage, output, *, environ=None, hostname=None,
     for signum in (signal.SIGUSR1, signal.SIGTERM, signal.SIGINT):
         old_handlers[signum] = signal.signal(signum, forward)
     maximum_rss = maximum_gpu = samples = 0
-    measurement_errors = {'process_tree': 0, 'gpu_sample': 0, 'live_receipt_write': 0}
+    measurement_errors = {'process_tree': 0, 'cpu_sample': 0, 'gpu_sample': 0, 'live_receipt_write': 0}
     gpu_available = False
     device_peaks = {}
     next_sample = started
+    previous_cpu = previous_cpu_time = None
     usage = None
     try:
         while True:
             now = clock()
             if now >= next_sample:
+                current_rss = None
                 try:
                     pids, rss = process_query(child.pid)
+                    current_rss = rss
                 except (OSError, ValueError):
                     measurement_errors['process_tree'] += 1
                     pids, rss = {child.pid}, 0
                 maximum_rss = max(maximum_rss, rss)
+                try:
+                    cpu = (cpu_query(pids) if current_rss is not None else
+                           {'available': False, 'sampled_tree_cpu_seconds': None, 'status': 'PROCESS_TREE_UNAVAILABLE'})
+                    live_cpu = cpu_interval(cpu, previous_cpu, now, previous_cpu_time, assigned.get('cpus'))
+                except (OSError, ValueError, TypeError, KeyError, AttributeError, OverflowError):
+                    cpu = {'available': False, 'sampled_tree_cpu_seconds': None, 'status': 'CPU_QUERY_UNAVAILABLE'}
+                    live_cpu = cpu_interval(cpu, previous_cpu, now, previous_cpu_time, assigned.get('cpus'))
+                if cpu.get('available') is not True:
+                    measurement_errors['cpu_sample'] += 1
+                previous_cpu, previous_cpu_time = cpu, now
                 try:
                     gpu = gpu_query(pids)
                 except (OSError, ValueError):
@@ -321,6 +400,14 @@ def run_stage(command, root, stage, output, *, environ=None, hostname=None,
                         'observation_id': report['observation_id'], 'stage': stage, 'allocation': assigned,
                         'observed_at_utc': datetime.now(timezone.utc).isoformat(),
                         'wall_seconds': max(0, now - started), 'sampled_tree_peak_rss_bytes': maximum_rss,
+                        'sampled_tree_rss_bytes': current_rss,
+                        'sampled_tree_cpu_seconds': cpu.get('sampled_tree_cpu_seconds'), **live_cpu,
+                        'cpu_measurement_scope': 'asynchronous_proc_tree_sample; final_CPU_accounting_uses_wait4',
+                        'gpu_observation_available': gpu.get('available') is True,
+                        'owned_process_gpu_memory_mib': (gpu.get('owned_process_memory_mib')
+                                                         if gpu.get('available') is True else None),
+                        'owned_gpus': gpu.get('owned_gpus', []) if gpu.get('available') is True else [],
+                        'gpu_utilization_scope': 'overall_device_may_include_neighbor_jobs_not_owned_process_utilization',
                         'owned_process_gpu_peak_memory_mib': maximum_gpu, 'samples': samples,
                         'cpu_seconds': None, 'actual_exit_code': None,
                         'signals_forwarded': report['signals_forwarded'], 'measurement_errors': measurement_errors,

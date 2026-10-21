@@ -347,7 +347,8 @@ def hidden(label):
     return value
 
 
-def r2_client(*, prompt=False):
+def r2_client(*, prompt=False, metadata_probe=False):
+    need(type(metadata_probe) is bool, 'boolean_metadata_probe_flag_required')
     credentials = {name: os.environ.get(name) for name in R2_NAMES}
     if not all(credentials.values()):
         need(prompt, 'existing_r2_configuration_required_on_network_allowed_node')
@@ -367,8 +368,10 @@ def r2_client(*, prompt=False):
         client = boto3.client('s3', endpoint_url=credentials['R2_ENDPOINT'], region_name='auto',
                               aws_access_key_id=credentials['AWS_ACCESS_KEY_ID'],
                               aws_secret_access_key=credentials['AWS_SECRET_ACCESS_KEY'],
-                              config=Config(connect_timeout=15, read_timeout=120,
-                                            retries={'max_attempts': 2, 'mode': 'standard'}))
+                              config=Config(connect_timeout=5 if metadata_probe else 15,
+                                            read_timeout=10 if metadata_probe else 120,
+                                            retries={'max_attempts': 0 if metadata_probe else 2,
+                                                     'mode': 'standard'}))
     except ImportError:
         raise HandoffError('existing_environment_missing_minimal_r2_sdk') from None
     bucket = credentials['R2_BUCKET']; credentials.clear()

@@ -210,3 +210,144 @@ def test_sacct_rows_are_optional_and_do_not_claim_scientific_completion():
     assert not value['scientific_completion_claimed']
     missing = resources.collect_sacct('12345', lambda *args, **kwargs: SimpleNamespace(returncode=1, stdout=''))
     assert missing['status'] == 'SACCT_NOT_YET_AVAILABLE'
+
+
+def proc_stat(root, pid, *, counters=(100, 50, 20, 30), start=1, comm='worker name ) with spaces'):
+    folder = root / str(pid); folder.mkdir(exist_ok=True)
+    fields = ['S'] + ['0'] * 21
+    for index, value in zip((11, 12, 13, 14), counters):
+        fields[index] = str(value)
+    fields[19] = str(start)
+    (folder / 'stat').write_text(f'{pid} ({comm}) ' + ' '.join(fields))
+
+
+def test_cpu_stat_uses_final_comm_parenthesis_and_includes_reaped_child_time(tmp_path, monkeypatch):
+    proc_stat(tmp_path, 10, start=100)
+    proc_stat(tmp_path, 11, counters=(40, 20, 0, 0), start=110)
+    proc_stat(tmp_path, 99, counters=(99999, 0, 0, 0))
+    original = Path.read_text
+    def allowed(path, *args, **kwargs):
+        assert path.name == 'stat' and path.parent.name in {'10', '11'}
+        return original(path, *args, **kwargs)
+    monkeypatch.setattr(Path, 'read_text', allowed)
+    sample = resources.process_cpu({10, 11}, tmp_path, clock_ticks=100)
+    assert sample['available'] and sample['sampled_tree_cpu_seconds'] == 2.6
+    assert sample['process_identities'] == {'10': 100, '11': 110}
+
+
+@pytest.mark.parametrize('failure', ['missing', 'permission', 'malformed', 'negative'])
+def test_partial_or_unreadable_cpu_stat_is_unavailable_never_zero(tmp_path, monkeypatch, failure):
+    proc_stat(tmp_path, 10)
+    if failure != 'missing':
+        proc_stat(tmp_path, 11, counters=(-1, 0, 0, 0) if failure == 'negative' else (1, 0, 0, 0))
+    if failure == 'permission':
+        original = Path.read_text
+        def denied(path, *args, **kwargs):
+            if path.parent.name == '11':
+                raise PermissionError('software proc fixture')
+            return original(path, *args, **kwargs)
+        monkeypatch.setattr(Path, 'read_text', denied)
+    elif failure == 'malformed':
+        (tmp_path / '11/stat').write_text('broken software fixture')
+    sample = resources.process_cpu({10, 11}, tmp_path, clock_ticks=100)
+    assert not sample['available'] and sample['sampled_tree_cpu_seconds'] is None
+    assert sample['process_identities'] == {}
+
+
+def cpu_sample(seconds, identities=None):
+    return {'available': True, 'sampled_tree_cpu_seconds': seconds,
+            'process_identities': {'10': 1} if identities is None else identities,
+            'status': 'CPU_COUNTERS_OBSERVED'}
+
+
+def test_cpu_interval_reports_used_cores_and_fraction_of_allocated_cpus():
+    value = resources.cpu_interval(cpu_sample(6.6), cpu_sample(2.6), 4, 2, 24)
+    assert value['used_cpu_cores'] == pytest.approx(2)
+    assert value['allocated_CPU_util_percent'] == pytest.approx(100 / 12)
+    assert value['cpu_sample_status'] == 'CPU_INTERVAL_OBSERVED'
+    zero = resources.cpu_interval(cpu_sample(6.6), cpu_sample(6.6), 4, 2, 24)
+    assert zero['used_cpu_cores'] == zero['allocated_CPU_util_percent'] == 0
+    unknown_allocation = resources.cpu_interval(cpu_sample(6.6), cpu_sample(2.6), 4, 2, None)
+    assert unknown_allocation['used_cpu_cores'] == pytest.approx(2)
+    assert unknown_allocation['allocated_CPU_util_percent'] is None
+
+
+@pytest.mark.parametrize('current,previous,now,before,status', [
+    (cpu_sample(1), None, 1, None, 'FIRST_SAMPLE'),
+    ({'available': False, 'status': 'PROCESS_STAT_UNAVAILABLE'}, cpu_sample(1), 2, 1, 'PROCESS_STAT'),
+    (cpu_sample(2), {'available': False}, 2, 1, 'PREVIOUS_SAMPLE'),
+    (cpu_sample(4), cpu_sample(2, {'10': 1, '11': 2}), 2, 1, 'PROCESS_SET_CHANGED'),
+    (cpu_sample(4, {'10': 1, '11': 2}), cpu_sample(2), 2, 1, 'PROCESS_SET_CHANGED'),
+    (cpu_sample(4, {'10': 2}), cpu_sample(2), 2, 1, 'PROCESS_IDENTITY_CHANGED'),
+    (cpu_sample(1), cpu_sample(2), 2, 1, 'COUNTER_OR_INTERVAL_CHANGED'),
+    (cpu_sample(2), cpu_sample(1), 1, 1, 'COUNTER_OR_INTERVAL_CHANGED')])
+def test_uncertain_cpu_intervals_stay_null(current, previous, now, before, status):
+    value = resources.cpu_interval(current, previous, now, before, 24)
+    assert value['used_cpu_cores'] is value['allocated_CPU_util_percent'] is None
+    assert value['cpu_sample_status'].startswith(status)
+
+
+def test_live_current_values_are_separate_from_peaks_and_final_wait4(tmp_path):
+    tick, samples = {'now': 0.}, {'index': -1}
+    def process_query(pid):
+        samples['index'] += 1
+        return {pid}, [10, 20, 12][samples['index']] * 1024**2
+    def gpu_query(pids):
+        index = samples['index']; memory = [1, 10, 2][index]
+        return {'available': True, 'owned_process_memory_mib': memory,
+                'owned_gpus': [{'gpu_uuid': 'GPU-owned', 'device_utilization_percent': [20, 90, 25][index],
+                                'total_memory_mib': 81920, 'owned_process_memory_mib': memory}]}
+    usage = SimpleNamespace(ru_maxrss=5000, ru_utime=9, ru_stime=3)
+    value = resources.run_stage(['software-metadata-child'], tmp_path, 'test', tmp_path / 'reports',
+        environ=env(), hostname='gpu3', popen=lambda *args, **kwargs: SimpleNamespace(pid=10, returncode=None),
+        waiter=lambda pid, flags: (pid, 0, usage) if tick['now'] >= 2 else (0, 0, None),
+        process_query=process_query, cpu_query=lambda pids: cpu_sample([1, 3, 4][samples['index']]),
+        gpu_query=gpu_query, clock=lambda: tick['now'], sleep=lambda seconds: tick.update(now=tick['now'] + seconds), interval=1)
+    live = json.loads((tmp_path / 'reports/resources.live.json').read_text())
+    assert live['sampled_tree_cpu_seconds'] == 4 and live['used_cpu_cores'] == 1
+    assert live['allocated_CPU_util_percent'] == pytest.approx(100 / 24)
+    assert live['sampled_tree_rss_bytes'] == 12 * 1024**2
+    assert live['sampled_tree_peak_rss_bytes'] == 20 * 1024**2
+    assert live['owned_process_gpu_memory_mib'] == 2 and live['owned_process_gpu_peak_memory_mib'] == 10
+    assert live['owned_gpus'][0]['device_utilization_percent'] == 25
+    assert 'neighbor_jobs_not_owned_process' in live['gpu_utilization_scope']
+    assert value['measurements']['owned_gpu_peaks'][0]['device_utilization_percent'] == 90
+    assert value['measurements']['cpu_seconds'] == 12  # Only the actual wait4 fact, not sampled CPU=4.
+    assert live['cpu_seconds'] is live['actual_exit_code'] is None
+
+
+def test_cpu_sampling_failure_never_stops_child_or_replaces_final_wait4_cpu(tmp_path):
+    def unavailable(pids):
+        raise OSError('software metadata unavailable')
+    ticks = iter([100., 100., 110.])
+    usage = SimpleNamespace(ru_maxrss=1, ru_utime=2, ru_stime=1)
+    value = resources.run_stage(['software-metadata-child'], tmp_path, 'test', tmp_path / 'reports',
+        environ=env(), hostname='gpu3', popen=lambda *args, **kwargs: SimpleNamespace(pid=10, returncode=None),
+        waiter=lambda pid, flags: (pid, 0, usage), clock=lambda: next(ticks),
+        process_query=lambda pid: ({pid}, 100), cpu_query=unavailable,
+        gpu_query=lambda pids: {'available': False})
+    live = json.loads((tmp_path / 'reports/resources.live.json').read_text())
+    assert live['used_cpu_cores'] is live['allocated_CPU_util_percent'] is live['sampled_tree_cpu_seconds'] is None
+    assert live['owned_process_gpu_memory_mib'] is None and not live['gpu_observation_available']
+    assert value['actual_exit_code'] == 0 and value['measurements']['cpu_seconds'] == 3
+    assert value['measurements']['measurement_errors']['cpu_sample'] == 1
+
+
+def test_actual_owned_metadata_cpu_loop_has_live_rates_without_fit_or_gpu(tmp_path, monkeypatch):
+    snapshots = []
+    original = resources.write_json
+    def record(path, value):
+        if Path(path).name == 'resources.live.json':
+            snapshots.append(dict(value))
+        original(path, value)
+    monkeypatch.setattr(resources, 'write_json', record)
+    script = 'import time\nend=time.monotonic()+.3\nx=0\nwhile time.monotonic()<end: x+=1\n'
+    value = resources.run_stage([sys.executable, '-B', '-c', script], tmp_path, 'test', tmp_path / 'report',
+        environ=env(), hostname='gpu3', gpu_query=lambda pids: {'available': False}, interval=.04)
+    assert value['actual_exit_code'] == 0 and value['measurements']['cpu_seconds'] > 0
+    assert snapshots[0]['used_cpu_cores'] is None
+    assert any(row['used_cpu_cores'] is not None and row['used_cpu_cores'] > 0 for row in snapshots)
+    assert all(row['owned_process_gpu_memory_mib'] is None for row in snapshots)
+    assert value['measurements']['cpu_seconds'] == (value['measurements']['cpu_user_seconds']
+                                                   + value['measurements']['cpu_system_seconds'])
+    assert not value['checkpoint_saved_claimed'] and not value['upload_success_claimed']
