@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paper3-work"
+version = "0.1.0"
+description = "Protocol-bound Paper3 preparation and constrained spatial adaptation"
+requires-python = ">=3.12,<3.13"
+
+[project.scripts]
+p3work = "p3work.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["p3work*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
