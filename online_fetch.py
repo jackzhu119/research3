@@ -21,7 +21,7 @@ from urllib import error, parse, request
 
 CHUNK = 1024 * 1024
 MAX_REDIRECTS = 6
-ALLOWED_HOSTS = frozenset({'api.github.com', 'github.com',
+ALLOWED_HOSTS = frozenset({'api.github.com', 'github.com', 'raw.githubusercontent.com',
     'release-assets.githubusercontent.com', 'objects.githubusercontent.com',
     'github-releases.githubusercontent.com'})
 
@@ -167,6 +167,35 @@ def fetch_release_asset(repo, tag, name, expected_sha, expected_bytes, destinati
     else:
         asset_url = 'https://api.github.com/repos/' + repo + '/releases/assets/' + str(asset['id'])
     response = _open_get(asset_url, 'application/octet-stream', token)
+    identity['asset_id'] = asset['id']
+    return _save_response(response, target, identity, expected_sha, expected_bytes,
+                          'GITHUB_RELEASE_COMPLETE_GET_SHA256_VERIFIED')
+
+
+def fetch_pinned_file(repo, commit, path, expected_sha, expected_bytes, destination):
+    """Public software file at an immutable commit; no API/token/upload host."""
+    _need(isinstance(repo, str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9-]{0,38}/[A-Za-z0-9_.-]{1,100}', repo),
+          'GITHUB_RELEASE_REPOSITORY_INVALID')
+    _need(isinstance(commit, str) and re.fullmatch(r'[a-f0-9]{40}', commit), 'IMMUTABLE_GITHUB_COMMIT_REQUIRED')
+    _need(isinstance(path, str) and path and '\\' not in path
+          and all(part not in {'', '.', '..'} for part in path.split('/'))
+          and not any(ord(c) < 32 or ord(c) == 127 for c in path), 'PINNED_GITHUB_PATH_INVALID')
+    _need(isinstance(expected_sha, str) and re.fullmatch(r'[a-f0-9]{64}', expected_sha)
+          and type(expected_bytes) is int and expected_bytes > 0, 'GITHUB_RELEASE_IDENTITY_INVALID')
+    target = _path(destination)
+    identity = {'repository': repo, 'commit': commit, 'path': path, 'sha256': expected_sha,
+                'bytes': expected_bytes, 'credentials_recorded': False}
+    if target.exists():
+        _need(_hash(target) == (expected_sha, expected_bytes), 'EXISTING_GITHUB_ASSET_DIFFERS_PRESERVED')
+        return dict(identity, status='LOCAL_VERIFIED_CACHE_HIT', get_attempted=False,
+                    network_bytes_read=0, http_status=None, complete_body_read=None)
+    url = 'https://raw.githubusercontent.com/' + repo + '/' + commit + '/' + parse.quote(path, safe='/')
+    response = _open_get(url, 'application/octet-stream', None)
+    return _save_response(response, target, identity, expected_sha, expected_bytes,
+                          'PINNED_GITHUB_FILE_COMPLETE_GET_SHA256_VERIFIED')
+
+
+def _save_response(response, target, identity, expected_sha, expected_bytes, status):
     temporary = None
     try:
         declared = response.headers.get('Content-Length')
@@ -191,9 +220,9 @@ def fetch_release_asset(repo, tag, name, expected_sha, expected_bytes, destinati
             os.link(temporary, target)
         except FileExistsError:
             raise FetchError('GITHUB_DOWNLOAD_TARGET_CREATED_CONCURRENTLY') from None
-        return dict(identity, status='GITHUB_RELEASE_COMPLETE_GET_SHA256_VERIFIED',
+        return dict(identity, status=status,
                     get_attempted=True, network_bytes_read=n, http_status=200,
-                    complete_body_read=True, asset_id=asset['id'], atomic_commit='link_no_overwrite')
+                    complete_body_read=True, atomic_commit='link_no_overwrite')
     except FetchError:
         raise
     except Exception:
@@ -207,7 +236,9 @@ def fetch_release_asset(repo, tag, name, expected_sha, expected_bytes, destinati
 def main(argv=None):
     parser = argparse.ArgumentParser(description='论文3固定 GitHub 发布包下载与完整 SHA256 核验。')
     parser.add_argument('--repo', default='jackzhu119/research3')
-    parser.add_argument('--tag', default='paper3-online-20261021-v1')
+    parser.add_argument('--tag', help='仅显式指定时读取 GitHub Release 附件')
+    parser.add_argument('--commit', default='4e4fa1504e01bf2d04875c9ce04d543f3248f826')
+    parser.add_argument('--path', default='launcher_assets/Paper3_OneClick_20261021.zip')
     parser.add_argument('--name', default='Paper3_OneClick_20261021.zip')
     parser.add_argument('--sha256', default='5bb056d39254854707e91c4eb2ce2a4cc6e8e922a9337a52f3daea08b0fb5489')
     parser.add_argument('--bytes', type=int, default=17717251)
@@ -215,6 +246,10 @@ def main(argv=None):
     args = parser.parse_args(argv)
     token = None
     try:
+        if args.tag is None:
+            result = fetch_pinned_file(args.repo, args.commit, args.path, args.sha256, args.bytes, args.destination)
+            print(json.dumps(result, ensure_ascii=False))
+            return 0
         try:
             result = fetch_release_asset(args.repo, args.tag, args.name, args.sha256, args.bytes, args.destination)
         except FetchError as exc:

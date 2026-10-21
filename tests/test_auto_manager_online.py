@@ -126,20 +126,20 @@ def test_exact_zip_merge_preserves_work_and_identical_source(tmp_path, monkeypat
     assert checkpoint.read_bytes() == b'actual-checkpoint'
 
 
-def test_missing_zip_uses_embedded_fixed_release_fetch_once(tmp_path, monkeypatch):
+def test_missing_zip_uses_embedded_immutable_commit_fetch_once(tmp_path, monkeypatch):
     source = tiny_zip(tmp_path, monkeypatch, [(manager.TOP + '/START.sh', b'fixed\n')])
     payload = source.read_bytes()
     source.unlink()
     marker = tmp_path / 'fixture_fetch_called'
     stub = '''from pathlib import Path
-def fetch_release_asset(repo, tag, name, sha256, byte_count, destination):
-    assert repo == {repo!r} and tag == {tag!r}
-    assert name == {name!r} and sha256 == {sha!r} and byte_count == {count!r}
+def fetch_pinned_file(repo, commit, relative_path, sha256, byte_count, destination):
+    assert repo == {repo!r} and commit == {commit!r}
+    assert relative_path == {name!r} and sha256 == {sha!r} and byte_count == {count!r}
     assert not destination.exists()
     Path({marker!r}).write_text('called once')
     destination.write_bytes({payload!r})
     return {{'status': 'FIXTURE_PINNED_DOWNLOAD'}}
-'''.format(repo=manager.ONLINE_REPO, tag=manager.ONLINE_TAG, name=manager.ZIP_NAME,
+'''.format(repo=manager.ONLINE_REPO, commit=manager.ONLINE_ASSET_COMMIT, name='launcher_assets/' + manager.ZIP_NAME,
            sha=manager.ZIP_SHA, count=manager.ZIP_BYTES, marker=str(marker), payload=payload)
     monkeypatch.setattr(manager, 'FETCH_SOURCE', stub)
     root = manager.ensure_bundle(tmp_path)

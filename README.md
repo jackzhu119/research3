@@ -12,7 +12,7 @@ bash /workspace/paper3-online/RUN_ON_RUNPOD.sh
 
 本入口自动查找已有论文3进程及原工作锁。有正在运行的任务时直接接入其 tmux 窗口，新增只读状态面板，不重新启动、不重新解包。上方输入窗口保持焦点，凭证只在真实提示出现后输入。
 
-确实没有任务时，入口会自动从本仓库固定 GitHub Release 下载 17.7 MB 的代码/SDK 启动 ZIP，完整核对 SHA256，安全补齐尚未存在的文件，创建 tmux 并沿用原 START。无需手工下载、上传或解压 ZIP。发布包的固定身份是 `5bb056d39254854707e91c4eb2ce2a4cc6e8e922a9337a52f3daea08b0fb5489`（17,717,251 字节）。
+确实没有任务时，入口会自动从本仓库的固定提交下载 17.7 MB 的代码/SDK 启动 ZIP，完整核对 SHA256，安全补齐尚未存在的文件，创建 tmux 并沿用原 START。无需手工下载、上传或解压 ZIP。软件包绑定固定提交 `4e4fa1504e01bf2d04875c9ce04d543f3248f826`；固定身份是 `5bb056d39254854707e91c4eb2ce2a4cc6e8e922a9337a52f3daea08b0fb5489`（17,717,251 字节）。
 
 原入口仍按顺序隐藏输入 GitHub Token、R2 Account ID/Endpoint、Bucket、Access Key ID、Secret Access Key。GitHub Token 须具有目标仓库 Contents 读写权限，R2 凭证须具有保存固定数据包的已有桶的对象读写权限。凭证不进入命令参数、URL、文件或日志。
 

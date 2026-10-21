@@ -27,7 +27,8 @@ RELEASE = '603d299351fa6605aa0bc258bbbe2c421b2048e5becbeb33521e119a62f20fd7'
 MONITOR_SOURCE = None
 FETCH_SOURCE = None
 ONLINE_REPO = 'jackzhu119/research3'
-ONLINE_TAG = 'paper3-online-20261021-v1'
+ONLINE_TAG = 'paper3-online-20261021-v2'
+ONLINE_ASSET_COMMIT = '4e4fa1504e01bf2d04875c9ce04d543f3248f826'
 
 
 class AutoError(ValueError):
@@ -181,11 +182,11 @@ def ensure_bundle(workspace):
 
 def download_bundle(workspace):
     need(isinstance(FETCH_SOURCE, str), 'USE_BUILT_ONLINE_SINGLE_FILE_HELPER')
-    print('正在从 GitHub 固定发布自动下载启动器与SDK（17.7 MB）……', flush=True)
+    print('正在从 GitHub 固定版本自动下载启动器与SDK（17.7 MB）……', flush=True)
     namespace = {'__name__': 'paper3_online_release_fetch'}
     exec(compile(FETCH_SOURCE, 'embedded_online_fetch.py', 'exec'), namespace)
     try:
-        return namespace['fetch_release_asset'](ONLINE_REPO, ONLINE_TAG, ZIP_NAME,
+        return namespace['fetch_pinned_file'](ONLINE_REPO, ONLINE_ASSET_COMMIT, 'launcher_assets/' + ZIP_NAME,
                 ZIP_SHA, ZIP_BYTES, checked_path(workspace / ZIP_NAME))
     except Exception as exc:
         code = getattr(exc, 'code', 'GITHUB_FIXED_RELEASE_DOWNLOAD_FAILED')
