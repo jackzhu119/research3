@@ -12,7 +12,9 @@
 
 已失败测试的 `afterok` 子作业可能永久待运行。显式恢复时使用 `hpc/recover_failed_chain.py --failed-test-job 767434 --execute`：按原始回执、账户、UID、工作目录、依赖和调度器状态核对，只取消确认从未启动的旧待运行依赖；保留全部原始回执、缓存、claim、预算和 checkpoint。独立恢复证明完整后，`hpc/start.py --execute --staged-data` 才允许提交新链；未知或曾运行的作业仍保持阻塞。固定恢复启动包可以顺序完成更新、上述恢复与新链提交；不要自行删除旧记录或使用按用户名批量取消。
 
-Slurm 20.11 的数据库读取代码会把部分已取消、原开始时间未知的作业显示为 `Start=End`。恢复入口对这一格式只接受原始取消意图中已经绑定并确认 `PENDING`、未知开始时间、运行时长为零且重启次数为零的同一个作业；首次看到的取消时间戳、实际运行时间及身份不符仍会阻塞。原意图和旧证明不重写，恢复可以在取消后中断的地方继续。实现依据为 [Slurm 20.11.8 原始代码](https://github.com/SchedMD/slurm/blob/slurm-20-11-8-1/src/plugins/accounting_storage/mysql/as_mysql_jobacct_process.c#L703-L707)。
+Slurm 20.11 的数据库读取代码会把部分已取消、原开始时间未知的作业显示为 `Start=End`。有原始取消意图时，恢复入口对这一格式要求同一作业已经绑定并确认 `PENDING`、未知开始时间、运行时长为零且重启次数为零；仅有取消时间戳、实际运行时间及身份不符仍会阻塞。原意图和旧证明不重写，恢复可以在取消后中断的地方继续。实现依据为 [Slurm 20.11.8 原始代码](https://github.com/SchedMD/slurm/blob/slurm-20-11-8-1/src/plugins/accounting_storage/mysql/as_mysql_jobacct_process.c#L703-L707)。
+
+两个历史下游作业均已取消而没有本地取消意图时，入口额外读取两次完整 `sacct --duplicates` 作业和 step 记录，创建独立的“未获资源分配”证明，不补造取消意图。它要求原失败 CPU 测试确实有实际资源、节点和 batch/extern 步骤作为采集能力对照；两个下游必须实际 `AllocNodes=0`、`AllocTRES` 为空、无已分配节点、无任何 step、零运行时长、无本地执行痕迹、没有重复或重排队历史歧义，并且已不在本用户队列中。观测不一致、资源字段缺失或没有对照均保持阻塞。Slurm 的 `AllocCPUS` 和 `NNodes` 可能显示申请量，不能用它们代替实际分配证据；`Reason` 也只作信息记录，不宣称确定了取消来源。此路径只保留和核验历史，不执行 `scancel`。
 
 恢复阻塞时可执行 `"$P" hpc/recover_failed_chain.py --root "$PWD" --failed-test-job 767434 --diagnose`，只读取已绑定的原始回执和调度状态，不取消、不提交、不创建锁或恢复证明；输出仅包含经过验证的状态字段。复制命令时只复制代码块，不复制终端提示符、`>`、下载进度或 JSON 输出。
 

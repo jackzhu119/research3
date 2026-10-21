@@ -379,6 +379,13 @@ def superseded_attempts(root):
     root = start.safe(root)
     result = {}
     for path, value in start.records(root, '.paper3-hpc/recoveries', r'test-[0-9]+\.json'):
+        from hpc import never_allocated
+        if value.get('schema_version') == never_allocated.SCHEMA:
+            verified = never_allocated.validate_proof(root, path, value)
+            attempt = verified['binding']['attempt']
+            need(attempt not in result, 'recovery_duplicate_final_proof')
+            result[attempt] = {'job_ids': verified['job_ids'], 'receipt': verified['receipt']}
+            continue
         need(value.get('schema_version') == SCHEMA and value.get('status') == 'RECOVERY_VERIFIED_NO_FIT_REPLAY'
              and value.get('project') == str(root) and value.get('scientific_fit_performed') is False
              and value.get('scientific_budget_changed') is False,
@@ -470,7 +477,23 @@ def recover(root, failed_test_job, *, execute=False, dry_run=False, runner=subpr
         intent_witness = _load_intent(binding, user)
         need(pinned_intent_sha is None or _hash(intent_path) == pinned_intent_sha,
              'recovery_original_cancel_intent_changed')
-        before = accounting(binding, runner=runner, username=user, intent=intent_witness)
+        try:
+            before = accounting(binding, runner=runner, username=user, intent=intent_witness)
+        except RecoveryError as exc:
+            children = (exc.diagnostic or {}).get('children', [])
+            # Historical scheduler cancellations have no local cancel intent.
+            # Require independent full allocation/step evidence, never create
+            # a retrospective PENDING witness or accept timestamps alone.
+            if (intent_witness is None
+                    and str(exc) == 'recovery_descendant_may_have_started_preserve_existing_jobs'
+                    and len(children) == 2
+                    and all(c.get('actual', {}).get('state') == 'CANCELLED'
+                            and c.get('checks', {}).get('cancelled_equal_start_end')
+                            and c.get('checks', {}).get('elapsed_is_zero') for c in children)):
+                from hpc import never_allocated
+                return never_allocated.recover(root, binding, execute=acting, runner=runner,
+                                               username=user, sleeper=sleeper)
+            raise
         controls = {}
         for stage in ('prepare', 'train'):
             if before[binding['jobs'][stage]['job_id']]['state'] == 'PENDING':

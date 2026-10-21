@@ -37,6 +37,57 @@
     "real_training_started": false,
     "school_connection_attempted": false
   },
+  "cancelled_without_allocation_recovery": {
+    "R2_result_upload_performed": false,
+    "distinct_proof_schema": "paper3-hpc-cancelled-without-allocation-v1",
+    "observed_descendants": "767436 and 767438 CANCELLED with equal Start/End, zero elapsed, empty actual TRES, None assigned nodes, Dependency reason, exit 0:0 and no steps",
+    "observed_parent": "767434 FAILED; 1186 seconds; actual 16 CPU, 64G memory, node comput1; batch and extern steps present",
+    "original_cancel_intent_fabricated": false,
+    "real_Slurm_submission_performed": false,
+    "real_training_started": false,
+    "regression": {
+      "errors": 0,
+      "failed": 0,
+      "log": {
+        "bytes": 2070,
+        "name": "paper3_never_allocated_recovery_pytest.log",
+        "sha256": "13f2570f064012b75a91a818d05231818e34c10146d4f901881eaa0280c4cd23"
+      },
+      "passed": 1176,
+      "scope": "All HPC tests, retained transport and original training/source-extension controllers; explicit scheduler/network doubles. Includes 40 new accounting-proof cases.",
+      "seconds": 35.83,
+      "skipped": 0
+    },
+    "scheduler_mutation_in_new_accounting_path": false,
+    "school_AllocNodes_DBIndex_Submit_and_fresh_queue_verification_pending": true,
+    "school_connection_attempted": false,
+    "scientific_kernels_splits_seeds_fit_budgets_and_gates_changed": false,
+    "strict_checks": [
+      "two identical complete accounting snapshots with --duplicates and steps",
+      "unique original allocation database IDs and exact owner/account/name/workdir bindings",
+      "actual zero AllocNodes and empty AllocTRES plus no assigned nodes and no descendant step",
+      "positive allocation and parent batch/extern step control",
+      "no queue activity or descendant execution artifacts",
+      "original frozen records and all claims/checkpoints/budgets preserved"
+    ],
+    "user_supplied_accounting": {
+      "bytes": 502,
+      "fields": [
+        "JobIDRaw",
+        "State",
+        "Start",
+        "End",
+        "ElapsedRaw",
+        "AllocTRES",
+        "NodeList",
+        "Reason",
+        "ExitCode"
+      ],
+      "name": "paper3_school_user_reported_accounting_20261021.txt",
+      "sha256": "a957ae45f7c8ea3254250dcf6b7da670fc1044b6e60f9bbfdd1a6192678f453e",
+      "source": "User pasted successful sacct --duplicates output in this chat; no school connection by Codex"
+    }
+  },
   "code_download_recovery_regression": {
     "errors": 0,
     "failed": 0,
