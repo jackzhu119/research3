@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import copy
+import errno
 import fcntl
 import hashlib
 import io
@@ -54,7 +55,7 @@ class FakeR2:
 
 
 @pytest.fixture
-def fixed(tmp_path, monkeypatch):
+def fixed(tmp_path, monkeypatch, request):
     root = tmp_path / 'project'
     root.mkdir()
     incoming = root / '.hpc/packages'
@@ -113,6 +114,8 @@ def fixed(tmp_path, monkeypatch):
                'bootstrap_index': descriptor(index_path, bodies[index_path]), 'objects': {}}
     omitted = {'cache/stieger_v2/Stieger2021/1/X.npy',
                'cache/source_extensions_20261019/Yang2025/1/X.npy'}
+    if getattr(request, 'param', None) == 'two_missing_baseline_objects':
+        omitted.add('cache/source_v2/BNCI2014_001/1/X.npy')
     package_bodies = {path: body for path, body in bodies.items() if path not in omitted}
     def make_package(name, selected):
         payload = {path: package_bodies[path] for path in selected}
@@ -332,3 +335,209 @@ def test_SHA_parallelism_is_bounded_by_Slurm_allocation(fixed, monkeypatch):
     monkeypatch.setenv('SLURM_CPUS_PER_TASK', '2')
     result = stage.prepare_data(fixed['root'], mode='check')
     assert result['independent_SHA_IO_workers'] == 2
+
+
+@pytest.fixture
+def bounded_waits(monkeypatch):
+    waits = []
+    monkeypatch.setattr(stage.time, 'sleep', waits.append)
+    monkeypatch.setattr(stage.hpc_fetch, 'SLEEP', waits.append)
+    return waits
+
+
+def test_fixed_object_progress_tracks_real_body_commit_and_final_verification(fixed, monkeypatch):
+    row = fixed['release']['objects']['main_archive']
+    (fixed['incoming'] / row['path']).unlink()
+    clock = iter(range(0, 10000, 2))
+    monkeypatch.setattr(stage.hpc_fetch, 'CLOCK', lambda: next(clock))
+    events = []
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket', progress=events.append)
+    assert result['status'] == 'ready' and fixed['client'].calls.count(row['key']) == 1
+    main_events = [event for event in events if event.get('object') == 'main_archive']
+    phases = [event['phase'] for event in main_events]
+    assert phases.index('get_headers') < phases.index('body_read') < phases.index('commit') < phases.index('verified')
+    body_event = next(event for event in main_events if event['phase'] == 'body_read')
+    assert body_event['bytes_read'] == row['bytes'] and body_event['whole_body_verified'] is False
+    assert all(not event['whole_body_verified'] for event in main_events if event['phase'] == 'get_headers')
+    final = next(event for event in main_events if event['phase'] == 'verified')
+    assert final['whole_body_verified'] is True and final['bytes_read'] == row['bytes']
+    assert result['release_object_GETs'][0]['complete_body_read'] is True
+    assert result['release_object_GETs'][0]['get_sha256'] == row['sha256']
+    assert result['release_object_GETs'][1]['get_attempted'] is False
+    receipt_path = fixed['root'] / result['attempt'] / 'receipt.json'
+    assert json.loads(receipt_path.read_bytes()) == result
+    assert result['active_transfer']['phase'] == 'finished'
+    assert result['scientific_fits'] == 0 and result['GPU_checked'] is False
+
+
+def test_release_ENOSPC_retains_safe_structural_diagnostics_and_closes_gate(fixed, monkeypatch, bounded_waits):
+    row = fixed['release']['objects']['main_archive']
+    target = fixed['incoming'] / row['path']
+    target.unlink()
+    secret = 'SECRET-EXCEPTION-PRIVATE-ENDPOINT-DO-NOT-PRINT'
+    def disk_full(parent):
+        raise OSError(errno.ENOSPC, secret, '/private/' + secret)
+    monkeypatch.setattr(stage.hpc_fetch, '_new_temp', disk_full)
+    events = []
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket', progress=events.append)
+    assert result['status'] == 'failed' and result['error_code'] == 'LOCAL_IO_ENOSPC'
+    detail = result['failure_detail']
+    assert detail['phase'] == 'temp_create' and detail['errno'] == errno.ENOSPC
+    assert detail['errno_name'] == 'ENOSPC' and detail['retryable'] is False
+    assert detail['bytes_read'] == 0 and detail['whole_body_verified'] is False
+    assert fixed['client'].calls == [row['key']] and bounded_waits == []
+    assert not target.exists() and 'quota' in result['minimal_gap']
+    encoded = json.dumps({'result': result, 'events': events})
+    assert secret not in encoded and 'fixture-bucket' not in encoded and row['key'] not in encoded
+    assert not any(event['phase'] == 'verified' for event in events)
+    assert json.loads((fixed['root'] / result['attempt'] / 'receipt.json').read_bytes()) == result
+    assert all(stream.closed for stream in fixed['client'].streams)
+
+
+def test_receipt_quota_failure_is_not_claimed_persisted_or_ready(fixed, monkeypatch):
+    def no_receipt(*args):
+        raise OSError(errno.EDQUOT, 'SECRET_STORAGE_MESSAGE')
+    monkeypatch.setattr(stage, '_atomic_json', no_receipt)
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket')
+    assert result['status'] == 'failed' and result['receipt_persisted'] is False
+    assert result['error_code'] == 'LOCAL_RECEIPT_WRITE_FAILED'
+    assert result['failure_detail']['phase'] == 'stage_receipt_write'
+    assert result['failure_detail']['errno_name'] == 'EDQUOT'
+    assert fixed['client'].calls == [] and result['scientific_fits'] == 0
+    assert 'SECRET_STORAGE_MESSAGE' not in json.dumps(result)
+
+
+def test_materialization_directory_quota_failure_has_local_phase_not_R2_error(fixed, monkeypatch):
+    def no_directory(*args, **kwargs):
+        raise OSError(errno.ENOSPC, 'SECRET_QUOTA_MESSAGE', '/private/SECRET_PATH')
+    monkeypatch.setattr(stage, '_materialize_archive', no_directory)
+    result = stage.prepare_data(fixed['root'], mode='materialize')
+    assert result['status'] == 'failed' and result['error_code'] == 'LOCAL_IO_ENOSPC'
+    assert result['failure_detail']['phase'] == 'materializing_verified_archive'
+    assert result['failure_detail']['errno_name'] == 'ENOSPC'
+    assert 'quota' in result['minimal_gap'] and 'SECRET' not in json.dumps(result)
+    assert fixed['client'].calls == []
+
+
+def test_cli_setup_io_failure_is_safe_json_not_raw_traceback(fixed, monkeypatch, capsys):
+    def cannot_create(*args, **kwargs):
+        raise OSError(errno.EACCES, 'SECRET_SETUP_MESSAGE', '/private/SECRET_PATH')
+    monkeypatch.setattr(stage, 'prepare_data', cannot_create)
+    assert stage.main(['fetch', '--root', str(fixed['root']), '--execute', '--network-host']) == 2
+    printed = capsys.readouterr()
+    value = json.loads(printed.out)
+    assert value['status'] == 'failed' and value['receipt_persisted'] is False
+    assert value['failure_detail']['errno_name'] == 'EACCES'
+    assert 'SECRET' not in printed.out + printed.err
+
+
+def test_bad_fixed_object_SHA_is_not_retried_or_published_ready(fixed, bounded_waits):
+    row = fixed['release']['objects']['main_archive']
+    target = fixed['incoming'] / row['path']
+    target.unlink()
+    original = fixed['client'].bodies[row['key']]
+    fixed['client'].bodies[row['key']] = bytes([original[0] ^ 1]) + original[1:]
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket')
+    assert result['status'] == 'failed' and result['error_code'] == 'R2_GET_BODY_SHA_OR_LENGTH_MISMATCH'
+    assert result['failure_detail']['phase'] == 'body_verify'
+    assert result['failure_detail']['retryable'] is False
+    assert fixed['client'].calls == [row['key']] and bounded_waits == []
+    assert not target.exists() and result['group_restore_receipts'] == []
+    assert result['failure_detail']['whole_body_verified'] is False
+
+
+@pytest.mark.parametrize('fixed', ['two_missing_baseline_objects'], indirect=True)
+def test_original_profile_transient_retries_keep_receipts_without_reGET_of_success(fixed, monkeypatch, bounded_waits):
+    class ReadTimeoutError(Exception):
+        pass
+    client = fixed['client']
+    original = client.get_object
+    bad_key = next(key for key in client.bodies if key.endswith('Stieger2021/1/X.npy'))
+    good_key = next(key for key in client.bodies if key.endswith('BNCI2014_001/1/X.npy'))
+    failures = [0]
+    def sometimes(*, Bucket, Key):
+        if Key == bad_key and failures[0] < 2:
+            failures[0] += 1
+            client.calls.append(Key)
+            raise ReadTimeoutError('SECRET-RAW-SDK-EXCEPTION')
+        return original(Bucket=Bucket, Key=Key)
+    monkeypatch.setattr(client, 'get_object', sometimes)
+    index_before = copy.deepcopy(fixed['index'])
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=client, bucket='fixture-bucket')
+    assert result['status'] == 'ready' and client.calls.count(good_key) == 1 and client.calls.count(bad_key) == 3
+    assert bounded_waits == [1, 2]
+    proofs = [row for row in result['group_restore_receipts'] if row['ordinal'] == 0]
+    assert [row['attempt'] for row in proofs] == [1, 2, 3]
+    assert [row['status'] for row in proofs] == ['failed', 'failed', 'restored_verified']
+    assert len({row['path'] for row in proofs}) == 3
+    receipts = [json.loads((fixed['root'] / row['path']).read_bytes()) for row in proofs]
+    assert receipts[0]['objects'][0]['status'] == 'restored_verified'
+    assert all(value['objects'][0]['status'] == 'already_present_verified' for value in receipts[1:])
+    assert 'SECRET-RAW-SDK-EXCEPTION' not in json.dumps(receipts + [result])
+    assert stage.load_index(fixed['root']) == index_before
+    profiled = result['group_restore_receipts'][-1]
+    profile_receipt = json.loads((fixed['root'] / profiled['path']).read_bytes())
+    assert profile_receipt['source_extension_profile'] == stage.source_extension_io.profile()
+    assert all('/cache/cache/' in row['key'] for row in profile_receipt['objects'])
+    assert all((fixed['root'] / row['path']).read_bytes() == fixed['bodies'][row['path']]
+               for row in fixed['index']['files'] if row['path'] in fixed['omitted'])
+
+
+@pytest.mark.parametrize('relative,ordinal', [
+    ('cache/stieger_v2/Stieger2021/1/X.npy', 0),
+    ('cache/source_extensions_20261019/Yang2025/1/X.npy', 1)])
+def test_original_profile_persistent_network_failure_stops_after_three_saved_receipts(
+        fixed, monkeypatch, bounded_waits, relative, ordinal):
+    class ConnectionClosedError(Exception):
+        pass
+    client = fixed['client']
+    original = client.get_object
+    bad_key = next(key for key in client.bodies if key.endswith(relative))
+    def blocked(*, Bucket, Key):
+        if Key == bad_key:
+            client.calls.append(Key)
+            raise ConnectionClosedError('SECRET-BUCKET-PARAMETER')
+        return original(Bucket=Bucket, Key=Key)
+    monkeypatch.setattr(client, 'get_object', blocked)
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=client, bucket='fixture-bucket')
+    assert result['status'] == 'failed' and result['error_code'] == 'original_profile_restore_failed_see_receipt'
+    assert client.calls.count(bad_key) == 3 and bounded_waits == [1, 2]
+    assert all(client.calls.count(key) == 1 for key in set(client.calls) - {bad_key})
+    proofs = [row for row in result['group_restore_receipts'] if row['ordinal'] == ordinal]
+    assert len(proofs) == 3 and [row['attempt'] for row in proofs] == [1, 2, 3]
+    assert len({row['path'] for row in proofs}) == 3
+    for proof in proofs:
+        saved = json.loads((fixed['root'] / proof['path']).read_bytes())
+        assert saved['status'] == 'failed' and saved['objects'][0]['complete_body_read'] is False
+        assert 'SECRET-BUCKET-PARAMETER' not in json.dumps(saved)
+    assert not (fixed['root'] / relative).exists()
+    assert result['scientific_fits'] == 0 and result['external_query_accessed'] is False
+
+
+@pytest.mark.parametrize('relative,ordinal', [
+    ('cache/stieger_v2/Stieger2021/1/X.npy', 0),
+    ('cache/source_extensions_20261019/Yang2025/1/X.npy', 1)])
+def test_original_profile_bad_SHA_never_retries_or_relaxes_profile(fixed, bounded_waits, relative, ordinal):
+    client = fixed['client']
+    key = next(key for key in client.bodies if key.endswith(relative))
+    raw = client.bodies[key]
+    client.bodies[key] = bytes([raw[0] ^ 1]) + raw[1:]
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=client, bucket='fixture-bucket')
+    assert result['status'] == 'failed' and client.calls.count(key) == 1 and bounded_waits == []
+    proofs = [row for row in result['group_restore_receipts'] if row['ordinal'] == ordinal]
+    assert len(proofs) == 1
+    saved = json.loads((fixed['root'] / proofs[0]['path']).read_bytes())
+    assert saved['objects'][0]['error_code'] == 'remote_integrity_mismatch'
+    assert saved['objects'][0]['complete_body_read'] is True
+    assert saved['objects'][0]['get_sha256'] != saved['objects'][0]['sha256']
+    assert saved['objects'][0]['status'] == 'failed'
+    assert not (fixed['root'] / relative).exists()
+    if ordinal:
+        assert saved['source_extension_profile'] == stage.source_extension_io.profile()

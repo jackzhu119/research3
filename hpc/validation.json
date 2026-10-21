@@ -1,4 +1,35 @@
 {
+  "HPC_fixed_input_materialization_recheck": {
+    "archives": {
+      "control": {
+        "already_present": 2287,
+        "archive_members": 12483,
+        "excluded_software_or_other": 2,
+        "materialized": 10194
+      },
+      "main": {
+        "already_present": 0,
+        "archive_members": 18120,
+        "excluded_software_or_other": 211,
+        "materialized": 17909
+      }
+    },
+    "disposable_input_copies_removed_after_check": true,
+    "external_query_accessed": false,
+    "fresh_R2_GETs": 0,
+    "locally_SHA_verified": 17892,
+    "missing_cache_bytes": 955668432,
+    "missing_cache_files": 3370,
+    "receipt": {
+      "bytes": 1958187,
+      "sha256": "0bb89debb44b9009b258267f310f653385b51fc9917d1b8be0920d321f8d83c3"
+    },
+    "scientific_fits": 0,
+    "scope": "Actual frozen original archives materialized with the new HPC-only fd-fchmod/POSIX no-overwrite transport; remaining 3370 cache objects require original receipt-bound R2 restoration. No school network diagnosis inferred.",
+    "seconds": 102.603,
+    "source_code_overlaid": false,
+    "status": "blocked"
+  },
   "actions": {
     "Slurm_job_submitted": false,
     "new_R2_result_upload_performed": false,
@@ -89,6 +120,35 @@
     "scope": "Read-only panel, real CPU metadata loop, fake HEAD transports, default backup timeout and full GET gates preserved; no school probe/real R2 request/fit performed.",
     "seconds": 4.53,
     "skipped": 0
+  },
+  "one_command_full_software_regression": {
+    "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1 python -B -m pytest -q --durations=8 -ra",
+    "errors": 0,
+    "failed": 0,
+    "log": {
+      "bytes": 5864,
+      "name": "paper3_hpc_one_command_full_pytest.log",
+      "sha256": "7f78122dd443c6cb006d25956d8f4a16912f10f8c93a47a7518628df62870130"
+    },
+    "passed": 4284,
+    "scientific_threads": 1,
+    "scope": "Final complete software collection after all HPC startup, transport, diagnostics and quota fixes. Scheduler/network acceptance tests use explicit doubles; no school connection, real R2 request or scientific training performed.",
+    "seconds": 477.81,
+    "skipped": 0
+  },
+  "one_command_startup": {
+    "default_plan_only": true,
+    "dependencies": "afterok bound only to actual submitted job IDs",
+    "full_GET_and_SHA_gates_preserved": true,
+    "new_credentials_created_or_recorded": false,
+    "original_RunPod_transport_changed": false,
+    "pipeline": [
+      "test",
+      "prepare",
+      "train"
+    ],
+    "school_execution_performed": false,
+    "unknown_submission_outcomes_block_replay": true
   },
   "schema_version": "paper3-hpc-local-verification-v1",
   "school_validation_pending": [

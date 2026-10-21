@@ -293,6 +293,19 @@ def collect(root, *, runner=subprocess.run, now=None, interval=10):
             'group_receipts': len(groups),
             'missing_cache_files': value.get('missing_cache_files') if type(value.get('missing_cache_files')) is int else None,
             'locally_SHA_verified': value.get('locally_SHA_verified') if type(value.get('locally_SHA_verified')) is int else None}
+        transfer = value.get('active_transfer')
+        if isinstance(transfer, dict):
+            data_summary['transfer'] = {key: safe_text(transfer.get(key), 100)
+                for key in ('phase', 'object', 'io_profile', 'updated_at_utc')}
+            data_summary['transfer'].update({key: transfer.get(key) if type(transfer.get(key)) is int
+                and transfer[key] >= 0 else None for key in
+                ('attempt', 'attempt_limit', 'bytes_read', 'expected_bytes', 'group', 'groups_total')})
+        failure = value.get('failure_detail')
+        if isinstance(failure, dict):
+            data_summary['failure'] = {key: safe_text(failure.get(key), 100)
+                for key in ('phase', 'errno_name', 'service_code')}
+            data_summary['failure'].update({key: failure.get(key) if type(failure.get(key)) is int else None
+                for key in ('errno', 'http_status')})
     progress = record(root, 'runs/training_campaign_v1/campaign_progress.json')
     campaign = None
     if progress['value'] is not None:
@@ -366,6 +379,14 @@ def render(snapshot):
         lines.append(f'数据最近回执：{data["operation"]} / {data["status"]} | 错误 {data["error_code"]} | {_amount(data["age_seconds"], suffix="s")} 前')
         lines.append(f'  固定对象已核验 {data["full_GET_objects"] + data["local_verified_objects"]}/5：完整 GET {data["full_GET_objects"]}；本地 SHA 命中 {data["local_verified_objects"]}；成功恢复组 {data["restored_groups"]}/{data["group_receipts"]}')
         lines.append(f'  本地 SHA 文件 {_amount(data["locally_SHA_verified"], digits=0)}；缺缓存 {_amount(data["missing_cache_files"], digits=0)}（回执计数，非实时下载速度）')
+        transfer = data.get('transfer')
+        if transfer:
+            lines.append(f'  最近传输阶段 {transfer["phase"]} | 对象 {transfer["object"]} | 尝试 {_amount(transfer["attempt"],digits=0)} | 正文 {_amount(transfer["bytes_read"],1024**2,"MiB")} / {_amount(transfer["expected_bytes"],1024**2,"MiB")}；阶段进度不等于校验成功。')
+            if transfer['group'] is not None:
+                lines.append(f'  原权限恢复组 {transfer["group"]}/{transfer["groups_total"]} | {transfer["io_profile"]}')
+        failure = data.get('failure')
+        if failure:
+            lines.append(f'  精确失败阶段 {failure["phase"]} | errno={_amount(failure["errno"],digits=0)} {failure["errno_name"]} | HTTP {_amount(failure["http_status"],digits=0)} {failure["service_code"]}')
     else:
         lines.append('数据：N/A（没有可读的最近数据回执）。')
     diagnostic = snapshot.get('r2_diagnostic')

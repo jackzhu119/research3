@@ -89,6 +89,22 @@ def test_running_data_receipt_alone_never_proves_liveness(tmp_path):
     assert snapshot['data']['age_seconds'] == 600
 
 
+def test_transfer_progress_is_not_completion_and_storage_errno_is_visible(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json',
+          {'operation': 'fetch', 'status': 'failed', 'error_code': 'LOCAL_IO_ENOSPC',
+           'active_transfer': {'phase': 'body_read', 'object': 'main_archive',
+               'attempt': 1, 'bytes_read': 1048576, 'expected_bytes': 2097152,
+               'bucket': 'SECRET_BUCKET', 'endpoint': 'SECRET_ENDPOINT'},
+           'failure_detail': {'phase': 'local_write', 'errno': 28, 'errno_name': 'ENOSPC',
+                              'raw_message': 'SECRET_ERROR'}})
+    snapshot = monitor.collect(tmp_path, runner=scheduler(), now=1000)
+    shown = monitor.render(snapshot)
+    assert 'STOPPED' in shown and '1.0MiB / 2.0MiB' in shown
+    assert '固定对象已核验 0/5' in shown and '不等于校验成功' in shown
+    assert 'local_write' in shown and 'ENOSPC' in shown and 'errno=28' in shown
+    assert 'SECRET' not in json.dumps(snapshot) and 'SECRET' not in shown
+
+
 def test_latest_data_uses_mtime_not_attempt_name(tmp_path):
     write(tmp_path, '.paper3-hpc/data/attempt-fff/receipt.json', {'status': 'running'}, mtime=900)
     write(tmp_path, '.paper3-hpc/data/attempt-aaa/receipt.json', {'status': 'failed'}, mtime=999)

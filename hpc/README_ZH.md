@@ -2,25 +2,40 @@
 
 本入口复用学校已有 Python 环境，不安装 PyTorch、Docker 或便携 Python。保留原 RunPod 入口、科研协议、数值实现、数据划分、随机种子、训练预算及科研门禁。`test / prepare / pilot / train / backup` 均由 `sbatch` 调度；不要在 `login1` 直接执行 `hpc/run_stage.py` 或原训练入口。
 
-代码已在 Codex 进行软件测试；这不代表已连接学校、完成学校兼容验证、启动真实训练或上传真实结果。请先运行 CPU 测试和数据准备，反馈学校日志后再决定是否提交 GPU 作业。
+代码已在 Codex 进行软件测试；这不代表已连接学校、完成学校兼容验证、启动真实训练或上传真实结果。
+
+## 一条命令更新并提交
+
+在学校允许联网的登录/传输节点执行以下一条命令。它更新已有分支、只取回冻结授权输入并完整校验，然后提交 `test → prepare → train` 的 `afterok` 链。测试或准备失败时训练不会开始；取回数据未通过时一个作业都不提交。默认训练申请 1 张 A100、24 CPU、128 GiB、24 小时，原科研预算不变。更新前保留本地修改、checkpoint 和 claim，不强制覆盖。
+
+```bash
+p3_boot=$(mktemp /tmp/paper3-start.XXXXXX) && curl -fL --retry 3 --connect-timeout 15 --max-time 180 https://raw.githubusercontent.com/jackzhu119/research3/research/paper3-slurm-hpc-20261021/hpc/START.sh -o "$p3_boot" && bash "$p3_boot" --execute --network-host
+```
+
+先下载为文件再执行，以保留终端的隐藏凭证输入。已有环境变量可直接复用；否则仅在提示处输入，不把凭证加入上述命令。默认 Git 取回最多三次，处理临时 `Empty reply`；已有本地分支直接切换并快进。若存在同项目活动作业或提交结果不确定，入口报告原作业号并停止重复提交。输入取回阶段断线可重跑同一命令，已通过 SHA 的文件复用；实际 `sbatch` 作业提交后不依赖 SSH。数据取回尚在前台时请等待返回作业号，勿将进度字节或 HEAD 200 当作数据就绪。
+
+已有新版本代码时也可运行 `"$P" hpc/start.py --execute --network-host`；默认不加 `--execute` 仅显示计划。末尾可加 `--cpus 16 --mem-gib 64 --gpus 1 --time 12:00:00` 手动修改训练资源；测试与准备仍用各自配置。冻结数值实现、种子、科学线程和 fit 预算不随资源参数改变。
+
+新的 HPC 数据入口把 GET 读取、临时文件写入、原子发布和最终 SHA 回读分开记录，显示正文进度与安全 `failure_detail`。仅明确瞬时网络错误做有界重试，真实正文 SHA 不符保持失败。使用已核验普通临时文件的 POSIX 无覆盖发布，避开旧 glibc 的路径 chmod 可选标志；共享文件系统不支持输入缓存的目录 fsync 时如实记录，不宣称崩溃持久化。checkpoint、预算账本和备份交接的持久性要求不变。原 RunPod 传输模块不改。
 
 ## 1. 更新代码和固定数据
 
-在 `login1` 的现有项目目录执行。以下首次创建本地研究分支；若此分支已存在，用下方更新命令。
+下列是逐步操作方式；已使用上面的一键入口时不要再重复手工提交。在 `login1` 的现有项目目录执行：
 
 ```bash
 cd /public/home/zhuziyuan/projects/paper3
-git fetch origin research/paper3-slurm-hpc-20261021
-git checkout -b research/paper3-slurm-hpc-20261021 FETCH_HEAD
+git fetch origin refs/heads/research/paper3-slurm-hpc-20261021:refs/remotes/origin/research/paper3-slurm-hpc-20261021
+git checkout research/paper3-slurm-hpc-20261021
+git merge --ff-only origin/research/paper3-slurm-hpc-20261021
 P=/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python
 ```
 
 以后更新同一分支：
 
 ```bash
-git fetch origin research/paper3-slurm-hpc-20261021
+git fetch origin refs/heads/research/paper3-slurm-hpc-20261021:refs/remotes/origin/research/paper3-slurm-hpc-20261021
 git checkout research/paper3-slurm-hpc-20261021
-git merge --ff-only FETCH_HEAD
+git merge --ff-only origin/research/paper3-slurm-hpc-20261021
 ```
 
 使用旧 Git 支持的 `checkout` 和 `merge --ff-only`；不要 `reset --hard`、清理 `runs/` 或删除 claim 文件。若本地有已跟踪修改，先保存并处理，勿强制覆盖。

@@ -20,6 +20,8 @@ import re
 import sys
 import tarfile
 import uuid
+from datetime import datetime, timezone
+import time
 
 REPOSITORY = Path(__file__).resolve().parents[1]
 if str(REPOSITORY) not in sys.path:
@@ -29,6 +31,7 @@ import paper3_transport as transport
 from tools import bootstrap_data_plan as bootstrap
 from tools import r2_restore
 from p3work import source_extension_io
+from hpc import fetch as hpc_fetch
 
 SCHEMA = 'paper3-hpc-data-stage-v1'
 RELEASE_SHA256 = '2f48f4baf5a1069f21f324f9a43e63dea9e87a2f19f5167ce6c9bdee14177c60'
@@ -121,12 +124,7 @@ def _copy_stream(root, row, stream):
                  'materialized_body_SHA_or_size_mismatch')
             output.flush()
             os.fsync(output.fileno())
-        try:
-            transport._commit(root, row['path'], temporary, 0o644)
-        except transport.TransportError as exc:
-            if exc.code != 'ATOMIC_TARGET_ALREADY_EXISTS':
-                raise
-            transport._matches(target, row)
+        hpc_fetch.publish_verified_cache(root, row, temporary, mode=0o644)
         return 'materialized_SHA_verified'
     finally:
         temporary.unlink(missing_ok=True)
@@ -276,7 +274,14 @@ def _inspect(root, index):
                             'original receipt; rerun offline check.' if missing else None)}
 
 
-def _run(root, archive_root, release, *, mode, execute, network_host, client, bucket, prompt, persist):
+def _transient_restore_failure(result):
+    failed = [row for row in result.get('objects', []) if row.get('status') == 'failed']
+    return bool(failed) and all(row.get('http_status') in hpc_fetch.TRANSIENT_HTTP
+        or row.get('error_type') in {'EndpointConnectionError', 'ConnectTimeoutError',
+            'ReadTimeoutError', 'ConnectionClosedError', 'HTTPClientError'} for row in failed)
+
+
+def _run(root, archive_root, release, *, mode, execute, network_host, client, bucket, prompt, persist, progress):
     need(mode in {'check', 'materialize', 'fetch'}, 'unknown_data_stage_mode')
     if mode == 'fetch':
         need(execute and network_host, 'fetch_requires_execute_and_network_host')
@@ -294,40 +299,62 @@ def _run(root, archive_root, release, *, mode, execute, network_host, client, bu
               'dependency_installation_performed': False, 'source_code_overlaid': False,
               'release_object_GETs': [], 'group_restore_receipts': []}
     persist(report)
+    def update_transfer(event, **scope):
+        report['active_transfer'] = dict(event, **scope,
+            updated_at_utc=datetime.now(timezone.utc).isoformat())
+        persist(report)
+        if progress is not None:
+            try:
+                progress(dict(report['active_transfer']))
+            except Exception:
+                pass  # Display is optional; durable verification receipts are not.
     if mode == 'fetch':
-        for row in release['objects'].values():
-            report['release_object_GETs'].append(transport.fetch_object(client, bucket, row, archive_root))
+        for name, row in release['objects'].items():
+            report['release_object_GETs'].append(hpc_fetch.fetch_object(client, bucket, row, archive_root,
+                progress=lambda event, name=name: update_transfer(event, object=name)))
             persist(report)
     if mode in {'materialize', 'fetch'}:
         report['archives'] = {}
         for name in ('main', 'control'):
+            update_transfer({'phase': 'materializing_verified_archive'}, object=name)
             report['archives'][name] = _materialize_archive(root, archive_root, release, name)
             persist(report)
     index = _load_index(root, release)
     inspection = _inspect(root, index)
     if mode == 'fetch' and inspection['restore_groups']:
-        for group in inspection['restore_groups']:
+        for position, group in enumerate(inspection['restore_groups'], 1):
             loader = r2_restore if group['io_profile'] == 'baseline' else source_extension_io
-            relative = report['attempt'] + '/restores/' + str(group['ordinal']).zfill(5) + '.json'
-            result = loader.run_restore(backup_receipt_path=root / group['receipt']['path'], root=root,
-                report_path=_file(root, relative, create=True), paths=group['paths'], execute=True,
-                client=client, bucket=bucket)
-            report['group_restore_receipts'].append({'ordinal': group['ordinal'], 'path': relative,
-                'status': result.get('status'), 'objects': len(result.get('objects', [])),
-                'fresh_full_GETs': sum(row.get('status') == 'restored_verified'
-                    and row.get('get_attempted') is True and row.get('complete_body_read') is True
-                    for row in result.get('objects', []))})
-            persist(report)
-            need(result.get('status') == 'restored_verified', 'original_profile_restore_failed_see_receipt')
+            for attempt in range(1, 4):
+                update_transfer({'phase': 'original_profile_restore', 'group': position,
+                    'groups_total': len(inspection['restore_groups']), 'attempt': attempt,
+                    'files': len(group['paths'])}, io_profile=group['io_profile'])
+                suffix = '' if attempt == 1 else '-attempt' + str(attempt).zfill(2)
+                relative = (report['attempt'] + '/restores/' + str(group['ordinal']).zfill(5)
+                            + suffix + '.json')
+                result = loader.run_restore(backup_receipt_path=root / group['receipt']['path'], root=root,
+                    report_path=_file(root, relative, create=True), paths=group['paths'], execute=True,
+                    client=client, bucket=bucket)
+                report['group_restore_receipts'].append({'ordinal': group['ordinal'], 'path': relative,
+                    'attempt': attempt, 'status': result.get('status'), 'objects': len(result.get('objects', [])),
+                    'fresh_full_GETs': sum(row.get('status') == 'restored_verified'
+                        and row.get('get_attempted') is True and row.get('complete_body_read') is True
+                        for row in result.get('objects', []))})
+                persist(report)
+                if result.get('status') == 'restored_verified':
+                    break
+                need(attempt < 3 and _transient_restore_failure(result),
+                     'original_profile_restore_failed_see_receipt')
+                time.sleep(attempt)
         inspection = _inspect(root, index)
     report.update(inspection)
+    report['active_transfer'] = {'phase': 'finished', 'updated_at_utc': datetime.now(timezone.utc).isoformat()}
     report['ready_scope'] = 'frozen_W3_source_development_and_internal_cache_staging_only_external_query_forbidden'
     persist(report)
     return report
 
 
 def prepare_data(root, *, archive_root=None, mode='check', execute=False, network_host=False,
-                 client=None, bucket=None, prompt=False):
+                 client=None, bucket=None, prompt=False, progress=None):
     """Run a resumable, locked data-only stage; return ready/blocked/failed proof.
 
     ``archive_root`` contains the frozen descriptors' relative ``archives/`` and
@@ -350,7 +377,8 @@ def prepare_data(root, *, archive_root=None, mode='check', execute=False, networ
             return {'schema_version': SCHEMA, 'status': 'blocked', 'error_code': 'data_stage_already_running',
                     'scientific_fits': 0, 'external_query_accessed': False}
         report = _run(root, archive_root, load_release(), mode=mode, execute=execute,
-                      network_host=network_host, client=client, bucket=bucket, prompt=prompt, persist=persist)
+                      network_host=network_host, client=client, bucket=bucket, prompt=prompt,
+                      persist=persist, progress=progress)
     except Exception as exc:
         # SDK exceptions and credential values are never stringified/serialized.
         code = getattr(exc, 'code', None)
@@ -359,6 +387,8 @@ def prepare_data(root, *, archive_root=None, mode='check', execute=False, networ
             code = exc.args[0]
         if not isinstance(code, str) or not re.fullmatch('[A-Za-z0-9_]+', code):
             code = 'missing_frozen_input' if isinstance(exc, FileNotFoundError) else 'data_stage_failed'
+            if isinstance(exc, OSError) and not isinstance(exc, FileNotFoundError):
+                code = 'LOCAL_IO_' + errno.errorcode.get(exc.errno, 'UNKNOWN_ERRNO')
         blocked = isinstance(exc, FileNotFoundError) or code in {
             'existing_r2_configuration_required_on_network_allowed_node',
             'existing_environment_missing_minimal_r2_sdk'}
@@ -375,7 +405,30 @@ def prepare_data(root, *, archive_root=None, mode='check', execute=False, networ
                       error_code=code, credentials_recorded=False, scientific_fits=0,
                       external_query_accessed=False, GPU_checked=False,
                       minimal_gap='Supply exact frozen packages/sidecars in .hpc/packages or run explicit network-host fetch; inspect this attempt receipt.')
-        persist(report)
+        if isinstance(exc, (hpc_fetch.FetchError, OSError)) and not isinstance(exc, FileNotFoundError):
+            detail = exc.detail if isinstance(exc, hpc_fetch.FetchError) else {
+                'phase': report.get('active_transfer', {}).get('phase', 'local_data_stage'),
+                'errno': exc.errno, 'errno_name': errno.errorcode.get(exc.errno, 'UNKNOWN_ERRNO')}
+            report['failure_detail'] = detail
+            number = detail.get('errno')
+            if number in {errno.ENOSPC, errno.EDQUOT}:
+                report['minimal_gap'] = 'Free project storage/check school disk quota, then rerun the same command; verified inputs are reused.'
+            elif number in {errno.EACCES, errno.EPERM, errno.EROFS}:
+                report['minimal_gap'] = 'Ask the school administrator to fix project filesystem permissions/read-only status; no training was submitted.'
+            elif code == 'LOCAL_ATOMIC_NOREPLACE_UNAVAILABLE':
+                report['minimal_gap'] = 'Use a school-approved filesystem supporting atomic no-overwrite publication; existing inputs were not overwritten.'
+            else:
+                report['minimal_gap'] = 'Inspect failure_detail phase/HTTP/errno; rerun on an approved network host after correcting that specific failure. No training was submitted.'
+        try:
+            persist(report)
+        except OSError as storage_error:
+            # In-memory failure evidence only: never claim this receipt was
+            # persisted when quota/permissions prevented the actual write.
+            report.update(prior_error_code=code, status='failed',
+                error_code='LOCAL_RECEIPT_WRITE_FAILED', receipt_persisted=False,
+                failure_detail={'phase': 'stage_receipt_write', 'errno': storage_error.errno,
+                    'errno_name': errno.errorcode.get(storage_error.errno, 'UNKNOWN_ERRNO')},
+                minimal_gap='Fix project storage quota/permissions and rerun; this failure receipt could not be persisted. No training was submitted.')
     finally:
         owner.close()
     return report
@@ -389,11 +442,20 @@ def main(argv=None):
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--network-host', action='store_true')
     args = parser.parse_args(argv)
-    result = prepare_data(args.root, archive_root=args.archive_root, mode=args.mode,
-                          execute=args.execute, network_host=args.network_host,
-                          prompt=args.mode == 'fetch' and sys.stdin.isatty())
+    try:
+        result = prepare_data(args.root, archive_root=args.archive_root, mode=args.mode,
+                              execute=args.execute, network_host=args.network_host,
+                              prompt=args.mode == 'fetch' and sys.stdin.isatty(),
+                              progress=lambda event: print(json.dumps({'data_progress': event}, ensure_ascii=False), flush=True))
+    except OSError as exc:
+        result = {'status': 'failed', 'error_code': 'LOCAL_DATA_STAGE_SETUP_FAILED',
+            'failure_detail': {'phase': 'data_stage_setup_or_receipt', 'errno': exc.errno,
+                              'errno_name': errno.errorcode.get(exc.errno, 'UNKNOWN_ERRNO')},
+            'receipt_persisted': False, 'scientific_fits': 0,
+            'minimal_gap': 'Check project permissions/storage quota; no training was submitted.'}
     brief = {key: result.get(key) for key in ('status', 'attempt', 'locally_SHA_verified',
-        'missing_cache_files', 'missing_cache_bytes', 'error_code', 'minimal_gap') if key in result}
+        'missing_cache_files', 'missing_cache_bytes', 'error_code', 'failure_detail',
+        'receipt_persisted', 'minimal_gap') if key in result}
     print(json.dumps(brief, ensure_ascii=False))
     return 0 if result.get('status') == 'ready' else 2
 
