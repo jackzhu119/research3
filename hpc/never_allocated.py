@@ -107,8 +107,20 @@ def _validate_snapshot(binding, snapshot, user):
           'never_allocated_positive_parent_allocation_required', parent['job_id'])
     for row in steps:
         _need(row['db_index'] == parent['db_index'] and _ordered(parent['start'], row['start'])
-              and _ordered(row['end'], parent['end']),
-              'never_allocated_parent_step_identity_or_time_invalid', parent['job_id'])
+              and _ordered(row['start'], row['end']) and _ordered(row['start'], parent['end']),
+              'never_allocated_parent_step_identity_or_time_invalid', row['job_id'])
+        if not _ordered(row['end'], parent['end']):
+            # Slurm records extern cleanup independently of the batch/job end.
+            # Bind this exception to the same completed allocation and the
+            # observed downstream cancellations, never an arbitrary grace time.
+            _need(row['job_id'] == parent['job_id'] + '.extern'
+                  and row['name'] == 'extern' and row['state'] == 'COMPLETED'
+                  and row['exit_code'] == '0:0'
+                  and row['alloc_nodes'] == parent['alloc_nodes']
+                  and row['node_list'] == parent['node_list'] and _positive_tres(row['alloc_tres'])
+                  and all(_ordered(row['end'], allocations[stage]['start'])
+                          for stage in ('prepare', 'train')),
+                  'never_allocated_parent_step_identity_or_time_invalid', row['job_id'])
     _need(any(row['job_id'].endswith(('.batch','.extern'))
               and row['state'] in api.TERMINAL_TEST | {'COMPLETED'}
               and re.fullmatch(r'\d+:\d+', row['exit_code']) is not None

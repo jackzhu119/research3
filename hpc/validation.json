@@ -423,6 +423,100 @@
       "sha256": "00356b7a66ba69716ef2f0c858adc820051b097d91069ee12bb6e7f7c64f640b"
     }
   },
+  "slurm20_extern_cleanup_recovery": {
+    "CLI_exception_module_identity_fixed": true,
+    "R2_request_or_result_upload_performed": false,
+    "after_fix": {
+      "actual_network_scheduler_training": false,
+      "authentic_times_states_DBIndex_resources_retained": true,
+      "raw_accounting_sha256": "89d0529ddfd31a6236dda3748a57939038a15a85edea873114bb7beda80066a6",
+      "rows": 5,
+      "status": "ACTUAL_SCHOOL_ACCOUNTING_COMPATIBILITY_REPLAY_PASSED"
+    },
+    "before_fix": {
+      "actual_network_scheduler_training": false,
+      "diagnostic": {
+        "job_id": "767487",
+        "phase": "cancelled_without_allocation_accounting",
+        "read_only_diagnostic": true
+      },
+      "raw_accounting_sha256": "89d0529ddfd31a6236dda3748a57939038a15a85edea873114bb7beda80066a6",
+      "reason": "never_allocated_parent_step_identity_or_time_invalid",
+      "status": "ORIGINAL_BLOCK_REPRODUCED_FROM_USER_SACCT"
+    },
+    "compatibility_rule": "Only completed zero-exit extern cleanup from the same DBIndex, allocation node count and NodeList may end after its job; it must finish by both observed downstream cancellation times. No arbitrary grace interval. Batch and numeric steps remain within the job interval.",
+    "descendant_zero_allocation_identity_steps_duplicates_queue_and_two_snapshot_checks_retained": true,
+    "kernel_algorithm_splits_seeds_fit_budgets_and_scientific_gates_changed": false,
+    "original_failed_receipts_intents_claims_budgets_checkpoints_preserved": true,
+    "read_only_full_history_diagnostics_sanitized": true,
+    "real_scheduler_submission_or_cancellation": false,
+    "real_training_started": false,
+    "school_connection_attempted": false,
+    "school_observation": {
+      "dependent_cancellations": "2026-10-21T20:40:52",
+      "dependents": [
+        "767489",
+        "767491"
+      ],
+      "descendant_AllocTRES": [
+        "",
+        ""
+      ],
+      "descendant_alloc_nodes": [
+        "0",
+        "0"
+      ],
+      "extern_db_index": "2593801",
+      "extern_end": "2026-10-21T20:40:49",
+      "parent_end": "2026-10-21T20:40:44",
+      "raw_rows": {
+        "bytes": 906,
+        "name": "paper3_school_767487_accounting.psv",
+        "sha256": "89d0529ddfd31a6236dda3748a57939038a15a85edea873114bb7beda80066a6"
+      },
+      "source": "User-supplied full sacct --duplicates output, 2026-10-21; exact five raw rows retained in the regression fixture.",
+      "test_job": "767487"
+    },
+    "school_validation_pending": "New actual CPU test then offline preparation and gated GPU execution; local replay does not claim school success.",
+    "source_baseline_commit": "9e421817f3ef1dda6c8086054eb8695379b19c15",
+    "upstream_sources": [
+      {
+        "bytes": 50847,
+        "name": "slurm-20.11-mysql-job.c",
+        "sha256": "b10fad642eb4bbcd13ac463c642a0e98c59017607ba243300fa2bfc6504bad38",
+        "url": "https://github.com/SchedMD/slurm/blob/slurm-20-11-8-1/src/plugins/accounting_storage/mysql/as_mysql_job.c#L1279-L1292"
+      },
+      {
+        "bytes": 49128,
+        "name": "slurm-20.11-db-process.c",
+        "sha256": "fbd6c4f138c7317b34867bbbed11da95d11726250eec57a4fe70b31426f8d9fe",
+        "url": "https://github.com/SchedMD/slurm/blob/slurm-20-11-8-1/src/plugins/accounting_storage/mysql/as_mysql_jobacct_process.c#L950-L969"
+      }
+    ],
+    "verification": {
+      "errors": 0,
+      "failed": 0,
+      "log": {
+        "bytes": 2189,
+        "name": "paper3_extern_cleanup_compat_regression.log",
+        "sha256": "eb0b2532d27676a092efc9b90661e16aa34a3b0e6767bcbc21da7e176454a2e3"
+      },
+      "passed": 1306,
+      "recovery_specific": {
+        "log": {
+          "bytes": 1006,
+          "name": "paper3_recovery_cli_diagnostics_pytest.log",
+          "sha256": "71f7460eba42272c23888aaea7f9581fe93bc9748a783a4211f8231cbc4f9dd5"
+        },
+        "passed": 122,
+        "seconds": 1.99
+      },
+      "scientific_threads": 1,
+      "scope": "All HPC tests, oneclick GitHub/transport, original training campaign/source-extension/deployment-manifest controllers; Slurm allocation inherited and missing glibc APIs simulated in parent/children. Scheduler/network doubles only. Actual CLI subprocess regressions included.",
+      "seconds": 39.85,
+      "skipped": 0
+    }
+  },
   "staged_recovery_deployment": {
     "R2_requested": false,
     "existing_empty_attempts_preserved": true,

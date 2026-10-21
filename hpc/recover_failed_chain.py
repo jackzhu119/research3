@@ -22,6 +22,10 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+# The historical-accounting adapter imports this module by its package name.
+# Keep one exception class when the same file is the direct CLI entry point.
+if __name__ == '__main__':
+    sys.modules['hpc.recover_failed_chain'] = sys.modules[__name__]
 from hpc import start
 from hpc.run_stage import StageError, owner_lock
 
@@ -371,6 +375,41 @@ def diagnose(root, failed_test_job, *, runner=subprocess.run, username=None):
             result['live_controls'][stage] = {'job_id': binding['jobs'][stage]['job_id'],
                 'identity_validated': False,
                 'error_code': str(exc) if isinstance(exc, (RecoveryError, start.StartError)) else type(exc).__name__}
+    from hpc import never_allocated
+    try:
+        snapshot = never_allocated.collect(binding, runner=runner, username=user)
+        facts = []
+        for row in snapshot['rows']:
+            fact = _safe_accounting(row)
+            for name in ('db_index', 'alloc_nodes'):
+                fact[name] = row[name] if re.fullmatch(r'\d{1,20}', row[name]) else 'UNRECOGNIZED_VALUE'
+            # Step display metadata is not allocation authority.  Do not echo
+            # arbitrary step names, accounts, paths, TRES or node strings.
+            fact['allocation_recorded'] = row['alloc_tres'] not in never_allocated.NULL_TRES
+            fact['node_assignment'] = ('none' if row['node_list'] in never_allocated.NULL_NODES
+                                       else 'present' if never_allocated._node(row['node_list'])
+                                       else 'UNRECOGNIZED_VALUE')
+            facts.append(fact)
+        result['allocation_history'] = {
+            'status': 'ACCOUNTING_SNAPSHOT_VERIFIED_NOT_A_RECOVERY_PROOF',
+            'facts': {'rows': facts}, 'read_only_diagnostic': True,
+            'single_observation_does_not_authorize_recovery': True}
+    except (RecoveryError, start.StartError, OSError, ValueError, TypeError, KeyError) as exc:
+        code = str(exc) if isinstance(exc, (RecoveryError, start.StartError)) else type(exc).__name__
+        original = getattr(exc, 'diagnostic', None)
+        diagnostic = None
+        if isinstance(original, dict):
+            diagnostic = {'read_only_diagnostic': True}
+            if original.get('phase') == 'cancelled_without_allocation_accounting':
+                diagnostic['phase'] = original['phase']
+            for name, pattern in (('job_id', r'\d+(?:\.(?:batch|extern|\d+))?'),
+                                  ('field', r'[a-z_]{1,64}')):
+                if isinstance(original.get(name), str) and re.fullmatch(pattern, original[name]):
+                    diagnostic[name] = original[name]
+        result['allocation_history'] = {
+            'status': 'HISTORY_NOT_VERIFIED',
+            'error_code': code if re.fullmatch(r'[A-Za-z0-9_]+', code) else type(exc).__name__,
+            'diagnostic': diagnostic, 'read_only_diagnostic': True}
     return result
 
 

@@ -208,3 +208,94 @@ def test_parent_step_database_and_time_must_match_failed_allocation(project,fiel
 def test_malformed_binding_is_a_safe_recovery_error(project,bad):
     if isinstance(bad,dict) and bad.get('project')=='placeholder':bad['project']=str(project)
     with pytest.raises(recovery.RecoveryError):proof.recover(project,bad,execute=True)
+
+
+# Exact user-supplied sacct output, 2026-10-21. The extern step's independent
+# cleanup ended five seconds after the job, three seconds before cancellation.
+SCHOOL_767487 = '''767487|FAILED|1:0|2026-10-21T20:13:26|2026-10-21T20:40:44|1638|zhuziyuan|zhuziyuan|paper3-test|/public/home/zhuziyuan/projects/paper3|1|billing=16,cpu=16,mem=64G,node=1|comput1|None|2593801|2026-10-21T20:13:25
+767487.batch|FAILED|1:0|2026-10-21T20:13:26|2026-10-21T20:40:44|1638|zhuziyuan||batch||1|cpu=16,mem=64G,node=1|comput1||2593801|2026-10-21T20:13:26
+767487.extern|COMPLETED|0:0|2026-10-21T20:13:26|2026-10-21T20:40:49|1643|zhuziyuan||extern||1|billing=16,cpu=16,mem=64G,node=1|comput1||2593801|2026-10-21T20:13:26
+767489|CANCELLED|0:0|2026-10-21T20:40:52|2026-10-21T20:40:52|0|zhuziyuan|zhuziyuan|paper3-prepare|/public/home/zhuziyuan/projects/paper3|0||None assigned|Dependency|2593804|2026-10-21T20:13:26
+767491|CANCELLED|0:0|2026-10-21T20:40:52|2026-10-21T20:40:52|0|zhuziyuan|zhuziyuan|paper3-train|/public/home/zhuziyuan/projects/paper3|0||None assigned|Dependency|2593805|2026-10-21T20:13:26
+'''
+
+
+def _school_rows():
+    return [dict(zip(proof.FIELDS, line.split('|'))) for line in SCHOOL_767487.splitlines()]
+
+
+def _school_binding():
+    return {'account': 'zhuziyuan', 'project': '/public/home/zhuziyuan/projects/paper3',
+            'jobs': {stage: {'job_id': job} for stage, job in
+                     zip(('test', 'prepare', 'train'), ('767487', '767489', '767491'))}}
+
+
+def _collect_school(rows):
+    def runner(command, **kwargs):
+        assert command == ['sacct', '--duplicates', '--jobs=767487,767489,767491',
+                           '--noheader', '--parsable2', '--format=' + proof.FORMAT]
+        return SimpleNamespace(returncode=0, stdout='\n'.join(
+            '|'.join(row[field] for field in proof.FIELDS) for row in rows) + '\n')
+    return proof.collect(_school_binding(), runner, username='zhuziyuan')
+
+
+def test_actual_school_extern_cleanup_after_failed_job_is_a_valid_snapshot():
+    snapshot = _collect_school(_school_rows())
+    extern = next(row for row in snapshot['rows'] if row['job_id'] == '767487.extern')
+    assert extern['end'] == '2026-10-21T20:40:49'
+    assert extern['elapsed'] == '1643'
+    assert len(snapshot['rows']) == 5
+
+
+def test_extern_cleanup_school_observation_publishes_and_revalidates_bound_proof(project):
+    scheduler = Accounting(project)
+    # Only fixture identity/location differ from the real rows; all clocks,
+    # resources, database identities and step states remain exactly observed.
+    mapping = dict(zip(('767487', '767489', '767491'), (IDS[s] for s in ('test', 'prepare', 'train'))))
+    scheduler.records = _school_rows()
+    for row in scheduler.records:
+        parent, dot, step = row['job_id'].partition('.')
+        row['job_id'] = mapping[parent] + dot + step
+        if not dot:
+            row['user'], row['workdir'] = USER, str(project)
+    before = software.originals(project)
+    result = proof.recover(project, binding(project), execute=True, runner=scheduler, sleeper=lambda n: None)
+    path = project / result['receipt']
+    assert proof.validate_proof(project, path, start.read(path))['job_ids'] == IDS
+    assert recovery.superseded_attempts(project)[result['binding']['attempt']]['job_ids'] == IDS
+    assert scheduler.full_queries == 2 and not software.cancel_calls(scheduler)
+    assert all(software.originals(project)[key] == value for key, value in before.items())
+    assert not (project / '.paper3-hpc/recoveries/test-767434.intent.json').exists()
+
+
+@pytest.mark.parametrize('step', ['batch', '0'])
+def test_only_extern_cleanup_may_end_after_the_parent_job(step):
+    rows = _school_rows()
+    rows[1].update(job_id='767487.' + step, end='2026-10-21T20:40:49', elapsed='1643')
+    with pytest.raises(recovery.RecoveryError, match='parent_step_identity_or_time_invalid'):
+        _collect_school(rows)
+
+
+@pytest.mark.parametrize('field,value', [
+    ('db_index', '2593999'), ('state', 'RUNNING'), ('state', 'FAILED'), ('exit_code', '1:0'),
+    ('alloc_nodes', '0'), ('alloc_tres', ''), ('alloc_tres', 'cpu=16'), ('node_list', 'comput2'),
+    ('name', 'unrelated'), ('start', '2026-10-21T20:13:25'),
+    ('start', '2026-10-21T20:40:45'), ('end', '2026-10-21T20:40:53')])
+def test_delayed_extern_requires_bound_terminal_allocation_and_observed_cleanup_boundary(field,value):
+    rows = _school_rows(); rows[2][field] = value
+    with pytest.raises(recovery.RecoveryError):
+        _collect_school(rows)
+
+
+def test_delayed_extern_must_finish_before_both_child_cancellations():
+    rows = _school_rows()
+    rows[3].update(start='2026-10-21T20:40:48', end='2026-10-21T20:40:48')
+    with pytest.raises(recovery.RecoveryError, match='parent_step_identity_or_time_invalid'):
+        _collect_school(rows)
+
+
+def test_extern_exception_does_not_hide_a_child_execution_step():
+    rows = _school_rows()
+    rows.append({**rows[1], 'job_id': '767491.batch'})
+    with pytest.raises(recovery.RecoveryError, match='descendant_step_found'):
+        _collect_school(rows)
