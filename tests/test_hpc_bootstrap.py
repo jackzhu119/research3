@@ -69,6 +69,13 @@ def test_missing_branch_created_once_with_tracking(fixture):
     assert 'checkout --no-track -b research/paper3-slurm-hpc-20261021 refs/remotes/origin/' in (root / 'calls').read_text()
 
 
+def test_staged_mode_updates_code_and_forwards_without_requiring_r2_network_flag(fixture):
+    root, run = fixture
+    assert run('--execute', '--staged-data').returncode == 0
+    forwarded = (root / 'started').read_text()
+    assert '--staged-data' in forwarded and '--network-host' not in forwarded
+
+
 @pytest.mark.parametrize('changes', [{'FAIL_FETCHES': '99'}, {'CHECKOUT_EXIT': '1'}])
 def test_git_failure_does_not_continue_to_data_or_sbatch(fixture, changes):
     root, run = fixture

@@ -108,6 +108,27 @@ def test_missing_school_software_test_gate_blocks_training(tmp_path):
         stage.tested(tmp_path, {}, {'modules': {}, 'python': '3.12.3'})
 
 
+@pytest.mark.parametrize('phase,expected_mode', [('prepare', 'materialize'), ('train', 'check')])
+def test_staged_chain_preserves_failed_data_gate_and_never_fits(tmp_path, monkeypatch, phase, expected_mode):
+    from hpc import stage_data, handoff
+    monkeypatch.setenv('SLURM_JOB_ID', '123')
+    monkeypatch.setattr(stage, 'guard', lambda root, name: root)
+    monkeypatch.setattr(stage, 'audit_restore', lambda *a: {})
+    monkeypatch.setattr(stage, 'verify_code', lambda *a: {})
+    monkeypatch.setattr(stage, 'inspect_environment', lambda **kw: {})
+    monkeypatch.setattr(stage, 'tested', lambda *a: None)
+    def incomplete(root, *, mode, progress):
+        assert mode == expected_mode and callable(progress)
+        progress({'phase': 'frozen_file_SHA_verification', 'files_processed': 1, 'files_total': 2})
+        return {'status': 'blocked', 'missing_cache_files': 1}
+    monkeypatch.setattr(stage_data, 'prepare_data', incomplete)
+    monkeypatch.setattr(stage, 'run_training', lambda *a: pytest.fail('unverified inputs must never fit'))
+    monkeypatch.setattr(handoff, 'snapshot', lambda *a, **kw: {'status': 'NO_RESULT_TEST_DOUBLE'})
+    assert stage.run(tmp_path, phase) == 2
+    value = json.loads((tmp_path / f'.paper3-hpc/jobs/123/stage-{phase}.json').read_text())
+    assert value['returncode'] == 2 and value['scientific_completion_claimed'] is False
+
+
 def test_software_pass_is_bound_to_code_and_environment(tmp_path):
     path = tmp_path / '.paper3-hpc/software_test_passed.json'
     env = {'modules': {'torch': '2.5.1+cu121'}, 'python': '3.12.3'}

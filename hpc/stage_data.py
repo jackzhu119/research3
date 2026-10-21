@@ -40,6 +40,28 @@ METADATA_ROOTS = frozenset({'audit', 'catalog', 'data_catalog', 'manifests',
 CACHE_ROOTS = frozenset({'source_v2', 'stieger_v2', 'source_extensions_20261019',
                          'source_c3czc4_v1'})
 DATA_SUFFIXES = frozenset({'.npy', '.json', '.jsonl', '.tsv', '.csv', '.txt'})
+PROGRESS_INTERVAL_SECONDS = 5.0
+
+
+class _Progress:
+    """Bounded observational updates after actually completed IO/checks.
+
+    The callback used by ``_run`` persists evidence before optional display.
+    Its exceptions must propagate: a failed receipt write is not a successful
+    verification. This class never owns a thread, changes verification order,
+    or estimates work that has not completed.
+    """
+    def __init__(self, callback, phase, **scope):
+        self.callback, self.phase, self.scope = callback, phase, scope
+        self.last = None
+
+    def emit(self, *, force=False, completed=False, **counts):
+        if self.callback is None:
+            return
+        now = time.monotonic()
+        if force or completed or self.last is None or now - self.last >= PROGRESS_INTERVAL_SECONDS:
+            self.callback(dict(phase=self.phase, **self.scope, **counts, completed=completed))
+            self.last = now
 
 
 class DataStageError(ValueError):
@@ -140,18 +162,28 @@ def _package_rows(archive_root, release, name):
     return top, rows
 
 
-def _materialize_archive(root, archive_root, release, name):
+def _materialize_archive(root, archive_root, release, name, *, progress=None):
+    _Progress(progress, 'archive_SHA_verification').emit(processed_files=0, total_files=1)
     archive = _verify(archive_root, release['objects'][name + '_archive'])
+    _Progress(progress, 'archive_manifest_verification').emit(processed_files=0, total_files=1)
     top, rows = _package_rows(archive_root, release, name)
     counts = {'materialized': 0, 'already_present': 0, 'excluded_software_or_other': 0,
               'archive_members': len(rows)}
     with tarfile.open(archive, 'r:gz') as package:
-        members = package.getmembers()
+        scanned = _Progress(progress, 'archive_member_scan')
+        scanned.emit(processed_files=0, total_files=len(rows))
+        members = []
+        for member in package:
+            members.append(member)
+            scanned.emit(processed_files=len(members), total_files=len(rows))
         expected = {top + '/' + relative: row for relative, row in rows.items()}
         names = [member.name for member in members]
         need(len(names) == len(set(names)) and set(names) == set(expected),
              'archive_exact_member_set_mismatch')
-        for member in members:
+        scanned.emit(processed_files=len(members), total_files=len(rows), completed=True)
+        headers = _Progress(progress, 'archive_header_verification')
+        headers.emit(processed_files=0, total_files=len(members))
+        for number, member in enumerate(members, 1):
             row = expected[member.name]
             mode = 0o755 if Path(row['path']).suffix in {'.py', '.sh'} else 0o644
             need(member.isfile() and member.type in {tarfile.REGTYPE, tarfile.AREGTYPE}
@@ -159,24 +191,37 @@ def _materialize_archive(root, archive_root, release, name):
                  and member.uid == member.gid == member.mtime == 0
                  and not member.uname and not member.gname, 'archive_regular_frozen_header_required')
             transport._relative(member.name)
+            headers.emit(processed_files=number, total_files=len(members))
         while trailer := package.fileobj.read(transport.CHUNK):
             need(not any(trailer), 'archive_nonzero_trailing_data')
-        for member in members:
+        headers.emit(processed_files=len(members), total_files=len(members), completed=True)
+        payloads = _Progress(progress, 'materializing_verified_archive')
+        def payload_progress(processed, *, completed=False):
+            payloads.emit(processed_files=processed, total_files=len(members),
+                verified_files=counts['materialized'] + counts['already_present'],
+                materialized_files=counts['materialized'], already_present_files=counts['already_present'],
+                excluded_files=counts['excluded_software_or_other'], completed=completed)
+        payload_progress(0)
+        for number, member in enumerate(members, 1):
             row = expected[member.name]
             if not _allowed(row['path']):
                 counts['excluded_software_or_other'] += 1
+                payload_progress(number)
                 continue
             with package.extractfile(member) as stream:
                 result = _copy_stream(root, row, stream)
             key = 'materialized' if result == 'materialized_SHA_verified' else 'already_present'
             counts[key] += 1
+            payload_progress(number)
     # The complete compressed file was SHA-verified before opening; repeat after
     # materialization to reject a concurrent archive replacement.
     _verify(archive_root, release['objects'][name + '_archive'])
+    payload_progress(len(members), completed=True)
     return counts
 
 
-def _load_index(root, release):
+def _load_index(root, release, *, progress=None):
+    _Progress(progress, 'index_SHA_verification').emit(processed_files=0, total_files=1)
     path = _verify(root, release['bootstrap_index'])
     value = json.loads(path.read_bytes())
     need(value.get('schema_version') == bootstrap.SCHEMA
@@ -191,17 +236,25 @@ def _load_index(root, release):
          and value.get('thread_environment') == {key: '1' for key in bootstrap.THREAD_VARIABLES},
          'frozen_runtime_descriptor_or_thread_profile_changed')
     by_path = {}
-    for row in value.get('files', []):
+    descriptors = _Progress(progress, 'index_descriptor_verification')
+    total_files = len(value.get('files', []))
+    descriptors.emit(processed_files=0, total_files=total_files)
+    for number, row in enumerate(value.get('files', []), 1):
         need(set(row) == set(bootstrap.ENTRY_FIELDS) | {'io_profile'}
              and row['io_profile'] in {'baseline', 'source_extension'}, 'exact_profiled_file_required')
         transport._descriptor(row, exact=False)
         bootstrap.safe_payload(row)
         need(row['path'] not in by_path, 'duplicate_frozen_file')
         by_path[row['path']] = row
+        descriptors.emit(processed_files=number, total_files=total_files)
     need(bool(by_path), 'nonempty_frozen_index_required')
+    descriptors.emit(processed_files=len(by_path), total_files=total_files, completed=True)
     covered = set()
     loaders = {'baseline': r2_restore, 'source_extension': source_extension_io._modules()[1]}
-    for group in value.get('restore_groups', []):
+    bindings = _Progress(progress, 'index_receipt_binding_verification')
+    total_groups = len(value.get('restore_groups', []))
+    bindings.emit(processed_groups=0, total_groups=total_groups, covered_files=0, total_files=total_files)
+    for number, group in enumerate(value.get('restore_groups', []), 1):
         need(group.get('io_profile') in loaders and group.get('paths')
              and len(group['paths']) == len(set(group['paths'])), 'exact_restore_group_required')
         receipt = _verify(root, group['receipt'])
@@ -215,9 +268,16 @@ def _load_index(root, release):
                  and all(received[relative][key] == by_path[relative][key]
                          for key in bootstrap.ENTRY_FIELDS), 'original_restore_selection_binding_invalid')
             covered.add(relative)
+        bindings.emit(processed_groups=number, total_groups=total_groups,
+                      covered_files=len(covered), total_files=total_files)
     need(covered == set(by_path), 'every_frozen_file_requires_exact_original_restore_group')
-    for key in ('runtime_contract', 'deploy_manifest'):
+    bindings.emit(processed_groups=total_groups, total_groups=total_groups,
+                  covered_files=len(covered), total_files=total_files, completed=True)
+    contracts = _Progress(progress, 'index_contract_verification')
+    contracts.emit(processed_files=0, total_files=2)
+    for number, key in enumerate(('runtime_contract', 'deploy_manifest'), 1):
         _verify(root, value[key])
+        contracts.emit(processed_files=number, total_files=2)
     names = []
     for row in value.get('bootstrap_wheels', []):
         transport._descriptor(row)
@@ -230,6 +290,7 @@ def _load_index(root, release):
          'both_original_extension_manifests_required')
     # Deliberately do not verify/install the unused portable runtime or wheels;
     # their exact descriptors remain frozen above. Current software is separate.
+    contracts.emit(processed_files=2, total_files=2, completed=True)
     return value
 
 
@@ -238,8 +299,15 @@ def load_index(root):
     return _load_index(transport._root(root), load_release())
 
 
-def _inspect(root, index):
-    selected = [row for row in index['files'] if _allowed(row['path'])]
+def _inspect(root, index, *, progress=None):
+    scope = _Progress(progress, 'frozen_scope_selection')
+    scope.emit(processed_files=0, total_files=len(index['files']))
+    selected = []
+    for number, row in enumerate(index['files'], 1):
+        if _allowed(row['path']):
+            selected.append(row)
+        scope.emit(processed_files=number, total_files=len(index['files']))
+    scope.emit(processed_files=len(index['files']), total_files=len(index['files']), completed=True)
     def inspect_one(row):
         target = _file(root, row['path'])
         if target.exists():
@@ -252,8 +320,22 @@ def _inspect(root, index):
     except ValueError:
         cpus = 1
     workers = min(8, cpus)
+    checked = _Progress(progress, 'frozen_file_SHA_verification')
+    verified, verified_bytes, missing = 0, 0, []
+    total_bytes = sum(row['bytes'] for row in selected)
+    def verification_progress(processed, *, completed=False):
+        checked.emit(processed_files=processed, total_files=len(selected),
+            verified_files=verified, missing_files_count=len(missing),
+            verified_bytes=verified_bytes, total_bytes=total_bytes, completed=completed)
+    verification_progress(0)
     with ThreadPoolExecutor(max_workers=workers) as executor:
-        missing = [row for row in executor.map(inspect_one, selected) if row is not None]
+        for number, (row, absent) in enumerate(zip(selected, executor.map(inspect_one, selected)), 1):
+            if absent is None:
+                verified += 1
+                verified_bytes += row['bytes']
+            else:
+                missing.append(absent)
+            verification_progress(number)
     present = len(selected) - len(missing)
     paths = {row['path'] for row in missing}
     groups = []
@@ -262,6 +344,7 @@ def _inspect(root, index):
         if chosen:
             groups.append({'ordinal': ordinal, 'io_profile': group['io_profile'],
                            'receipt': group['receipt'], 'paths': chosen})
+    verification_progress(len(selected), completed=True)
     return {'status': 'blocked' if missing else 'ready', 'index_sha256': index['index_sha256'],
             'frozen_data_files': len(selected), 'locally_SHA_verified': present,
             'independent_SHA_IO_workers': workers,
@@ -316,11 +399,12 @@ def _run(root, archive_root, release, *, mode, execute, network_host, client, bu
     if mode in {'materialize', 'fetch'}:
         report['archives'] = {}
         for name in ('main', 'control'):
-            update_transfer({'phase': 'materializing_verified_archive'}, object=name)
-            report['archives'][name] = _materialize_archive(root, archive_root, release, name)
+            report['archives'][name] = _materialize_archive(root, archive_root, release, name,
+                progress=lambda event, name=name: update_transfer(event, object=name))
             persist(report)
-    index = _load_index(root, release)
-    inspection = _inspect(root, index)
+    index = _load_index(root, release, progress=update_transfer)
+    inspection = _inspect(root, index,
+        progress=lambda event: update_transfer(event, inspection='before_restore'))
     if mode == 'fetch' and inspection['restore_groups']:
         for position, group in enumerate(inspection['restore_groups'], 1):
             loader = r2_restore if group['io_profile'] == 'baseline' else source_extension_io
@@ -345,7 +429,8 @@ def _run(root, archive_root, release, *, mode, execute, network_host, client, bu
                 need(attempt < 3 and _transient_restore_failure(result),
                      'original_profile_restore_failed_see_receipt')
                 time.sleep(attempt)
-        inspection = _inspect(root, index)
+        inspection = _inspect(root, index,
+            progress=lambda event: update_transfer(event, inspection='after_restore'))
     report.update(inspection)
     report['active_transfer'] = {'phase': 'finished', 'updated_at_utc': datetime.now(timezone.utc).isoformat()}
     report['ready_scope'] = 'frozen_W3_source_development_and_internal_cache_staging_only_external_query_forbidden'

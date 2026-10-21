@@ -156,5 +156,63 @@
     "Slurm20.11.8 resource and signal handling",
     "allowed network-host exact R2 restore and real PUT/full GET SHA256",
     "A100 engineering pilot and compatible-identity checkpoint resume after user approval"
-  ]
+  ],
+  "staged_recovery_deployment": {
+    "R2_requested": false,
+    "existing_empty_attempts_preserved": true,
+    "full_SHA_gate_location": "Original CPU Slurm prepare and pre-fit train recheck",
+    "original_scientific_kernels_changed": false,
+    "pipeline": [
+      "test",
+      "prepare",
+      "train"
+    ],
+    "preparer_called_on_submit_host": false,
+    "real_Slurm_submission_performed": false,
+    "real_training_started": false,
+    "school_connection_attempted": false,
+    "submit_host_data_readiness_claimed": false,
+    "unknown_submission_outcomes_replayed": false
+  },
+  "staged_recovery_original_data_readonly_check": {
+    "R2_GETs": 0,
+    "last_progress": {
+      "completed": true,
+      "missing_files_count": 0,
+      "phase": "frozen_file_SHA_verification",
+      "processed_files": 21262,
+      "total_bytes": 2225387157,
+      "total_files": 21262,
+      "verified_bytes": 2225387157,
+      "verified_files": 21262
+    },
+    "locally_SHA_verified": 21262,
+    "original_receipts_bound": 2657,
+    "progress_events": 13,
+    "receipt": {
+      "bytes": 471,
+      "name": "paper3_hpc_staged_recovery_data_check.json",
+      "sha256": "d782f98bcf4c21e13644bc29ad94129c641db7bee9c2754f5162c00314d895c0"
+    },
+    "root_writes": 0,
+    "scientific_fits": 0,
+    "scope": "Codex authoritative frozen data only; not school readiness proof",
+    "seconds": 21.136,
+    "status": "ready"
+  },
+  "staged_recovery_targeted_regression": {
+    "command": "python -B -m pytest -q tests/test_hpc_*.py tests/test_oneclick_transport.py tests/test_training_campaign.py tests/test_source_extension_downstream.py tests/test_source_extension_training.py tests/test_data_plan_deploy_manifest_v2.py --durations=5 -ra",
+    "errors": 0,
+    "failed": 0,
+    "log": {
+      "bytes": 1913,
+      "name": "paper3_hpc_staged_recovery_pytest.log",
+      "sha256": "d1623b76e282e264195785d625eb85bec985638746b074e176424f328f3fdbd3"
+    },
+    "passed": 1018,
+    "scientific_threads": 1,
+    "scope": "All HPC tests plus retained transport and original campaign/source-extension controllers; scheduler and network use explicit software doubles. No school job, fit or R2 request.",
+    "seconds": 30.71,
+    "skipped": 0
+  }
 }

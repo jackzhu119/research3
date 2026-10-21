@@ -54,8 +54,8 @@ def ready(root, **kwargs):
 
 def submitter(root, calls, *, durable=False):
     def submitted(request):
-        attempts = list((root / '.paper3-hpc/start').glob('attempt-*.json'))
-        before = json.loads(attempts[0].read_text())
+        attempt = root / '.paper3-hpc/start' / ('attempt-' + request['start_attempt_id'] + '.json')
+        before = json.loads(attempt.read_text())
         intent = before['submission_intents'][-1]
         assert intent['state'] == 'SUBMISSION_INTENT_OUTCOME_UNKNOWN' and intent['request'] == request
         assert request['start_source_identity'] == {'source_commit': 'c' * 40, 'code_manifest_sha256': 'a' * 64}
@@ -275,3 +275,118 @@ def test_main_reports_safe_errno_without_exception_text_or_discarding_intent(pro
     value = json.loads(output)
     assert value['failure_detail'] == {'errno': errno.ENOSPC, 'errno_name': 'ENOSPC'}
     assert 'SOFTWARE_SECRET' not in output
+
+
+def staged_packages(project, monkeypatch):
+    from hpc import stage_data
+    objects = {str(i): {'path': 'archives/fixed-' + str(i), 'bytes': i + 1} for i in range(5)}
+    for row in objects.values():
+        path = project / '.hpc/packages' / row['path']
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(b'x' * row['bytes'])
+    monkeypatch.setattr(stage_data, 'load_release', lambda: {'objects': objects})
+
+
+def test_staged_plan_defers_data_gate_without_lock_network_or_submission(project):
+    result = launch.start(args(project, staged_data=True, network_host=False, execute=False),
+        runner=forbidden, verifier=forbidden, preparer=forbidden, submitter=forbidden)
+    assert result['data_gate'] == 'SLURM_PREPARE_NOT_YET_VERIFIED'
+    assert result['execute_requires'] == ['--execute', '--staged-data']
+    assert not (project / '.paper3-hpc').exists()
+
+
+def test_staged_mode_submits_same_gated_chain_without_foreground_data_processing(project, monkeypatch):
+    staged_packages(project, monkeypatch)
+    calls = []
+    result = launch.start(args(project, staged_data=True, network_host=False),
+        runner=runner(), verifier=verifier, preparer=forbidden, submitter=submitter(project, calls))
+    assert result['job_ids'] == {'test': '9000', 'prepare': '9001', 'train': '9002'}
+    assert '--dependency=afterok:9000' in calls[1]['command']
+    assert '--dependency=afterok:9001' in calls[2]['command']
+    proof = json.loads((project / result['attempt']).read_text())
+    assert proof['data_receipt']['status'] == 'DEFERRED_TO_SLURM_PREPARE_NOT_YET_VERIFIED'
+    assert proof['data_mode'] == 'STAGED_INPUTS_CPU_SLURM_VERIFICATION'
+    assert not list((project / '.paper3-hpc/data').glob('attempt-*'))
+
+
+def test_staged_retry_preserves_interrupted_empty_attempt_and_original_data_receipt(project, monkeypatch):
+    staged_packages(project, monkeypatch)
+    old = project / '.paper3-hpc/start/attempt-11111111111111111111111111111111.json'
+    original = {'schema_version': launch.SCHEMA, 'project': str(project),
+        'status': 'FETCHING_FROZEN_DATA', 'submission_intents': [], 'submitted_jobs': []}
+    launch.write(old, original)
+    data = project / '.paper3-hpc/data/attempt-old/receipt.json'
+    launch.write(data, {'status': 'running', 'completed_groups': 1538})
+    before = data.read_bytes()
+    result = launch.start(args(project, staged_data=True, network_host=False), runner=runner(),
+        verifier=verifier, preparer=forbidden, submitter=submitter(project, []))
+    assert result['new_jobs_submitted'] is True
+    assert json.loads(old.read_text()) == original and data.read_bytes() == before
+
+
+def test_staged_existing_data_writer_blocks_before_queue_and_scheduling(project):
+    with launch.staged_owner(project):
+        with pytest.raises(launch.StartError, match='existing_data_coordinator'):
+            launch.start(args(project, staged_data=True, network_host=False), runner=forbidden,
+                verifier=forbidden, preparer=forbidden, submitter=forbidden)
+
+
+def test_staged_mode_still_refuses_nested_compute_submission(project, monkeypatch):
+    monkeypatch.setenv('SLURM_JOB_ID', '456')
+    with pytest.raises(launch.StartError, match='not_compute_job'):
+        launch.start(args(project, staged_data=True, network_host=False), runner=forbidden)
+    assert not (project / '.paper3-hpc').exists()
+
+
+@pytest.mark.parametrize('mutation', ['missing', 'size', 'symlink'])
+def test_staged_missing_or_changed_fixed_package_stops_before_any_sbatch(project, monkeypatch, mutation):
+    staged_packages(project, monkeypatch)
+    path = project / '.hpc/packages/archives/fixed-0'
+    path.unlink()
+    if mutation == 'size':
+        path.write_bytes(b'wrong-length')
+    elif mutation == 'symlink':
+        target = project / 'another-file'
+        target.write_bytes(b'x')
+        path.symlink_to(target)
+    with pytest.raises(launch.StartError):
+        launch.start(args(project, staged_data=True, network_host=False), runner=runner(),
+            verifier=verifier, preparer=forbidden, submitter=forbidden)
+    attempt = json.loads(next((project / '.paper3-hpc/start').glob('attempt-*.json')).read_text())
+    assert attempt['submission_intents'] == [] and attempt['error_type'] == 'StartError'
+    assert 'error_code' in attempt
+
+
+def test_staged_mode_keeps_unknown_previous_submission_blocked(project, monkeypatch):
+    calls = []
+    def uncertain(request):
+        calls.append(request)
+        raise subprocess.TimeoutExpired('sbatch', 60)
+    with pytest.raises(subprocess.TimeoutExpired):
+        launch.start(args(project), runner=runner(), verifier=verifier,
+            preparer=ready, submitter=uncertain)
+    result = launch.start(args(project, staged_data=True, network_host=False), runner=runner(),
+        verifier=forbidden, preparer=forbidden, submitter=forbidden)
+    assert result['status'] == 'SUBMISSION_OUTCOME_UNCERTAIN_NO_RESUBMISSION'
+    assert len(calls) == 1
+
+
+def test_staged_mode_preflight_failure_persists_actual_control_code(project, monkeypatch):
+    staged_packages(project, monkeypatch)
+    def reject(request):
+        raise launch.submit.SubmissionError('Slurm_test_only_rejected_request_no_job_submitted')
+    with pytest.raises(launch.submit.SubmissionError):
+        launch.start(args(project, staged_data=True, network_host=False), runner=runner(),
+            verifier=verifier, preparer=forbidden, submitter=reject)
+    attempt = json.loads(next((project / '.paper3-hpc/start').glob('attempt-*.json')).read_text())
+    assert attempt['submission_intents'][0]['state'] == 'NOT_SUBMITTED_BLOCKED'
+    assert attempt['error_code'] == 'Slurm_test_only_rejected_request_no_job_submitted'
+
+
+def test_arbitrary_external_exception_text_is_not_saved(project):
+    def broken(*a, **kw):
+        raise RuntimeError('SOFTWARE_SECRET_NEVER_PERSIST')
+    with pytest.raises(RuntimeError):
+        launch.start(args(project), runner=runner(), verifier=verifier, preparer=broken, submitter=forbidden)
+    raw = next((project / '.paper3-hpc/start').glob('attempt-*.json')).read_text()
+    assert 'SOFTWARE_SECRET' not in raw and json.loads(raw)['error_type'] == 'RuntimeError'

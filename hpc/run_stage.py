@@ -263,12 +263,16 @@ def run(root, stage):
                     else:
                         from hpc.stage_data import prepare_data
                         if stage == 'prepare':
-                            result = prepare_data(root, mode='materialize')
+                            result = prepare_data(root, mode='materialize',
+                                progress=lambda event: print(json.dumps({'data_progress': event},
+                                    ensure_ascii=False), flush=True))
                             code = 0 if result.get('status') == 'ready' else 2
                             write(output / 'data_prepared.json', result)
                         else:
                             tested(root, identity, environment)
-                            result = prepare_data(root, mode='check')
+                            result = prepare_data(root, mode='check',
+                                progress=lambda event: print(json.dumps({'data_progress': event},
+                                    ensure_ascii=False), flush=True))
                             write(output / 'frozen_data_verified.json', result)
                             if result.get('status') != 'ready':
                                 raise StageError('frozen_data_gate_blocked_inspect_frozen_data_verified_json')

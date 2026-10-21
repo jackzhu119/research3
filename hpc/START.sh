@@ -29,13 +29,20 @@ fi
 # A default/plan invocation does not fetch, update or schedule anything.
 execute=false
 dry_run=false
+staged_data=false
 for argument in "${forward[@]}"; do
     if [ "$argument" = --execute ]; then execute=true; fi
     if [ "$argument" = --dry-run ]; then dry_run=true; fi
+    if [ "$argument" = --staged-data ]; then staged_data=true; fi
 done
 if [ "$execute" != true ] || [ "$dry_run" = true ]; then
-    echo 'PLAN: explicit branch fetch -> existing branch fast-forward -> data gates -> sbatch test -> prepare -> train.'
-    echo 'Use --execute --network-host only on a school-permitted transfer/login host.'
+    if [ "$staged_data" = true ]; then
+        echo 'PLAN: branch update -> sbatch test -> CPU Slurm prepare with full data gates -> train.'
+        echo 'Use --execute --staged-data with existing transferred inputs; no foreground data scan or R2 request.'
+    else
+        echo 'PLAN: explicit branch fetch -> existing branch fast-forward -> data gates -> sbatch test -> prepare -> train.'
+        echo 'Use --execute --network-host only on a school-permitted transfer/login host.'
+    fi
     exit 0
 fi
 

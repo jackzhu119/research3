@@ -33,6 +33,31 @@ ERROR_CATEGORIES = {'NETWORK_DNS_OR_CONNECTION_FAILED', 'CONNECTION_TIMEOUT', 'R
     'INVALID_LOCAL_DIAGNOSTIC_CONFIGURATION', 'existing_r2_configuration_required_on_network_allowed_node',
     'existing_environment_missing_minimal_r2_sdk', 'r2_https_account_endpoint_required',
     'interactive_hidden_input_required', 'invalid_hidden_credential'}
+DATA_PHASES = frozenset({'get_headers', 'body_read', 'failed_attempt', 'bounded_retry',
+    'commit', 'verified', 'local_cache_verified', 'materializing_verified_archive',
+    'original_profile_restore', 'finished', 'archive_SHA_verification',
+    'archive_manifest_verification', 'archive_member_scan', 'archive_header_verification',
+    'index_SHA_verification', 'index_descriptor_verification',
+    'index_receipt_binding_verification', 'index_contract_verification',
+    'frozen_scope_selection', 'frozen_file_SHA_verification'})
+DATA_COUNTERS = ('attempt', 'attempt_limit', 'bytes_read', 'expected_bytes',
+    'group', 'groups_total', 'files', 'processed_files', 'total_files', 'verified_files',
+    'missing_files_count', 'verified_bytes', 'total_bytes', 'processed_groups',
+    'total_groups', 'covered_files', 'excluded_files', 'materialized_files',
+    'already_present_files')
+DATA_PHASE_LABELS = {
+    'archive_SHA_verification': '整包 SHA 核验',
+    'archive_manifest_verification': '原包清单核验',
+    'archive_member_scan': '归档成员扫描',
+    'archive_header_verification': '归档头核验',
+    'materializing_verified_archive': '原包解包与逐文件核验',
+    'index_SHA_verification': '冻结索引 SHA 核验',
+    'index_descriptor_verification': '冻结索引描述符核验',
+    'index_receipt_binding_verification': '原恢复收据绑定核验',
+    'index_contract_verification': '冻结索引契约核验',
+    'frozen_scope_selection': '冻结文件范围核对',
+    'frozen_file_SHA_verification': '本地冻结文件 SHA 核验',
+}
 
 
 def safe_text(value, maximum=150):
@@ -52,6 +77,35 @@ def _safe(path):
 
 def _number(value):
     return value if type(value) in (int, float) and math.isfinite(value) and value >= 0 else None
+
+
+def data_transfer(value):
+    """Keep only fixed phase names and true numerical stage observations.
+
+    Even completed=True is a per-phase fact, never a process-liveness or
+    overall data-ready proof. No paths, SDK messages or configuration escape.
+    """
+    def choice(key, allowed):
+        item = value.get(key)
+        return item if isinstance(item, str) and item in allowed else 'N/A'
+    stamp = 'N/A'
+    candidate = value.get('updated_at_utc')
+    if isinstance(candidate, str) and len(candidate) <= 64:
+        try:
+            parsed = datetime.fromisoformat(candidate)
+            if parsed.utcoffset() is not None and parsed.utcoffset().total_seconds() == 0:
+                stamp = parsed.astimezone(timezone.utc).isoformat()
+        except ValueError:
+            pass
+    result = {'phase': choice('phase', DATA_PHASES),
+        'object': choice('object', DIAGNOSTIC_OBJECTS | {'main', 'control'}),
+        'io_profile': choice('io_profile', {'baseline', 'source_extension'}),
+        'updated_at_utc': stamp,
+        'inspection': choice('inspection', {'before_restore', 'after_restore'}),
+        'completed': value.get('completed') if type(value.get('completed')) is bool else None}
+    result.update({key: value.get(key) if type(value.get(key)) is int
+                   and 0 <= value[key] <= 2**63 - 1 else None for key in DATA_COUNTERS})
+    return result
 
 
 def record(root, relative, *, limit=MAX_JSON_BYTES):
@@ -291,15 +345,12 @@ def collect(root, *, runner=subprocess.run, now=None, interval=10):
             'local_verified_objects': sum(isinstance(row, dict) and row.get('status') == 'LOCAL_VERIFIED_CACHE_HIT' for row in getters),
             'restored_groups': sum(isinstance(row, dict) and row.get('status') == 'restored_verified' for row in groups),
             'group_receipts': len(groups),
+            'object_receipts_observed': len(getters),
             'missing_cache_files': value.get('missing_cache_files') if type(value.get('missing_cache_files')) is int else None,
             'locally_SHA_verified': value.get('locally_SHA_verified') if type(value.get('locally_SHA_verified')) is int else None}
         transfer = value.get('active_transfer')
         if isinstance(transfer, dict):
-            data_summary['transfer'] = {key: safe_text(transfer.get(key), 100)
-                for key in ('phase', 'object', 'io_profile', 'updated_at_utc')}
-            data_summary['transfer'].update({key: transfer.get(key) if type(transfer.get(key)) is int
-                and transfer[key] >= 0 else None for key in
-                ('attempt', 'attempt_limit', 'bytes_read', 'expected_bytes', 'group', 'groups_total')})
+            data_summary['transfer'] = data_transfer(transfer)
         failure = value.get('failure_detail')
         if isinstance(failure, dict):
             data_summary['failure'] = {key: safe_text(failure.get(key), 100)
@@ -378,12 +429,33 @@ def render(snapshot):
     if data:
         lines.append(f'数据最近回执：{data["operation"]} / {data["status"]} | 错误 {data["error_code"]} | {_amount(data["age_seconds"], suffix="s")} 前')
         lines.append(f'  固定对象已核验 {data["full_GET_objects"] + data["local_verified_objects"]}/5：完整 GET {data["full_GET_objects"]}；本地 SHA 命中 {data["local_verified_objects"]}；成功恢复组 {data["restored_groups"]}/{data["group_receipts"]}')
+        if data['operation'] in {'check', 'materialize'} and data['object_receipts_observed'] == 0:
+            lines.append('  本次为离线核查，未发起固定对象 GET；历史取回证据保留在原 fetch 回执。')
         lines.append(f'  本地 SHA 文件 {_amount(data["locally_SHA_verified"], digits=0)}；缺缓存 {_amount(data["missing_cache_files"], digits=0)}（回执计数，非实时下载速度）')
         transfer = data.get('transfer')
         if transfer:
-            lines.append(f'  最近传输阶段 {transfer["phase"]} | 对象 {transfer["object"]} | 尝试 {_amount(transfer["attempt"],digits=0)} | 正文 {_amount(transfer["bytes_read"],1024**2,"MiB")} / {_amount(transfer["expected_bytes"],1024**2,"MiB")}；阶段进度不等于校验成功。')
+            label = DATA_PHASE_LABELS.get(transfer['phase'], transfer['phase'])
+            scope = {'before_restore': '本次初始核查', 'after_restore': '恢复后复核'}.get(transfer['inspection'])
+            lines.append(f'  最近数据阶段 {label} [{transfer["phase"]}] | 对象 {transfer["object"]}'
+                         + (' | ' + scope if scope else '') + '；阶段进度不等于校验成功。')
+            if transfer['bytes_read'] is not None or transfer['expected_bytes'] is not None:
+                lines.append(f'  GET 正文 {_amount(transfer["bytes_read"],1024**2,"MiB")} / {_amount(transfer["expected_bytes"],1024**2,"MiB")} | 尝试 {_amount(transfer["attempt"],digits=0)}')
             if transfer['group'] is not None:
-                lines.append(f'  原权限恢复组 {transfer["group"]}/{transfer["groups_total"]} | {transfer["io_profile"]}')
+                lines.append(f'  原权限恢复组 {transfer["group"]}/{transfer["groups_total"]} | {transfer["io_profile"]}'
+                             + (f' | 本组需恢复 {transfer["files"]} 文件' if transfer['files'] is not None else ''))
+            if transfer['processed_files'] is not None or transfer['total_files'] is not None:
+                lines.append(f'  本阶段已处理条目 {_amount(transfer["processed_files"],digits=0)} / {_amount(transfer["total_files"],digits=0)}')
+            if transfer['verified_files'] is not None or transfer['missing_files_count'] is not None:
+                lines.append(f'  本轮 SHA 通过 {_amount(transfer["verified_files"],digits=0)} 文件；缺失 {_amount(transfer["missing_files_count"],digits=0)} 文件')
+            if transfer['verified_bytes'] is not None or transfer['total_bytes'] is not None:
+                lines.append(f'  本轮已核验内容 {_amount(transfer["verified_bytes"],1024**2,"MiB")} / {_amount(transfer["total_bytes"],1024**2,"MiB")}（累计核验量，非速率）')
+            if transfer['processed_groups'] is not None or transfer['total_groups'] is not None:
+                lines.append(f'  原收据已核验组 {_amount(transfer["processed_groups"],digits=0)} / {_amount(transfer["total_groups"],digits=0)}；已绑定文件 {_amount(transfer["covered_files"],digits=0)}')
+            if any(transfer[key] is not None for key in ('materialized_files', 'already_present_files', 'excluded_files')):
+                lines.append(f'  本包新落盘 {_amount(transfer["materialized_files"],digits=0)}；原有 SHA 命中 {_amount(transfer["already_present_files"],digits=0)}；范围外条目 {_amount(transfer["excluded_files"],digits=0)}')
+            if transfer['completed'] is not None:
+                lines.append('  本阶段检查已返回；整体数据就绪仍以最终回执为准。' if transfer['completed']
+                             else '  本阶段尚未返回；计数回执不证明进程仍活跃。')
         failure = data.get('failure')
         if failure:
             lines.append(f'  精确失败阶段 {failure["phase"]} | errno={_amount(failure["errno"],digits=0)} {failure["errno_name"]} | HTTP {_amount(failure["http_status"],digits=0)} {failure["service_code"]}')

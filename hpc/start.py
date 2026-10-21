@@ -8,7 +8,7 @@ are retained. Repeating the command never authorizes a second training chain.
 from __future__ import annotations
 
 import argparse
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from datetime import datetime, timezone
 import errno
 import fcntl
@@ -91,6 +91,45 @@ def owner(root):
         try: fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError: raise StartError('existing_start_coordinator_is_still_running_no_duplicate_fetch_or_submission') from None
         yield
+
+
+@contextmanager
+def staged_owner(root):
+    """Do not queue CPU validation while another local data writer is active."""
+    path = safe(root / '.paper3-hpc/data/stage.lock')
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open('a') as stream:
+        try:
+            fcntl.flock(stream, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise StartError('existing_data_coordinator_is_still_running_no_staged_submission') from None
+        yield
+
+
+def staged_inputs(root):
+    """Cheap presence checks only. All data SHA gates run in Slurm prepare."""
+    from hpc.stage_data import load_release
+    release = load_release()
+    for row in release['objects'].values():
+        path = safe(root / '.hpc/packages' / row['path'])
+        need(path.is_file() and path.stat().st_size == row['bytes'],
+             'staged_fixed_packages_missing_or_size_changed_CPU_gate_not_submitted')
+    return {'status': 'DEFERRED_TO_SLURM_PREPARE_NOT_YET_VERIFIED',
+            'fixed_object_presence_and_size_checked': 5, 'local_SHA_verified_by_launcher': False,
+            'network_GET_performed': False, 'scientific_data_gate_passed': False}
+
+
+def failure(exc):
+    """Keep control error codes, never arbitrary SDK messages or credentials."""
+    detail = {'error_type': type(exc).__name__}
+    if isinstance(exc, (StartError, submit.SubmissionError)):
+        code = str(exc)
+        if re.fullmatch(r'[A-Za-z0-9_]+', code):
+            detail['error_code'] = code
+    if isinstance(exc, OSError):
+        detail['failure_detail'] = {'errno': exc.errno,
+            'errno_name': errno.errorcode.get(exc.errno, 'UNKNOWN_ERRNO')}
+    return detail
 
 
 def records(root, relative, pattern):
@@ -202,15 +241,18 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
     need(root.is_dir(), 'existing_project_directory_required')
     config = submit.load_config(args.config or root / 'hpc/resources.json')
     planned = requests(args, root, config)
+    staged = bool(getattr(args, 'staged_data', False))
     if not args.execute or args.dry_run:
         return {'schema_version': SCHEMA, 'status': 'PLAN_ONLY_NO_FETCH_OR_SUBMISSION',
                 'stages': [{'stage': row['stage'], 'request': row,
                     'dependency_on_stage': None if index == 0 else STAGES[index-1],
                     'dependency_bound_only_after_real_job_id': index > 0} for index, row in enumerate(planned)],
-                'execute_requires': ['--execute', '--network-host'], 'scientific_completion_claimed': False}
-    need(args.network_host, 'execute_requires_explicit_network_host_permission')
-    need(not os.environ.get('SLURM_JOB_ID'), 'network_fetch_must_run_on_permitted_submission_host_not_compute_job')
-    with owner(root):
+                'execute_requires': ['--execute', '--staged-data'] if staged else ['--execute', '--network-host'],
+                'data_gate': 'SLURM_PREPARE_NOT_YET_VERIFIED' if staged else 'NETWORK_HOST_FETCH_AND_SHA',
+                'scientific_completion_claimed': False}
+    need(staged or args.network_host, 'execute_requires_explicit_network_host_permission')
+    need(not os.environ.get('SLURM_JOB_ID'), 'submission_must_run_on_permitted_host_not_compute_job')
+    with owner(root), staged_owner(root) if staged else nullcontext():
         existing = submissions(root)
         queued = active_jobs(root, existing, runner=runner)
         prior_attempts = []
@@ -246,17 +288,22 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
         path = root / '.paper3-hpc/start' / ('attempt-' + attempt_id + '.json')
         value = {'schema_version': SCHEMA, 'attempt_id': attempt_id, 'project': str(root),
             'source_identity': identity, 'created_at_utc': datetime.now(timezone.utc).isoformat(),
-            'status': 'FETCHING_FROZEN_DATA', 'submission_intents': [], 'submitted_jobs': [],
+            'status': 'CHECKING_STAGED_INPUT_PRESENCE' if staged else 'FETCHING_FROZEN_DATA',
+            'data_mode': 'STAGED_INPUTS_CPU_SLURM_VERIFICATION' if staged else 'NETWORK_HOST_FETCH',
+            'submission_intents': [], 'submitted_jobs': [],
             'credentials_recorded': False, 'scientific_completion_claimed': False}
         write(path, value)
-        if preparer is None:
+        if preparer is None and not staged:
             from hpc.stage_data import prepare_data
             preparer = prepare_data
         try:
-            data = preparer(root, mode='fetch', execute=True, network_host=True, prompt=sys.stdin.isatty(),
+            data = staged_inputs(root) if staged else preparer(root, mode='fetch', execute=True,
+                network_host=True, prompt=sys.stdin.isatty(),
                 progress=lambda event: print(json.dumps(event, ensure_ascii=False), flush=True))
+            if staged:
+                value['staged_input_presence'] = data
             value['data_receipt'] = {key: data.get(key) for key in ('status', 'attempt', 'error_code', 'failure_detail', 'minimal_gap') if key in data}
-            if data.get('status') != 'ready':
+            if not staged and data.get('status') != 'ready':
                 value['status'] = 'DATA_NOT_READY_NO_JOBS_SUBMITTED'
                 write(path, value)
                 return {**value['data_receipt'], 'status': value['status'], 'attempt': str(path.relative_to(root)),
@@ -289,7 +336,7 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
                     if isinstance(exc, submit.SubmissionError) and str(exc) in NO_SUBMISSION_ERRORS:
                         intent['state'] = 'NOT_SUBMITTED_BLOCKED'
                     value['status'] = 'SUBMISSION_BLOCKED_PRESERVE_INTENT'
-                    value['error_type'] = type(exc).__name__
+                    value.update(failure(exc))
                     write(path, value)
                     raise
                 need(receipt.get('status') == 'SLURM_JOB_SUBMITTED_NOT_TRAINING_COMPLETE'
@@ -304,10 +351,11 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
             write(path, value)
             return {'status': value['status'], 'attempt': str(path.relative_to(root)), 'source_identity': identity,
                     'job_ids': {row['stage']: row['job_id'] for row in value['submitted_jobs']},
+                    'data_verification': value['data_receipt']['status'],
                     'monitor_command': monitor_command(root), 'scientific_completion_claimed': False,
                     'new_jobs_submitted': True}
         except BaseException as exc:
-            value['error_type'] = type(exc).__name__
+            value.update(failure(exc))
             if value['status'] == 'FETCHING_FROZEN_DATA':
                 value['status'] = 'FETCH_INTERRUPTED_NO_JOBS_SUBMITTED'
             write(path, value)
@@ -325,6 +373,8 @@ def main(argv=None):
     parser.add_argument('--time', help='Train Slurm wall time only; original scientific caps remain fixed')
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--network-host', action='store_true')
+    parser.add_argument('--staged-data', action='store_true',
+        help='Use already transferred inputs; perform full data checks inside Slurm prepare, without foreground fetch or SHA scan')
     parser.add_argument('--dry-run', action='store_true')
     args = parser.parse_args(argv)
     try:

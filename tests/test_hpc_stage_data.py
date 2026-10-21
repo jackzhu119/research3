@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import errno
 import fcntl
+import gzip
 import hashlib
 import io
 import json
@@ -337,6 +338,171 @@ def test_SHA_parallelism_is_bounded_by_Slurm_allocation(fixed, monkeypatch):
     assert result['independent_SHA_IO_workers'] == 2
 
 
+def test_materialization_index_and_SHA_progress_is_persisted_and_scope_bounded(fixed, monkeypatch):
+    ticks = iter(range(0, 100000, 2))
+    monkeypatch.setattr(stage.time, 'monotonic', lambda: next(ticks))
+    events, observations = [], []
+    def observed(event):
+        receipts = list((fixed['root'] / '.paper3-hpc/data').glob('attempt-*/receipt.json'))
+        current = json.loads(max(receipts, key=lambda path: path.stat().st_mtime_ns).read_bytes())
+        # Evidence must already be persisted before a display callback runs.
+        observations.append((copy.deepcopy(current), copy.deepcopy(event)))
+        events.append(copy.deepcopy(event))
+    result = stage.prepare_data(fixed['root'], mode='materialize', progress=observed)
+    assert result['status'] == 'blocked' and result['missing_cache_files'] == 2
+    assert observations and all(current['active_transfer'] == event and current['status'] == 'running'
+                                for current, event in observations)
+    phases = [event['phase'] for event in events]
+    for expected in ('archive_member_scan', 'archive_header_verification',
+                     'materializing_verified_archive', 'index_descriptor_verification',
+                     'index_receipt_binding_verification', 'index_contract_verification',
+                     'frozen_scope_selection', 'frozen_file_SHA_verification'):
+        assert expected in phases
+    assert phases.index('index_receipt_binding_verification') < phases.index('frozen_file_SHA_verification')
+    complete_archives = [event for event in events
+        if event['phase'] == 'materializing_verified_archive' and event.get('completed')]
+    assert {event['object'] for event in complete_archives} == {'main', 'control'}
+    assert all(event['processed_files'] == event['total_files']
+        == event['verified_files'] + event['excluded_files'] for event in complete_archives)
+    bindings = next(event for event in events
+        if event['phase'] == 'index_receipt_binding_verification' and event['completed'])
+    assert bindings['processed_groups'] == bindings['total_groups'] == 2
+    assert bindings['covered_files'] == len(fixed['index']['files'])
+    inspected = [event for event in events if event['phase'] == 'frozen_file_SHA_verification']
+    assert inspected[0]['processed_files'] == 0 and inspected[0]['completed'] is False
+    assert inspected[-1]['completed'] is True and inspected[-1]['inspection'] == 'before_restore'
+    assert inspected[-1]['processed_files'] == inspected[-1]['total_files'] == result['frozen_data_files']
+    assert inspected[-1]['verified_files'] == result['locally_SHA_verified']
+    assert inspected[-1]['missing_files_count'] == 2
+    assert inspected[-1]['verified_bytes'] + result['missing_bytes'] == inspected[-1]['total_bytes']
+    assert 'fixture-bucket' not in json.dumps(events)
+    assert not any(event.get('status') == 'ready' for event in events)
+    assert fixed['client'].calls == []
+
+
+def test_after_restore_SHA_progress_is_distinct_and_matches_real_verified_bytes(fixed):
+    events = []
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket', progress=events.append)
+    assert result['status'] == 'ready'
+    completed = [event for event in events
+        if event['phase'] == 'frozen_file_SHA_verification' and event['completed']]
+    assert [event['inspection'] for event in completed] == ['before_restore', 'after_restore']
+    before, after = completed
+    assert before['missing_files_count'] == 2 and after['missing_files_count'] == 0
+    assert before['verified_files'] + 2 == after['verified_files'] == after['total_files']
+    assert after['verified_bytes'] == after['total_bytes']
+    assert after['verified_bytes'] - before['verified_bytes'] == sum(
+        len(fixed['bodies'][path]) for path in fixed['omitted'])
+
+
+def test_failed_local_SHA_reports_current_phase_without_false_completion(fixed, monkeypatch):
+    stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket')
+    (fixed['root'] / 'cache/stieger_v2/Stieger2021/1/X.npy').write_bytes(b'corrupt-software-fixture')
+    ticks = iter(range(0, 100000, 6))
+    monkeypatch.setattr(stage.time, 'monotonic', lambda: next(ticks))
+    events = []
+    result = stage.prepare_data(fixed['root'], mode='check', progress=events.append)
+    assert result['status'] == 'failed' and result['error_code'] == 'LOCAL_SHA_OR_BYTES_MISMATCH'
+    inspected = [event for event in events if event['phase'] == 'frozen_file_SHA_verification']
+    assert inspected and not any(event['completed'] for event in inspected)
+    assert any(event['verified_files'] == 1 for event in inspected)
+    assert max(event['processed_files'] for event in inspected) < inspected[0]['total_files']
+    assert result['active_transfer']['phase'] == 'frozen_file_SHA_verification'
+    assert result['active_transfer']['completed'] is False
+    assert result['scientific_fits'] == 0
+
+
+def test_corrupt_original_receipt_reports_binding_phase_and_never_finishes_it(fixed):
+    stage.prepare_data(fixed['root'], mode='materialize')
+    receipt_path = fixed['root'] / fixed['index']['restore_groups'][0]['receipt']['path']
+    receipt_path.write_bytes(b'corrupt-original-receipt-software-fixture')
+    events = []
+    result = stage.prepare_data(fixed['root'], mode='check', progress=events.append)
+    assert result['status'] == 'failed' and result['error_code'] == 'LOCAL_SHA_OR_BYTES_MISMATCH'
+    bindings = [event for event in events if event['phase'] == 'index_receipt_binding_verification']
+    assert bindings and bindings[-1]['processed_groups'] == 0
+    assert not any(event['completed'] for event in bindings)
+    assert result['active_transfer']['phase'] == 'index_receipt_binding_verification'
+    assert not any(event['phase'] == 'frozen_file_SHA_verification' for event in events)
+    assert fixed['client'].calls == []
+
+
+def test_scope_progress_is_throttled_except_start_and_actual_completion(monkeypatch):
+    ticks = iter((0.0, 1.0, 4.9, 5.0, 5.1, 10.0, 10.1))
+    monkeypatch.setattr(stage.time, 'monotonic', lambda: next(ticks))
+    events = []
+    progress = stage._Progress(events.append, 'software_fixture_only')
+    for number in range(6):
+        progress.emit(processed_files=number, total_files=6)
+    progress.emit(processed_files=6, total_files=6, completed=True)
+    assert [event['processed_files'] for event in events] == [0, 3, 5, 6]
+    assert [event['completed'] for event in events] == [False, False, False, True]
+
+
+def test_progress_receipt_write_failure_remains_a_failed_data_gate(fixed, monkeypatch):
+    stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket')
+    original = stage._atomic_json
+    def quota_at_SHA_progress(root, relative, value):
+        if (value.get('status') == 'running'
+                and value.get('active_transfer', {}).get('phase') == 'frozen_file_SHA_verification'):
+            raise OSError(errno.EDQUOT, 'SECRET_PROGRESS_RECEIPT_FAILURE')
+        return original(root, relative, value)
+    monkeypatch.setattr(stage, '_atomic_json', quota_at_SHA_progress)
+    result = stage.prepare_data(fixed['root'], mode='check')
+    assert result['status'] == 'failed' and result['error_code'] == 'LOCAL_IO_EDQUOT'
+    assert result['failure_detail']['phase'] == 'frozen_file_SHA_verification'
+    assert result['active_transfer']['completed'] is False
+    assert 'SECRET_PROGRESS_RECEIPT_FAILURE' not in json.dumps(result)
+
+
+def test_broken_progress_display_does_not_remove_full_SHA_checks(fixed):
+    def disconnected_display(event):
+        raise BrokenPipeError('SECRET_DISPLAY_MESSAGE')
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+        client=fixed['client'], bucket='fixture-bucket', progress=disconnected_display)
+    assert result['status'] == 'ready'
+    assert len(fixed['client'].calls) == 2
+    assert result['locally_SHA_verified'] == result['frozen_data_files']
+    assert result['scientific_fits'] == 0 and 'SECRET_DISPLAY_MESSAGE' not in json.dumps(result)
+
+
+@pytest.mark.parametrize('malformation,code', [
+    ('duplicate', 'archive_exact_member_set_mismatch'),
+    ('bad_header', 'archive_regular_frozen_header_required'),
+    ('trailing', 'archive_nonzero_trailing_data'),
+])
+def test_archive_scan_progress_preserves_original_full_archive_gates(fixed, malformation, code):
+    row = fixed['release']['objects']['main_archive']
+    path = fixed['incoming'] / row['path']
+    with tarfile.open(fileobj=io.BytesIO(path.read_bytes()), mode='r:gz') as archive:
+        contents = [(copy.deepcopy(member), archive.extractfile(member).read()) for member in archive.getmembers()]
+    if malformation == 'duplicate':
+        contents.append(copy.deepcopy(contents[0]))
+    elif malformation == 'bad_header':
+        contents[0][0].uid = 1
+    output = io.BytesIO()
+    with tarfile.open(fileobj=output, mode='w:gz') as archive:
+        for member, body in contents:
+            archive.addfile(member, io.BytesIO(body))
+    payload = output.getvalue()
+    if malformation == 'trailing':
+        payload = gzip.compress(gzip.decompress(payload) + b'forbidden-software-fixture-trailer')
+    path.write_bytes(payload)
+    # The fixture's outer SHA now matches; the unchanged inner archive gates
+    # must still reject duplicate members, altered headers and nonzero tails.
+    row.update(descriptor(row['path'], payload))
+    events = []
+    result = stage.prepare_data(fixed['root'], mode='materialize', progress=events.append)
+    assert result['status'] == 'failed' and result['error_code'] == code
+    assert not any(event['phase'] == 'materializing_verified_archive' and event.get('completed')
+                   for event in events)
+    assert not (fixed['root'] / 'cache').exists()
+    assert result['scientific_fits'] == 0 and fixed['client'].calls == []
+
+
 @pytest.fixture
 def bounded_waits(monkeypatch):
     waits = []
@@ -413,7 +579,9 @@ def test_receipt_quota_failure_is_not_claimed_persisted_or_ready(fixed, monkeypa
 def test_materialization_directory_quota_failure_has_local_phase_not_R2_error(fixed, monkeypatch):
     def no_directory(*args, **kwargs):
         raise OSError(errno.ENOSPC, 'SECRET_QUOTA_MESSAGE', '/private/SECRET_PATH')
-    monkeypatch.setattr(stage, '_materialize_archive', no_directory)
+    # Directory creation occurs while publishing an individual payload, after
+    # the actual archive and headers have passed their original checks.
+    monkeypatch.setattr(stage, '_copy_stream', no_directory)
     result = stage.prepare_data(fixed['root'], mode='materialize')
     assert result['status'] == 'failed' and result['error_code'] == 'LOCAL_IO_ENOSPC'
     assert result['failure_detail']['phase'] == 'materializing_verified_archive'

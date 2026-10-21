@@ -105,6 +105,103 @@ def test_transfer_progress_is_not_completion_and_storage_errno_is_visible(tmp_pa
     assert 'SECRET' not in json.dumps(snapshot) and 'SECRET' not in shown
 
 
+def test_true_file_inspection_counters_do_not_claim_data_ready_or_liveness(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'operation': 'materialize', 'status': 'running',
+        'active_transfer': {'phase': 'frozen_file_SHA_verification',
+            'inspection': 'after_restore', 'processed_files': 21262, 'total_files': 21262,
+            'verified_files': 21260, 'missing_files_count': 2,
+            'verified_bytes': 1048576, 'total_bytes': 2097152, 'completed': True,
+            'updated_at_utc': '2026-10-21T07:18:15.279981+00:00'}}, mtime=400)
+    snapshot = monitor.collect(tmp_path, runner=scheduler(), now=1000)
+    shown = monitor.render(snapshot)
+    assert snapshot['data']['status'] == 'running' and snapshot['data']['age_seconds'] == 600
+    assert snapshot['queue_count'] == 0 and 'UNCONFIRMED' in shown
+    assert '恢复后复核' in shown and '本地冻结文件 SHA 核验' in shown
+    assert '21262 / 21262' in shown and 'SHA 通过 21260 文件；缺失 2 文件' in shown
+    assert '1.0MiB / 2.0MiB' in shown and '累计核验量，非速率' in shown
+    assert '整体数据就绪仍以最终回执为准' in shown
+    assert snapshot['data']['transfer']['completed'] is True
+    assert snapshot['data']['transfer']['updated_at_utc'] == '2026-10-21T07:18:15.279981+00:00'
+
+
+@pytest.mark.parametrize('phase', ['archive_member_scan', 'archive_header_verification',
+    'materializing_verified_archive', 'index_descriptor_verification', 'frozen_scope_selection'])
+def test_local_stage_counts_are_not_presented_as_network_transfer_bytes(tmp_path, phase):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'status': 'running', 'active_transfer': {'phase': phase, 'object': 'control',
+            'processed_files': 100, 'total_files': 12483, 'completed': False,
+            'materialized_files': 40, 'already_present_files': 59, 'excluded_files': 1}})
+    snapshot = monitor.collect(tmp_path, runner=scheduler(), now=1000)
+    shown = monitor.render(snapshot)
+    assert phase in shown and '100 / 12483' in shown
+    assert '本包新落盘 40；原有 SHA 命中 59；范围外条目 1' in shown
+    assert '本阶段尚未返回' in shown and 'UNCONFIRMED' in shown
+    assert 'GET 正文' not in shown
+
+
+def test_index_receipt_binding_has_its_own_count_scope(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'status': 'running', 'active_transfer': {'phase': 'index_receipt_binding_verification',
+            'processed_groups': 1234, 'total_groups': 2657, 'covered_files': 10000,
+            'completed': False}})
+    shown = monitor.render(monitor.collect(tmp_path, runner=scheduler(), now=1000))
+    assert '原恢复收据绑定核验' in shown
+    assert '原收据已核验组 1234 / 2657；已绑定文件 10000' in shown
+    assert 'UNCONFIRMED' in shown
+
+
+def test_group_file_count_is_plan_size_not_completed_restore_count(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'operation': 'fetch', 'status': 'running',
+        'group_restore_receipts': [{'status': 'restored_verified'}],
+        'active_transfer': {'phase': 'original_profile_restore', 'group': 2,
+            'groups_total': 1538, 'files': 448, 'io_profile': 'baseline'}})
+    shown = monitor.render(monitor.collect(tmp_path, runner=scheduler(), now=1000))
+    assert '原权限恢复组 2/1538 | baseline | 本组需恢复 448 文件' in shown
+    assert '成功恢复组 1/1' in shown and 'UNCONFIRMED' in shown
+
+
+def test_offline_pass_does_not_imply_missing_historical_GET_proofs(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'operation': 'materialize', 'status': 'running',
+        'active_transfer': {'phase': 'frozen_file_SHA_verification',
+            'processed_files': 100, 'total_files': 21262, 'completed': False}})
+    shown = monitor.render(monitor.collect(tmp_path, runner=scheduler(), now=1000))
+    assert '本次为离线核查，未发起固定对象 GET' in shown
+    assert '历史取回证据保留在原 fetch 回执' in shown
+    assert '100 / 21262' in shown and 'UNCONFIRMED' in shown
+
+
+def test_running_Slurm_prepare_takes_precedence_over_old_stage_counters(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'status': 'running', 'active_transfer': {'phase': 'original_profile_restore',
+            'group': 1538, 'groups_total': 1538}}, mtime=200)
+    snapshot = monitor.collect(tmp_path, runner=scheduler(job_line(stage='prepare')), now=1000)
+    shown = monitor.render(snapshot)
+    assert snapshot['data']['age_seconds'] == 800
+    assert '当前：Slurm 已观察到 RUNNING/COMPLETING' in shown
+    assert 'UNCONFIRMED' not in shown
+    assert 'prepare 成功' in monitor.next_step(snapshot)
+
+
+def test_stage_metadata_is_strictly_whitelisted_and_malformed_counters_are_NA(tmp_path):
+    write(tmp_path, '.paper3-hpc/data/attempt-abc/receipt.json', {
+        'status': 'running', 'active_transfer': {'phase': ['SECRET_PHASE'],
+            'object': {'key': 'SECRET_OBJECT'}, 'io_profile': 'SECRET_PROFILE',
+            'inspection': 'SECRET_SCOPE', 'updated_at_utc': 'SECRET_TIMESTAMP',
+            'completed': 'SECRET_COMPLETED', 'processed_files': True, 'total_files': -1,
+            'verified_bytes': 10**400, 'verified_files': 'SECRET_COUNTER',
+            'raw_exception': 'SECRET_SDK', 'file_path': 'SECRET_PATH'}})
+    snapshot = monitor.collect(tmp_path, runner=scheduler(), now=1000)
+    shown = monitor.render(snapshot)
+    transfer = snapshot['data']['transfer']
+    assert transfer['phase'] == transfer['object'] == transfer['inspection'] == 'N/A'
+    assert transfer['processed_files'] is transfer['verified_bytes'] is transfer['completed'] is None
+    assert 'SECRET' not in json.dumps(snapshot) and 'SECRET' not in shown
+    assert 'UNCONFIRMED' in shown
+
+
 def test_latest_data_uses_mtime_not_attempt_name(tmp_path):
     write(tmp_path, '.paper3-hpc/data/attempt-fff/receipt.json', {'status': 'running'}, mtime=900)
     write(tmp_path, '.paper3-hpc/data/attempt-aaa/receipt.json', {'status': 'failed'}, mtime=999)
