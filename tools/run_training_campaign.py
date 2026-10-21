@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from p3work.training_campaign import compile_campaign, execute_campaign
+from p3work.training_campaign import compile_campaign, execute_campaign, graceful_stop_signals
 
 
 def main(argv=None):
@@ -20,12 +20,22 @@ def main(argv=None):
     parser.add_argument("--operational-amendment-note")
     parser.add_argument("--max-actions", type=int, help="Pause after this many stage dispatches; same jobs resume")
     parser.add_argument("--require-ready", action="store_true")
+    parser.add_argument("--handle-slurm-signals", action="store_true",
+                        help="Cooperatively pause the same job on SIGUSR1/SIGTERM; does not extend any budget")
+    parser.add_argument("--stop-grace-seconds", type=float, default=120,
+                        help="Maximum cooperative cleanup, also bounded by the original stage deadline")
     args = parser.parse_args(argv)
+    with graceful_stop_signals(args.handle_slurm_signals) as stop:
+        return _run(args, stop.is_set)
+
+
+def _run(args, stop_requested):
     try:
         if args.execute:
             result = execute_campaign(args.root, user_started_gpu=args.user_started_gpu,
                 max_wall_seconds=args.max_wall_seconds, amendment_note=args.operational_amendment_note,
-                max_actions=args.max_actions)
+                max_actions=args.max_actions, stop_requested=stop_requested,
+                stop_grace_seconds=args.stop_grace_seconds)
         else:
             result = compile_campaign(args.root)
         print(json.dumps(result, indent=2, allow_nan=False))

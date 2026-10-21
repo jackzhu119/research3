@@ -52,6 +52,62 @@ class CampaignError(ValueError):
     pass
 
 
+def validate_registered_action(action):
+    """Reject invalid control messages before imports, deadlines or spawn.
+
+    A slow spawn must not turn a programming error into a normal wall pause.
+    This verifies only the existing action registry; kernels retain all data,
+    budget, identity and completion checks.
+    """
+    if (not isinstance(action, dict) or not isinstance(action.get("kind"), str)
+            or action["kind"] not in ACTION_STATUSES):
+        raise CampaignError("unregistered_campaign_action")
+    return action
+
+
+@contextmanager
+def graceful_stop_signals(enabled=False):
+    """Optional scheduler signal bridge; handlers only set a stop event.
+
+    This is deliberately opt-in so the existing RunPod entry keeps its signal
+    behaviour. No checkpoint or journal is written from an asynchronous signal
+    handler. The normal controller owns the bounded cleanup and pause record.
+    """
+    stop = threading.Event()
+    previous = {}
+    if enabled:
+        for number in (signal.SIGUSR1, signal.SIGTERM):
+            previous[number] = signal.getsignal(number)
+            signal.signal(number, lambda _number, _frame: stop.set())
+    try:
+        yield stop
+    finally:
+        for number, handler in previous.items():
+            signal.signal(number, handler)
+
+
+def _stop_requested(callback):
+    if callback is not None and not callable(callback):
+        raise CampaignError("stop_requested_must_be_callable")
+    return callback is not None and bool(callback())
+
+
+def _stop_grace(seconds):
+    if type(seconds) not in (int, float) or not math.isfinite(seconds) or seconds <= 0:
+        raise CampaignError("positive_finite_scheduler_stop_grace_required")
+    return seconds
+
+
+def interrupt_owned_stage(worker, pgid):
+    """Ask only an acknowledged independent stage group to unwind normally."""
+    if pgid is None or pgid != worker.pid or pgid == os.getpgrp():
+        raise CampaignError("scheduler_stop_requires_acknowledged_owned_stage_group")
+    try:
+        os.killpg(pgid, signal.SIGINT)
+    except ProcessLookupError:
+        pass
+
+
 def local(root, relative, *, exists=True):
     if not isinstance(relative, str) or not relative:
         raise CampaignError("explicit_root_relative_path_required")
@@ -335,8 +391,8 @@ def _budget(root, action, body, *, evidence=(), derivation=None, campaign_limit)
     return immutable(root, relative, value)
 
 
-def backup_manifest(root):
-    """Finite result-only manifest; never credentials/configs, never an upload."""
+def collect_backup_manifest(root):
+    """Collect the original finite result descriptors without changing files."""
     root = Path(root).resolve(strict=True)
     folders = (OUTPUT, PILOT, SOURCE, CLASSICAL, "runs/meta", "runs/internal_validation_once")
     files = {}
@@ -358,8 +414,14 @@ def backup_manifest(root):
         if path.exists():
             ref = descriptor(root, path)
             files[relative] = {**ref, "bytes": path.stat().st_size, "role": "result", "dataset": "Paper3_mainline"}
-    value = {"schema_version": 1, "files": [files[p] for p in sorted(files)],
+    return {"schema_version": 1, "files": [files[p] for p in sorted(files)],
         "upload_performed": False, "full_GET_verified": False, "contains_credentials": False}
+
+
+def backup_manifest(root):
+    """Finite result-only manifest; never credentials/configs, never an upload."""
+    root = Path(root).resolve(strict=True)
+    value = collect_backup_manifest(root)
     path = local(root, OUTPUT + "/backup_manifest.json", exists=False)
     path.parent.mkdir(parents=True, exist_ok=True)
     atomic_json(path, value)
@@ -387,6 +449,7 @@ class Production:
 
     def perform(self, action):
         """Returns an actual receipt descriptor; no guessed output status."""
+        validate_registered_action(action)
         kind, method = action["kind"], action.get("method")
         root = self.root
         guard_child_recovery(root, action)
@@ -848,13 +911,18 @@ def stop_owned_stage(worker, pgid):
             return
 
 
-def dispatch_bounded(root, maximum, action, *, remaining_seconds, on_group_ready=None, on_group_stopped=None):
+def dispatch_bounded(root, maximum, action, *, remaining_seconds, on_group_ready=None, on_group_stopped=None,
+                     stop_requested=None, stop_grace_seconds=120):
     """Independent hard parent deadline; child limits remain cumulative too.
 
     A killed stage has exactly the same kernel output, claim and checkpoint on
     its next invocation. Uncertain fits are blocked by that kernel, not retried
     under a new job. setsid allows the deadline to include classical workers.
     """
+    validate_registered_action(action)
+    grace = _stop_grace(stop_grace_seconds)
+    if _stop_requested(stop_requested):
+        return None
     if not math.isfinite(remaining_seconds) or remaining_seconds <= 10:
         return None
     # Fix the absolute deadline BEFORE spawn startup/import overhead.
@@ -863,12 +931,20 @@ def dispatch_bounded(root, maximum, action, *, remaining_seconds, on_group_ready
     parent, child = context.Pipe(duplex=True)
     worker = context.Process(target=_stage_worker,
         args=(str(root), maximum, action, child, os.getpid(), deadline))
-    started, pgid = False, None
+    started, pgid, stopping_deadline = False, None, None
     try:
         worker.start()
         started = True
         child.close()
         while time.monotonic() < deadline:
+            if _stop_requested(stop_requested):
+                if pgid is None:
+                    return None  # No kernel was authorized before the handshake.
+                if stopping_deadline is None:
+                    interrupt_owned_stage(worker, pgid)
+                    stopping_deadline = min(deadline, time.monotonic() + grace)
+                if time.monotonic() >= stopping_deadline:
+                    return None
             if parent.poll(min(.1, max(0., deadline-time.monotonic()))):
                 try:
                     message = parent.recv()
@@ -878,17 +954,21 @@ def dispatch_bounded(root, maximum, action, *, remaining_seconds, on_group_ready
                     if pgid is not None or message.get("pid") != worker.pid or message.get("pgid") != worker.pid:
                         raise CampaignError("invalid_owned_stage_group_handshake")
                     pgid = worker.pid
-                    if time.monotonic() >= deadline:
+                    if time.monotonic() >= deadline or _stop_requested(stop_requested):
                         return None
                     if on_group_ready is not None:
                         # The real parent persists ownership BEFORE authorizing
                         # any kernel. A failed publication sends no dispatch ACK.
                         on_group_ready(worker.pid, pgid, deadline)
+                    if _stop_requested(stop_requested):
+                        return None  # A stop during durable publication authorizes no fit.
                     parent.send("dispatch_owned_stage")
                 elif message.get("type") == "result" and pgid is not None:
                     if time.monotonic() >= deadline:
                         return None  # Never accept a late COMPLETE transport.
                     if not message["ok"]:
+                        if stopping_deadline is not None and message.get("error_type") == "KeyboardInterrupt":
+                            return None  # Existing kernel interruption records remain authoritative.
                         raise CampaignError("stage_blocked:"+message["error_type"]+":"+message["reason"])
                     parent.send("stage_result_received")
                     return message["receipt"]
@@ -999,11 +1079,12 @@ def verify_source_prefix(root):
 
 
 def execute_campaign(root, *, user_started_gpu=False, max_wall_seconds=43200,
-                     amendment_note=None, max_actions=None):
+                     amendment_note=None, max_actions=None, stop_requested=None, stop_grace_seconds=120):
     """Real local-only progression. Called only after explicit execution flag.
 
-    No callback/fixture bypass exists in this production entry. The original
-    kernels own fit claims, checkpoints, CUDA checks and resume decisions.
+    The scheduler callback can only pause work; it confers no fit capability.
+    The original kernels own fit claims, checkpoints, CUDA checks and resume
+    decisions, with no execution/fixture bypass in this production entry.
     """
     if user_started_gpu is not True:
         raise CampaignError("explicit_user_started_GPU_attestation_required")
@@ -1011,6 +1092,8 @@ def execute_campaign(root, *, user_started_gpu=False, max_wall_seconds=43200,
         raise CampaignError("positive_integer_cumulative_wall_limit_required")
     if max_actions is not None and (type(max_actions) is not int or max_actions < 1):
         raise CampaignError("positive_optional_dispatch_count_required")
+    _stop_grace(stop_grace_seconds)
+    _stop_requested(stop_requested)
     plan = compile_campaign(root)
     if plan["minimum_gaps"]:
         return {**plan, "status": "PENDING_DATA_GATES", "execute": True}
@@ -1042,6 +1125,9 @@ def execute_campaign(root, *, user_started_gpu=False, max_wall_seconds=43200,
             for row in state["actions"]:
                 checked(root, row["receipt"])
             while True:
+                if _stop_requested(stop_requested):
+                    state["status"] = "PAUSED_SCHEDULER_SIGNAL_SAME_JOB"
+                    break
                 if journal.exhausted or journal.remaining_seconds <= 10:
                     state["status"] = "PAUSED_CAMPAIGN_WALL_LIMIT"
                     break
@@ -1076,11 +1162,13 @@ def execute_campaign(root, *, user_started_gpu=False, max_wall_seconds=43200,
                         state["active_process"]["cleanup_verified"] = True
                         atomic_json(state_path, state)
                 ref = dispatch_bounded(root, max_wall_seconds, action, remaining_seconds=journal.remaining_seconds,
-                    on_group_ready=group_ready, on_group_stopped=group_stopped)
+                    on_group_ready=group_ready, on_group_stopped=group_stopped,
+                    stop_requested=stop_requested, stop_grace_seconds=stop_grace_seconds)
                 dispatched += 1
                 journal.checkpoint()
                 if ref is None:
-                    state["status"] = "PAUSED_SAME_JOB_RECOVERY_REQUIRED"
+                    state["status"] = ("PAUSED_SCHEDULER_SIGNAL_SAME_JOB" if _stop_requested(stop_requested)
+                                       else "PAUSED_SAME_JOB_RECOVERY_REQUIRED")
                     break
                 checked(root, ref)
                 if ref["path"] != action["expected_receipt"]:

@@ -8,6 +8,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from p3work import source_extension_downstream as run
+from p3work.training_campaign import graceful_stop_signals
 
 
 def main(argv=None):
@@ -26,7 +27,15 @@ def main(argv=None):
     p.add_argument('--max-actions',type=int)
     p.add_argument('--execute',action='store_true')
     p.add_argument('--user-started-gpu',action='store_true')
+    p.add_argument('--handle-slurm-signals',action='store_true',
+        help='Cooperatively pause on SIGUSR1/SIGTERM without extending the original budget')
+    p.add_argument('--stop-grace-seconds',type=float,default=120)
     a=p.parse_args(argv)
+    with graceful_stop_signals(a.handle_slurm_signals) as stop:
+        return _run(a,stop.is_set)
+
+
+def _run(a,stop_requested):
     try:
         if a.execute and not a.user_started_gpu:raise PermissionError('execute_and_later_user_started_GPU_both_required')
         if a.stage=='plan':result=run.readiness(a.root,a.arm)
@@ -35,7 +44,8 @@ def main(argv=None):
             result=run.initialize_catalog(a.root,a.arm,a.primary_freeze,a.extension_manifest,execute=a.execute)
         else:
             catalog=a.catalog or f'runs/source_extension_downstream/{a.arm}/launch.json'
-            kwargs={'execute':a.execute,'user_started_gpu':a.user_started_gpu}
+            kwargs={'execute':a.execute,'user_started_gpu':a.user_started_gpu,
+                    'stop_requested':stop_requested,'stop_grace_seconds':a.stop_grace_seconds}
             if a.stage=='budget':result=run.prepare_budget(a.root,catalog,execute=a.execute)
             elif a.stage=='f0':result=run.execute_stage(a.root,catalog,'f0',args=(a.seed,),**kwargs)
             elif a.stage=='reference':result=run.execute_stage(a.root,catalog,'reference',args=(a.seed,),**kwargs)

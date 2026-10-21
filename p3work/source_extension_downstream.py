@@ -2063,20 +2063,26 @@ def verify_development_freeze(root,item,catalog):
     return value
 
 
-def auto_development(root,catalog,*,max_actions=None,execute=False,user_started_gpu=False):
+def auto_development(root,catalog,*,max_actions=None,execute=False,user_started_gpu=False,
+                     stop_requested=None,stop_grace_seconds=120):
     root=Path(root).resolve(strict=True);catalog=_latest_catalog(root,catalog)
     if not execute:return {**readiness(root,catalog['arm']),'stage':'auto-development','status':'PLANNED_NOT_EXECUTED'}
     if not user_started_gpu:raise PermissionError('execute_and_later_user_started_GPU_both_required')
+    from .training_campaign import _stop_requested,_stop_grace
+    _stop_requested(stop_requested);_stop_grace(stop_grace_seconds)
     if max_actions is not None and (type(max_actions) is not int or max_actions<1):raise DownstreamError('positive_action_pause_required')
     _primary(root,catalog);actions=[];flags={'execute':True,'user_started_gpu':True}
     def perform(function,*args,**kwargs):
+        from .training_campaign import _stop_requested
+        if _stop_requested(stop_requested):return False
         if max_actions is not None and len(actions)>=max_actions:return False
         stages={prepare_f0:'f0',prepare_reference_stage:'reference',prepare_source_banks:'source-bank',
             execute_meta:'meta',execute_profile:'profile',execute_validation:'evaluate',
             freeze_configurations:'select',freeze_development:'freeze'}
         if function in stages:
             result=execute_stage(root,catalog,stages[function],args=args,kwargs=kwargs,
-                execute=True,user_started_gpu=True)
+                execute=True,user_started_gpu=True,stop_requested=stop_requested,
+                stop_grace_seconds=stop_grace_seconds)
         else:result=function(root,catalog,*args,**kwargs)
         actions.append(result)
         if result.get('status') in {'PAUSED_NOT_COMPLETE','BLOCKED'}:return False
@@ -2157,7 +2163,8 @@ def _owned_worker(root,catalog,stage,args,kwargs,connection,owner_pid,deadline):
         stop.set();watchdog.join(.2);connection.close()
 
 
-def execute_stage(root,catalog,stage,*,args=(),kwargs=None,execute=False,user_started_gpu=False):
+def execute_stage(root,catalog,stage,*,args=(),kwargs=None,execute=False,user_started_gpu=False,
+                  stop_requested=None,stop_grace_seconds=120):
     """Hard deadline plus lost-owner cleanup; never starts a server or network."""
     if stage not in _stage_functions():raise DownstreamError('registered_development_only_stage_required')
     kwargs=dict(kwargs or {})
@@ -2165,6 +2172,11 @@ def execute_stage(root,catalog,stage,*,args=(),kwargs=None,execute=False,user_st
         kwargs['execute']=False
         return _stage_functions()[stage](root,catalog,*args,**kwargs)
     if not user_started_gpu:raise PermissionError('execute_and_later_user_started_GPU_both_required')
+    from .training_campaign import _stop_requested,_stop_grace,interrupt_owned_stage
+    grace=_stop_grace(stop_grace_seconds)
+    if _stop_requested(stop_requested):
+        return {'status':'PAUSED_NOT_COMPLETE','reason':'scheduler_stop_before_dispatch',
+            'scientific_fit_completion_claim':False,'server_actions':False}
     root=Path(root).resolve(strict=True);catalog=_latest_catalog(root,catalog);budget,budget_ref=_budget(root,catalog)
     _primary(root,catalog);kwargs['execute']=True
     if stage not in {'select','freeze'}:kwargs['user_started_gpu']=True
@@ -2174,7 +2186,7 @@ def execute_stage(root,catalog,stage,*,args=(),kwargs=None,execute=False,user_st
     try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     except BlockingIOError:lock.close();raise DownstreamError('single_extension_controller_already_active') from None
     identity={'schema_version':SCHEMA,'arm':catalog['arm'],'budget':budget_ref,'kind':'all_dispatch_and_verification_wall'}
-    sha=digest(identity);wall=None;worker=None;parent=None;child=None;pgid=None;started=False;result=None
+    sha=digest(identity);wall=None;worker=None;parent=None;child=None;pgid=None;started=False;result=None;stopping_deadline=None
     try:
         if (resources/'claim.json').exists() and not (resources/'wall.json').is_file():raise DownstreamError('controller_wall_missing_no_reset')
         immutable_json(resources/'claim.json',identity);floor=0
@@ -2200,6 +2212,15 @@ def execute_stage(root,catalog,stage,*,args=(),kwargs=None,execute=False,user_st
         worker=ctx.Process(target=_owned_worker,args=(str(root),catalog,stage,args,kwargs,child,os.getpid(),deadline))
         worker.start();started=True;child.close()
         while time.monotonic()<deadline:
+            if _stop_requested(stop_requested):
+                if pgid is None:
+                    result={'status':'PAUSED_NOT_COMPLETE','reason':'scheduler_stop_before_kernel_authority',
+                        'scientific_fit_completion_claim':False};break
+                if stopping_deadline is None:
+                    interrupt_owned_stage(worker,pgid);stopping_deadline=min(deadline,time.monotonic()+grace)
+                if time.monotonic()>=stopping_deadline:
+                    result={'status':'PAUSED_NOT_COMPLETE','reason':'scheduler_stop_cleanup_grace_expired',
+                        'scientific_fit_completion_claim':False};break
             if parent.poll(min(.1,max(0,deadline-time.monotonic()))):
                 try:message=parent.recv()
                 except EOFError:raise DownstreamError('owned_stage_exited_preserve_same_dispatch_and_checkpoint') from None
@@ -2208,10 +2229,17 @@ def execute_stage(root,catalog,stage,*,args=(),kwargs=None,execute=False,user_st
                         raise DownstreamError('owned_stage_group_handshake_invalid')
                     pgid=worker.pid
                     if time.monotonic()>=deadline:break
+                    if _stop_requested(stop_requested):
+                        result={'status':'PAUSED_NOT_COMPLETE','reason':'scheduler_stop_before_kernel_authority',
+                            'scientific_fit_completion_claim':False};break
                     parent.send('dispatch_owned_stage')
                 elif message.get('type')=='result' and pgid is not None:
                     if time.monotonic()>=deadline:break
-                    if message.get('ok') is not True:raise DownstreamError(message.get('reason','owned_stage_failed'))
+                    if message.get('ok') is not True:
+                        if stopping_deadline is not None and message.get('reason')=='owned_stage_failed_KeyboardInterrupt':
+                            result={'status':'PAUSED_NOT_COMPLETE','reason':'scheduler_stop_preserve_same_checkpoint',
+                                'scientific_fit_completion_claim':False};break
+                        raise DownstreamError(message.get('reason','owned_stage_failed'))
                     result=message['result'];parent.send('result_received');break
                 else:raise DownstreamError('stage_result_without_owned_process_authority')
             if not worker.is_alive():raise DownstreamError('owned_stage_exited_preserve_same_dispatch_and_checkpoint')

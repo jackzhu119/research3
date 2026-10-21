@@ -29,13 +29,29 @@ def fails(code):
 
 @pytest.fixture(autouse=True)
 def restore_runtime():
+    # The launcher starts in a fresh stdlib-only process. Other test modules
+    # may already have imported system dateutil/urllib3 before these wheel
+    # fixtures run; isolate that process state, then restore it exactly.
+    # Tests which explicitly inject a foreign dependency still exercise the
+    # unchanged production fail-closed SDK origin check below.
     previous = transport._sdk_site
     paths = sys.path[:]
     bytecode = sys.dont_write_bytecode
-    yield
-    transport._sdk_site = previous
-    sys.path[:] = paths
-    sys.dont_write_bytecode = bytecode
+    def sdk_module(name):
+        return name.partition(".")[0] in transport.SDK_IMPORT_ROOTS
+    modules = {name: module for name, module in sys.modules.items() if sdk_module(name)}
+    for name in modules:
+        sys.modules.pop(name, None)
+    try:
+        yield
+    finally:
+        for name in list(sys.modules):
+            if sdk_module(name):
+                sys.modules.pop(name, None)
+        sys.modules.update(modules)
+        transport._sdk_site = previous
+        sys.path[:] = paths
+        sys.dont_write_bytecode = bytecode
 
 
 class FakeClient:

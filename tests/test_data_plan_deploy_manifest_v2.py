@@ -557,6 +557,54 @@ def test_original_builder_bytes_remain_frozen():
     assert (hashlib.sha256(body).hexdigest(), len(body)) == (new.ORIGINAL_SHA, new.ORIGINAL_BYTES)
 
 
+def policy_fixture_relative(value):
+    """Skip only exact frozen raw references from the original producer root.
+
+    The authentic historical receipt retains absolute producer paths. This
+    fixture copies policy metadata on arbitrary deployment roots; it must not
+    open those raw payloads or make the frozen runtime builder less strict.
+    """
+    try:
+        return old.relative(REPO, value["path"])
+    except old.DeploymentError:
+        producer = "/workspace/research3/"
+        path = value["path"]
+        if not isinstance(path, str) or not path.startswith(producer):
+            raise
+        relative = path[len(producer):]
+        if old.classify(relative) != "raw_reference_only":
+            raise
+        body = (REPO / new.YANG_PLAN).read_bytes()
+        assert hashlib.sha256(body).hexdigest() == new.YANG_PLAN_FILE_SHA
+        plan = json.loads(body)
+        expected = {(raw["path"], raw["sha256"], raw["bytes"])
+                    for record in plan["records"] for raw in record["raw_files"]}
+        if (relative, value.get("sha256"), value.get("bytes")) not in expected:
+            raise old.DeploymentError("fixture_original_raw_reference_not_frozen", path)
+        return relative
+
+
+@pytest.mark.parametrize("change", ["other_origin", "prefix_lookalike", "unregistered_path", "wrong_SHA", "wrong_bytes", "non_raw"])
+def test_policy_fixture_rejects_nonoriginal_absolute_reference(change, tmp_path, monkeypatch):
+    body = (REPO / new.YANG_PLAN).read_bytes()
+    target = tmp_path / new.YANG_PLAN
+    target.parent.mkdir(parents=True)
+    target.write_bytes(body)
+    monkeypatch.setitem(globals(), "REPO", tmp_path)
+    plan = json.loads(body)
+    raw = plan["records"][0]["raw_files"][0]
+    value = {key: raw[key] for key in ("path", "sha256", "bytes")}
+    value["path"] = "/workspace/research3/" + value["path"]
+    if change == "other_origin": value["path"] = value["path"].replace("/workspace/research3/", "/some_other_producer/")
+    if change == "prefix_lookalike": value["path"] = value["path"].replace("/workspace/research3/", "/workspace/research3_extra/")
+    if change == "unregistered_path": value["path"] += ".unregistered.bdf"
+    if change == "wrong_SHA": value["sha256"] = "0" * 64
+    if change == "wrong_bytes": value["bytes"] += 1
+    if change == "non_raw": value["path"] = "/workspace/research3/p3work/episodes.py"
+    with pytest.raises(old.DeploymentError):
+        policy_fixture_relative(value)
+
+
 def copy_policy_metadata(root, start):
     """Copy immutable policy/code only; never a provider file or EEG array."""
     seen = set()
@@ -568,7 +616,7 @@ def copy_policy_metadata(root, start):
     def visit(value):
         if isinstance(value, dict):
             if {"path", "sha256"} <= set(value):
-                path = old.relative(REPO, value["path"])
+                path = policy_fixture_relative(value)
                 if old.classify(path) == "raw_reference_only" or Path(path).suffix == ".npy": return
                 path = aliases.get((path, value["sha256"]), path)
                 if path in seen: return

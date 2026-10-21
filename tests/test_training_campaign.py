@@ -287,8 +287,8 @@ def test_status_only_W3_is_not_training_readiness(metadata_root):
 
 
 def test_real_spawn_transport_refuses_unregistered_action_without_any_fit(metadata_root):
-    # Exercises the actual spawn/process-group/pipe transport. No production
-    # method is selected and no source, CUDA, network, or fit API is called.
+    # Reject the action before the real spawn transport, so interpreter/import
+    # overhead cannot swallow this programming error as an ordinary wall pause.
     with pytest.raises(campaign.CampaignError, match="unregistered_campaign_action"):
         campaign.dispatch_bounded(metadata_root, 30, {"kind": "UNREGISTERED_SOFTWARE_FIXTURE"}, remaining_seconds=30)
     assert not (metadata_root / "runs").exists()
@@ -440,7 +440,7 @@ def test_spawn_import_timeout_uses_owned_process_before_any_setsid(metadata_root
     worker, parent, _ = fake_transport(monkeypatch, messages=[], start_overhead=30)
     monkeypatch.setattr(campaign.os, "killpg", lambda *a: pytest.fail("no PGID authorized before handshake"))
     monkeypatch.setattr(campaign, "live_group_members", lambda *a: pytest.fail("no group exists"))
-    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "NO_FIT"}, remaining_seconds=30) is None
+    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "pilot"}, remaining_seconds=30) is None
     assert not worker.alive and worker.terms == 1 and parent.sent == []
 
 
@@ -456,7 +456,7 @@ def test_missing_PGID_still_terminates_owned_handle_and_ignored_TERM_escalates(m
         raise ProcessLookupError
     monkeypatch.setattr(campaign.os, "killpg", missing_group)
     monkeypatch.setattr(campaign, "live_group_members", lambda pgid: ())
-    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "NO_FIT"}, remaining_seconds=30) is None
+    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "pilot"}, remaining_seconds=30) is None
     assert calls and worker.terms > 0 and worker.kills == 1 and not worker.alive
     assert parent.sent == ["dispatch_owned_stage"]
 
@@ -472,7 +472,7 @@ def test_dead_leader_does_not_leave_its_descendants_or_release_early(metadata_ro
     # must signal and confirm again despite the leader already being dead.
     monkeypatch.setattr(campaign, "live_group_members", lambda pgid: (777,) if len(calls) < 2 else ())
     with pytest.raises(campaign.CampaignError, match="exited_without_receipt"):
-        campaign.dispatch_bounded(metadata_root, 30, {"kind": "NO_FIT"}, remaining_seconds=30)
+        campaign.dispatch_bounded(metadata_root, 30, {"kind": "pilot"}, remaining_seconds=30)
     assert len(calls) >= 2 and worker.terms == 0 and worker.kills == 0
 
 
@@ -485,10 +485,10 @@ def test_late_complete_is_rejected_and_success_also_cleans_group(metadata_root, 
     calls = []
     monkeypatch.setattr(campaign.os, "killpg", lambda *a: calls.append(a))
     monkeypatch.setattr(campaign, "live_group_members", lambda pgid: ())
-    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "NO_FIT"}, remaining_seconds=30) is None
+    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "pilot"}, remaining_seconds=30) is None
     assert calls and not worker.alive
     worker, _, _ = fake_transport(monkeypatch, messages=[group_ready(), complete])
-    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "NO_FIT"}, remaining_seconds=30) == complete["receipt"]
+    assert campaign.dispatch_bounded(metadata_root, 30, {"kind": "pilot"}, remaining_seconds=30) == complete["receipt"]
     assert len(calls) >= 2 and not worker.alive
 
 
@@ -530,7 +530,7 @@ def test_group_ownership_is_persisted_before_any_dispatch_ACK(metadata_root, mon
         assert parent.sent == []
         publications.append((pid, pgid, deadline))
     stopped = []
-    campaign.dispatch_bounded(metadata_root, 30, {"kind": "NO_FIT"}, remaining_seconds=30,
+    campaign.dispatch_bounded(metadata_root, 30, {"kind": "pilot"}, remaining_seconds=30,
         on_group_ready=ready, on_group_stopped=lambda: stopped.append(True))
     assert publications == [(worker.pid, worker.pid, 25.)]
     assert stopped == [True]
