@@ -30,7 +30,9 @@ fi
 execute=false
 dry_run=false
 staged_data=false
-for argument in "${forward[@]}"; do
+# Bash 4.2 (common with glibc 2.17) treats an empty array as unset with -u.
+# The guarded expansion emits zero words for that case and preserves argv.
+for argument in ${forward[@]+"${forward[@]}"}; do
     if [ "$argument" = --execute ]; then execute=true; fi
     if [ "$argument" = --dry-run ]; then dry_run=true; fi
     if [ "$argument" = --staged-data ]; then staged_data=true; fi

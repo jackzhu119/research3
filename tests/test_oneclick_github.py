@@ -17,6 +17,19 @@ REPO = "owner/research3"
 BRANCH = "research/paper3-test-123456"
 
 
+def _without_renameat2(real_cdll):
+    """Hide only the new glibc wrapper, retaining the real kernel syscall."""
+    def load(*args, **kwargs):
+        library = real_cdll(*args, **kwargs)
+        class Glibc217:
+            def __getattr__(self, name):
+                if name == "renameat2":
+                    raise AttributeError(name)
+                return getattr(library, name)
+        return Glibc217()
+    return load
+
+
 def test_publish_error_exposes_only_the_fixed_failure_code():
     error = gh.PublishError('GITHUB_TOKEN_REJECTED')
     assert error.code == 'GITHUB_TOKEN_REJECTED' and str(error) == error.code
@@ -384,9 +397,12 @@ def test_pre_state_failure_cleans_only_owned_git_and_can_retry(code, failure_com
 
 
 @pytest.mark.parametrize("step", ["handoff", "init", "add", "commit", "state_before", "state_after"])
-def test_hard_exit_residue_is_owned_and_recovers(code, step):
+@pytest.mark.parametrize("missing_glibc_wrapper", [False, True])
+def test_hard_exit_residue_is_owned_and_recovers(code, step, missing_glibc_wrapper, monkeypatch):
     # os._exit runs no Python finally/context cleanup, like SIGKILL. Network
     # commands remain intercepted in the child and only fixture credentials exist.
+    if missing_glibc_wrapper:
+        monkeypatch.setattr(gh.ctypes, "CDLL", _without_renameat2(gh.ctypes.CDLL))
     build = Path(__file__).resolve().parents[1]
     script = r'''
 import os,sys,json,importlib
@@ -395,6 +411,8 @@ sys.path.insert(0,sys.argv[1])
 sys.path.insert(0,sys.argv[1]+"/tests")
 fixture=importlib.import_module(sys.argv[5])
 gh,LocalGit,publish,Path=fixture.gh,fixture.LocalGit,fixture.publish,fixture.Path
+if sys.argv[6] == "missing":
+    gh.ctypes.CDLL=fixture._without_renameat2(gh.ctypes.CDLL)
 step=sys.argv[3]
 original_install=gh._install_initializing_git
 original_write=gh._write_state
@@ -424,7 +442,8 @@ publish(Path(sys.argv[2]),KillGit())
 raise RuntimeError("Expected a hard exit")
 '''
     killed = subprocess.run([sys.executable, "-B", "-c", script, str(build), str(code), step,
-                             json.dumps(sys.path), Path(__file__).stem],
+                             json.dumps(sys.path), Path(__file__).stem,
+                             "missing" if missing_glibc_wrapper else "native"],
                             env=dict(gh.os.environ), capture_output=True, text=True)
     assert killed.returncode == 73, killed.stderr
     assert (code / ".git" / gh._INITIALIZING).is_file()
@@ -453,7 +472,10 @@ def test_initialization_marker_mismatch_never_deletes_unknown_git(code, field):
     assert (gitdir / "keep-unknown-file").read_text() == "preserve this unknown Git directory"
 
 
-def test_atomic_install_cannot_replace_unknown_empty_git(code):
+@pytest.mark.parametrize("missing_glibc_wrapper", [False, True])
+def test_atomic_install_cannot_replace_unknown_empty_git(code, missing_glibc_wrapper, monkeypatch):
+    if missing_glibc_wrapper:
+        monkeypatch.setattr(gh.ctypes, "CDLL", _without_renameat2(gh.ctypes.CDLL))
     stage = code.parent / "stage-git"
     stage.mkdir()
     (stage / "marker").write_text("owned staged metadata")
@@ -465,3 +487,76 @@ def test_atomic_install_cannot_replace_unknown_empty_git(code):
     assert unknown.is_dir() and list(unknown.iterdir()) == []
     assert unknown.stat().st_ino == before.st_ino
     assert (stage / "marker").read_text() == "owned staged metadata"
+
+
+def test_missing_glibc_wrapper_uses_actual_no_replace_syscall(tmp_path, monkeypatch):
+    monkeypatch.setattr(gh.ctypes, "CDLL", _without_renameat2(gh.ctypes.CDLL))
+    monkeypatch.setattr(gh.os, "rename", lambda *a, **k: pytest.fail("replacing rename forbidden"))
+    source, target = tmp_path / "源目录", tmp_path / "已安装.git"
+    source.mkdir(); (source / "ownership-marker").write_bytes(b"owned metadata")
+    identity = source.stat()
+    gh._rename_no_replace(source, target)
+    assert not source.exists() and target.stat().st_ino == identity.st_ino
+    assert (target / "ownership-marker").read_bytes() == b"owned metadata"
+
+
+@pytest.mark.parametrize("number,code", [
+    (gh.errno.ENOSYS, "ATOMIC_GIT_INITIALIZATION_UNSUPPORTED"),
+    (gh.errno.EOPNOTSUPP, "ATOMIC_GIT_INITIALIZATION_UNSUPPORTED"),
+    (gh.errno.EINVAL, "ATOMIC_GIT_INITIALIZATION_UNSUPPORTED"),
+    (gh.errno.EEXIST, "UNOWNED_GIT_DIRECTORY"),
+    (gh.errno.ENOTEMPTY, "UNOWNED_GIT_DIRECTORY"),
+    (gh.errno.EACCES, "GITHUB_LOCAL_INITIALIZATION_FAILED"),
+])
+def test_raw_rename_syscall_errors_remain_closed(tmp_path, monkeypatch, number, code):
+    calls = []
+    def syscall(*args):
+        calls.append(args)
+        gh.ctypes.set_errno(number)
+        return -1
+    class OldLibc:
+        pass
+    library = OldLibc(); library.syscall = syscall
+    monkeypatch.setattr(gh.ctypes, "CDLL", lambda *a, **k: library)
+    monkeypatch.setattr(gh.os, "rename", lambda *a, **k: pytest.fail("replacing rename forbidden"))
+    source, target = tmp_path / "source", tmp_path / "target"
+    source.mkdir(); (source / "marker").write_bytes(b"keep")
+    with pytest.raises(gh.PublishError, match="^" + code + "$"):
+        gh._rename_no_replace(source, target)
+    assert len(calls) == 1 and calls[0][-1].value == 1
+    assert source.is_dir() and (source / "marker").read_bytes() == b"keep"
+    assert not target.exists()
+
+
+@pytest.mark.parametrize("platform_name,machine,pointer_bytes,long_bytes", [
+    ("darwin", "x86_64", 8, 8), ("linux", "riscv64", 8, 8),
+    ("linux", "x86_64", 4, 4), ("linux", "x86_64", 8, 4),
+])
+def test_missing_wrapper_unknown_kernel_abi_never_attempts_syscall(
+        tmp_path, monkeypatch, platform_name, machine, pointer_bytes, long_bytes):
+    class OldLibc:
+        def syscall(self, *args):
+            pytest.fail("unknown syscall ABI must remain closed")
+    monkeypatch.setattr(gh.ctypes, "CDLL", lambda *a, **k: OldLibc())
+    monkeypatch.setattr(gh.sys, "platform", platform_name)
+    monkeypatch.setattr(gh.platform, "machine", lambda: machine)
+    original_sizeof = gh.ctypes.sizeof
+    monkeypatch.setattr(gh.ctypes, "sizeof", lambda value:
+        pointer_bytes if value is gh.ctypes.c_void_p else
+        long_bytes if value is gh.ctypes.c_long else original_sizeof(value))
+    with pytest.raises(gh.PublishError, match="^ATOMIC_GIT_INITIALIZATION_UNSUPPORTED$"):
+        gh._rename_no_replace(tmp_path / "source", tmp_path / "target")
+
+
+@pytest.mark.parametrize("machine,number", [("x86_64", 316), ("amd64", 316),
+                                           ("aarch64", 276), ("arm64", 276)])
+def test_raw_rename_syscall_abi_selection_is_explicit(monkeypatch, machine, number):
+    monkeypatch.setattr(gh.sys, "platform", "linux")
+    monkeypatch.setattr(gh.platform, "machine", lambda: machine)
+    assert gh._renameat2_syscall_number() == number
+
+
+def test_missing_both_rename_and_syscall_symbols_preserves_unsupported_error(tmp_path, monkeypatch):
+    monkeypatch.setattr(gh.ctypes, "CDLL", lambda *a, **k: object())
+    with pytest.raises(gh.PublishError, match="^ATOMIC_GIT_INITIALIZATION_UNSUPPORTED$"):
+        gh._rename_no_replace(tmp_path / "source", tmp_path / "target")

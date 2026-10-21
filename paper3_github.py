@@ -11,6 +11,7 @@ import errno
 import json
 import os
 from pathlib import Path
+import platform
 import re
 import subprocess
 import sys
@@ -262,18 +263,48 @@ def _check_initialization_marker(gitdir, marker):
         raise PublishError("PUBLISH_INITIALIZATION_MARKER_INVALID") from None
 
 
+def _renameat2_syscall_number():
+    # glibc before 2.28 has no renameat2 wrapper. These are Linux LP64 syscall
+    # ABIs, not arbitrary CPU labels: x32 and unknown ABIs must stay closed.
+    if (not sys.platform.startswith("linux") or ctypes.sizeof(ctypes.c_void_p) != 8
+            or ctypes.sizeof(ctypes.c_long) != 8):
+        return None
+    return {"x86_64": 316, "amd64": 316, "aarch64": 276, "arm64": 276}.get(
+        platform.machine().lower())
+
+
 def _rename_no_replace(source, destination):
     # The training target is Linux. Plain rename can replace an unknown empty
     # destination directory; Linux RENAME_NOREPLACE atomically forbids that.
     try:
         library = ctypes.CDLL(None, use_errno=True)
+    except (AttributeError, OSError):
+        raise PublishError("ATOMIC_GIT_INITIALIZATION_UNSUPPORTED") from None
+    try:
         rename = library.renameat2
+    except AttributeError:
+        number = _renameat2_syscall_number()
+        if number is None:
+            raise PublishError("ATOMIC_GIT_INITIALIZATION_UNSUPPORTED") from None
+        try:
+            syscall = library.syscall
+            syscall.argtypes = [ctypes.c_long]
+            syscall.restype = ctypes.c_long
+        except (AttributeError, OSError):
+            raise PublishError("ATOMIC_GIT_INITIALIZATION_UNSUPPORTED") from None
+        # Use exactly the same kernel RENAME_NOREPLACE operation. A missing
+        # kernel/filesystem feature never falls back to a replacing rename.
+        result = syscall(ctypes.c_long(number), ctypes.c_int(-100),
+                         ctypes.c_char_p(os.fsencode(source)), ctypes.c_int(-100),
+                         ctypes.c_char_p(os.fsencode(destination)), ctypes.c_uint(1))
+    except OSError:
+        raise PublishError("ATOMIC_GIT_INITIALIZATION_UNSUPPORTED") from None
+    else:
         rename.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p,
                            ctypes.c_uint]
         rename.restype = ctypes.c_int
-    except (AttributeError, OSError):
-        raise PublishError("ATOMIC_GIT_INITIALIZATION_UNSUPPORTED") from None
-    if rename(-100, os.fsencode(source), -100, os.fsencode(destination), 1) != 0:
+        result = rename(-100, os.fsencode(source), -100, os.fsencode(destination), 1)
+    if result != 0:
         number = ctypes.get_errno()
         if number in {errno.EEXIST, errno.ENOTEMPTY}:
             raise PublishError("UNOWNED_GIT_DIRECTORY")

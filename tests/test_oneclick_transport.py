@@ -134,6 +134,102 @@ def test_get_atomic_race_keeps_other_writer_file(tmp_path, monkeypatch):
     assert not list(tmp_path.glob("*.partial"))
 
 
+@pytest.mark.parametrize("operation", ["get", "race", "probe", "archive", "sdk"])
+def test_publication_works_without_path_chmod_no_follow_support(tmp_path, monkeypatch, operation):
+    """Exercise the real publication paths with the missing glibc API surface."""
+    original_chmod = os.chmod
+
+    def old_glibc_chmod(path, mode, **kwargs):
+        if kwargs.get("follow_symlinks") is False:
+            raise NotImplementedError("chmod: follow_symlinks unavailable")
+        return original_chmod(path, mode, **kwargs)
+
+    monkeypatch.setattr(transport.os, "chmod", old_glibc_chmod)
+    if operation in {"get", "race"}:
+        descriptor = row("data.bin", b"content", key="paper3/fixed/data.bin")
+        if operation == "race":
+            original_link = os.link
+
+            def competing_writer(*args, **kwargs):
+                (tmp_path / "data.bin").write_bytes(b"other writer")
+                return original_link(*args, **kwargs)
+
+            monkeypatch.setattr(transport.os, "link", competing_writer)
+            with fails("ATOMIC_TARGET_ALREADY_EXISTS"):
+                transport.fetch_object(FakeClient(), "bucket-name", descriptor, tmp_path)
+            assert (tmp_path / "data.bin").read_bytes() == b"other writer"
+        else:
+            receipt = transport.fetch_object(FakeClient(), "bucket-name", descriptor, tmp_path)
+            assert receipt["status"] == "R2_FULL_GET_SHA_VERIFIED"
+            assert stat.S_IMODE((tmp_path / "data.bin").stat().st_mode) == 0o600
+    elif operation == "probe":
+        receipt = transport.probe_write(ProbeClient(), "bucket-name", tmp_path,
+                                        {"closure_sha256": "a" * 64})
+        assert receipt["status"] == "R2_WRITE_AND_FULL_GET_PROBE_VERIFIED"
+    elif operation == "archive":
+        descriptor = inputs(tmp_path, {"train.py": b"# software fixture\n"})
+        package = archive(tmp_path, [("train.py", b"# software fixture\n")])
+        receipt = transport.extract_exact(package, descriptor, tmp_path / "out", TOP)
+        assert receipt["verified_members"] == 1
+        assert stat.S_IMODE((tmp_path / "out" / TOP / "train.py").stat().st_mode) == 0o755
+    else:
+        bundle, descriptors = sdk_bundle(tmp_path)
+        transport.ensure_sdk(bundle, descriptors, tmp_path / "work")
+        assert len(list((tmp_path / "work" / "sdk_site").glob("*/__init__.py"))) == 8
+
+
+def test_fchmod_failure_never_publishes_or_exposes_exception(tmp_path, monkeypatch):
+    def denied(descriptor, mode):
+        raise PermissionError("synthetic credential must remain hidden")
+
+    monkeypatch.setattr(transport.os, "fchmod", denied)
+    client = FakeClient()
+    with fails("R2_GET_FAILED") as caught:
+        transport.fetch_object(client, "bucket-name",
+                               row("data.bin", b"content", key="paper3/fixed/data.bin"), tmp_path)
+    assert "synthetic credential" not in str(caught.value)
+    assert not (tmp_path / "data.bin").exists()
+    assert not list(tmp_path.glob("*.partial"))
+    assert client.body.closed
+
+
+def test_commit_checks_reopened_inode_before_fchmod(tmp_path, monkeypatch):
+    source = tmp_path / ".paper3-owned.partial"
+    source.write_bytes(b"verified original")
+    original_open = os.open
+    fchmod_calls = []
+
+    def substituted(path, flags, *args, **kwargs):
+        if Path(path) == source and flags & os.O_NOFOLLOW:
+            source.rename(tmp_path / "original-retained")
+            source.write_bytes(b"replacement")
+        return original_open(path, flags, *args, **kwargs)
+
+    monkeypatch.setattr(transport.os, "open", substituted)
+    monkeypatch.setattr(transport.os, "fchmod", lambda *args: fchmod_calls.append(args))
+    with fails("ATOMIC_TEMP_CHANGED"):
+        transport._commit(tmp_path, "data.bin", source, 0o600)
+    assert not fchmod_calls and not (tmp_path / "data.bin").exists()
+    assert source.read_bytes() == b"replacement"
+
+
+def test_commit_checks_path_still_names_chmodded_inode(tmp_path, monkeypatch):
+    source = tmp_path / ".paper3-owned.partial"
+    source.write_bytes(b"verified original")
+    original_fchmod = os.fchmod
+
+    def substituted(descriptor, mode):
+        original_fchmod(descriptor, mode)
+        source.rename(tmp_path / "original-retained")
+        source.write_bytes(b"replacement")
+
+    monkeypatch.setattr(transport.os, "fchmod", substituted)
+    with fails("ATOMIC_TEMP_CHANGED"):
+        transport._commit(tmp_path, "data.bin", source, 0o600)
+    assert not (tmp_path / "data.bin").exists()
+    assert source.read_bytes() == b"replacement"
+
+
 def test_get_suppresses_service_exception(tmp_path):
     secret = "never expose dummy secret"
     with fails("R2_GET_FAILED") as failure:

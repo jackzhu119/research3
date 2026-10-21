@@ -127,8 +127,22 @@ def _commit(root, relative, temporary, mode):
     _need(not target.exists(), "ATOMIC_TARGET_ALREADY_EXISTS")
     _root(temporary.parent)
     _need(target.parent == temporary.parent, "ATOMIC_PARENT_MISMATCH")
-    _need(stat.S_ISREG(temporary.lstat().st_mode), "ATOMIC_TEMP_NOT_REGULAR")
-    os.chmod(temporary, mode, follow_symlinks=False)
+    before = temporary.lstat()
+    _need(stat.S_ISREG(before.st_mode), "ATOMIC_TEMP_NOT_REGULAR")
+    # Python on glibc 2.17 may not implement chmod(..., follow_symlinks=False).
+    # Use the already verified regular inode, without a path-following fallback.
+    descriptor = os.open(temporary, os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK)
+    try:
+        _need(_identity(os.fstat(descriptor)) == _identity(before), "ATOMIC_TEMP_CHANGED")
+        os.fchmod(descriptor, mode)
+        os.fsync(descriptor)
+        after = os.fstat(descriptor)
+        _need((before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+              == (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)
+              and _identity(after) == _identity(temporary.lstat())
+              and stat.S_IMODE(after.st_mode) == mode, "ATOMIC_TEMP_CHANGED")
+    finally:
+        os.close(descriptor)
     directory = os.open(target.parent, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
     try:
         try:

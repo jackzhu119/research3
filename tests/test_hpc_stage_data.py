@@ -8,6 +8,7 @@ import gzip
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import tarfile
 
@@ -57,6 +58,10 @@ class FakeR2:
 
 @pytest.fixture
 def fixed(tmp_path, monkeypatch, request):
+    # These fake IO cases model the separately permitted network host.  The
+    # enclosing real CPU test job can have a SLURM_JOB_ID; preserve the actual
+    # production guard and let its dedicated test explicitly install one.
+    monkeypatch.delenv('SLURM_JOB_ID', raising=False)
     root = tmp_path / 'project'
     root.mkdir()
     incoming = root / '.hpc/packages'
@@ -154,6 +159,23 @@ def fixed(tmp_path, monkeypatch, request):
     monkeypatch.setattr(stage, 'load_release', lambda: copy.deepcopy(release))
     return {'root': root, 'incoming': incoming, 'release': release, 'bodies': bodies,
             'index': index, 'omitted': omitted, 'client': FakeR2(r2_bodies)}
+
+
+@pytest.fixture
+def inherited_compute_allocation(monkeypatch):
+    monkeypatch.setenv('SLURM_JOB_ID', '767487')
+    monkeypatch.setenv('SLURM_CPUS_PER_TASK', '16')
+
+
+@pytest.mark.usefixtures('inherited_compute_allocation')
+def test_mock_network_host_isolates_the_enclosing_cpu_allocation(fixed):
+    assert 'SLURM_JOB_ID' not in os.environ
+    assert os.environ['SLURM_CPUS_PER_TASK'] == '16'
+    result = stage.prepare_data(fixed['root'], mode='fetch', execute=True, network_host=True,
+                                client=fixed['client'], bucket='fixture-bucket')
+    assert result['status'] == 'ready'
+    assert result['scientific_fits'] == 0
+    assert fixed['client'].calls
 
 
 def test_original_release_descriptor_is_pinned(monkeypatch):

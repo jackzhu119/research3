@@ -32,11 +32,13 @@ case "$*" in
 esac
 ''')
     python = binary / 'python'
-    python.write_text('#!/bin/bash\nprintf "%s\\n" "$*" > "$STARTED"\n')
+    python.write_text('#!/bin/bash\nprintf "%s\\n" "$*" > "$STARTED"\n'
+                      'printf "%s\\n" "$@" > "$STARTED_ARGS"\n')
     git.chmod(0o700); python.chmod(0o700)
     env = dict(os.environ, PATH=str(binary) + ':' + os.environ.get('PATH', ''),
                CALLS=str(tmp_path / 'calls'), COUNT=str(tmp_path / 'count'),
-               STARTED=str(tmp_path / 'started'), PAPER3_HPC_GIT_RETRY_DELAY='0')
+               STARTED=str(tmp_path / 'started'), STARTED_ARGS=str(tmp_path / 'started-args'),
+               PAPER3_HPC_GIT_RETRY_DELAY='0')
     def run(*args, **changes):
         return subprocess.run(['bash', str(SCRIPT), '--root', str(project),
             '--python', str(python), *args], env=dict(env, **changes),
@@ -74,6 +76,13 @@ def test_staged_mode_updates_code_and_forwards_without_requiring_r2_network_flag
     assert run('--execute', '--staged-data').returncode == 0
     forwarded = (root / 'started').read_text()
     assert '--staged-data' in forwarded and '--network-host' not in forwarded
+
+
+def test_bootstrap_preserves_arguments_with_spaces_under_nounset(fixture):
+    root, run = fixture
+    assert run('--execute', '--staged-data', '--config', 'configuration with spaces.json').returncode == 0
+    assert (root / 'started-args').read_text().splitlines()[-4:] == [
+        '--execute', '--staged-data', '--config', 'configuration with spaces.json']
 
 
 @pytest.mark.parametrize('changes', [{'FAIL_FETCHES': '99'}, {'CHECKOUT_EXIT': '1'}])

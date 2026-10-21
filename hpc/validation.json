@@ -160,6 +160,85 @@
     "seconds": 469.79,
     "skipped": 0
   },
+  "glibc217_bash42_and_slurm_test_compatibility": {
+    "R2_result_upload_performed": false,
+    "actual_local_Bash42": {
+      "bootstrap_passed": 8,
+      "comparison": {
+        "bytes": 1110,
+        "name": "bootstrap_comparison.json",
+        "sha256": "da0e3ac98dea155e4e45837bb22e2872a601cee6ee4bd246ebd4ffc207a3bc1d"
+      },
+      "log": {
+        "bytes": 481,
+        "name": "paper3_bash42_bootstrap_pytest.log",
+        "sha256": "29893aefb3d90043e16fb55a0f109063ababc465af8da38cd74c5a8174e9d999"
+      },
+      "seconds": 0.13
+    },
+    "full_regression": {
+      "errors": 0,
+      "failed": 0,
+      "log": {
+        "bytes": 6382,
+        "name": "paper3_oldglibc_slurm_full_pytest.log",
+        "sha256": "4cd300ca2778015278d8bbec1aa1ca3e3670c0083cecc28b7f85b41821935295"
+      },
+      "passed": 4510,
+      "scope": "Entire unchanged pytest entry under inherited synthetic SLURM_JOB_ID and CPU allocation plus software-only emulation of missing libc renameat2 and unavailable path no-follow chmod. No real HPC allocation or scientific fit.",
+      "seconds": 517.2,
+      "skipped": 0
+    },
+    "inherited_Slurm_reproduction": {
+      "after_log": {
+        "bytes": 762,
+        "name": "paper3_network_host_fixture_slurm_fixed_pytest.log",
+        "sha256": "ce3a37e8d4c26a3800d8fdc3609b2b00a95c17c1cc001df7f26f21b8d4614a59"
+      },
+      "after_passed": 57,
+      "before_failed": 17,
+      "before_log": {
+        "bytes": 10318,
+        "name": "paper3_stage_data_inherited_slurm_repro.log",
+        "sha256": "3e8a56e1e68cea70d5745823a7f6ec09efafd1e0d8d20436bd1c9ec591f9e5e7"
+      },
+      "before_passed": 31
+    },
+    "real_Slurm_submission_performed": false,
+    "real_training_started": false,
+    "reported_failure_groups": {
+      "test_hpc_bootstrap.py": 1,
+      "test_hpc_stage_data.py": 17,
+      "test_oneclick_github.py": 23,
+      "test_oneclick_transport.py": 5
+    },
+    "root_causes": {
+      "bootstrap": "Actual Bash 4.2 reproduces set -u empty forward array failure; guarded empty-array expansion retains argv and zero-action plan mode.",
+      "github": "Missing libc renameat2 symbol on glibc 2.17; retain wrapper first and use the same RENAME_NOREPLACE kernel syscall only for recognized Linux LP64 ABIs. Unsupported kernel/ABI/filesystem stays blocked.",
+      "stage_data_tests": "The artificial permitted-network-host fixture inherited the enclosing real SLURM_JOB_ID; isolate only that fixture while retaining the production compute-node fetch prohibition and its explicit rejection test.",
+      "transport": "Path chmod with follow_symlinks=False is unavailable; use verified O_NOFOLLOW inode fd, fchmod/fsync, unchanged hardlink no-overwrite and full SHA readback."
+    },
+    "school_connected": false,
+    "school_job_id": "767487",
+    "school_kernel_NOREPLACE_support_pending": true,
+    "school_result": {
+      "failed": 46,
+      "passed": 4430,
+      "seconds": 860.72,
+      "skipped": 1
+    },
+    "scientific_kernels_splits_seeds_budgets_deadlines_and_gates_changed": false,
+    "software_only_interface_emulation": {
+      "bytes": 984,
+      "name": "sitecustomize.py",
+      "sha256": "cc4d8b79ebea244bfba8abba5495128fc4e1dc86ed2ed1f85d57fb62bf017857"
+    },
+    "user_log": {
+      "bytes": 41227,
+      "name": "\u5df2\u7c98\u8d34\u7684\u6587\u672c.txt",
+      "sha256": "d88fdd2c394f7c9b638f55316a3ac1e109a33a55658ab374929fe9ff2d6a217b"
+    }
+  },
   "history": {
     "all_original_SHA256_verified": true,
     "bytes": 48031789,
