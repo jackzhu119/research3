@@ -12,6 +12,10 @@
 
 已失败测试的 `afterok` 子作业可能永久待运行。显式恢复时使用 `hpc/recover_failed_chain.py --failed-test-job 767434 --execute`：按原始回执、账户、UID、工作目录、依赖和调度器状态核对，只取消确认从未启动的旧待运行依赖；保留全部原始回执、缓存、claim、预算和 checkpoint。独立恢复证明完整后，`hpc/start.py --execute --staged-data` 才允许提交新链；未知或曾运行的作业仍保持阻塞。固定恢复启动包可以顺序完成更新、上述恢复与新链提交；不要自行删除旧记录或使用按用户名批量取消。
 
+Slurm 20.11 的数据库读取代码会把部分已取消、原开始时间未知的作业显示为 `Start=End`。恢复入口对这一格式只接受原始取消意图中已经绑定并确认 `PENDING`、未知开始时间、运行时长为零且重启次数为零的同一个作业；首次看到的取消时间戳、实际运行时间及身份不符仍会阻塞。原意图和旧证明不重写，恢复可以在取消后中断的地方继续。实现依据为 [Slurm 20.11.8 原始代码](https://github.com/SchedMD/slurm/blob/slurm-20-11-8-1/src/plugins/accounting_storage/mysql/as_mysql_jobacct_process.c#L703-L707)。
+
+恢复阻塞时可执行 `"$P" hpc/recover_failed_chain.py --root "$PWD" --failed-test-job 767434 --diagnose`，只读取已绑定的原始回执和调度状态，不取消、不提交、不创建锁或恢复证明；输出仅包含经过验证的状态字段。复制命令时只复制代码块，不复制终端提示符、`>`、下载进度或 JSON 输出。
+
 ## GitHub 下载不稳定时的代码更新
 
 固定代码更新包可通过 `hpc/code_download.py` 下载：它复用系统及既有 R2 SDK 的 CA，分块保存进度，有界重试时使用 HTTP Range 续传，并在完整长度与 SHA-256 核验后才发布文件。重复执行复用已核验的包。该工具不安装依赖、不访问科研数据、不调用 Git 或 Slurm；错误包和证书失败不会被当成成功。更新包支持单独手动传到学校后离线使用。

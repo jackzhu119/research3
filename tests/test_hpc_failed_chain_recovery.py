@@ -51,6 +51,8 @@ class Scheduler:
         self.states = {'767434': 'FAILED', '767436': 'PENDING', '767438': 'PENDING'}
         self.start = {'767434': '2026-10-21T17:00:00', '767436': 'Unknown', '767438': 'Unknown'}
         self.elapsed = {'767434': '1186', '767436': '0', '767438': '0'}
+        self.end = {'767434': '2026-10-21T17:19:46', '767436': 'Unknown', '767438': 'Unknown'}
+        self.normalize_cancelled_start = False
         self.owner = USER
         self.account = 'zhuziyuan'
         self.control_changes = {}
@@ -68,7 +70,7 @@ class Scheduler:
                 job = IDS[stage]
                 lines.append('|'.join([job, self.states[job], '2:0' if stage == 'test' else '0:0',
                     self.start[job], self.elapsed[job], self.account, self.owner,
-                    'paper3-' + stage, str(self.root)]))
+                    'paper3-' + stage, str(self.root),self.end[job]]))
             return SimpleNamespace(returncode=0, stdout='\n'.join(lines) + '\n')
         if command[0] == 'scontrol':
             job = command[-1]
@@ -85,6 +87,9 @@ class Scheduler:
             assert command[3] in {'767436', '767438'}
             if self.cancel and self.states[command[3]] == 'PENDING':
                 self.states[command[3]] = 'CANCELLED'
+                self.end[command[3]] = '2026-10-21T18:00:00'
+                if self.normalize_cancelled_start:
+                    self.start[command[3]] = self.end[command[3]]
             if self.cancel_timeout_once:
                 self.cancel_timeout_once = False
                 raise subprocess.TimeoutExpired(command, 30)
@@ -414,3 +419,147 @@ def test_slurm20_dependency_rendering_never_allows_other_parent_or_semantics(pro
     with pytest.raises(recovery.RecoveryError,match='dependency_mismatch'):
         recovery.recover(project,'767434',execute=True,runner=scheduler)
     assert not cancel_calls(scheduler)
+
+
+def test_slurm20_cancelled_start_normalization_requires_original_pending_witness(project):
+    scheduler=Scheduler(project);scheduler.normalize_cancelled_start=True
+    value=recovery.recover(project,'767434',execute=True,runner=scheduler)
+    assert value['status']=='RECOVERY_VERIFIED_NO_FIT_REPLAY'
+    for job in ('767436','767438'):
+        assert value['accounting_after'][job]['start']==value['accounting_after'][job]['end']
+        assert value['accounting_after'][job]['elapsed']=='0'
+    assert value['binding']['attempt'] in recovery.superseded_attempts(project)
+
+
+def test_normalized_cancel_timeout_replay_uses_unchanged_legacy_pending_intent(project):
+    scheduler=Scheduler(project);scheduler.normalize_cancelled_start=True;scheduler.cancel_timeout_once=True
+    with pytest.raises(recovery.RecoveryError,match='observation_unavailable'):
+        recovery.recover(project,'767434',execute=True,runner=scheduler)
+    intent=project/'.paper3-hpc/recoveries/test-767434.intent.json'
+    value=json.loads(intent.read_text())
+    for row in value['accounting_before'].values():row.pop('end',None)
+    start.write(intent,value);before=intent.read_bytes()
+    result=recovery.recover(project,'767434',execute=True,runner=scheduler)
+    assert result['status']=='RECOVERY_VERIFIED_NO_FIT_REPLAY'
+    assert intent.read_bytes()==before
+    assert [c[-1] for c in cancel_calls(scheduler)]==['767438','767436']
+    assert recovery.superseded_attempts(project)
+
+
+def test_first_observed_cancelled_equal_timestamps_are_not_own_never_started_proof(project):
+    scheduler=Scheduler(project)
+    scheduler.states['767438']='CANCELLED'
+    scheduler.start['767438']=scheduler.end['767438']='2026-10-21T18:00:00'
+    with pytest.raises(recovery.RecoveryError,match='may_have_started') as caught:
+        recovery.recover(project,'767434',execute=True,runner=scheduler)
+    assert caught.value.diagnostic['cancel_intent_available_and_validated'] is False
+    assert caught.value.diagnostic['children'][1]['actual']['end']=='2026-10-21T18:00:00'
+    assert not cancel_calls(scheduler)
+
+
+@pytest.mark.parametrize('state,start_time,end_time,elapsed',[
+    ('PENDING','2026-10-21T18:00:00','2026-10-21T18:00:00','0'),
+    ('CANCELLED','2026-10-21T17:59:59','2026-10-21T18:00:00','0'),
+    ('CANCELLED','2026-10-21T18:00:00','2026-10-21T18:00:00','0.0'),
+    ('CANCELLED','2026-99-21T18:00:00','2026-99-21T18:00:00','0'),
+])
+def test_pending_real_started_or_malformed_time_cannot_use_cancel_witness(project,state,start_time,end_time,elapsed):
+    scheduler=Scheduler(project);scheduler.cancel_timeout_once=True
+    with pytest.raises(recovery.RecoveryError):
+        recovery.recover(project,'767434',execute=True,runner=scheduler)
+    count=len(cancel_calls(scheduler))
+    scheduler.states['767438']=state;scheduler.start['767438']=start_time
+    scheduler.end['767438']=end_time;scheduler.elapsed['767438']=elapsed
+    with pytest.raises(recovery.RecoveryError,match='may_have_started'):
+        recovery.recover(project,'767434',execute=True,runner=scheduler)
+    assert len(cancel_calls(scheduler))==count
+
+
+def test_malformed_existing_intent_is_blocked_before_any_additional_scheduler_mutation(project):
+    scheduler=Scheduler(project);scheduler.cancel_timeout_once=True
+    with pytest.raises(recovery.RecoveryError):recovery.recover(project,'767434',execute=True,runner=scheduler)
+    path=project/'.paper3-hpc/recoveries/test-767434.intent.json'
+    value=json.loads(path.read_text());value['live_pending_before']=['SECRET_MUST_NOT_LEAK'];start.write(path,value)
+    count=len(cancel_calls(scheduler))
+    with pytest.raises(recovery.RecoveryError,match='initial_live_pending_proof_invalid'):
+        recovery.recover(project,'767434',execute=True,runner=scheduler)
+    assert len(cancel_calls(scheduler))==count
+    diag=recovery.diagnose(project,'767434',runner=scheduler)
+    assert diag['cancel_intent']=={'exists':True,'validated':False,'error_code':'recovery_initial_live_pending_proof_invalid'}
+    assert 'SECRET_MUST_NOT_LEAK' not in json.dumps(diag)
+
+
+def test_cancel_intent_change_during_observation_prevents_final_publication(project):
+    scheduler=Scheduler(project)
+    def changed(command,**kwargs):
+        value=scheduler(command,**kwargs)
+        if command[0]=='scancel':
+            path=project/'.paper3-hpc/recoveries/test-767434.intent.json'
+            path.write_bytes(path.read_bytes()+b'\n')
+        return value
+    with pytest.raises(recovery.RecoveryError,match='cancel_intent_changed'):
+        recovery.recover(project,'767434',execute=True,runner=changed)
+    assert not (project/'.paper3-hpc/recoveries/test-767434.json').exists()
+
+
+def test_old_nine_field_unknown_start_recovery_proof_remains_valid(project):
+    import hashlib
+    scheduler=Scheduler(project)
+    recovery.recover(project,'767434',execute=True,runner=scheduler)
+    intent=project/'.paper3-hpc/recoveries/test-767434.intent.json'
+    value=json.loads(intent.read_text())
+    for row in value['accounting_before'].values():row.pop('end',None)
+    start.write(intent,value)
+    final=project/'.paper3-hpc/recoveries/test-767434.json';value=json.loads(final.read_text())
+    for group in ('accounting_before','accounting_after'):
+        for row in value[group].values():row.pop('end',None)
+    value['intent_sha256']=hashlib.sha256(intent.read_bytes()).hexdigest();start.write(final,value)
+    assert recovery.superseded_attempts(project)
+
+
+def test_read_only_diagnose_includes_actual_failed_checks_without_creating_lock_or_files(project):
+    scheduler=Scheduler(project);scheduler.start['767438']='2026-10-21T18:00:00'
+    before={str(p.relative_to(project)):p.read_bytes() for p in project.rglob('*') if p.is_file()}
+    diag=recovery.diagnose(project,'767434',runner=scheduler)
+    assert diag['status']=='READ_ONLY_RECOVERY_DIAGNOSTIC'
+    assert diag['diagnostic']['children'][1]['actual']['start']=='2026-10-21T18:00:00'
+    assert diag['diagnostic']['children'][1]['checks']['start_is_unknown'] is False
+    assert diag['cancel_intent']=={'exists':False,'validated':False,'error_code':None}
+    assert len(diag['diagnostic']['accounting'])==3 and len(diag['live_controls'])==2
+    assert not cancel_calls(scheduler)
+    assert {str(p.relative_to(project)):p.read_bytes() for p in project.rglob('*') if p.is_file()}==before
+
+
+def test_malformed_secret_scheduler_fields_are_redacted_in_failure_and_readonly_diagnosis(project):
+    scheduler=Scheduler(project)
+    scheduler.states['767438']=scheduler.start['767438']=scheduler.elapsed['767438']='SECRET_DO_NOT_COPY'
+    scheduler.end['767438']='SECRET_DO_NOT_COPY'
+    scheduler.control_changes={'StartTime':'SECRET_DO_NOT_COPY','Reason':'SECRET_DO_NOT_COPY',
+        'Restarts':'SECRET_DO_NOT_COPY','RunTime':'SECRET_DO_NOT_COPY','Dependency':'SECRET_DO_NOT_COPY'}
+    with pytest.raises(recovery.RecoveryError) as caught:
+        recovery.recover(project,'767434',execute=True,runner=scheduler)
+    assert 'SECRET_DO_NOT_COPY' not in json.dumps(caught.value.diagnostic)
+    diag=recovery.diagnose(project,'767434',runner=scheduler)
+    assert 'SECRET_DO_NOT_COPY' not in json.dumps(diag)
+    assert diag['diagnostic']['children'][1]['actual']['state']=='UNRECOGNIZED_VALUE'
+    assert diag['live_controls']['train']['runtime']=='UNRECOGNIZED_VALUE'
+    assert not cancel_calls(scheduler)
+
+
+def test_diagnose_owner_mismatch_returns_only_safe_error_per_child(project):
+    scheduler=Scheduler(project);scheduler.control_changes={'UserId':'SECRET_DO_NOT_COPY(99999)'}
+    diag=recovery.diagnose(project,'767434',runner=scheduler)
+    assert all(not value['identity_validated'] for value in diag['live_controls'].values())
+    assert 'SECRET_DO_NOT_COPY' not in json.dumps(diag)
+    assert not cancel_calls(scheduler)
+
+
+def test_cli_diagnose_even_with_execute_never_cancels_or_writes(project,monkeypatch,capsys):
+    scheduler=Scheduler(project);scheduler.start['767438']='2026-10-21T18:00:00'
+    actual=recovery.diagnose
+    monkeypatch.setattr(recovery,'diagnose',lambda root,job:actual(root,job,runner=scheduler))
+    assert recovery.main(['--root',str(project),'--failed-test-job','767434','--execute','--diagnose'])==0
+    value=json.loads(capsys.readouterr().out)
+    assert value['status']=='READ_ONLY_RECOVERY_DIAGNOSTIC' and not cancel_calls(scheduler)
+    assert not (project/'.paper3-hpc/recoveries').exists()
+    assert not (project/'.paper3-deployment').exists()

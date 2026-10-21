@@ -27,12 +27,18 @@ from hpc.run_stage import StageError, owner_lock
 
 SCHEMA = 'paper3-hpc-failed-prefit-recovery-v1'
 TERMINAL_TEST = {'FAILED', 'TIMEOUT', 'CANCELLED', 'OUT_OF_MEMORY', 'NODE_FAIL', 'PREEMPTED'}
-FIELDS = ('job_id', 'state', 'exit_code', 'start', 'elapsed', 'account', 'user', 'name', 'workdir')
+FIELDS = ('job_id', 'state', 'exit_code', 'start', 'elapsed', 'account', 'user', 'name', 'workdir', 'end')
 UNKNOWN_START = {'Unknown', 'None', 'N/A', ''}
+SAFE_STATES = TERMINAL_TEST | {'PENDING', 'RUNNING', 'COMPLETED', 'CONFIGURING', 'COMPLETING',
+    'BOOT_FAIL', 'DEADLINE', 'REQUEUED', 'REQUEUE_FED', 'REQUEUE_HOLD', 'RESIZING',
+    'REVOKED', 'SIGNALING', 'SPECIAL_EXIT', 'STAGE_OUT', 'STOPPED', 'SUSPENDED'}
+DEPENDENCY_SUFFIX = r'(?:\((?:unfulfilled|fulfilled|unsatisfied|satisfied)\))?'
 
 
 class RecoveryError(ValueError):
-    pass
+    def __init__(self, code, diagnostic=None):
+        super().__init__(code)
+        self.diagnostic = diagnostic
 
 
 def need(value, code):
@@ -47,6 +53,120 @@ def _hash(path):
 
 def _state(value):
     return value.split()[0].rstrip('+') if value.strip() else ''
+
+
+def _timestamp(value):
+    if not isinstance(value, str) or not re.fullmatch(
+            r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})?', value):
+        return False
+    try:
+        datetime.fromisoformat(value.replace('Z', '+00:00'))
+    except ValueError:
+        return False
+    return True
+
+
+def _initial_pending_control(control, binding, stage, user, uid):
+    job_id = binding['jobs'][stage]['job_id']
+    parent = binding['jobs']['test' if stage == 'prepare' else 'prepare']['job_id']
+    return (isinstance(control, dict) and control.get('job_id') == job_id
+        and control.get('state') == 'PENDING' and control.get('uid') == uid
+        and control.get('user') == user and control.get('account') == binding['account']
+        and control.get('workdir') == binding['project'] and control.get('name') == 'paper3-' + stage
+        and control.get('runtime') == '00:00:00' and control.get('restarts') == 0
+        and isinstance(control.get('dependency'), str)
+        and re.fullmatch('afterok:' + parent + DEPENDENCY_SUFFIX, control['dependency']) is not None)
+
+
+def _validate_intent(binding, intent, user):
+    """Validate the original pre-cancel witness, including legacy 7ae receipts."""
+    need(isinstance(intent, dict) and intent.get('schema_version') == SCHEMA
+         and intent.get('status') == 'PENDING_CANCEL_INTENT_PRESERVE_ORIGINALS'
+         and intent.get('project') == binding['project'] and intent.get('binding') == binding
+         and intent.get('failed_test_job') == binding['jobs']['test']['job_id']
+         and type(intent.get('uid')) is int and intent['uid'] == os.getuid()
+         and intent.get('user') == user and intent.get('scientific_fit_performed') is False
+         and intent.get('scientific_budget_changed') is False,
+         'recovery_original_cancel_intent_invalid')
+    rows = intent.get('accounting_before', {})
+    controls = intent.get('live_pending_before', {})
+    ids = [binding['jobs'][s]['job_id'] for s in start.STAGES]
+    need(isinstance(rows, dict) and set(rows) == set(ids), 'recovery_initial_accounting_incomplete')
+    need(isinstance(controls, dict), 'recovery_initial_live_pending_proof_invalid')
+    for stage, job_id in zip(start.STAGES, ids):
+        row = rows[job_id]
+        need(isinstance(row, dict) and all(isinstance(row.get(k), str) for k in FIELDS[:-1])
+             and ('end' not in row or isinstance(row['end'], str)) and row.get('job_id') == job_id
+             and row.get('account') == binding['account'] and row.get('user') == user
+             and row.get('workdir') == binding['project'] and row.get('name') == 'paper3-' + stage,
+             'recovery_initial_identity_invalid')
+        if stage == 'test':
+            exit_code = re.fullmatch(r'(\d+):(\d+)', row.get('exit_code', ''))
+            need(row.get('state') in TERMINAL_TEST and exit_code and any(map(int, exit_code.groups())),
+                 'recovery_initial_test_not_failed')
+        else:
+            # This witness is always the strict original pre-cancel observation.
+            # A normalized timestamp can never establish its own provenance.
+            need(row.get('state') in {'PENDING', 'CANCELLED'} and row.get('start') in UNKNOWN_START
+                 and row.get('elapsed') == '0', 'recovery_initial_descendant_not_never_started')
+            if row['state'] == 'PENDING':
+                need(_initial_pending_control(controls.get(stage),
+                                              binding, stage, user, intent['uid']),
+                     'recovery_initial_live_pending_proof_invalid')
+    return intent
+
+
+def _load_intent(binding, user):
+    path = start.safe(Path(binding['project']) / '.paper3-hpc/recoveries'
+                      / ('test-' + binding['jobs']['test']['job_id'] + '.intent.json'))
+    if not path.exists():
+        return None
+    return _validate_intent(binding, start.read(path), user)
+
+
+def _never_started(row, binding, intent=None):
+    if row.get('state') not in {'PENDING', 'CANCELLED'} or row.get('elapsed') != '0':
+        return False
+    if row.get('start') in UNKNOWN_START:
+        return True
+    # Slurm 20.11 normalizes a cancelled job's missing start to its end. Accept
+    # that only after a fully bound, original PENDING/unknown-start witness.
+    if (row.get('state') != 'CANCELLED' or not _timestamp(row.get('start'))
+            or row.get('start') != row.get('end') or intent is None):
+        return False
+    original = intent['accounting_before'].get(row.get('job_id'), {})
+    return (original.get('state') == 'PENDING' and original.get('start') in UNKNOWN_START
+            and original.get('elapsed') == '0')
+
+
+def _safe_accounting(row):
+    """Retain only typed scheduler fields, never arbitrary returned text."""
+    def clock(value):
+        return value if value in UNKNOWN_START or _timestamp(value) else 'UNRECOGNIZED_VALUE'
+    return {'job_id': row['job_id'], 'state': row['state'] if row['state'] in SAFE_STATES else 'UNRECOGNIZED_VALUE',
+            'start': clock(row.get('start', '')), 'end': clock(row.get('end', '')),
+            'elapsed': row['elapsed'] if re.fullmatch(r'\d{1,20}', row['elapsed']) else 'UNRECOGNIZED_VALUE',
+            'exit_code': row['exit_code'] if re.fullmatch(r'\d{1,10}:\d{1,10}', row['exit_code']) else 'UNRECOGNIZED_VALUE'}
+
+
+def _diagnostic(binding, rows, intent):
+    children = []
+    for stage in ('prepare', 'train'):
+        row = rows[binding['jobs'][stage]['job_id']]
+        children.append({'stage': stage, 'actual': _safe_accounting(row),
+            'checks': {'state_is_pending_or_cancelled': row['state'] in {'PENDING', 'CANCELLED'},
+                       'start_is_unknown': row['start'] in UNKNOWN_START, 'elapsed_is_zero': row['elapsed'] == '0',
+                       'cancelled_equal_start_end': row['state'] == 'CANCELLED' and _timestamp(row['start'])
+                                                    and row['start'] == row.get('end'),
+                       'never_started_proven': _never_started(row, binding, intent)},
+            'expected': {'elapsed': '0', 'state': ['PENDING', 'CANCELLED'],
+                         'start': 'unknown, or cancelled Start=End backed by original pending cancel intent'}})
+    return {'phase': 'validated_accounting_never_started_check', 'children': children,
+            'accounting': [_safe_accounting(rows[binding['jobs'][s]['job_id']]) for s in start.STAGES],
+            'cancel_intent_available_and_validated': intent is not None,
+            'read_only_diagnostic': True,
+            'next_read_only_command': ['sacct', '-X', '-j', ','.join(binding['jobs'][s]['job_id'] for s in start.STAGES),
+                '-n', '-P', '-o', 'JobIDRaw,State%40,Start,End,ElapsedRaw,NNodes,AllocCPUS,NodeList%64']}
 
 
 def _bound(root, failed_test_job):
@@ -131,9 +251,9 @@ def _run(command, runner):
     return value.stdout
 
 
-def accounting(binding, *, runner=subprocess.run, username=None):
+def _accounting_rows(binding, *, runner=subprocess.run, username=None):
     ids = [binding['jobs'][s]['job_id'] for s in start.STAGES]
-    format_ = 'JobIDRaw,State%64,ExitCode,Start,ElapsedRaw,Account%64,User%64,JobName%64,WorkDir%4096'
+    format_ = 'JobIDRaw,State%64,ExitCode,Start,ElapsedRaw,Account%64,User%64,JobName%64,WorkDir%4096,End'
     raw = _run(['sacct', '--allocations', '--jobs=' + ','.join(ids), '--noheader', '--parsable2',
                 '--format=' + format_], runner)
     found = {}
@@ -152,23 +272,45 @@ def accounting(binding, *, runner=subprocess.run, username=None):
              'recovery_scheduler_job_identity_mismatch')
         found[row['job_id']] = row
     need(set(found) == set(ids), 'recovery_all_three_accounting_records_required')
+    return found
+
+
+def accounting(binding, *, runner=subprocess.run, username=None, intent=None):
+    user = username or pwd.getpwuid(os.getuid()).pw_name
+    if intent is not None:
+        _validate_intent(binding, intent, user)
+    found = _accounting_rows(binding, runner=runner, username=user)
+    ids = [binding['jobs'][s]['job_id'] for s in start.STAGES]
     test = found[ids[0]]
     exit_code = re.fullmatch(r'(\d+):(\d+)', test['exit_code'])
     need(test['state'] in TERMINAL_TEST and exit_code and any(map(int, exit_code.groups())),
          'recovery_scheduler_failed_test_confirmation_required')
     for job_id in ids[1:]:
         row = found[job_id]
-        need(row['state'] in {'PENDING', 'CANCELLED'} and row['start'] in UNKNOWN_START
-             and row['elapsed'] == '0', 'recovery_descendant_may_have_started_preserve_existing_jobs')
+        if not _never_started(row, binding, intent):
+            raise RecoveryError('recovery_descendant_may_have_started_preserve_existing_jobs',
+                                _diagnostic(binding, found, intent))
     return found
 
 
-def _control(binding, stage, *, runner=subprocess.run, username=None):
+def _control_rows(binding, stage, *, runner=subprocess.run, username=None):
     job_id = binding['jobs'][stage]['job_id']
     text = _run(['scontrol', '--oneliner', 'show', 'job', job_id], runner)
     matches = list(re.finditer(r'(?<!\S)([A-Za-z][A-Za-z0-9_]*)=', text))
     row = {m.group(1): text[m.end():matches[i+1].start() if i+1 < len(matches) else len(text)].strip()
            for i, m in enumerate(matches)}
+    user = username or pwd.getpwuid(os.getuid()).pw_name
+    owner = re.fullmatch(r'([^()\s]+)\((\d+)\)', row.get('UserId', ''))
+    need(row.get('JobId') == job_id and row.get('JobName') == 'paper3-' + stage
+         and row.get('WorkDir') == binding['project'] and row.get('Account') == binding['account']
+         and owner and owner.group(1) == user and int(owner.group(2)) == os.getuid(),
+         'recovery_live_job_identity_or_start_state_mismatch')
+    return row
+
+
+def _control(binding, stage, *, runner=subprocess.run, username=None):
+    job_id = binding['jobs'][stage]['job_id']
+    row = _control_rows(binding, stage, runner=runner, username=username)
     user = username or pwd.getpwuid(os.getuid()).pw_name
     owner = re.fullmatch(r'([^()\s]+)\((\d+)\)', row.get('UserId', ''))
     expected_dependency = binding['jobs']['test' if stage == 'prepare' else 'prepare']['job_id']
@@ -185,6 +327,51 @@ def _control(binding, stage, *, runner=subprocess.run, username=None):
             'user': user, 'uid': os.getuid(), 'account': binding['account'],
             'workdir': binding['project'], 'name': 'paper3-' + stage,
             'runtime': '00:00:00', 'restarts': 0}
+
+
+def diagnose(root, failed_test_job, *, runner=subprocess.run, username=None):
+    """Read original bindings and scheduler facts; never take locks or mutate."""
+    root = start.safe(root)
+    need(root.is_dir(), 'recovery_existing_project_required')
+    user = username or pwd.getpwuid(os.getuid()).pw_name
+    binding = _bound(root, failed_test_job)
+    intent_path = start.safe(root / '.paper3-hpc/recoveries' / ('test-' + failed_test_job + '.intent.json'))
+    intent, intent_error = None, None
+    try:
+        intent = _load_intent(binding, user)
+    except (RecoveryError, start.StartError, OSError, ValueError, TypeError, KeyError) as exc:
+        intent_error = str(exc) if isinstance(exc, (RecoveryError, start.StartError)) else type(exc).__name__
+    rows = _accounting_rows(binding, runner=runner, username=user)
+    result = {'schema_version': SCHEMA, 'status': 'READ_ONLY_RECOVERY_DIAGNOSTIC',
+              'project': str(root), 'failed_test_job': failed_test_job,
+              'diagnostic': _diagnostic(binding, rows, intent),
+              'cancel_intent': {'exists': intent_path.exists(), 'validated': intent is not None,
+                                'error_code': intent_error},
+              'live_controls': {}, 'read_only_diagnostic': True,
+              'new_jobs_submitted': False, 'scientific_fit_performed': False}
+    for stage in ('prepare', 'train'):
+        try:
+            row = _control_rows(binding, stage, runner=runner, username=user)
+            dependency = row.get('Dependency', '')
+            runtime = row.get('RunTime', '')
+            restarts = row.get('Restarts', '')
+            start_time = row.get('StartTime', '')
+            reason = row.get('Reason', '')
+            result['live_controls'][stage] = {
+                'job_id': binding['jobs'][stage]['job_id'], 'identity_validated': True,
+                'state': row.get('JobState') if row.get('JobState') in SAFE_STATES else 'UNRECOGNIZED_VALUE',
+                'runtime': runtime if re.fullmatch(r'(?:\d+-)?\d{2,3}:\d{2}:\d{2}', runtime) else 'UNRECOGNIZED_VALUE',
+                'restarts': restarts if re.fullmatch(r'\d{1,10}', restarts) else 'UNRECOGNIZED_VALUE',
+                'start': start_time if start_time in UNKNOWN_START or _timestamp(start_time) else 'UNRECOGNIZED_VALUE',
+                'dependency': dependency if re.fullmatch(r'(?:afterok|afterany|afternotok):\d+' + DEPENDENCY_SUFFIX, dependency)
+                                            else 'UNRECOGNIZED_VALUE',
+                'reason': reason if reason in {'Dependency', 'DependencyNeverSatisfied', 'Resources', 'Priority',
+                    'None', 'QOSMaxJobsPerUserLimit', 'JobHeldUser', 'JobHeldAdmin', 'BeginTime'} else 'UNRECOGNIZED_VALUE'}
+        except (RecoveryError, start.StartError, OSError, ValueError, TypeError, KeyError) as exc:
+            result['live_controls'][stage] = {'job_id': binding['jobs'][stage]['job_id'],
+                'identity_validated': False,
+                'error_code': str(exc) if isinstance(exc, (RecoveryError, start.StartError)) else type(exc).__name__}
+    return result
 
 
 def superseded_attempts(root):
@@ -205,6 +392,7 @@ def superseded_attempts(root):
         need(intent_path.is_file() and _hash(intent_path) == value.get('intent_sha256'),
              'recovery_original_cancel_intent_changed')
         intent = start.read(intent_path)
+        _validate_intent(binding, intent, value.get('user'))
         need(intent.get('schema_version') == SCHEMA
              and intent.get('status') == 'PENDING_CANCEL_INTENT_PRESERVE_ORIGINALS'
              and intent.get('binding') == binding and intent.get('uid') == value.get('uid')
@@ -243,7 +431,9 @@ def superseded_attempts(root):
         need(set(final) == set(ids), 'recovery_final_accounting_incomplete')
         for index, job_id in enumerate(ids):
             row = final[job_id]
-            need(row.get('job_id') == job_id and row.get('account') == binding['account']
+            need(isinstance(row, dict) and all(isinstance(row.get(k), str) for k in FIELDS[:-1])
+                 and ('end' not in row or isinstance(row['end'], str))
+                 and row.get('job_id') == job_id and row.get('account') == binding['account']
                  and row.get('workdir') == str(root)
                  and row.get('name') == 'paper3-' + start.STAGES[index]
                  and row.get('user') == value.get('user'), 'recovery_final_identity_invalid')
@@ -252,8 +442,8 @@ def superseded_attempts(root):
                 need(row.get('state') in TERMINAL_TEST and exit_code
                      and any(map(int, exit_code.groups())), 'recovery_final_test_not_failed')
             else:
-                need(row.get('state') == 'CANCELLED' and row.get('start') in UNKNOWN_START
-                     and row.get('elapsed') == '0', 'recovery_final_descendant_not_never_started')
+                need(row.get('state') == 'CANCELLED' and _never_started(row, binding, intent),
+                     'recovery_final_descendant_not_never_started')
         need(value.get('queue_after') == [] and type(value.get('uid')) is int
              and value['uid'] == os.getuid() and value.get('user') == pwd.getpwuid(os.getuid()).pw_name,
              'recovery_final_owner_or_queue_invalid')
@@ -275,7 +465,12 @@ def recover(root, failed_test_job, *, execute=False, dry_run=False, runner=subpr
          (start.staged_owner(root) if acting else nullcontext()), \
          (owner_lock(root) if acting else nullcontext()):
         need(_bound(root, failed_test_job) == binding, 'recovery_original_records_changed')
-        before = accounting(binding, runner=runner, username=user)
+        intent_path = root / '.paper3-hpc/recoveries' / ('test-' + failed_test_job + '.intent.json')
+        pinned_intent_sha = _hash(intent_path) if intent_path.exists() else None
+        intent_witness = _load_intent(binding, user)
+        need(pinned_intent_sha is None or _hash(intent_path) == pinned_intent_sha,
+             'recovery_original_cancel_intent_changed')
+        before = accounting(binding, runner=runner, username=user, intent=intent_witness)
         controls = {}
         for stage in ('prepare', 'train'):
             if before[binding['jobs'][stage]['job_id']]['state'] == 'PENDING':
@@ -292,7 +487,6 @@ def recover(root, failed_test_job, *, execute=False, dry_run=False, runner=subpr
             checked = superseded_attempts(root)
             need(binding['attempt'] in checked, 'recovery_existing_proof_requires_review')
             return {**start.read(destination), 'reused_existing_proof': True}
-        intent_path = root / '.paper3-hpc/recoveries' / ('test-' + failed_test_job + '.intent.json')
         if intent_path.exists():
             old = start.read(intent_path)
             need(old.get('binding') == binding and old.get('uid') == os.getuid()
@@ -300,16 +494,21 @@ def recover(root, failed_test_job, *, execute=False, dry_run=False, runner=subpr
         else:
             start.write(intent_path, {**result, 'status': 'PENDING_CANCEL_INTENT_PRESERVE_ORIGINALS',
                                       'created_at_utc': datetime.now(timezone.utc).isoformat()})
+        if pinned_intent_sha is None:
+            pinned_intent_sha = _hash(intent_path)
+        intent_witness = _load_intent(binding, user)
+        need(_hash(intent_path) == pinned_intent_sha, 'recovery_original_cancel_intent_changed')
         for stage in ('train', 'prepare'):
             if stage in controls:
                 # Recheck immediately, then use Slurm's state filter to refuse a
                 # newly RUNNING job even if it races this last observation.
+                need(_hash(intent_path) == pinned_intent_sha, 'recovery_original_cancel_intent_changed')
                 _control(binding, stage, runner=runner, username=user)
                 _run(['scancel', '--state=PENDING', '--user=' + str(os.getuid()),
                       binding['jobs'][stage]['job_id']], runner)
         after = None
         for retry in range(4):
-            after = accounting(binding, runner=runner, username=user)
+            after = accounting(binding, runner=runner, username=user, intent=intent_witness)
             if all(after[binding['jobs'][s]['job_id']]['state'] == 'CANCELLED' for s in ('prepare', 'train')):
                 break
             if retry < 3:
@@ -327,8 +526,9 @@ def recover(root, failed_test_job, *, execute=False, dry_run=False, runner=subpr
                  'recovery_queue_record_unrecognized')
             need(cells[0] not in ids, 'recovery_original_jobs_still_queued')
         need(_bound(root, failed_test_job) == binding, 'recovery_original_records_changed')
+        need(_hash(intent_path) == pinned_intent_sha, 'recovery_original_cancel_intent_changed')
         result.update(status='RECOVERY_VERIFIED_NO_FIT_REPLAY', accounting_after=after, queue_after=[],
-                      intent=str(intent_path.relative_to(root)), intent_sha256=_hash(intent_path),
+                      intent=str(intent_path.relative_to(root)), intent_sha256=pinned_intent_sha,
                       finished_at_utc=datetime.now(timezone.utc).isoformat())
         start.write(destination, result)
         superseded_attempts(root)
@@ -341,15 +541,19 @@ def main(argv=None):
     parser.add_argument('--failed-test-job', required=True)
     parser.add_argument('--execute', action='store_true')
     parser.add_argument('--dry-run', action='store_true')
+    parser.add_argument('--diagnose', action='store_true',
+                        help='Read-only original binding/accounting/live-control diagnostic; never cancel or submit')
     args = parser.parse_args(argv)
     try:
-        result = recover(args.root, args.failed_test_job, execute=args.execute, dry_run=args.dry_run)
+        result = (diagnose(args.root, args.failed_test_job) if args.diagnose else
+                  recover(args.root, args.failed_test_job, execute=args.execute, dry_run=args.dry_run))
         print(json.dumps(result, indent=2, allow_nan=False), flush=True)
         return 0
     except (RecoveryError, start.StartError, StageError, OSError, ValueError, TypeError, KeyError) as exc:
         code = str(exc) if isinstance(exc, (RecoveryError, start.StartError, StageError)) else type(exc).__name__
         print(json.dumps({'status': 'RECOVERY_BLOCKED_PRESERVE_ORIGINAL_JOBS_AND_CLAIMS',
-                          'reason': code, 'scientific_fit_performed': False}), flush=True)
+                          'reason': code, 'diagnostic': getattr(exc, 'diagnostic', None),
+                          'scientific_fit_performed': False}), flush=True)
         return 2
 
 
