@@ -41,7 +41,7 @@ def test_fixed_seven_imports_record_resources_without_adjusting_thread_or_test_b
         assert kwargs == {'cwd': tmp_path, 'stdin': subprocess.DEVNULL, 'stdout': subprocess.PIPE,
                           'stderr': subprocess.PIPE, 'text': True, 'timeout': 180, 'check': False}
         calls.append(command[4])
-        return SimpleNamespace(returncode=0, stdout=json.dumps(observation(command[4])), stderr='')
+        return SimpleNamespace(returncode=0, stdout=probe.WORKER_PREFIX + json.dumps(observation(command[4])), stderr='')
 
     monkeypatch.setenv('OPENBLAS_NUM_THREADS', '1')
     monkeypatch.setenv('R2_SECRET_ACCESS_KEY', 'SOFTWARE_SECRET_MUST_NOT_BE_PRINTED_OR_COPIED')
@@ -74,7 +74,7 @@ def test_probe_timeout_is_explicit_incomplete_and_preserves_original_fixture_tim
                                    {'status': 'UNKNOWN'}, {'numerical_fit_performed': True}])
 def test_invalid_child_metrics_never_claim_completed_probe(tmp_path, change):
     def broken(command, **kwargs):
-        return SimpleNamespace(returncode=0, stdout=json.dumps({**observation(command[4]), **change}), stderr='')
+        return SimpleNamespace(returncode=0, stdout=probe.WORKER_PREFIX + json.dumps({**observation(command[4]), **change}), stderr='')
 
     result = probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture', runner=broken)
     assert result['status'] == 'IMPORT_PROBES_INCOMPLETE'
@@ -85,7 +85,7 @@ def test_child_import_error_remains_failed_with_resources(tmp_path):
     def failed(command, **kwargs):
         value = {**observation(command[4]), 'status': 'IMPORT_FAILED',
                  'error_type': 'ModuleNotFoundError', 'missing_module': 'software_missing_dependency'}
-        return SimpleNamespace(returncode=2, stdout=json.dumps(value), stderr='')
+        return SimpleNamespace(returncode=2, stdout=probe.WORKER_PREFIX + json.dumps(value), stderr='')
 
     result = probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture', runner=failed)
     assert result['status'] == 'IMPORT_PROBES_INCOMPLETE'
@@ -120,3 +120,86 @@ def test_cli_does_not_probe_from_login_terminal(tmp_path, monkeypatch, capsys):
     assert probe.main(['--root', str(tmp_path), '--output', str(tmp_path / 'startup.json')]) == 2
     assert json.loads(capsys.readouterr().out)['status'] == 'STARTUP_PROBE_BLOCKED'
     assert list(tmp_path.iterdir()) == []
+
+
+def test_progress_is_durable_before_each_import_and_final_result_is_explicit(tmp_path, capsys):
+    output = tmp_path / 'startup.json'
+    calls = []
+    def runner(command, **kwargs):
+        current = json.loads(output.read_text())
+        assert current['status'] == 'IMPORT_PROBES_RUNNING_NOT_COMPLETE'
+        assert current['modules_completed'] == len(calls)
+        assert current['active_module'] == command[4]
+        assert current['modules_total'] == 7
+        calls.append(command[4])
+        return SimpleNamespace(returncode=0,
+            stdout=probe.WORKER_PREFIX + json.dumps(observation(command[4])), stderr='')
+    result = probe.run_probe(tmp_path, output, environ=allocation(), hostname='cpu-fixture', runner=runner)
+    events = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    assert events[0]['event'] == 'STARTUP_PROBE_STARTED'
+    assert events[-1]['event'] == 'STARTUP_PROBE_FINISHED'
+    assert len([event for event in events if event['event'] == 'IMPORT_PROBE_STARTED']) == 7
+    assert len([event for event in events if event['event'] == 'IMPORT_PROBE_FINISHED']) == 7
+    assert result['modules_completed'] == 7 and result['active_module'] is None
+    assert json.loads(output.read_text())['status'] == 'IMPORT_PROBES_COMPLETE'
+
+
+def test_interrupted_import_keeps_durable_current_module_and_never_claims_complete(tmp_path, capsys):
+    def interrupt(command, **kwargs):
+        raise KeyboardInterrupt('SOFTWARE_SECRET_MUST_NOT_LEAK')
+    with pytest.raises(KeyboardInterrupt):
+        probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture', runner=interrupt)
+    result = json.loads((tmp_path / 'startup.json').read_text())
+    assert result['status'] == 'IMPORT_PROBES_INTERRUPTED_NOT_COMPLETE'
+    assert result['active_module'] == probe.MODULES[0][0] and result['modules_completed'] == 0
+    assert result['numerical_fit_performed'] is False
+    assert 'SOFTWARE_SECRET' not in (tmp_path / 'startup.json').read_text() + capsys.readouterr().out
+
+
+def test_failed_initial_report_write_never_starts_import(tmp_path, monkeypatch):
+    def fail(*args):
+        raise OSError('SOFTWARE_QUOTA_TEST_DOUBLE')
+    monkeypatch.setattr(probe, 'write_json', fail)
+    with pytest.raises(OSError):
+        probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture',
+            runner=lambda *a, **k: pytest.fail('unrecorded probe must not spawn'))
+
+
+def test_library_stdout_is_hashed_without_false_import_failure_or_secret_exposure(tmp_path, capsys):
+    noise = 'SOFTWARE_SECRET_LIBRARY_STDOUT\n'
+    def noisy(command, **kwargs):
+        return SimpleNamespace(returncode=0,
+            stdout=noise + probe.WORKER_PREFIX + json.dumps(observation(command[4])) + '\n' + noise,
+            stderr=noise)
+    result = probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture', runner=noisy)
+    assert result['status'] == 'IMPORT_PROBES_COMPLETE'
+    assert all(row['incidental_stdout']['bytes'] == len(noise.encode()) * 2 for row in result['modules'])
+    assert 'SOFTWARE_SECRET' not in (tmp_path / 'startup.json').read_text() + capsys.readouterr().out
+
+
+@pytest.mark.parametrize('kind', ['absent', 'duplicate', 'bad_identifier', 'bad_fit_flag'])
+def test_framing_or_failure_corruption_remains_incomplete(tmp_path, kind):
+    def broken(command, **kwargs):
+        value = observation(command[4])
+        code = 0
+        if kind == 'bad_identifier':
+            value.update(status='IMPORT_FAILED', error_type='Error with unexpected text')
+            code = 2
+        if kind == 'bad_fit_flag':
+            value['numerical_fit_performed'] = True
+        raw = json.dumps(value)
+        framed = probe.WORKER_PREFIX + raw + '\n'
+        return SimpleNamespace(returncode=code,
+            stdout=raw if kind == 'absent' else framed * 2 if kind == 'duplicate' else framed, stderr='')
+    result = probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture', runner=broken)
+    assert result['status'] == 'IMPORT_PROBES_INCOMPLETE'
+    assert all(row['status'] == 'IMPORT_PROBE_INVALID_RESULT' for row in result['modules'])
+
+
+def test_unknown_worker_fields_are_not_copied_to_report_or_stdout(tmp_path, capsys):
+    def extra(command, **kwargs):
+        value = {**observation(command[4]), 'unexpected_library_value': 'SOFTWARE_SECRET'}
+        return SimpleNamespace(returncode=0, stdout=probe.WORKER_PREFIX + json.dumps(value), stderr='')
+    result = probe.run_probe(tmp_path, 'startup.json', environ=allocation(), hostname='cpu-fixture', runner=extra)
+    assert result['status'] == 'IMPORT_PROBES_COMPLETE'
+    assert 'SOFTWARE_SECRET' not in (tmp_path / 'startup.json').read_text() + capsys.readouterr().out

@@ -108,6 +108,28 @@ def test_missing_school_software_test_gate_blocks_training(tmp_path):
         stage.tested(tmp_path, {}, {'modules': {}, 'python': '3.12.3'})
 
 
+def test_startup_failure_summary_exposes_actual_timing_without_arbitrary_output(tmp_path):
+    path = tmp_path / 'startup.json'
+    value = {'schema_version': 'paper3-hpc-startup-import-probe-v1',
+        'status': 'IMPORT_PROBES_INCOMPLETE', 'stdout': 'SECRET_MUST_NOT_LEAK',
+        'modules': [{'module': 'p3work.classical_training', 'status': 'IMPORT_PROBE_TIMEOUT',
+            'process_wall_seconds': 180.298, 'stdout': 'SECRET_MUST_NOT_LEAK'},
+            {'module': 'p3work.training_state', 'status': 'IMPORT_COMPLETE',
+             'import_wall_seconds': 120.974, 'user_seconds': 2.478, 'system_seconds': .907}]}
+    path.write_text(json.dumps(value))
+    summary = stage.startup_summary(path)
+    assert summary['status'] == value['status'] and summary['modules_completed'] == 2
+    assert summary['modules'][0]['process_wall_seconds'] == 180.298
+    assert summary['modules'][1]['user_seconds'] == 2.478
+    assert 'SECRET' not in json.dumps(summary)
+
+
+@pytest.mark.parametrize('payload', ['not JSON', '[]', '{"schema_version":"wrong"}'])
+def test_unusable_startup_report_never_claims_probe_passed(tmp_path, payload):
+    path = tmp_path / 'startup.json'; path.write_text(payload)
+    assert stage.startup_summary(path) == {'status': 'STARTUP_REPORT_NOT_AVAILABLE'}
+
+
 @pytest.mark.parametrize('phase,expected_mode', [('prepare', 'materialize'), ('train', 'check')])
 def test_staged_chain_preserves_failed_data_gate_and_never_fits(tmp_path, monkeypatch, phase, expected_mode):
     from hpc import stage_data, handoff

@@ -255,10 +255,18 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
     with owner(root), staged_owner(root) if staged else nullcontext():
         existing = submissions(root)
         queued = active_jobs(root, existing, runner=runner)
+        # Recovery is a separate, explicit submission-host operation. Retain
+        # every original record and bind any live old job before excluding its
+        # immutable, verified never-started failed chain from retry history.
+        from hpc.recover_failed_chain import superseded_attempts
+        retired = superseded_attempts(root)
+        retired_ids = {job_id for proof in retired.values() for job_id in proof['job_ids'].values()}
         prior_attempts = []
         for path, attempt in records(root, '.paper3-hpc/start', r'attempt-[a-f0-9]{32}\.json'):
             need(attempt.get('schema_version') == SCHEMA and attempt.get('project') == str(root),
                  'prior_start_attempt_identity_requires_review')
+            if str(path.relative_to(root)) in retired:
+                continue
             previous_result = prior_result(root, attempt, existing)
             if previous_result:
                 prior_attempts.append((path, previous_result))
@@ -277,7 +285,7 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
         if prior_attempts:
             path, prior = prior_attempts[0]
             return {**prior, 'attempt': str(path.relative_to(root))}
-        historical_train = [row for row in existing if row.get('stage') == 'train']
+        historical_train = [row for row in existing if row.get('stage') == 'train' and row['job_id'] not in retired_ids]
         if historical_train:
             return {'status': 'EXISTING_TRAIN_SUBMISSION_REQUIRES_REVIEW',
                     'job_ids': [row['job_id'] for row in historical_train], 'monitor_command': monitor_command(root),
@@ -290,6 +298,7 @@ def start(args, *, runner=subprocess.run, verifier=verify_code, preparer=None, s
             'source_identity': identity, 'created_at_utc': datetime.now(timezone.utc).isoformat(),
             'status': 'CHECKING_STAGED_INPUT_PRESENCE' if staged else 'FETCHING_FROZEN_DATA',
             'data_mode': 'STAGED_INPUTS_CPU_SLURM_VERIFICATION' if staged else 'NETWORK_HOST_FETCH',
+            'verified_prefit_recovery_receipts': [row['receipt'] for row in retired.values()],
             'submission_intents': [], 'submitted_jobs': [],
             'credentials_recorded': False, 'scientific_completion_claimed': False}
         write(path, value)

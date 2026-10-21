@@ -12,6 +12,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -129,9 +130,12 @@ def child(root, relative, args, output, stop, *, cooperative=False):
                     proc.kill()
                     raise CleanupUnconfirmed('coordinator_cleanup_unconfirmed_preserve_claims_and_ledgers')
                 if time.monotonic() - heartbeat >= 30:
-                    print(json.dumps({'status': 'OWNED_COORDINATOR_RUNNING_NOT_COMPLETION',
+                    observation = {'status': 'OWNED_COORDINATOR_RUNNING_NOT_COMPLETION',
                         'entry': relative, 'elapsed_seconds': round(time.monotonic() - started),
-                        'log': str(output.relative_to(root)), 'log_bytes': output.stat().st_size}), flush=True)
+                        'log': str(output.relative_to(root)), 'log_bytes': output.stat().st_size}
+                    if relative == 'hpc/startup_probe.py':
+                        observation['startup_probe'] = startup_summary(output.parent / 'startup.json')
+                    print(json.dumps(observation), flush=True)
                     heartbeat = time.monotonic()
                 time.sleep(.2)
             if proc.returncode < 0 and cooperative:
@@ -144,6 +148,46 @@ def child(root, relative, args, output, stop, *, cooperative=False):
                     proc.wait(timeout=5)
                 except subprocess.TimeoutExpired:
                     proc.kill(); proc.wait()
+
+
+def startup_summary(path):
+    """Expose bounded diagnostic fields in the Slurm log, never raw output."""
+    unavailable = {'status': 'STARTUP_REPORT_NOT_AVAILABLE'}
+    try:
+        if path.is_symlink() or path.stat().st_size > 128 * 1024:
+            return unavailable
+        value = json.loads(path.read_bytes())
+        statuses = {'IMPORT_PROBES_RUNNING_NOT_COMPLETE', 'IMPORT_PROBES_INTERRUPTED_NOT_COMPLETE',
+                    'IMPORT_PROBES_COMPLETE', 'IMPORT_PROBES_INCOMPLETE'}
+        if (not isinstance(value, dict) or value.get('schema_version') != 'paper3-hpc-startup-import-probe-v1'
+                or value.get('status') not in statuses):
+            return unavailable
+        from hpc.startup_probe import MODULES
+        names = {name for name, _ in MODULES}
+        observations = value.get('modules', [])
+        if not isinstance(observations, list) or len(observations) > len(names):
+            return unavailable
+        rows = []
+        for row in observations:
+            if (not isinstance(row, dict) or row.get('module') not in names
+                    or row.get('status') not in {'IMPORT_COMPLETE', 'IMPORT_FAILED',
+                        'IMPORT_PROBE_TIMEOUT', 'IMPORT_PROBE_INVALID_RESULT'}):
+                return unavailable
+            safe = {'module': row['module'], 'status': row['status']}
+            for key in ('process_wall_seconds', 'import_wall_seconds', 'user_seconds', 'system_seconds'):
+                number = row.get(key)
+                if type(number) in (int, float) and math.isfinite(number) and number >= 0:
+                    safe[key] = round(number, 3)
+            for key in ('error_type', 'missing_module'):
+                text = row.get(key)
+                if isinstance(text, str) and re.fullmatch(r'[A-Za-z_][A-Za-z0-9_.]{0,159}', text):
+                    safe[key] = text
+            rows.append(safe)
+        active = value.get('active_module')
+        return {'status': value['status'], 'modules_completed': len(rows), 'modules_total': len(names),
+                'active_module': active if active in names else None, 'modules': rows}
+    except (OSError, ValueError, TypeError, AttributeError):
+        return unavailable
 
 
 def audit_restore(root, output):
@@ -219,6 +263,7 @@ def run(root, stage):
     output = root / '.paper3-hpc/jobs' / os.environ['SLURM_JOB_ID']
     output.mkdir(parents=True, exist_ok=True)
     code, result, snapshot_error, safe_snapshot = 2, None, None, True
+    diagnostic_summary = None
     with stop_signals() as stop:
         try:
             with owner_lock(root):
@@ -234,6 +279,8 @@ def run(root, stage):
                     if stage == 'test':
                         diagnostic = child(root, 'hpc/startup_probe.py',
                             ['--output', str(output / 'startup.json')], output / 'startup.log', stop)
+                        diagnostic_summary = startup_summary(output / 'startup.json')
+                        print(json.dumps({'startup_probe': diagnostic_summary}), flush=True)
                         if diagnostic:
                             raise StageError('deployment_startup_probe_failed_inspect_job_startup_log')
                         # Preserve all original tests, including real process-kill cases.
@@ -256,7 +303,7 @@ def run(root, stage):
                                 proc.kill(); code = proc.wait()
                         result = {'status': 'ALL_SOFTWARE_TESTS_PASSED' if code == 0 else 'SOFTWARE_TESTS_FAILED_OR_STOPPED',
                                   'returncode': code, 'software_identity': identity, 'environment': environment,
-                                  'job_id': os.environ['SLURM_JOB_ID']}
+                                  'job_id': os.environ['SLURM_JOB_ID'], 'startup_probe': diagnostic_summary}
                         write(output / 'software_test.json', result)
                         if code == 0:
                             write(root / '.paper3-hpc/software_test_passed.json', result)
@@ -311,6 +358,7 @@ def run(root, stage):
                        'job_id': os.environ['SLURM_JOB_ID'], 'returncode': code,
                        'status': 'STAGE_RETURNED_ZERO_INSPECT_ORIGINAL_RECEIPTS' if code == 0 else 'STOPPED_OR_BLOCKED_NOT_COMPLETE',
                        'result': result, 'snapshot_error_type': snapshot_error,
+                       'startup_probe': diagnostic_summary,
                        'scientific_completion_claimed': False, 'external_query_accessed': False,
                        'finished_utc': datetime.now(timezone.utc).isoformat()}
             write(output / ('stage-' + stage + '.json'), receipt)

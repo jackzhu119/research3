@@ -164,6 +164,93 @@
     "unknown_submission_outcomes_block_replay": true
   },
   "schema_version": "paper3-hpc-local-verification-v1",
+  "school_import_cache_fix": {
+    "actual_Codex_CPU_cache": {
+      "CUDA_validation_performed": false,
+      "bytes": 939282146,
+      "files": 18976,
+      "installed_packages": 0,
+      "receipt": {
+        "bytes": 1768,
+        "name": "paper3_node_cache_actual_smoke.json",
+        "sha256": "78cfa24f2b919bedb612300177fbf99e34d8d5b2288348c22a23c31afc7a2ae1"
+      },
+      "same_interpreter": true,
+      "scope": "Actual Codex CPU software environment, not school Python3.12.3/PyTorch2.5.1+cu121",
+      "source_and_destination_SHA_verified": true
+    },
+    "actual_Slurm_jobs_submitted": false,
+    "actual_cached_imports": {
+      "modules": 7,
+      "receipt": {
+        "bytes": 7814,
+        "name": "paper3_local_cached_imports.json",
+        "sha256": "89724f977f21a98b972de9dc4cf0b77145907e0338d003cca163ca1b38d8e8cd"
+      },
+      "successful": 7
+    },
+    "final_targeted_regression": {
+      "errors": 0,
+      "failed": 0,
+      "log": {
+        "bytes": 2001,
+        "name": "paper3_hpc_import_cache_targeted_pytest.log",
+        "sha256": "c844da7fbe63aec833129f1427303672aa2cb3d05e9484be1c4bedd41ee02819"
+      },
+      "passed": 1122,
+      "scope": "Final deployment implementation including atomic cache activation and all Slurm20 dependency display formats.",
+      "seconds": 33.69,
+      "skipped": 0
+    },
+    "full_software_regression": {
+      "errors": 0,
+      "failed": 0,
+      "log": {
+        "bytes": 6293,
+        "name": "paper3_hpc_import_cache_full_pytest.log",
+        "sha256": "5f1c78fb404c484661fda91d1cf1a869b0585728070f96e61b64d90f6810563c"
+      },
+      "passed": 4414,
+      "seconds": 467.99,
+      "skipped": 0
+    },
+    "new_R2_result_upload_performed": false,
+    "observed_failure": {
+      "cause_scope": "Very high interpreter/import wait relative to CPU usage; runtime read-cache addresses shared-filesystem dependency reads, with school validation still required.",
+      "classical_import_timeout_seconds": 180,
+      "job_id": "767434",
+      "original_pytest_started": false,
+      "other_import_wall_seconds": [
+        73.209,
+        66.62,
+        35.183,
+        1.264,
+        1.15,
+        120.975
+      ],
+      "source": "User-supplied test-767434.out and pasted original startup.json"
+    },
+    "original_data_splits_seeds_budgets_and_gates_changed": false,
+    "original_scientific_kernels_changed": false,
+    "reported_timeout_and_controller_cases": {
+      "logs": [
+        {
+          "bytes": 1069,
+          "name": "paper3_cached_original_failures_pytest.log",
+          "sha256": "197e07a152f72470411b6ef2f393de08147073c7a109661946f99c56493c2e03"
+        },
+        {
+          "bytes": 343,
+          "name": "paper3_cached_original_body_kill_pytest.log",
+          "sha256": "e26012659a26807335167427644c26a0888e450fc6e27d20b116547fbb8fcf8f"
+        }
+      ],
+      "original_deadlines_unchanged": true,
+      "passed": 8
+    },
+    "school_connection_attempted": false,
+    "scientific_fit_performed": false
+  },
   "school_validation_pending": [
     "Python3.12.3 torch2.5.1+cu121 imports and original complete test suite",
     "Slurm20.11.8 resource and signal handling",

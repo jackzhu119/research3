@@ -2,6 +2,7 @@
 import importlib.util
 import json
 import os
+import shlex
 from pathlib import Path
 import subprocess
 import sys
@@ -139,7 +140,26 @@ def test_job_script_existing_python_only_preserves_slurm_devices_and_thread_caps
     python = tmp_path / 'venv/bin/python'; python.parent.mkdir(parents=True)
     # This stand-in prints argv and selected non-secret environment keys; no
     # scientific Python or Slurm command is called by this fixture.
-    python.write_text('#!/bin/bash\nprintf "%s\\n" "$@"\nprintf "OMP=%s MKL=%s CVD=%s\\n" "$OMP_NUM_THREADS" "$MKL_NUM_THREADS" "$CUDA_VISIBLE_DEVICES"\n')
+    python.write_text('''#!/bin/bash
+printf '%s\\n' "$@"
+printf 'OMP=%s MKL=%s CVD=%s\\n' "$OMP_NUM_THREADS" "$MKL_NUM_THREADS" "$CUDA_VISIBLE_DEVICES"
+case "${2:-}" in
+    */node_cache.py)
+        shift 2
+        while [ "$#" -gt 0 ]; do
+            case "$1" in --env-output) target="$2"; shift 2 ;; *) shift ;; esac
+        done
+        printf 'export PYTHONPATH=/fixture/node-local-site\\nexport PAPER3_HPC_NODE_CACHE_ROOT=/fixture/private-cache\\n' > "$target"
+        ;;
+    */project_bytecode.py)
+        shift 2
+        while [ "$#" -gt 0 ]; do
+            case "$1" in --env-output) target="$2"; shift 2 ;; *) shift ;; esac
+        done
+        printf 'export PYTHONPYCACHEPREFIX=/fixture/private-cache/project-pycache\\n' > "$target"
+        ;;
+esac
+''')
     python.chmod(0o700)
     env = {'PATH': '/usr/bin:/bin', 'SLURM_JOB_ID': '123', 'SLURMD_NODENAME': 'gpu3',
            'CUDA_VISIBLE_DEVICES': '5', 'OMP_NUM_THREADS': '24', 'MKL_NUM_THREADS': '24',
@@ -150,6 +170,8 @@ def test_job_script_existing_python_only_preserves_slurm_devices_and_thread_caps
     assert result.returncode == 0
     assert str(root / 'hpc/resources.py') in result.stdout
     assert str(root / 'hpc/run_stage.py') in result.stdout
+    assert result.stdout.index(str(root / 'hpc/node_cache.py')) < result.stdout.index(str(root / 'hpc/project_bytecode.py'))
+    assert result.stdout.index(str(root / 'hpc/project_bytecode.py')) < result.stdout.index(str(root / 'hpc/resources.py'))
     assert 'OMP=1 MKL=1 CVD=5' in result.stdout
     assert 'pip' not in result.stdout and 'docker' not in result.stdout
 
@@ -157,3 +179,22 @@ def test_job_script_existing_python_only_preserves_slurm_devices_and_thread_caps
 def test_job_script_shell_syntax():
     result = subprocess.run(['bash', '-n', str(ROOT / 'hpc/job.sbatch')], capture_output=True)
     assert result.returncode == 0
+
+
+def test_node_cache_failure_is_recorded_and_never_starts_scientific_coordinator(tmp_path):
+    root = tmp_path / 'project'; (root / 'hpc').mkdir(parents=True)
+    (root / 'hpc/resources.py').write_bytes((ROOT / 'hpc/resources.py').read_bytes())
+    (root / 'hpc/__init__.py').write_text('')
+    python = tmp_path / 'bin/python'; python.parent.mkdir()
+    python.write_text('#!/bin/bash\nif [ "$1" = - ]; then exec ' + shlex.quote(sys.executable)
+                      + ' "$@"; fi\nexit 2\n')
+    python.chmod(0o700)
+    result = subprocess.run(['bash', str(ROOT / 'hpc/job.sbatch'), '--root', str(root),
+        '--python', str(python), '--stage', 'test'],
+        env={'PATH': '/usr/bin:/bin', 'SLURM_JOB_ID': '123', 'SLURMD_NODENAME': 'cpu-fixture'},
+        capture_output=True, text=True, timeout=10)
+    assert result.returncode == 2
+    receipt = json.loads((root / '.paper3-hpc/jobs/123/stage-test.json').read_bytes())
+    assert receipt['returncode'] == 2 and receipt['scientific_completion_claimed'] is False
+    assert receipt['result']['reason'] == 'node_local_runtime_cache_failed'
+    assert 'Paper3 stage command:' not in result.stdout

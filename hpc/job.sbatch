@@ -51,6 +51,34 @@ if [ -n "$wall_seconds" ]; then
     export PAPER3_HPC_WALL_TIME_SECONDS="$wall_seconds"
 fi
 output="$project/.paper3-hpc/jobs/$SLURM_JOB_ID"
+mkdir -p -- "$output"
+
+# Keep slow shared-filesystem reads outside every original subprocess/fit
+# deadline. This is a verified read cache of existing files, never an install.
+bootstrap_failed() {
+    "$python" - "$project" "$output" "$stage" "$SLURM_JOB_ID" "$1" <<'PY'
+import json, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from hpc.resources import write_json
+value = {'schema_version': 'paper3-hpc-stage-receipt-v1', 'stage': sys.argv[3],
+    'job_id': sys.argv[4], 'returncode': 2, 'status': 'STOPPED_OR_BLOCKED_NOT_COMPLETE',
+    'result': {'status': 'DEPLOYMENT_CACHE_BLOCKED_BEFORE_SCIENTIFIC_STAGE', 'reason': sys.argv[5]},
+    'scientific_completion_claimed': False, 'external_query_accessed': False}
+write_json(Path(sys.argv[2]) / ('stage-' + sys.argv[3] + '.json'), value)
+print(json.dumps(value), flush=True)
+PY
+    exit 2
+}
+if [ "$stage" != backup ]; then
+    "$python" -u "$project/hpc/node_cache.py" --output "$output/node_cache.json" \
+        --env-output "$output/node_cache.env" || bootstrap_failed node_local_runtime_cache_failed
+    . "$output/node_cache.env" || bootstrap_failed node_local_cache_activation_failed
+    "$python" -u "$project/hpc/project_bytecode.py" --root "$project" \
+        --cache-root "$PAPER3_HPC_NODE_CACHE_ROOT" --output "$output/project_bytecode.json" \
+        --env-output "$output/project_bytecode.env" || bootstrap_failed frozen_project_bytecode_cache_failed
+    . "$output/project_bytecode.env" || bootstrap_failed frozen_project_bytecode_activation_failed
+fi
 # exec leaves the metrics supervisor as the batch PID. B:USR1 is caught there
 # and forwarded only to its owned run_stage coordinator, never all fit workers.
 exec "$python" -u "$project/hpc/resources.py" run \
