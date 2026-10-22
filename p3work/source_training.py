@@ -332,6 +332,23 @@ def _verify_engineering_prediction_replay(cache, receipt_file, receipt, identity
 
 def _verify_pilot_result_manifests(cache, receipt_file, receipt, identity, prediction_proof):
     """Recheck the finite backup-ready set; this is not an upload/GET receipt."""
+    deployment_profile = identity.get("deployment_runtime_profile")
+    if os.environ.get("PAPER3_HPC_RUNTIME_PROFILE") is not None:
+        from hpc.runtime_profile import (RuntimeProfileError, selected_profile,
+                                         validate_runtime_profile, registered_requirements)
+        try:
+            profile = selected_profile(cache.root)
+            verified_profile = validate_runtime_profile(cache.root, profile)
+            if (deployment_profile != verified_profile
+                    or receipt.get("deployment_runtime_profile") != verified_profile):
+                raise SourceTrainingError("Engineering pilot deployment runtime profile identity differs")
+            dependency_requirements = registered_requirements(profile)
+        except RuntimeProfileError as error:
+            raise SourceTrainingError(str(error)) from None
+    else:
+        if deployment_profile is not None or receipt.get("deployment_runtime_profile") is not None:
+            raise SourceTrainingError("Engineering pilot requires its explicit registered runtime profile")
+        dependency_requirements = (cache.root / "requirements-gpu.lock").read_text().splitlines()
     manifest_item = receipt.get("artifact_manifest")
     manifest_path = _pilot_replay_artifact(cache.root, receipt_file.parent, manifest_item)
     manifest = json.loads(manifest_path.read_text())
@@ -340,6 +357,8 @@ def _verify_pilot_result_manifests(cache, receipt_file, receipt, identity, predi
              prediction_proof["engineering_prediction_replay"]["path"],
              *(item["path"] for item in prediction_proof["prediction_artifacts"]),
              *(receipt_file.with_name(name).relative_to(cache.root).as_posix() for name in receipt["checkpoint_files"])}
+    if deployment_profile is not None:
+        paths.add(deployment_profile["path"])
     files = manifest.get("files")
     if (manifest.get("schema_version") != "paper3-source-engineering-artifacts-v1"
             or manifest.get("scope") != "ENGINEERING_SOURCE_PILOT_ONLY" or manifest.get("scientific_result") is not False
@@ -371,7 +390,7 @@ def _verify_pilot_result_manifests(cache, receipt_file, receipt, identity, predi
         if name in names:
             raise SourceTrainingError("Engineering resolved dependencies contain duplicates")
         names[name] = row["version"]
-    for line in (cache.root / "requirements-gpu.lock").read_text().splitlines():
+    for line in dependency_requirements:
         if not line.strip() or line.startswith(("#", "--")):
             continue
         name, version = line.strip().split("==")

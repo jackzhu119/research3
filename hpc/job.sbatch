@@ -45,6 +45,10 @@ export PYTHONDONTWRITEBYTECODE=1 PYTHONUTF8=1 PYTHONUNBUFFERED=1
 export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1
 export NUMEXPR_NUM_THREADS=1 VECLIB_MAXIMUM_THREADS=1
 export PAPER3_HPC_ROOT="$project" PAPER3_HPC_STAGE="$stage"
+unset PAPER3_HPC_RUNTIME_PROFILE
+case "$stage" in
+    pilot|train) export PAPER3_HPC_RUNTIME_PROFILE=school-cu121-v1 ;;
+esac
 unset PAPER3_HPC_WALL_TIME_SECONDS
 if [ -n "$wall_seconds" ]; then
     case "$wall_seconds" in *[!0-9]*) echo 'Invalid administrative wall time.' >&2; exit 64 ;; esac

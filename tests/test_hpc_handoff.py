@@ -69,6 +69,134 @@ def inputs(tmp_path, *, path='runs/source_training_v2/seed-1/model.pt', data=b'f
 def queue_path(root, result): return root / result['queue_path']
 
 
+def pilot_runtime_fixture(root, *, school=True, failed=False, with_identity=True):
+    """Metadata-only SOFTWARE_TEST_DOUBLE, never a GPU completion proof."""
+    from hpc import runtime_profile
+    from p3work import training_campaign
+    folder = root / handoff.PILOT; folder.mkdir(parents=True)
+    audit = root / 'audit'; audit.mkdir()
+    pins = dict(runtime_profile.REGISTRY['pins']) if school else {'torch':'2.8.0+cu128','numpy':'2.3.5'}
+    lock = root / 'requirements-gpu.lock'
+    lock.write_text('torch==2.8.0+cu128\nnumpy==2.3.5\n')
+    handoff.write_json(root / handoff.PILOT_RUNTIME_AUDITS[0],
+                       [{'name': name, 'version': version} for name,version in sorted(pins.items())])
+    def descriptor(relative, *, size=True):
+        sha,n=handoff.hash_file(root/relative)
+        return {'path':relative,'sha256':sha,**({'bytes':n} if size else {})}
+    dependencies=descriptor(handoff.PILOT_RUNTIME_AUDITS[0])
+    profile=None
+    if school:
+        proof={'schema_version':'paper3-hpc-installed-runtime-profile-v1',
+            'profile':runtime_profile.PROFILE,'project':str(root),'python':'3.12.3',
+            'python_executable':'SOFTWARE_TEST_DOUBLE_NOT_AN_EXECUTABLE',
+            'registered_profile_sha256':hashlib.sha256(handoff.json_bytes(runtime_profile.REGISTRY)).hexdigest(),
+            'original_RunPod_lock_sha256':hashlib.sha256(lock.read_bytes()).hexdigest(),
+            'resolved_dependencies':descriptor(handoff.PILOT_RUNTIME_AUDITS[0],size=False),
+            'inventory_packages':len(pins),'actual_module_versions':dict(runtime_profile.REGISTRY['pins']),
+            'packages_installed_by_capture':0,'network_operations_by_capture':0,
+            'scientific_parameters_changed':False}
+        handoff.write_json(root/handoff.PILOT_RUNTIME_AUDITS[1],proof)
+        profile=descriptor(handoff.PILOT_RUNTIME_AUDITS[1],size=False)
+    claim=root/'runs/controlled_pilot_job_claim.json'
+    handoff.write_json(claim,{'scope':'ENGINEERING_SOURCE_PILOT_ONLY','max_jobs':1,'output':handoff.PILOT})
+    identity={'resolved_dependencies':dependencies,'torch':pins['torch'],'numpy':pins['numpy'],
+              'fixture_scope':'SOFTWARE_TEST_DOUBLE_NO_FIT'}
+    receipt={'scope':'ENGINEERING_SOURCE_PILOT_ONLY',
+        'status':'ENGINEERING_PILOT_FAILED' if failed else 'ENGINEERING_PILOT_COMPLETE',
+        'training_started':not failed,'actual_completed_updates':0 if failed else 200,
+        'optimizer_updates_dispatched':0 if failed else 200,'resolved_dependencies':dependencies,
+        'fixture_scope':'SOFTWARE_TEST_DOUBLE_METADATA_NOT_A_GPU_PROOF'}
+    if profile is not None:
+        identity['deployment_runtime_profile']=profile;receipt['deployment_runtime_profile']=profile
+    if with_identity:handoff.write_json(folder/'identity.json',identity)
+    if not failed:
+        (folder/'engineering_initial.pt').write_bytes(b'SOFTWARE_TEST_DOUBLE_CHECKPOINT_NO_MODEL')
+    def seal():
+        paths=[claim,root/handoff.PILOT_RUNTIME_AUDITS[0]]
+        if school:paths.append(root/handoff.PILOT_RUNTIME_AUDITS[1])
+        paths.extend(path for path in folder.iterdir() if path.name in {'identity.json','engineering_initial.pt'})
+        rows=[{**descriptor(path.relative_to(root).as_posix()),'role':'result','dataset':'Paper3SourceEngineering'}
+              for path in paths]
+        artifact=handoff.PILOT+'/engineering_artifact_manifest.json'
+        handoff.write_json(root/artifact,{'schema_version':'paper3-source-engineering-artifacts-v1',
+            'scope':'ENGINEERING_SOURCE_PILOT_ONLY','scientific_result':False,
+            'pilot_status':receipt['status'],'files':rows})
+        receipt['artifact_manifest']=descriptor(artifact)
+        handoff.write_json(folder/'engineering_receipt.json',receipt)
+    seal()
+    return (Bootstrap(),training_campaign,r2_backup,r2_restore), receipt, descriptor, seal
+
+
+@pytest.mark.parametrize('school',[False,True])
+@pytest.mark.parametrize('failed',[False,True])
+def test_bound_pilot_dependency_provenance_survives_offline_handoff_and_full_get(tmp_path,school,failed):
+    apis,receipt,descriptor,seal=pilot_runtime_fixture(tmp_path,school=school,failed=failed)
+    before={str(p.relative_to(tmp_path)):p.read_bytes() for p in tmp_path.rglob('*') if p.is_file()}
+    snap=handoff.snapshot(tmp_path,job_exit_code=2 if failed else 0,apis=apis)
+    payload=queue_path(tmp_path,snap)/'payload'
+    expected=handoff.PILOT_RUNTIME_AUDITS if school else handoff.PILOT_RUNTIME_AUDITS[:1]
+    for name in expected:
+        assert (payload/name).read_bytes()==before[name]
+    assert snap['status']=='PENDING_EXTERNAL_BACKUP_NOT_UPLOADED' and not snap['uploaded']
+    assert all((tmp_path/name).read_bytes()==raw for name,raw in before.items())
+    client=S3(); result=handoff.flush(tmp_path,client=client,bucket='SOFTWARE_TEST_DOUBLE',apis=apis)
+    assert result['uploaded'] and all(body.eof and body.closed for body in client.bodies)
+    for name in expected:
+        assert client.objects['paper3/hpc-training-results/'+snap['queue_id']+'/'+name]==before[name]
+
+
+def test_prefit_failed_pilot_without_identity_can_retain_actual_bound_runtime_metadata(tmp_path):
+    apis,_,_,_=pilot_runtime_fixture(tmp_path,failed=True,with_identity=False)
+    snap=handoff.snapshot(tmp_path,job_exit_code=2,apis=apis)
+    assert all((queue_path(tmp_path,snap)/'payload'/name).is_file() for name in handoff.PILOT_RUNTIME_AUDITS)
+    assert not (tmp_path/handoff.PILOT/'identity.json').exists()
+
+
+@pytest.mark.parametrize('name',handoff.PILOT_RUNTIME_AUDITS)
+def test_changed_pilot_runtime_proof_blocks_snapshot_without_overwriting_originals(tmp_path,name):
+    apis,_,_,_=pilot_runtime_fixture(tmp_path)
+    path=tmp_path/name;path.write_bytes(path.read_bytes()+b'\n');raw=path.read_bytes()
+    with pytest.raises(handoff.HandoffError,match='artifact_SHA_mismatch'):
+        handoff.snapshot(tmp_path,apis=apis)
+    assert path.read_bytes()==raw and not (tmp_path/handoff.BASE).exists()
+
+
+def test_self_consistent_forged_hpc_runtime_registry_is_not_backup_authority(tmp_path):
+    apis,receipt,descriptor,seal=pilot_runtime_fixture(tmp_path)
+    path=tmp_path/handoff.PILOT_RUNTIME_AUDITS[1]
+    proof=json.loads(path.read_bytes());proof['actual_module_versions']['torch']='2.8.0+cu128'
+    handoff.write_json(path,proof)
+    receipt['deployment_runtime_profile']=descriptor(handoff.PILOT_RUNTIME_AUDITS[1],size=False)
+    identity_path=tmp_path/handoff.PILOT/'identity.json';identity=json.loads(identity_path.read_bytes())
+    identity['deployment_runtime_profile']=receipt['deployment_runtime_profile'];handoff.write_json(identity_path,identity);seal()
+    with pytest.raises(handoff.HandoffError,match='registered_provenance_mismatch'):
+        handoff.snapshot(tmp_path,apis=apis)
+
+
+@pytest.mark.parametrize('mode',['reference','manifest'])
+def test_pilot_runtime_references_cannot_inject_env_or_other_audit_files(tmp_path,monkeypatch,mode):
+    apis,receipt,descriptor,seal=pilot_runtime_fixture(tmp_path)
+    secret=tmp_path/'.env';secret.write_bytes(b'SOFTWARE_TEST_DOUBLE_SECRET_MUST_NOT_BE_READ')
+    if mode=='reference':
+        receipt['deployment_runtime_profile']=descriptor('.env',size=False)
+        identity_path=tmp_path/handoff.PILOT/'identity.json';identity=json.loads(identity_path.read_bytes())
+        identity['deployment_runtime_profile']=receipt['deployment_runtime_profile'];handoff.write_json(identity_path,identity);seal()
+    else:
+        artifact=tmp_path/handoff.PILOT/'engineering_artifact_manifest.json'
+        value=json.loads(artifact.read_bytes());value['files'].append({**descriptor('.env'),
+            'role':'result','dataset':'Paper3SourceEngineering'})
+        handoff.write_json(artifact,value)
+        receipt['artifact_manifest']=descriptor(artifact.relative_to(tmp_path).as_posix())
+        handoff.write_json(tmp_path/handoff.PILOT/'engineering_receipt.json',receipt)
+    actual=handoff.hash_file
+    def safe_hash(path):
+        assert Path(path)!=secret,'runtime closure tried to read the .env file'
+        return actual(path)
+    monkeypatch.setattr(handoff,'hash_file',safe_hash)
+    with pytest.raises(handoff.HandoffError):handoff.snapshot(tmp_path,apis=apis)
+    assert not (tmp_path/handoff.BASE).exists()
+
+
 def test_offline_snapshot_copies_real_bytes_and_never_uploads(tmp_path, monkeypatch):
     source, row, apis = inputs(tmp_path)
     monkeypatch.setattr(r2_backup, 'run_backup', lambda **kwargs: pytest.fail('snapshot must not call network API'))
@@ -322,9 +450,9 @@ HEAD = 'a' * 40
 
 
 class Git:
-    def __init__(self, *, remote=None, paths=None, dirty=False):
+    def __init__(self, *, remote=None, paths=None, dirty=False, blobs=None):
         self.remote = remote; self.paths = paths or ['README.md', 'p3work/module.py', 'hpc/handoff.py']
-        self.dirty = dirty; self.calls = []; self.helpers = []; self.pushes = 0
+        self.dirty = dirty; self.calls = []; self.helpers = []; self.pushes = 0; self.blobs = blobs or {}
     def __call__(self, argv, **kwargs):
         assert TOKEN not in repr(argv); assert '-A' not in argv and '--force' not in argv
         assert kwargs['timeout'] == 300
@@ -336,6 +464,7 @@ class Git:
             assert kwargs['env']['PAPER3_HPC_GITHUB_TOKEN'] == TOKEN
         assert kwargs['env'].get('HTTPS_PROXY') == 'https://proxy.invalid'
         if args == ['rev-parse', 'HEAD']: out = HEAD
+        elif args[:1] == ['rev-parse'] and args[1].startswith('HEAD:'): out = self.blobs.get(args[1][5:], '0' * 40)
         elif args[:1] == ['diff']: out = 'p3work/module.py' if self.dirty else ''
         elif args[:1] == ['ls-tree']: out = '\n'.join(self.paths)
         elif args[:1] == ['ls-remote']: out = '' if self.remote is None else self.remote + '\t' + args[-1]
@@ -407,3 +536,23 @@ def test_hidden_input_refuses_non_tty(monkeypatch):
     monkeypatch.setattr(handoff.sys, 'stdin', SimpleNamespace(isatty=lambda:False))
     with pytest.raises(handoff.HandoffError, match='interactive_hidden_input_required'):
         handoff.hidden('fixture')
+
+
+@pytest.mark.parametrize('path,blob', [
+    ('hpc/fixtures/original_source_training_54b972.py.txt', 'fee812b6165101afc6b0141ce5e0a8f0d158df85'),
+    ('hpc/fixtures/original_run_controlled_pilot_856393.py.txt', '793c40fe37a9c0d7f8826232a6e7622e183377c2'),
+])
+def test_github_historical_code_snapshot_requires_exact_original_committed_blob(tmp_path, git_env, path, blob):
+    git = Git(paths=[path], blobs={path:blob})
+    assert handoff.publish_code(tmp_path, token=TOKEN, runner=git)['actual_push_performed']
+    tampered = Git(paths=[path], blobs={path:'b' * 40})
+    with pytest.raises(handoff.HandoffError, match='github_data_or_credential_file_forbidden'):
+        handoff.publish_code(tmp_path, token=TOKEN, runner=tampered)
+    assert tampered.pushes == 0
+
+
+def test_github_does_not_admit_other_historical_text_files(tmp_path, git_env):
+    git = Git(paths=['hpc/fixtures/another_code_snapshot.py.txt'])
+    with pytest.raises(handoff.HandoffError, match='github_data_or_credential_file_forbidden'):
+        handoff.publish_code(tmp_path, token=TOKEN, runner=git)
+    assert git.pushes == 0

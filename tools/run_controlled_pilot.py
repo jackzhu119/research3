@@ -411,6 +411,15 @@ def _validate_checkpoint(saved, identity, update, *, path, io_timings=None, dead
 
 def _resolved_dependencies(root):
     """Validate the existing pip-list evidence without invoking pip or a shell."""
+    if os.environ.get("PAPER3_HPC_RUNTIME_PROFILE") is not None:
+        from hpc.runtime_profile import (RuntimeProfileError, selected_profile,
+                                         validate_runtime_profile)
+        try:
+            profile = selected_profile(root)
+            validate_runtime_profile(root, profile)
+        except RuntimeProfileError as error:
+            raise PilotGateError(str(error)) from None
+        return _descriptor(root, root / "audit/gpu_resolved_dependencies.json")
     path = root / "audit/gpu_resolved_dependencies.json"
     before = _descriptor(root, path)  # Reject the original alias before opening it.
     value = json.loads(path.read_text())
@@ -458,6 +467,11 @@ def _finalize_result_manifests(root, output, receipt):
         if descriptor != receipt["resolved_dependencies"]:
             raise PilotGateError("Resolved dependencies changed during the engineering pilot")
         allowed.append(root / "audit/gpu_resolved_dependencies.json")
+    if receipt.get("deployment_runtime_profile"):
+        from hpc.runtime_profile import validate_runtime_profile
+        if validate_runtime_profile(root, os.environ.get("PAPER3_HPC_RUNTIME_PROFILE")) != receipt["deployment_runtime_profile"]:
+            raise PilotGateError("Engineering deployment runtime profile changed")
+        allowed.append(root / "audit/hpc_runtime_profile.json")
     if receipt.get("status") == "ENGINEERING_PILOT_COMPLETE" and (
             not receipt.get("resolved_dependencies") or any(not path.is_file() for path in allowed)):
         raise PilotGateError("A completed engineering pilot requires every declared result artifact")
@@ -683,19 +697,27 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
     if relative.is_absolute() or ".." in relative.parts or relative.parts[:1] != ("runs",):
         raise PilotGateError("Pilot outputs must use a new root-relative runs/ directory")
     output = _result_destination(root, root / relative)
-    if not output.is_relative_to(root) or output.exists():
+    if not output.is_relative_to(root):
         raise PilotGateError("Output exists or escaped the execution root; no duplicate pilot")
+    prefit_resume = None
+    if output.exists():
+        if os.environ.get("PAPER3_HPC_RUNTIME_PROFILE"):
+            from hpc.pilot_prefit import consume_prefit_resume
+            prefit_resume = consume_prefit_resume(root, output)
+        else:
+            raise PilotGateError("Output exists or escaped the execution root; no duplicate pilot")
     runs = root / "runs"
     runs.mkdir(exist_ok=True)
     claim = runs / "controlled_pilot_job_claim.json"
     # A persistent one-job claim prevents accidental reexecution with another output path.
-    try:
-        with claim.open("x") as stream:
-            json.dump({"scope": "ENGINEERING_SOURCE_PILOT_ONLY", "max_jobs": 1,
-                       "output": str(relative), "started_utc": datetime.now(timezone.utc).isoformat()}, stream)
-    except FileExistsError:
-        raise PilotGateError("The one controlled pilot job was already claimed; inspect its receipt") from None
-    output.mkdir()
+    if prefit_resume is None:
+        try:
+            with claim.open("x") as stream:
+                json.dump({"scope": "ENGINEERING_SOURCE_PILOT_ONLY", "max_jobs": 1,
+                           "output": str(relative), "started_utc": datetime.now(timezone.utc).isoformat()}, stream)
+        except FileExistsError:
+            raise PilotGateError("The one controlled pilot job was already claimed; inspect its receipt") from None
+        output.mkdir()
     receipt = {"status": "RUNNING", "scope": "ENGINEERING_SOURCE_PILOT_ONLY",
                "scientific_f0": False, "source_lodo_selection_verified": False,
                "training_started": False,
@@ -706,14 +728,21 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
                "checkpoint_io_timings": [], "prediction_replay_optimizer_updates": 0,
                "completed_update_count_basis": "CUDA-synchronized complete segments; a lower bound on failure",
                "started_utc": datetime.now(timezone.utc).isoformat()}
+    if prefit_resume is not None:
+        receipt["started_utc"] = prefit_resume["original_started_utc"]
+        receipt["prefit_resume"] = prefit_resume
     _atomic_json(output / "engineering_receipt.json", receipt)
-    wall_start = time.monotonic()
+    wall_start = time.monotonic() - (prefit_resume["prior_wall_seconds"] if prefit_resume else 0)
     try:
         from p3work.runtime_clock import collect_clock_preflight
         receipt["clock_preflight"] = collect_clock_preflight()
         _atomic_json(output / "engineering_receipt.json", receipt)
         dependencies = _resolved_dependencies(root)
         receipt["resolved_dependencies"] = dependencies
+        if os.environ.get("PAPER3_HPC_RUNTIME_PROFILE"):
+            from hpc.runtime_profile import validate_runtime_profile
+            receipt["deployment_runtime_profile"] = validate_runtime_profile(
+                root, os.environ["PAPER3_HPC_RUNTIME_PROFILE"])
         if os.environ.get("CUBLAS_WORKSPACE_CONFIG", ":4096:8") not in {":4096:8", ":16:8"}:
             raise PilotGateError("CUBLAS workspace configuration is incompatible with deterministic execution")
         os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
@@ -750,6 +779,8 @@ def execute_pilot(cache, output_relative, *, user_started_gpu):
                     "geometry_sha256": file_digest(root / "p3work/spatial_geometry.py"),
                     "contracts_sha256": file_digest(root / "p3work/contracts.py")}
         identity["resolved_dependencies"] = dependencies
+        if receipt.get("deployment_runtime_profile"):
+            identity["deployment_runtime_profile"] = receipt["deployment_runtime_profile"]
         _atomic_json(output / "identity.json", identity)
         deadline = wall_start + MAX_WALL_SECONDS
         io_timings = receipt["checkpoint_io_timings"]

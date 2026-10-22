@@ -28,6 +28,24 @@ REPO=Path(__file__).resolve().parents[1]
 SCOPE='audit/data_plan_20261020/episode_descriptor_compatibility_fix'
 EPISODE_SNAPSHOT=SCOPE+'/original_episodes_348604.py.txt'
 PREDICTION_SNAPSHOT=SCOPE+'/original_prediction_store_e1af63.py.txt'
+SOURCE_TRAINING_SNAPSHOT='hpc/fixtures/original_source_training_54b972.py.txt'
+SOURCE_TRAINING_HISTORY={'path':'p3work/source_training.py',
+    'sha256':'54b972457ea1bbc08c15aeff9440a418047b7752b725dac3c27d562bead2a849','bytes':80473}
+PILOT_SNAPSHOT='hpc/fixtures/original_run_controlled_pilot_856393.py.txt'
+PILOT_HISTORY={'path':'tools/run_controlled_pilot.py',
+    'sha256':'856393030d10cdbbee54138fefadce6ee8520243f9e54d00feb7d5328088172c','bytes':50853}
+
+
+def historical_source_training(manifest, snapshot=None, *, expected=SOURCE_TRAINING_HISTORY):
+    """Bind the original historical-verifier fixture to its genuine snapshot."""
+    historical=[row for row in manifest['files'] if row['path']==expected['path']]
+    if historical != [expected]:
+        raise AssertionError('exact_original_source_training_inventory_required')
+    body=(snapshot or REPO/SOURCE_TRAINING_SNAPSHOT).read_bytes()
+    actual={'path':expected['path'],'sha256':hashlib.sha256(body).hexdigest(),'bytes':len(body)}
+    if actual != expected:
+        raise AssertionError('historical_source_training_snapshot_SHA_or_bytes_mismatch')
+    return body
 
 
 def function_ast(path,name):
@@ -96,6 +114,12 @@ class VersionedSoftwareIntegrityTests(unittest.TestCase):
             ('original_classical.py','original_software_code_manifest.json','native_regression.json'))
         for relative in paths:
             target=self.root/relative;target.parent.mkdir(parents=True,exist_ok=True)
+            if relative=='p3work/source_training.py':
+                target.write_bytes(historical_source_training(manifest))
+                continue
+            if relative=='tools/run_controlled_pilot.py':
+                target.write_bytes(historical_source_training(manifest,REPO/PILOT_SNAPSHOT,expected=PILOT_HISTORY))
+                continue
             shutil.copyfile(REPO/relative,target)
         contract=self.write('contracts/episode_descriptor_compatibility_20261020.json',
             {'software_fixture_only':True,'scientific_fits':0})
@@ -130,6 +154,27 @@ class VersionedSoftwareIntegrityTests(unittest.TestCase):
         self.assertEqual(report['approved_modified_files'],3)
         self.assertEqual(report['descriptor_consumer_compatibility_history'],self.history)
         self.assertNotIn('historical_116_code_SHA_unchanged',report)
+
+    def test_historical_source_training_snapshot_tampering_is_rejected_before_copy(self):
+        manifest=json.loads((REPO/'audit/software_code_manifest.json').read_bytes())
+        snapshot=self.root/'tampered-original-source-training.txt'
+        snapshot.write_bytes((REPO/SOURCE_TRAINING_SNAPSHOT).read_bytes()+b'\n# changed\n')
+        with self.assertRaisesRegex(AssertionError,'snapshot_SHA_or_bytes_mismatch'):
+            historical_source_training(manifest,snapshot)
+
+    def test_historical_source_training_inventory_remains_exact(self):
+        manifest=json.loads((REPO/'audit/software_code_manifest.json').read_bytes())
+        row=next(row for row in manifest['files'] if row['path']=='p3work/source_training.py')
+        row['bytes']+=1
+        with self.assertRaisesRegex(AssertionError,'exact_original_source_training_inventory'):
+            historical_source_training(manifest)
+
+    def test_historical_pilot_archive_tampering_is_rejected_before_copy(self):
+        manifest=json.loads((REPO/'audit/software_code_manifest.json').read_bytes())
+        snapshot=self.root/'tampered-original-pilot.txt'
+        snapshot.write_bytes((REPO/PILOT_SNAPSHOT).read_bytes()+b'\n# changed\n')
+        with self.assertRaisesRegex(AssertionError,'snapshot_SHA_or_bytes_mismatch'):
+            historical_source_training(manifest,snapshot,expected=PILOT_HISTORY)
 
     def test_fourth_original_file_change_is_rejected(self):
         self.write('p3work/__init__.py',b'unapproved fourth change\n')

@@ -987,16 +987,50 @@
       "sha256": "feac9f27845ef82dfc6bee167aa55da776d933ffa22cae0a4cad449563eb10cd"
     }
   ],
+  "deployment_only_ast_guards": {
+    "p3work/source_training.py": {
+      "deployment_functions": [
+        "_verify_pilot_result_manifests"
+      ],
+      "original_code_commit": "7371f0c2c5faa9e7e7ea78063cbe263f3bc7d308",
+      "untouched_module_AST_sha256": "b3c7bb9bc6cc31622b65f970aed7ddef4910cc5ca720344fdb51a8994ff3cc4a"
+    },
+    "tools/run_controlled_pilot.py": {
+      "deployment_functions": [
+        "_finalize_result_manifests",
+        "_resolved_dependencies",
+        "execute_pilot"
+      ],
+      "original_code_commit": "7371f0c2c5faa9e7e7ea78063cbe263f3bc7d308",
+      "unchanged_200_update_and_exact_resume_AST_sha256": "7bd6fc8f0a6f7106f6261a1aad5b1f9e7ce412cb0d480afe234bc4184b49f8c1",
+      "untouched_module_AST_sha256": "c4347cbb053eccd89aeaf219ff5d62b1ba14fbe7f674ee440f77b2ee7c7dfa44"
+    }
+  },
   "deployment_overrides": {
     "p3work/source_extension_downstream.py": {
       "bytes": 158680,
       "path": "p3work/source_extension_downstream.py",
       "sha256": "092a0556427294bc2417cb7586adf705560e85e8e7e633760c3944e7cb744234"
     },
+    "p3work/source_training.py": {
+      "bytes": 81705,
+      "path": "p3work/source_training.py",
+      "sha256": "149bae9b9caf371b170e061f0975a95f2c1e2de69efe17c5d5ac972cc1d7567e"
+    },
     "p3work/training_campaign.py": {
       "bytes": 67774,
       "path": "p3work/training_campaign.py",
       "sha256": "4d1ec4d1e930a96b5172145aaa220b761dc11f5710ffa8a424c2522a4bb2057b"
+    },
+    "tests/test_audit_completed_stieger_w3.py": {
+      "bytes": 22064,
+      "path": "tests/test_audit_completed_stieger_w3.py",
+      "sha256": "5bf82c0c23cc313c90b287e3a1d8a1e1b8b9e19cbd99c49df1fdaafc734a7488"
+    },
+    "tests/test_audit_completed_stieger_w3_v2.py": {
+      "bytes": 13489,
+      "path": "tests/test_audit_completed_stieger_w3_v2.py",
+      "sha256": "2a5c3a7df5339d8518e3aec1bbb6603c9f5174da2514ab56eac8f0582b8ee928"
     },
     "tests/test_data_plan_deploy_manifest_v2.py": {
       "bytes": 52638,
@@ -1007,6 +1041,11 @@
       "bytes": 29920,
       "path": "tests/test_training_campaign.py",
       "sha256": "423fa36a025aa9c391c72db109be2902871ceefc2128a66a315c54e559d43984"
+    },
+    "tools/run_controlled_pilot.py": {
+      "bytes": 52764,
+      "path": "tools/run_controlled_pilot.py",
+      "sha256": "95058f93b9ccaaa3143116b227eabef4fe046f924225c2ed274c1a80d09535a3"
     },
     "tools/run_source_extension_downstream.py": {
       "bytes": 4845,
@@ -1041,9 +1080,9 @@
       "sha256": "2f48f4baf5a1069f21f324f9a43e63dea9e87a2f19f5167ce6c9bdee14177c60"
     },
     {
-      "bytes": 4354,
+      "bytes": 6563,
       "path": "hpc/environment.py",
-      "sha256": "6cef6b4e3ba91442b4394ba4791a440710aff0f3db1c437f9bbf28403b588e83"
+      "sha256": "ad3001023d7268205ebc9654d3d8fa9fdc41236f3e6db741467d5a2c1bb633fe"
     },
     {
       "bytes": 17640,
@@ -1051,14 +1090,24 @@
       "sha256": "20e5aa816d6585f3717855fc5132f8ce97943cd2ea6a10e5c338d0b41961aee9"
     },
     {
-      "bytes": 30184,
-      "path": "hpc/handoff.py",
-      "sha256": "e34c21bc3518f61cf7df13926cb9ba58b739fbec90b6581ffc761d2c1f0b0ca3"
+      "bytes": 50853,
+      "path": "hpc/fixtures/original_run_controlled_pilot_856393.py.txt",
+      "sha256": "856393030d10cdbbee54138fefadce6ee8520243f9e54d00feb7d5328088172c"
     },
     {
-      "bytes": 3813,
+      "bytes": 80473,
+      "path": "hpc/fixtures/original_source_training_54b972.py.txt",
+      "sha256": "54b972457ea1bbc08c15aeff9440a418047b7752b725dac3c27d562bead2a849"
+    },
+    {
+      "bytes": 38241,
+      "path": "hpc/handoff.py",
+      "sha256": "3079d381887b6400c53bbe965bba5b70000c3f5e49b909e5e70c5b88cc3a624b"
+    },
+    {
+      "bytes": 3938,
       "path": "hpc/job.sbatch",
-      "sha256": "13906a606362c401a4112d1ea86b35045cc3330fd64399a1f90178343407ac8b"
+      "sha256": "d823da43569230c707288cf6c4c2bbc83946e8fa5ab6d9723f19ce3a3379802b"
     },
     {
       "bytes": 32701,
@@ -1074,6 +1123,11 @@
       "bytes": 16326,
       "path": "hpc/node_cache.py",
       "sha256": "d3d600bdb4d7eb5087085ae2cf411c5808ecbc372fb72f240efe15cb073a5048"
+    },
+    {
+      "bytes": 17220,
+      "path": "hpc/pilot_prefit.py",
+      "sha256": "bbd459b69fb3331ec678f21ccbe4323eeda45251f04f7b0757c54066b0dd8281"
     },
     {
       "bytes": 5193,
@@ -1096,9 +1150,19 @@
       "sha256": "89ed0dd5dfa85dce0d5585b604f428eaffb1dd00e8ffbdfb6236b1631bc97f0f"
     },
     {
-      "bytes": 19037,
+      "bytes": 20981,
+      "path": "hpc/resume_prefit_train.py",
+      "sha256": "6f45593c1fb994df08a3522112bba3b8194c8590bcec56db911eed6c268f9c51"
+    },
+    {
+      "bytes": 23683,
       "path": "hpc/run_stage.py",
-      "sha256": "3a2f55f3e3dca089b23b1ddd1ae5952b003f4294457715550c56c25fd9bb596f"
+      "sha256": "9f86bb861ebe45a054d66d50f0932bd22af6e4934e6c2abd3a47779ea9726750"
+    },
+    {
+      "bytes": 8410,
+      "path": "hpc/runtime_profile.py",
+      "sha256": "e8c61894be74ade0fb1674625e0bcd3f5360275ecc07aa816efaec414d9e8131"
     },
     {
       "bytes": 30015,
@@ -1166,6 +1230,11 @@
       "sha256": "34558644d23572b93935d1e045611286f2037c7d4a2f70829e3d7530fd6c7255"
     },
     {
+      "bytes": 3799,
+      "path": "tests/test_hpc_environment_guard.py",
+      "sha256": "761a416a93025079c5d25e0154c01d9e479797f1f230339785e95521a3cb6711"
+    },
+    {
       "bytes": 35772,
       "path": "tests/test_hpc_failed_chain_recovery.py",
       "sha256": "1eb9ab3f00513c0945d4bfadbf3983ff2575a1618a25f5942563f1fffe52ce27"
@@ -1176,9 +1245,9 @@
       "sha256": "5a7f63d8bd2d9a4260a736be7931b70c18f4e52f02a2c90b73d8557825dcc00d"
     },
     {
-      "bytes": 22053,
+      "bytes": 31555,
       "path": "tests/test_hpc_handoff.py",
-      "sha256": "2830a2636b0e1f9a77e9f82433c18f22949dfd44538b81305c03b920db4a550a"
+      "sha256": "b52372a14e0bda093c966bd7c65713bf5dc6a11622be77ffbebe85abebd4efa8"
     },
     {
       "bytes": 25006,
@@ -1196,6 +1265,11 @@
       "sha256": "4157717245f40733bf26d7f44ca59857f5700bd49680efa3a0c6c11475f447e4"
     },
     {
+      "bytes": 16712,
+      "path": "tests/test_hpc_pilot_prefit.py",
+      "sha256": "7f01e97bfa9eb685688f4cf338a330d915f60806c053344b29a0e0e03d2c99a6"
+    },
+    {
       "bytes": 2813,
       "path": "tests/test_hpc_project_bytecode.py",
       "sha256": "4beb08a34b613bb38f1b7de0d8beea4a632b06c3d4934eedc4607f1831d835bc"
@@ -1211,9 +1285,19 @@
       "sha256": "a229a1c27e0648b1e30466a4a3d0ae05abcb136689d01c1d1b8d8356965dfd58"
     },
     {
-      "bytes": 12391,
+      "bytes": 15845,
+      "path": "tests/test_hpc_resume_prefit_train.py",
+      "sha256": "a8843432ab977b246867e4e28e1f6f47c5ef3974ec8844e4ac2b5154d014dbcc"
+    },
+    {
+      "bytes": 20341,
       "path": "tests/test_hpc_run_stage.py",
-      "sha256": "1944e7311d77f08aa194d5695366c05958c408c0e014eb295388f24e2ba48d24"
+      "sha256": "17446c636a1bc538437e5643858f6c9595051bcf8140e48a297351bef3e42522"
+    },
+    {
+      "bytes": 13407,
+      "path": "tests/test_hpc_runtime_profile.py",
+      "sha256": "8867d1607d1e96fea710fdecffed86d3507a5d1cb6ca78a8cf8bf7633e0d3b55"
     },
     {
       "bytes": 9981,
@@ -1256,5 +1340,5 @@
   ],
   "original_inventory_sha256": "0550119a686b5b296cc436b24aba889a584e1b95360316194ac1aa726e82d52d",
   "schema_version": "paper3-hpc-software-overlay-v1",
-  "scope": "Only orchestration, scheduler signal handling, manifest collection and portable test fixtures amended; numerical kernels, splits, seeds, fit budgets, grids and gates unchanged. Historical original files retain original hashes; no runtime audit or data bytes are published here."
+  "scope": "Deployment orchestration, installed-runtime auditing, strict zero-update same-claim setup recovery, scheduler handling, manifest collection and portable fixtures only; numerical kernels, splits, seeds, update counts, fit budgets and exact-resume gates unchanged. Original inventory hashes retained; no runtime audit or data bytes published here."
 }

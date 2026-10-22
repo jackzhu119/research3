@@ -220,25 +220,96 @@ def verify_pilot(root):
     return verify_engineering_pilot(cache, 'runs/controlled_source_pilot_seed20261018/engineering_receipt.json')
 
 
+def coordinator_result(root, relative, output, code, stop):
+    """Summarize the actual child exit without echoing arbitrary log contents.
+
+    Coordinator logs retain their original bytes.  Only known status/type
+    values and exact known control messages enter the public stage receipt.
+    This is diagnostic metadata, never production completion authority.
+    """
+    result = {'entry': relative, 'returncode': code,
+              'status': ('COORDINATOR_PAUSED_OR_STOPPED_NOT_COMPLETE' if code == 3 or stop.is_set() else
+                         'COORDINATOR_RETURNED_ZERO_INSPECT_ORIGINAL_RECEIPTS' if code == 0 else
+                         'COORDINATOR_RETURNED_NONZERO'),
+              'log': str(output.relative_to(root)), 'stop_requested': stop.is_set(),
+              'scientific_completion_claimed': False}
+    statuses = {'BLOCKED_PRESERVE_EXISTING_JOBS', 'PENDING_DATA_GATES',
+        'MAINLINE_THROUGH_ONE_INTERNAL_CHECK_COMPLETE', 'PAUSED_SCHEDULER_SIGNAL_SAME_JOB',
+        'PAUSED_CAMPAIGN_WALL_LIMIT', 'PAUSED_SAME_JOB_RECOVERY_REQUIRED',
+        'PAUSED_REQUESTED_ACTION_BOUND', 'INTERRUPTED_PRESERVE_SAME_JOB'}
+    types = {'CampaignError', 'SourceTrainingError', 'SourceExtensionError', 'ValueError', 'OSError',
+             'FileNotFoundError', 'RuntimeError', 'KeyError', 'TypeError', 'PermissionError', 'MemoryError'}
+    pilot_error = 'Actual completed 200-update engineering pilot with exact resume is required'
+    try:
+        if output.is_symlink() or not output.is_file() or output.stat().st_size > 256 * 1024:
+            return result
+        text = output.read_text()
+        positions = [0, *(m.end() - 1 for m in re.finditer(r'\n\{', text))][-16:]
+        value = None
+        for offset in reversed(positions):
+            try:
+                candidate, end = json.JSONDecoder().raw_decode(text, offset)
+            except ValueError:
+                continue
+            if isinstance(candidate, dict) and not text[end:].strip():
+                value = candidate
+                break
+        if not isinstance(value, dict):
+            return result
+        if value.get('status') in statuses:
+            result['reported_status'] = value['status']
+        if value.get('error_type') in types:
+            result['error_type'] = value['error_type']
+        if value.get('reason') in {pilot_error, 'stage_blocked:SourceTrainingError:' + pilot_error}:
+            result['reason_code'] = 'engineering_pilot_evidence_invalid'
+    except (OSError, ValueError, TypeError):
+        pass
+    return result
+
+
 def run_training(root, stage, output, stop, *, runner=child):
+    if os.environ.get('PAPER3_HPC_RUNTIME_PROFILE'):
+        from hpc.runtime_profile import prepare_runtime_profile
+        from hpc.pilot_prefit import prepare_prefit_resume
+        profile = prepare_runtime_profile(root, os.environ['PAPER3_HPC_RUNTIME_PROFILE'])
+        prefit = prepare_prefit_resume(root)
+        write(output / 'runtime_profile.json', profile)
+        write(output / 'pilot_prefit.json', prefit)
+        print(json.dumps({'deployment_runtime_profile': profile, 'pilot_prefit': prefit}), flush=True)
     from p3work import training_campaign as campaign
     signal_flags = ['--handle-slurm-signals', '--stop-grace-seconds', '120']
     common = ['--execute', '--user-started-gpu', *signal_flags]
+    observations = []
+
+    def launch(entry, args, log):
+        code = runner(root, entry, args, log, stop, cooperative=True)
+        summary = coordinator_result(root, entry, log, code, stop)
+        observations.append(summary)
+        write(output / 'training_result.json', {'status': 'COORDINATOR_EXIT_RECORDED_NOT_STAGE_COMPLETION',
+              'coordinators': observations, 'scientific_completion_claimed': False})
+        print(json.dumps({'coordinator_result': summary}), flush=True)
+        return code
+
+    def finish(code):
+        write(output / 'training_result.json', {
+            'status': ('TRAINING_STAGE_RETURNED_ZERO_INSPECT_ORIGINAL_RECEIPTS' if code == 0 else
+                       'TRAINING_STOPPED_OR_BLOCKED_NOT_COMPLETE'),
+            'returncode': code, 'coordinators': observations, 'scientific_completion_claimed': False})
+        return code
+
     if stage == 'pilot':
         action = campaign.next_action(root)
         if action is None or action['kind'] != 'pilot':
             verify_pilot(root)  # Real byte/checkpoint verification; never start the next fit.
-            return 0
-        code = runner(root, 'tools/run_training_campaign.py', [*common, '--max-actions', '1'],
-                      output / 'campaign.log', stop, cooperative=True)
+            return finish(0)
+        code = launch('tools/run_training_campaign.py', [*common, '--max-actions', '1'], output / 'campaign.log')
         if code not in (0, 3) or stop.is_set():
-            return code or 3
+            return finish(code or 3)
         verify_pilot(root)
-        return 0
-    code = runner(root, 'tools/run_training_campaign.py', common, output / 'campaign.log',
-                  stop, cooperative=True)
+        return finish(0)
+    code = launch('tools/run_training_campaign.py', common, output / 'campaign.log')
     if code or stop.is_set():
-        return code or 3
+        return finish(code or 3)
     # Exactly the original launcher order: real mainline completion first, then
     # two independent source-development arms. No W7/external-test command.
     from hpc.stage_data import load_index
@@ -250,11 +321,10 @@ def run_training(root, stage, output, stop, *, runner=child):
              '--extension-manifest', index['extension_manifests'][arm], *common],
             ['--arm', arm, '--stage', 'auto-development', *common],
         ):
-            code = runner(root, 'tools/run_source_extension_downstream.py', args,
-                          output / (arm + '.log'), stop, cooperative=True)
+            code = launch('tools/run_source_extension_downstream.py', args, output / (arm + '.log'))
             if code or stop.is_set():
-                return code or 3
-    return 0
+                return finish(code or 3)
+    return finish(0)
 
 
 def run(root, stage):
@@ -263,6 +333,7 @@ def run(root, stage):
     output = root / '.paper3-hpc/jobs' / os.environ['SLURM_JOB_ID']
     output.mkdir(parents=True, exist_ok=True)
     code, result, snapshot_error, safe_snapshot = 2, None, None, True
+    frozen_data_verification = None
     diagnostic_summary = None
     with stop_signals() as stop:
         try:
@@ -320,10 +391,15 @@ def run(root, stage):
                             result = prepare_data(root, mode='check',
                                 progress=lambda event: print(json.dumps({'data_progress': event},
                                     ensure_ascii=False), flush=True))
+                            frozen_data_verification = result
                             write(output / 'frozen_data_verified.json', result)
                             if result.get('status') != 'ready':
                                 raise StageError('frozen_data_gate_blocked_inspect_frozen_data_verified_json')
                             code = run_training(root, stage, output, stop)
+                            training_path = output / 'training_result.json'
+                            result = (json.loads(training_path.read_text()) if training_path.is_file() else
+                                      {'status': 'TRAINING_RESULT_UNAVAILABLE_INSPECT_COORDINATOR_LOGS',
+                                       'returncode': code, 'scientific_completion_claimed': False})
             if stage == 'backup':
                 from hpc.handoff import flush, publish_code
                 result = flush(root)
@@ -340,6 +416,10 @@ def run(root, stage):
             # Do not serialize arbitrary dependency/SDK exception strings or credentials.
             safe_snapshot = not isinstance(exc, CleanupUnconfirmed)
             reason = str(exc) if isinstance(exc, (StageError, EnvironmentError)) else type(exc).__name__
+            if (isinstance(exc, ValueError) and type(exc).__module__ in
+                    {'hpc.runtime_profile', 'hpc.pilot_prefit'}
+                    and re.fullmatch(r'[a-z][a-z0-9_]{1,159}', str(exc))):
+                reason = str(exc)
             result = {'status': 'BLOCKED_PRESERVE_EXISTING_JOBS', 'reason': reason}
             code = 2
         finally:
@@ -358,6 +438,7 @@ def run(root, stage):
                        'job_id': os.environ['SLURM_JOB_ID'], 'returncode': code,
                        'status': 'STAGE_RETURNED_ZERO_INSPECT_ORIGINAL_RECEIPTS' if code == 0 else 'STOPPED_OR_BLOCKED_NOT_COMPLETE',
                        'result': result, 'snapshot_error_type': snapshot_error,
+                       'frozen_data_verification': frozen_data_verification,
                        'startup_probe': diagnostic_summary,
                        'scientific_completion_claimed': False, 'external_query_accessed': False,
                        'finished_utc': datetime.now(timezone.utc).isoformat()}

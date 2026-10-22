@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import ast
 import importlib
 import json
 import os
@@ -26,7 +27,9 @@ def verify_code(root):
     changed = value['deployment_overrides']
     allowed = {'p3work/training_campaign.py', 'p3work/source_extension_downstream.py',
                'tools/run_training_campaign.py', 'tools/run_source_extension_downstream.py',
-               'tests/test_training_campaign.py', 'tests/test_data_plan_deploy_manifest_v2.py'}
+               'tests/test_training_campaign.py', 'tests/test_data_plan_deploy_manifest_v2.py',
+               'tests/test_audit_completed_stieger_w3.py', 'tests/test_audit_completed_stieger_w3_v2.py',
+               'tools/run_controlled_pilot.py', 'p3work/source_training.py'}
     if not set(changed) <= allowed:
         raise EnvironmentError('scientific_kernel_override_forbidden')
     for row in value['baseline_files'] + value.get('deployment_support_files', []):
@@ -40,6 +43,31 @@ def verify_code(root):
         raw = path.read_bytes()
         if len(raw) != expected['bytes'] or hashlib.sha256(raw).hexdigest() != expected['sha256']:
             raise EnvironmentError('frozen_software_SHA256_mismatch:' + relative)
+    compatibility = {'tools/run_controlled_pilot.py', 'p3work/source_training.py'} & set(changed)
+    guards = value.get('deployment_only_ast_guards', {})
+    if compatibility != set(guards):
+        raise EnvironmentError('deployment_only_scientific_AST_guards_required')
+    for relative in sorted(compatibility):
+        guard = guards[relative]
+        tree = ast.parse((root / relative).read_bytes())
+        functions = set(guard['deployment_functions'])
+        expected = ({'_resolved_dependencies', '_finalize_result_manifests', 'execute_pilot'}
+                    if relative == 'tools/run_controlled_pilot.py' else {'_verify_pilot_result_manifests'})
+        if functions != expected:
+            raise EnvironmentError('deployment_function_allowlist_changed')
+        untouched = [node for node in tree.body
+                     if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) or node.name not in functions]
+        raw = '\n'.join(ast.dump(node, include_attributes=False) for node in untouched).encode()
+        if hashlib.sha256(raw).hexdigest() != guard['untouched_module_AST_sha256']:
+            raise EnvironmentError('scientific_AST_changed_outside_deployment_functions:' + relative)
+        if relative == 'tools/run_controlled_pilot.py':
+            execution = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'execute_pilot')
+            body = next(node for node in execution.body if isinstance(node, ast.Try)).body
+            start = next(i for i, node in enumerate(body) if isinstance(node, ast.Assign)
+                         and any(isinstance(target, ast.Name) and target.id == 'deadline' for target in node.targets))
+            raw = '\n'.join(ast.dump(node, include_attributes=False) for node in body[start:]).encode()
+            if hashlib.sha256(raw).hexdigest() != guard['unchanged_200_update_and_exact_resume_AST_sha256']:
+                raise EnvironmentError('original_pilot_update_or_exact_resume_algorithm_changed')
     return {'manifest_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
             'baseline_files_verified': len(value['baseline_files']),
             'deployment_support_files_verified': len(value.get('deployment_support_files', [])),

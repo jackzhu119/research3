@@ -22,6 +22,18 @@ Slurm 20.11 的数据库读取代码会把部分已取消、原开始时间未�
 
 学校 glibc 2.17 和 Bash 4.2 的兼容入口保留原有原子性要求：Git 元数据初始化优先使用 libc `renameat2`，缺少该符号时只在已识别的 Linux LP64 ABI 上调用同一内核 `RENAME_NOREPLACE` 操作；内核或文件系统不支持时继续阻塞。传输临时文件通过 `O_NOFOLLOW` 打开并验证 inode 后执行 `fchmod`，保留完整 GET/SHA、硬链接无覆盖发布和回读。Bash 默认计划模式可处理 `set -u` 下的空参数数组。
 
+### 学校工程 pilot 在依赖检查前失败后的续行
+
+作业 767530 的真实 pilot 回执显示：缺少 `audit/gpu_resolved_dependencies.json`，实际及派发更新数均为 0、`training_started=false`；已有同一 pilot claim，主线已累计 388.03804292087443 秒。保留这些记录，不删除 claim、不伪造完成状态、不将预算归零。
+
+GPU 作业显式选择 `school-cu121-v1`：Python 3.12.3、Torch 2.5.1+cu121、NumPy 2.2.6、SciPy 1.15.3、scikit-learn 1.6.1、pytest 8.4.2。部署程序从实际安装元数据记录完整依赖列表，核对真实导入版本，独占发布 `audit/gpu_resolved_dependencies.json` 和 `audit/hpc_runtime_profile.json` 并绑定 SHA；后续重查整个清单。有旧的不一致证明时保持阻塞，不覆盖、不安装依赖。原 RunPod 入口继续核对原 `requirements-gpu.lock`，该锁文件不改。
+
+仅对此已知的首次更新前依赖文件缺失，续行程序要求零更新、无 identity/checkpoint/训练证据、同一 claim 和输出、已确认退出的原 pilot 子进程及闭合的累计账本。原始回执、manifest、claim 和主线状态逐字节复制到不可覆盖的历史快照，再建立当前作业绑定的续行证明。继续使用同一 pilot 身份，累计计入此前 pilot 耗时，1800 秒 pilot 上限及 43200 秒主线预算不变；出现过更新或 checkpoint 时不适用此自动续行。200 次更新与完整状态精确恢复仍必须真实完成。部署代码的 AST 检查保护原数值函数、优化器、更新及恢复验证计算。
+
+部署新代码后，显式运行 `"$P" hpc/resume_prefit_train.py --root "$PWD" --python "$P" --failed-train-job 767530 --execute`，核验原始提交及终态后提交新的 CPU 测试和依赖它的 GPU train 两个作业。新代码仍须通过 CPU 门禁；已完成的 prepare 数据复用，GPU 前仍完整重查数据 SHA。此入口不取消或重提旧作业，不重放未知的 sbatch 结果；重复执行使用原提交回执。pilot 与正式训练在同一 train 分配内，保持实际 GPU UUID 一致。可以用 `--cpus`、`--mem-gib`、`--gpus`、`--time` 调整 train 申请量，科学参数不随之改变。
+
+训练回执现在分别记录数据验证与真实协调器返回值。失败时显示入口、退出码、日志路径及安全错误类别，完整原始错误继续保存在 `campaign.log`。工程依赖证明及历史快照与 checkpoint 一起进入原持久交接队列；只有真实 R2 完整 GET/SHA 回读完成才宣称上传通过。
+
 CPU 作业运行模拟联网主机测试时，只有该测试夹具隔离继承的 `SLURM_JOB_ID`；生产 `fetch` 仍拒绝计算节点下载，专门的拒绝测试保留。原科研线程、随机性、fit 预算、测试期限和全部测试入口不变。
 
 ## GitHub 下载不稳定时的代码更新

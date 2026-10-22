@@ -36,6 +36,8 @@ EXT = tuple(f'runs/{kind}/{arm}' for kind in ('source_extensions', 'source_exten
 FIELDS = ('path', 'sha256', 'bytes', 'role', 'dataset')
 BASE = '.paper3-hpc/handoffs'
 R2_NAMES = ('R2_ENDPOINT', 'R2_BUCKET', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY')
+PILOT = 'runs/controlled_source_pilot_seed20261018'
+PILOT_RUNTIME_AUDITS = ('audit/gpu_resolved_dependencies.json', 'audit/hpc_runtime_profile.json')
 NO_FIT = {'training_dispatched': False, 'scientific_completion_claimed': False, 'GPU_actions': 0,
           'credentials_recorded': False}
 
@@ -158,7 +160,7 @@ def original_apis():
 def owned(row):
     need(isinstance(row, dict) and set(row) == set(FIELDS), 'exact_owned_result_descriptor_required')
     path = PurePosixPath(row['path'])
-    main = row['path'] in CLAIMS or any(path.is_relative_to(prefix) for prefix in MAIN)
+    main = row['path'] in CLAIMS + PILOT_RUNTIME_AUDITS or any(path.is_relative_to(prefix) for prefix in MAIN)
     extension = any(path.is_relative_to(prefix) for prefix in EXT) or (
         path.parent.as_posix() == 'runs/source_extensions/claims'
         and any(path.name.startswith(arm + '-seed-') for arm in ARMS))
@@ -176,6 +178,115 @@ def owned(row):
          'owned_result_integrity_fields_required')
 
 
+def pilot_runtime_files(root):
+    """Collect only the two exact audit documents bound by actual pilot output.
+
+    Transfer hosts may differ from the training runtime. This verifies stored
+    provenance and full file hashes without importing CUDA or claiming a fit.
+    """
+    def read(relative):
+        path = local(root, relative)
+        need(path.is_file() and path.stat().st_size <= 4 * 1024**2,
+             'pilot_runtime_bounded_metadata_required')
+        return json.loads(path.read_bytes())
+
+    def bound(reference, relative):
+        need(isinstance(reference, dict) and {'path','sha256'} <= set(reference)
+             and set(reference) <= {'path','sha256','bytes'} and reference['path'] == relative,
+             'pilot_runtime_exact_artifact_reference_required')
+        sha, size = hash_file(local(root, relative))
+        need(reference['sha256'] == sha and ('bytes' not in reference or
+             type(reference['bytes']) is int and reference['bytes'] == size),
+             'pilot_runtime_artifact_SHA_mismatch')
+        return {'path': relative, 'sha256': sha, 'bytes': size,
+                'role': 'result', 'dataset': 'Paper3_mainline'}
+
+    receipt_path = PILOT + '/engineering_receipt.json'
+    if not local(root, receipt_path).exists():
+        return []
+    receipt = read(receipt_path)
+    identity_path = PILOT + '/identity.json'
+    identity = read(identity_path) if local(root, identity_path).exists() else None
+    references = ('resolved_dependencies', 'deployment_runtime_profile')
+    if not any(isinstance(value, dict) and any(value.get(key) is not None for key in references)
+               for value in (receipt, identity)):
+        return []
+    need(isinstance(receipt, dict) and receipt.get('scope') == 'ENGINEERING_SOURCE_PILOT_ONLY'
+         and receipt.get('status') in {'RUNNING','ENGINEERING_PILOT_FAILED','ENGINEERING_PILOT_COMPLETE'},
+         'pilot_runtime_original_receipt_required')
+    if identity is None:
+        need(receipt['status'] != 'ENGINEERING_PILOT_COMPLETE' and receipt.get('training_started') is False
+             and type(receipt.get('actual_completed_updates')) is int and receipt['actual_completed_updates'] == 0
+             and type(receipt.get('optimizer_updates_dispatched')) is int and receipt['optimizer_updates_dispatched'] == 0,
+             'pilot_runtime_identity_missing_preserve_checkpoint')
+    else:
+        need(isinstance(identity, dict) and all(identity.get(key) == receipt.get(key) for key in references),
+             'pilot_runtime_receipt_identity_reference_mismatch')
+    dependency = bound(receipt.get('resolved_dependencies'), PILOT_RUNTIME_AUDITS[0])
+    resolved = read(PILOT_RUNTIME_AUDITS[0]); names = {}
+    need(isinstance(resolved, list) and 0 < len(resolved) <= 20000,
+         'pilot_runtime_complete_dependency_metadata_required')
+    for row in resolved:
+        need(isinstance(row, dict) and set(row) == {'name','version'}
+             and isinstance(row['name'], str) and re.fullmatch(r'[A-Za-z0-9_.-]+', row['name'])
+             and isinstance(row['version'], str) and re.fullmatch(r'[A-Za-z0-9_.+!-]+', row['version']),
+             'pilot_runtime_dependency_metadata_invalid')
+        name = re.sub(r'[-_.]+','-',row['name']).lower()
+        need(name not in names,'pilot_runtime_dependency_metadata_duplicate'); names[name] = row['version']
+    if identity is not None:
+        need(all(identity.get(name) == names.get(name) for name in ('torch','numpy')),
+             'pilot_runtime_dependency_identity_mismatch')
+    rows = [dependency]
+    profile_ref = receipt.get('deployment_runtime_profile')
+    if profile_ref is not None:
+        from hpc.runtime_profile import PROFILE, REGISTRY
+        rows.append(bound(profile_ref, PILOT_RUNTIME_AUDITS[1]))
+        proof = read(PILOT_RUNTIME_AUDITS[1])
+        need(isinstance(proof, dict) and proof.get('schema_version') == 'paper3-hpc-installed-runtime-profile-v1'
+             and proof.get('profile') == PROFILE and proof.get('project') == str(root)
+             and proof.get('python') == REGISTRY['python']
+             and proof.get('registered_profile_sha256') == hashlib.sha256(json_bytes(REGISTRY)).hexdigest()
+             and proof.get('original_RunPod_lock_sha256') == hash_file(local(root,'requirements-gpu.lock'))[0]
+             and proof.get('resolved_dependencies') == {key:dependency[key] for key in ('path','sha256')}
+             and proof.get('inventory_packages') == len(resolved)
+             and proof.get('actual_module_versions') == REGISTRY['pins']
+             and proof.get('scientific_parameters_changed') is False
+             and proof.get('packages_installed_by_capture') == proof.get('network_operations_by_capture') == 0
+             and all(names.get(name) == version for name,version in REGISTRY['pins'].items()),
+             'pilot_runtime_registered_provenance_mismatch')
+    else:
+        for line in local(root,'requirements-gpu.lock').read_text().splitlines():
+            if line.strip() and not line.startswith(('#','--')):
+                name, version = line.strip().split('==')
+                need(names.get(re.sub(r'[-_.]+','-',name).lower()) == version,
+                     'pilot_runtime_original_dependency_pin_mismatch')
+    claim = read('runs/controlled_pilot_job_claim.json')
+    need(isinstance(claim,dict) and claim.get('scope') == 'ENGINEERING_SOURCE_PILOT_ONLY'
+         and type(claim.get('max_jobs')) is int and claim['max_jobs'] == 1 and claim.get('output') == PILOT,
+         'pilot_runtime_original_one_job_claim_required')
+    artifact_path = PILOT + '/engineering_artifact_manifest.json'
+    bound(receipt.get('artifact_manifest'), artifact_path)
+    manifest = read(artifact_path)
+    need(isinstance(manifest,dict) and manifest.get('schema_version') == 'paper3-source-engineering-artifacts-v1'
+         and manifest.get('scope') == 'ENGINEERING_SOURCE_PILOT_ONLY' and manifest.get('scientific_result') is False
+         and manifest.get('pilot_status') == receipt['status'] and isinstance(manifest.get('files'),list),
+         'pilot_runtime_original_artifact_manifest_required')
+    finite = {'runs/controlled_pilot_job_claim.json', identity_path, *PILOT_RUNTIME_AUDITS[:len(rows)],
+              *(PILOT+'/'+name for name in ('engineering_initial.pt','engineering_continuous100.pt',
+                  'engineering_resume50.pt','engineering_resumed100.pt','engineering_prediction_replay.json',
+                  'engineering_continuous100_predictions.json','engineering_resumed100_predictions.json'))}
+    seen = {}
+    for row in manifest['files']:
+        need(isinstance(row,dict) and set(row) == set(FIELDS) and row.get('path') in finite
+             and row['path'] not in seen and row.get('role') == 'result'
+             and row.get('dataset') == 'Paper3SourceEngineering',
+             'pilot_runtime_finite_artifact_manifest_required')
+        seen[row['path']] = bound({key:row[key] for key in ('path','sha256','bytes')}, row['path'])
+    need(all(seen.get(row['path']) == row for row in rows),
+         'pilot_runtime_audit_missing_from_original_manifest')
+    return rows
+
+
 def producer_files(root, apis):
     bootstrap, campaign, _, _ = apis
     # The original writer excludes live progress and overwrites its manifest.
@@ -184,6 +295,13 @@ def producer_files(root, apis):
     main = campaign.collect_backup_manifest(root)
     need(main.get('schema_version') == 1 and isinstance(main.get('files'), list), 'original_campaign_manifest_required')
     files = list(main['files'])
+    for row in pilot_runtime_files(root):
+        prior = [value for value in files if value.get('path') == row['path']]
+        need(not prior or prior == [row], 'pilot_runtime_collection_conflict')
+        if not prior:
+            files.append(row)
+    if len(files) != len(main['files']):
+        main = {**main, 'files': sorted(files, key=lambda row:row['path'])}
     producers = []
     progress_path = local(root, 'runs/training_campaign_v1/campaign_progress.json')
     old_manifest = local(root, 'runs/training_campaign_v1/backup_manifest.json')
@@ -464,6 +582,12 @@ def publish_code(root, *, repo='jackzhu119/research3', branch=None, token=None, 
                    or (parts and parts[0] in {'p3work', 'tools', 'tests'} and Path(path).suffix == '.py')
                    or (parts and parts[0] == 'hpc' and Path(path).suffix in {'.py', '.json', '.sbatch', '.sh', '.md'})
                    or path == 'audit/data_plan_20261020/deployment_finalize_review/prepare_finalize_plan_v2.py')
+        historical = {
+            'hpc/fixtures/original_source_training_54b972.py.txt': 'fee812b6165101afc6b0141ce5e0a8f0d158df85',
+            'hpc/fixtures/original_run_controlled_pilot_856393.py.txt': '793c40fe37a9c0d7f8826232a6e7622e183377c2',
+        }
+        if path in historical:
+            allowed = _git(root, env, ['rev-parse', 'HEAD:' + path], runner) == historical[path]
         if path == 'launcher_assets/Paper3_OneClick_20261021.zip':
             allowed = (_git(root, env, ['rev-parse', 'HEAD:' + path], runner)
                        == '06af636d8de736a378afb62b5da2c506bdd6983f')

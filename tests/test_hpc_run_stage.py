@@ -241,3 +241,135 @@ def test_unconfirmed_worker_cleanup_forbids_snapshot_publication(tmp_path, monke
     receipt = json.loads((tmp_path / '.paper3-hpc/jobs/123/stage-train.json').read_text())
     assert receipt['scientific_completion_claimed'] is False
     assert receipt['snapshot_error_type'].startswith('SKIPPED_OWNED_WORKER_CLEANUP_UNCONFIRMED')
+
+
+PILOT_ERROR = 'Actual completed 200-update engineering pilot with exact resume is required'
+
+
+def test_coordinator_failure_retains_exit_log_and_safe_actual_pilot_gate(tmp_path, capsys):
+    log = tmp_path / 'campaign.log'
+    original = json.dumps({'status': 'BLOCKED_PRESERVE_EXISTING_JOBS', 'error_type': 'CampaignError',
+        'reason': 'stage_blocked:SourceTrainingError:' + PILOT_ERROR})
+    log.write_text(original)
+    calls = []
+    def blocked(root, entry, args, output, stop, **kwargs):
+        calls.append((entry, args, kwargs)); assert output == log
+        return 2
+    assert stage.run_training(tmp_path, 'train', tmp_path, threading.Event(), runner=blocked) == 2
+    result = json.loads((tmp_path / 'training_result.json').read_text())
+    assert result['status'] == 'TRAINING_STOPPED_OR_BLOCKED_NOT_COMPLETE'
+    row = result['coordinators'][0]
+    assert row['entry'] == 'tools/run_training_campaign.py' and row['returncode'] == 2
+    assert row['log'] == 'campaign.log' and row['error_type'] == 'CampaignError'
+    assert row['reported_status'] == 'BLOCKED_PRESERVE_EXISTING_JOBS'
+    assert row['reason_code'] == 'engineering_pilot_evidence_invalid'
+    assert len(calls) == 1 and calls[0][2] == {'cooperative': True}
+    assert '--max-wall-seconds' not in calls[0][1] and log.read_text() == original
+    assert 'engineering_pilot_evidence_invalid' in capsys.readouterr().out
+
+
+@pytest.mark.parametrize('code', [0, 2, 3])
+def test_arbitrary_coordinator_metadata_is_not_echoed_or_mistaken_for_completion(tmp_path, code):
+    log = tmp_path / 'campaign.log'
+    log.write_text(json.dumps({'status': 'SECRET_METADATA_MUST_NOT_LEAK',
+        'error_type': 'SECRET_METADATA_MUST_NOT_LEAK', 'reason': 'SECRET_METADATA_MUST_NOT_LEAK',
+        'stdout': 'SECRET_METADATA_MUST_NOT_LEAK'}))
+    summary = stage.coordinator_result(tmp_path, 'tools/run_training_campaign.py', log, code, threading.Event())
+    assert summary['returncode'] == code and summary['scientific_completion_claimed'] is False
+    assert 'SECRET_METADATA_MUST_NOT_LEAK' not in json.dumps(summary)
+    assert 'reason_code' not in summary and 'reported_status' not in summary
+
+
+def test_exact_known_reason_does_not_authorize_echoing_a_secret_suffix(tmp_path):
+    log = tmp_path / 'campaign.log'
+    log.write_text(json.dumps({'reason': PILOT_ERROR + ': SECRET_SUFFIX'}))
+    summary = stage.coordinator_result(tmp_path, 'tools/run_training_campaign.py', log, 2, threading.Event())
+    assert 'reason_code' not in summary and 'SECRET_SUFFIX' not in json.dumps(summary)
+
+
+def test_last_bounded_coordinator_JSON_is_diagnostic_after_warnings_and_previous_records(tmp_path):
+    log = tmp_path / 'extension.log'
+    log.write_text('SECRET_WARNING_NOT_TO_ECHO\n' + json.dumps({'status': 'PENDING_DATA_GATES'}, indent=2)
+        + '\n' + json.dumps({'status': 'BLOCKED_PRESERVE_EXISTING_JOBS', 'error_type': 'ValueError'}, indent=2))
+    summary = stage.coordinator_result(tmp_path, 'tools/run_source_extension_downstream.py', log, 2, threading.Event())
+    assert summary['reported_status'] == 'BLOCKED_PRESERVE_EXISTING_JOBS'
+    assert summary['error_type'] == 'ValueError' and 'SECRET_WARNING' not in json.dumps(summary)
+
+
+@pytest.mark.parametrize('kind', ['missing', 'oversized', 'symlink', 'invalid'])
+def test_unusable_coordinator_log_still_reports_actual_nonzero_exit_without_payload(tmp_path, kind):
+    log = tmp_path / 'campaign.log'
+    if kind == 'oversized':
+        log.write_text('SECRET_PAYLOAD' * 25000)
+    elif kind == 'symlink':
+        original = tmp_path / 'secret'; original.write_text('SECRET_PAYLOAD'); log.symlink_to(original)
+    elif kind == 'invalid':
+        log.write_text('SECRET_PAYLOAD')
+    summary = stage.coordinator_result(tmp_path, 'tools/run_training_campaign.py', log, 2, threading.Event())
+    assert summary['returncode'] == 2 and summary['status'] == 'COORDINATOR_RETURNED_NONZERO'
+    assert 'SECRET_PAYLOAD' not in json.dumps(summary)
+
+
+@pytest.mark.parametrize('failure_at', [None, 1, 2, 3, 4])
+def test_success_and_each_extension_exit_keep_original_dispatch_order_and_result(
+        tmp_path, monkeypatch, failure_at):
+    from hpc import stage_data
+    arms = ('BASE4_PLUS_YANG', 'BASE4_PLUS_DREYER')
+    monkeypatch.setattr(stage_data, 'load_index', lambda root: {'extension_manifests': {a: a+'.json' for a in arms}})
+    calls = []
+    def runner(root, entry, args, output, stop, **kwargs):
+        assert kwargs == {'cooperative': True}
+        assert '--max-wall-seconds' not in args
+        calls.append((entry, args))
+        return 2 if len(calls)-1 == failure_at else 0
+    code = stage.run_training(tmp_path, 'train', tmp_path, threading.Event(), runner=runner)
+    assert code == (0 if failure_at is None else 2)
+    expected = [('tools/run_training_campaign.py', None, None)]
+    expected.extend(('tools/run_source_extension_downstream.py', arm, action)
+                    for arm in arms for action in ('initialize', 'auto-development'))
+    observed = [(entry, args[args.index('--arm')+1] if '--arm' in args else None,
+                 args[args.index('--stage')+1] if '--stage' in args else None) for entry, args in calls]
+    assert observed == expected[:5 if failure_at is None else failure_at+1]
+    result = json.loads((tmp_path / 'training_result.json').read_text())
+    assert result['returncode'] == code and len(result['coordinators']) == len(calls)
+    assert result['coordinators'][-1]['returncode'] == code
+    assert result['scientific_completion_claimed'] is False
+
+
+@pytest.mark.parametrize('code, signal_stop', [(3, False), (0, True)])
+def test_paused_or_signalled_mainline_is_recorded_and_never_dispatches_extension(tmp_path, code, signal_stop):
+    stop = threading.Event(); calls = []
+    def runner(root, entry, args, output, event, **kwargs):
+        calls.append(entry)
+        if signal_stop: event.set()
+        return code
+    assert stage.run_training(tmp_path, 'train', tmp_path, stop, runner=runner) == 3
+    result = json.loads((tmp_path / 'training_result.json').read_text())
+    assert result['returncode'] == 3 and calls == ['tools/run_training_campaign.py']
+    assert result['coordinators'][0]['returncode'] == code
+    assert result['coordinators'][0]['status'] == 'COORDINATOR_PAUSED_OR_STOPPED_NOT_COMPLETE'
+
+
+def test_failed_training_stage_receipt_does_not_misreport_prior_data_ready_result(tmp_path, monkeypatch):
+    from hpc import handoff, stage_data
+    monkeypatch.setenv('SLURM_JOB_ID', '767530')
+    monkeypatch.setattr(stage, 'guard', lambda root, name: root)
+    monkeypatch.setattr(stage, 'audit_restore', lambda *args: {})
+    monkeypatch.setattr(stage, 'verify_code', lambda *args: {})
+    monkeypatch.setattr(stage, 'inspect_environment', lambda **kwargs: {})
+    monkeypatch.setattr(stage, 'tested', lambda *args: None)
+    data = {'status': 'ready', 'locally_SHA_verified': 21262, 'scientific_fits': 0}
+    monkeypatch.setattr(stage_data, 'prepare_data', lambda *args, **kwargs: data)
+    monkeypatch.setattr(handoff, 'snapshot', lambda *args, **kwargs: {'status': 'NO_RESULT_SOFTWARE_DOUBLE'})
+    original_run_training = stage.run_training
+    def blocked(root, entry, args, output, stop, **kwargs):
+        output.write_text(json.dumps({'status': 'BLOCKED_PRESERVE_EXISTING_JOBS', 'error_type': 'CampaignError',
+            'reason': 'stage_blocked:SourceTrainingError:' + PILOT_ERROR}))
+        return 2
+    monkeypatch.setattr(stage, 'run_training', lambda *args: original_run_training(*args, runner=blocked))
+    assert stage.run(tmp_path, 'train') == 2
+    result = json.loads((tmp_path / '.paper3-hpc/jobs/767530/stage-train.json').read_text())
+    assert result['result']['status'] == 'TRAINING_STOPPED_OR_BLOCKED_NOT_COMPLETE'
+    assert result['result']['coordinators'][0]['reason_code'] == 'engineering_pilot_evidence_invalid'
+    assert result['frozen_data_verification'] == data
+    assert result['scientific_completion_claimed'] is False
