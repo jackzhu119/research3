@@ -103,6 +103,75 @@ def test_paused_mainline_cannot_initialize_extension_or_external_query(tmp_path)
     assert seen == ['tools/run_training_campaign.py']
 
 
+def test_completed_recovery_validates_existing_results_before_campaign_without_prefit(tmp_path, monkeypatch):
+    from hpc import pilot_finalize, pilot_prefit, runtime_profile
+    from tools import run_controlled_pilot, train_source
+    monkeypatch.setenv('PAPER3_HPC_RUNTIME_PROFILE', runtime_profile.PROFILE)
+    events = []
+    cache, runtime, inspection = object(), {'device_uuid': 'ORIGINAL_DEVICE_TEST_DOUBLE'}, {'original': True}
+    monkeypatch.setattr(runtime_profile, 'prepare_runtime_profile', lambda *a: {'profile': 'TEST_DOUBLE'})
+    monkeypatch.setattr(run_controlled_pilot, 'verify_inputs', lambda root: cache)
+    monkeypatch.setattr(train_source, 'cuda_runtime', lambda: runtime)
+    monkeypatch.setattr(pilot_prefit, 'prepare_prefit_resume', lambda *a: pytest.fail('200 updates must not use zero-update recovery'))
+    def finalize(root, **kw):
+        assert kw == {'cache': cache, 'runtime': runtime, 'inspection': inspection}
+        events.append('finalized_with_original_verifier')
+        return {'status': 'SOFTWARE_TEST_DOUBLE_NO_FIT', 'optimizer_updates_performed': 0}
+    monkeypatch.setattr(pilot_finalize, 'finalize_completed_pilot', finalize)
+    def launch(root, entry, *args, **kw):
+        assert events == ['finalized_with_original_verifier']
+        events.append(entry)
+        return 3
+    assert stage.run_training(tmp_path, 'train', tmp_path, threading.Event(), runner=launch,
+                              completed_resume={'inspection': inspection}) == 3
+    assert events == ['finalized_with_original_verifier', 'tools/run_training_campaign.py']
+    assert json.loads((tmp_path/'pilot_finalization.json').read_text())['optimizer_updates_performed'] == 0
+
+
+def test_completed_recovery_rejected_finalization_cannot_dispatch_campaign(tmp_path, monkeypatch):
+    from hpc import pilot_finalize, runtime_profile
+    from tools import run_controlled_pilot, train_source
+    monkeypatch.setenv('PAPER3_HPC_RUNTIME_PROFILE', runtime_profile.PROFILE)
+    monkeypatch.setattr(runtime_profile, 'prepare_runtime_profile', lambda *a: {})
+    monkeypatch.setattr(run_controlled_pilot, 'verify_inputs', lambda root: object())
+    monkeypatch.setattr(train_source, 'cuda_runtime', lambda: {})
+    def reject(*a, **kw):
+        raise pilot_finalize.FinalizeError('pilot_finalize_original_deep_verifier_rejected_candidate')
+    monkeypatch.setattr(pilot_finalize, 'finalize_completed_pilot', reject)
+    with pytest.raises(pilot_finalize.FinalizeError, match='original_deep_verifier_rejected'):
+        stage.run_training(tmp_path, 'train', tmp_path, threading.Event(),
+                           runner=lambda *a, **kw: pytest.fail('invalid pilot must not fit'),
+                           completed_resume={'inspection': {}})
+
+
+def test_wrong_completed_pilot_GPU_blocks_before_frozen_data_reads(tmp_path, monkeypatch):
+    from hpc import handoff, pilot_finalize, resume_completed_pilot, stage_data
+    monkeypatch.setenv('SLURM_JOB_ID', '123')
+    monkeypatch.setattr(stage, 'guard', lambda root, name: root)
+    monkeypatch.setattr(stage, 'audit_restore', lambda *a: {})
+    monkeypatch.setattr(stage, 'verify_code', lambda *a: {})
+    monkeypatch.setattr(stage, 'inspect_environment', lambda **kw: {'runtime': {'device_uuid': 'OTHER_GPU'}})
+    monkeypatch.setattr(stage, 'tested', lambda *a: None)
+    monkeypatch.setattr(resume_completed_pilot, 'allocated_resume_proof', lambda *a, **kw: {'inspection': {}})
+    def reject(*a):
+        raise pilot_finalize.FinalizeError('pilot_finalize_original_runtime_device_mismatch')
+    monkeypatch.setattr(pilot_finalize, 'require_runtime_identity', reject)
+    monkeypatch.setattr(stage_data, 'prepare_data', lambda *a, **kw: pytest.fail('wrong GPU should block before expensive data reads'))
+    monkeypatch.setattr(stage, 'run_training', lambda *a, **kw: pytest.fail('wrong GPU must not fit'))
+    monkeypatch.setattr(handoff, 'snapshot', lambda *a, **kw: {})
+    assert stage.run(tmp_path, 'train') == 2
+    receipt = json.loads((tmp_path/'.paper3-hpc/jobs/123/stage-train.json').read_text())
+    assert receipt['result']['reason'] == 'pilot_finalize_original_runtime_device_mismatch'
+    assert receipt['frozen_data_verification'] is None
+
+
+def test_completed_recovery_requires_explicit_registered_runtime_profile(tmp_path, monkeypatch):
+    monkeypatch.delenv('PAPER3_HPC_RUNTIME_PROFILE', raising=False)
+    with pytest.raises(stage.StageError, match='explicit_runtime_profile_required'):
+        stage.run_training(tmp_path, 'train', tmp_path, threading.Event(),
+                           runner=lambda *a, **kw: pytest.fail('must not dispatch'), completed_resume={})
+
+
 def test_missing_school_software_test_gate_blocks_training(tmp_path):
     with pytest.raises(stage.StageError, match='software_test_required'):
         stage.tested(tmp_path, {}, {'modules': {}, 'python': '3.12.3'})
@@ -373,3 +442,137 @@ def test_failed_training_stage_receipt_does_not_misreport_prior_data_ready_resul
     assert result['result']['coordinators'][0]['reason_code'] == 'engineering_pilot_evidence_invalid'
     assert result['frozen_data_verification'] == data
     assert result['scientific_completion_claimed'] is False
+
+
+def _pilot_diagnostic_fixture(root, **changes):
+    relative = 'runs/controlled_source_pilot_seed20261018/engineering_receipt.json'
+    value = {'scope': 'ENGINEERING_SOURCE_PILOT_ONLY', 'status': 'ENGINEERING_PILOT_FAILED',
+             'training_started': True, 'exact_resume_verified': True, 'actual_completed_updates': 200,
+             'optimizer_updates_dispatched': 200, 'prediction_replay_optimizer_updates': 100,
+             'seed': 20261018, 'max_jobs': 1, 'result_manifest_error_type': 'PilotGateError',
+             'result_manifest_status': 'BLOCKED_NO_COMPLETE_BACKUP_MANIFEST',
+             'checkpoint_files': {name: 'a'*64 for name in ('engineering_initial.pt',
+                 'engineering_continuous100.pt', 'engineering_resume50.pt', 'engineering_resumed100.pt')},
+             'checkpoint_io_timings': [{'payload': 'SECRET_DO_NOT_ECHO'}],
+             'timing_segments': [{'payload': 'SECRET_DO_NOT_ECHO'}],
+             'total_monotonic_wall_seconds': 210.5}
+    value.update(changes); stage.write(root / relative, value)
+    return root / relative
+
+
+def test_failed_pilot_200_update_finalization_is_visible_without_claiming_completion(tmp_path):
+    receipt = _pilot_diagnostic_fixture(tmp_path)
+    before = receipt.read_bytes()
+    summary = stage.pilot_receipt_summary(tmp_path)
+    assert summary['reported_status'] == 'ENGINEERING_PILOT_FAILED'
+    assert summary['actual_completed_updates'] == summary['optimizer_updates_dispatched'] == 200
+    assert summary['exact_resume_verified'] is True
+    assert summary['result_manifest_error_type'] == 'PilotGateError'
+    assert summary['result_manifest_status'] == 'BLOCKED_NO_COMPLETE_BACKUP_MANIFEST'
+    assert summary['failure_phase'] == 'result_manifest_publication'
+    assert summary['checkpoint_files_count'] == 4
+    assert summary['artifact_manifest_declared'] is summary['backup_manifest_declared'] is False
+    assert summary['scientific_completion_claimed'] is False
+    assert 'SECRET_DO_NOT_ECHO' not in json.dumps(summary) and receipt.read_bytes() == before
+
+
+@pytest.mark.parametrize('failure,expected', [
+    ('Controlled engineering pilot wall-time budget reached', 'engineering_pilot_wall_budget_exhausted'),
+    ('CUBLAS workspace configuration is incompatible with deterministic execution', 'cublas_determinism_configuration_invalid'),
+    ('UNKNOWN_SECRET_DO_NOT_ECHO', None),
+    ('Controlled engineering pilot wall-time budget reached: SECRET_DO_NOT_ECHO', None)])
+def test_only_exact_known_pilot_failure_text_becomes_a_constant_code(tmp_path, failure, expected):
+    _pilot_diagnostic_fixture(tmp_path, failure_type='TimeoutError', failure=failure)
+    summary = stage.pilot_receipt_summary(tmp_path)
+    assert summary.get('reason_code') == expected and summary['failure_type'] == 'TimeoutError'
+    assert 'SECRET_DO_NOT_ECHO' not in json.dumps(summary)
+
+
+def test_known_missing_dependency_inventory_reports_code_without_absolute_path(tmp_path):
+    missing = str(FileNotFoundError(2, 'No such file or directory', str(tmp_path / 'audit/gpu_resolved_dependencies.json')))
+    _pilot_diagnostic_fixture(tmp_path, failure_type='FileNotFoundError', failure=missing,
+                              actual_completed_updates=0, training_started=False, exact_resume_verified=False)
+    summary = stage.pilot_receipt_summary(tmp_path)
+    assert summary['reason_code'] == 'resolved_dependency_inventory_missing'
+    assert str(tmp_path) not in json.dumps(summary)
+
+
+def test_unknown_error_types_and_boolean_counts_are_not_echoed_as_pilot_facts(tmp_path):
+    _pilot_diagnostic_fixture(tmp_path, failure_type='SECRET_DO_NOT_ECHO',
+        result_manifest_error_type='SECRET_DO_NOT_ECHO', result_manifest_status='SECRET_DO_NOT_ECHO',
+        actual_completed_updates=True, optimizer_updates_dispatched='SECRET_DO_NOT_ECHO')
+    summary = stage.pilot_receipt_summary(tmp_path)
+    assert 'failure_type' not in summary and 'result_manifest_error_type' not in summary
+    assert 'actual_completed_updates' not in summary and 'optimizer_updates_dispatched' not in summary
+    assert 'SECRET_DO_NOT_ECHO' not in json.dumps(summary)
+
+
+@pytest.mark.parametrize('kind', ['missing', 'invalid', 'oversized', 'symlink'])
+def test_unusable_pilot_receipt_cannot_claim_any_production_completion(tmp_path, kind):
+    path = tmp_path / 'runs/controlled_source_pilot_seed20261018/engineering_receipt.json'
+    path.parent.mkdir(parents=True)
+    if kind == 'invalid': path.write_text('SECRET_DO_NOT_ECHO')
+    elif kind == 'oversized': path.write_text('SECRET_DO_NOT_ECHO' * 20000)
+    elif kind == 'symlink':
+        target = tmp_path / 'secret'; target.write_text('SECRET_DO_NOT_ECHO'); path.symlink_to(target)
+    summary = stage.pilot_receipt_summary(tmp_path)
+    assert summary['status'] == 'PILOT_RECEIPT_DIAGNOSTIC_NOT_AVAILABLE'
+    assert 'SECRET_DO_NOT_ECHO' not in json.dumps(summary)
+
+
+def test_campaign_failure_summary_surfaces_current_pilot_receipt_and_change_without_refit(tmp_path):
+    _pilot_diagnostic_fixture(tmp_path, actual_completed_updates=0)
+    calls = []
+    def runner(root, entry, args, output, stop, **kwargs):
+        calls.append(entry)
+        _pilot_diagnostic_fixture(root)
+        output.write_text(json.dumps({'status': 'BLOCKED_PRESERVE_EXISTING_JOBS',
+            'error_type': 'CampaignError', 'reason': 'stage_blocked:SourceTrainingError:' + PILOT_ERROR}))
+        return 2
+    assert stage.run_training(tmp_path, 'train', tmp_path, threading.Event(), runner=runner) == 2
+    result = json.loads((tmp_path / 'training_result.json').read_bytes())
+    summary = result['coordinators'][0]['pilot_receipt']
+    assert summary['actual_completed_updates'] == 200 and summary['receipt_changed_during_coordinator'] is True
+    assert summary['result_manifest_error_type'] == 'PilotGateError'
+    assert summary['failure_phase'] == 'result_manifest_publication'
+    assert result['returncode'] == 2 and calls == ['tools/run_training_campaign.py']
+    assert result['scientific_completion_claimed'] is False
+
+
+@pytest.mark.parametrize('kind,expected', [
+    ('known', 'pilot_runtime_complete_dependency_metadata_required'), ('unknown', None), ('other_type', None)])
+def test_handoff_diagnostic_accepts_only_actual_known_adapter_literal_codes(kind, expected):
+    from hpc.handoff import HandoffError
+    if kind == 'known': error = HandoffError(expected)
+    elif kind == 'unknown': error = HandoffError('secret_lowercase_must_not_leak')
+    else:
+        error = RuntimeError('SECRET_DO_NOT_ECHO'); error.code = 'pilot_runtime_complete_dependency_metadata_required'
+    assert stage.handoff_error_code(error) == expected
+
+
+def test_train_stage_final_receipt_includes_safe_pilot_finalization_and_handoff_failure(tmp_path, monkeypatch):
+    from hpc import handoff, stage_data
+    monkeypatch.setenv('SLURM_JOB_ID', '767958')
+    monkeypatch.setattr(stage, 'guard', lambda root, name: root)
+    monkeypatch.setattr(stage, 'audit_restore', lambda *args: {})
+    monkeypatch.setattr(stage, 'verify_code', lambda *args: {})
+    monkeypatch.setattr(stage, 'inspect_environment', lambda **kwargs: {})
+    monkeypatch.setattr(stage, 'tested', lambda *args: None)
+    monkeypatch.setattr(stage_data, 'prepare_data', lambda *args, **kwargs: {'status': 'ready'})
+    original_run = stage.run_training
+    def runner(root, entry, args, output, stop, **kwargs):
+        _pilot_diagnostic_fixture(root)
+        output.write_text(json.dumps({'status': 'BLOCKED_PRESERVE_EXISTING_JOBS', 'error_type': 'CampaignError',
+            'reason': 'stage_blocked:SourceTrainingError:' + PILOT_ERROR}))
+        return 2
+    monkeypatch.setattr(stage, 'run_training', lambda *args: original_run(*args, runner=runner))
+    def snapshot(*args, **kwargs):
+        raise handoff.HandoffError('pilot_runtime_complete_dependency_metadata_required')
+    monkeypatch.setattr(handoff, 'snapshot', snapshot)
+    assert stage.run(tmp_path, 'train') == 2
+    result = json.loads((tmp_path / '.paper3-hpc/jobs/767958/stage-train.json').read_bytes())
+    assert result['snapshot_error_type'] == 'HandoffError'
+    assert result['snapshot_error_code'] == 'pilot_runtime_complete_dependency_metadata_required'
+    pilot = result['result']['coordinators'][0]['pilot_receipt']
+    assert pilot['actual_completed_updates'] == 200 and pilot['result_manifest_error_type'] == 'PilotGateError'
+    assert result['returncode'] == 2 and result['scientific_completion_claimed'] is False

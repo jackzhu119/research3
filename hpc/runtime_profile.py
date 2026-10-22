@@ -15,6 +15,7 @@ from pathlib import Path
 import platform
 import re
 import stat
+import subprocess
 import sys
 import tempfile
 
@@ -30,6 +31,14 @@ INVENTORY = 'audit/gpu_resolved_dependencies.json'
 EVIDENCE = 'audit/hpc_runtime_profile.json'
 MODULES = {'torch': 'torch', 'numpy': 'numpy', 'scipy': 'scipy',
            'scikit-learn': 'sklearn', 'pytest': 'pytest'}
+INVENTORY_OBSERVER_TIMEOUT = 60
+INVENTORY_OBSERVER_MAX_BYTES = 2 * 1024**2
+INVENTORY_OBSERVER_ERRORS = frozenset({
+    'runtime_profile_distribution_metadata_invalid',
+    'runtime_profile_conflicting_installed_distributions',
+    'runtime_profile_complete_inventory_required',
+    'runtime_profile_inventory_observer_output_limit',
+})
 
 
 class RuntimeProfileError(ValueError):
@@ -98,6 +107,57 @@ def _installed_inventory():
     return [{'name': name, 'version': version} for name, version in sorted(names.items())]
 
 
+def _observe_installed_inventory(root, *, runner=None):
+    """Observe the whole installed environment before third-party path changes.
+
+    Importing setuptools can append its bundled ``_vendor`` directory to the
+    caller's sys.path. Those bundled distribution records are not newly
+    installed packages. A fresh interpreter sees the same real executable,
+    environment, node cache and normal startup paths each time. No package is
+    filtered out, and the caller's actually imported core versions are still
+    checked separately below.
+    """
+    runner = subprocess.run if runner is None else runner
+    observer = str(Path(__file__).absolute())
+    command = [sys.executable, '-B', '-c',
+        'import runpy,sys; sys.argv=sys.argv[1:]; '
+        'runpy.run_path(sys.argv[0],run_name="__main__")',
+        observer, '--observe-installed-inventory']
+    try:
+        result = runner(command, cwd=root, stdin=subprocess.DEVNULL,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        close_fds=True, check=False,
+                        timeout=INVENTORY_OBSERVER_TIMEOUT)
+    except subprocess.TimeoutExpired:
+        raise RuntimeProfileError('runtime_profile_inventory_observer_timeout') from None
+    except OSError:
+        raise RuntimeProfileError('runtime_profile_inventory_observer_unavailable') from None
+    raw = result.stdout
+    _need(isinstance(raw, bytes) and len(raw) <= INVENTORY_OBSERVER_MAX_BYTES,
+          'runtime_profile_inventory_observer_output_invalid')
+    try:
+        inventory = json.loads(raw)
+    except (ValueError, TypeError, UnicodeError):
+        raise RuntimeProfileError('runtime_profile_inventory_observer_output_invalid') from None
+    if result.returncode != 0:
+        code = inventory.get('error') if isinstance(inventory, dict) else None
+        raise RuntimeProfileError(code if code in INVENTORY_OBSERVER_ERRORS else
+                                  'runtime_profile_inventory_observer_failed') from None
+    _need(isinstance(inventory, list) and inventory
+          and all(isinstance(row, dict) and set(row) == {'name', 'version'}
+                  and isinstance(row['name'], str)
+                  and re.fullmatch(r'[a-z0-9-]+', row['name'])
+                  and re.sub(r'[-_.]+', '-', row['name']).lower() == row['name']
+                  and isinstance(row['version'], str)
+                  and re.fullmatch(r'[A-Za-z0-9_.+!-]+', row['version'])
+                  for row in inventory),
+          'runtime_profile_inventory_observer_output_invalid')
+    names = [row['name'] for row in inventory]
+    _need(names == sorted(set(names)) and _raw(inventory) == raw,
+          'runtime_profile_inventory_observer_output_invalid')
+    return inventory
+
+
 def _runtime_versions():
     return {name: str(importlib.import_module(module).__version__)
             for name, module in MODULES.items()}
@@ -131,7 +191,7 @@ def _observation(root, profile):
           'runtime_profile_explicit_selection_required')
     _need(platform.python_version() == REGISTRY['python'],
           'runtime_profile_python_version_mismatch')
-    inventory = _installed_inventory()
+    inventory = _observe_installed_inventory(root)
     names = {row['name']: row['version'] for row in inventory}
     _need(all(names.get(name) == version for name, version in REGISTRY['pins'].items()),
           'runtime_profile_registered_pin_mismatch')
@@ -210,3 +270,22 @@ def prepare_runtime_profile(root, profile):
     _publish(root / INVENTORY, inventory)
     _publish(root / EVIDENCE, evidence)
     return validate_runtime_profile(root, profile)
+
+
+def _inventory_observer_main():
+    """Private stdlib-only child entry; no scientific imports or file writes."""
+    try:
+        raw = _raw(_installed_inventory())
+        _need(len(raw) <= INVENTORY_OBSERVER_MAX_BYTES,
+              'runtime_profile_inventory_observer_output_limit')
+        sys.stdout.buffer.write(raw)
+        return 0
+    except RuntimeProfileError as exc:
+        sys.stdout.buffer.write(_raw({'error': str(exc)}))
+        return 2
+
+
+if __name__ == '__main__':
+    if sys.argv[1:] != ['--observe-installed-inventory']:
+        raise SystemExit(64)
+    raise SystemExit(_inventory_observer_main())

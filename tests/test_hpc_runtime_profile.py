@@ -5,7 +5,10 @@ school environment, not a claim that the local CPU executor has those versions.
 """
 import hashlib
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -33,6 +36,9 @@ def runtime(tmp_path, monkeypatch):
     distributions = [SimpleNamespace(metadata={'Name': name}, version=version)
                      for name, version in installed.items()]
     monkeypatch.setattr(profile.metadata, 'distributions', lambda: iter(distributions))
+    # This fixture explicitly doubles the child process observation boundary.
+    # Real child-process behavior is exercised by the tests below.
+    monkeypatch.setattr(profile, '_observe_installed_inventory', lambda root: profile._installed_inventory())
     monkeypatch.setattr(profile, '_runtime_versions', lambda: dict(profile.REGISTRY['pins']))
     return root, distributions
 
@@ -231,3 +237,123 @@ def test_source_manifest_verifier_binds_registered_profile_and_complete_inventor
     (root/profile.EVIDENCE).write_bytes((root/profile.EVIDENCE).read_bytes()+b'\n')
     with pytest.raises(source.SourceTrainingError,match='provenance_changed'):
         source._verify_pilot_result_manifests(SimpleNamespace(root=root),receipt_file,receipt,identity,proof)
+
+
+def test_fresh_observer_retains_exact_interpreter_environment_and_bounded_command(tmp_path,monkeypatch):
+    observed = []
+    monkeypatch.setenv('PAPER3_HPC_NODE_CACHE_ROOT', '/software-fixture/node-cache')
+    monkeypatch.setenv('PYTHONPATH', '/software-fixture/site')
+    monkeypatch.setenv('HTTPS_PROXY', 'http://SOFTWARE_PROXY_VALUE_NOT_TO_PRINT')
+    inventory = [{'name':'software-fixture','version':'1.0'}]
+    def runner(command, **kwargs):
+        observed.append((command, kwargs))
+        assert os.environ['PYTHONPATH'] == '/software-fixture/site'
+        assert os.environ['PAPER3_HPC_NODE_CACHE_ROOT'] == '/software-fixture/node-cache'
+        assert os.environ['HTTPS_PROXY'] == 'http://SOFTWARE_PROXY_VALUE_NOT_TO_PRINT'
+        return SimpleNamespace(returncode=0,stdout=profile._raw(inventory),stderr=b'')
+    assert profile._observe_installed_inventory(tmp_path,runner=runner) == inventory
+    command, kwargs = observed[0]
+    assert command[0:3] == [sys.executable,'-B','-c']
+    assert command[-2:] == [str(Path(profile.__file__).absolute()),'--observe-installed-inventory']
+    assert kwargs == {'cwd':tmp_path,'stdin':subprocess.DEVNULL,'stdout':subprocess.PIPE,
+                      'stderr':subprocess.PIPE,'close_fds':True,'check':False,'timeout':60}
+    assert 'env' not in kwargs and 'SOFTWARE_PROXY' not in repr(command)
+
+
+@pytest.mark.parametrize('error,code',[
+    (subprocess.TimeoutExpired(['observer'],60,stderr=b'SOFTWARE_SECRET'), 'observer_timeout'),
+    (FileNotFoundError('SOFTWARE_SECRET'), 'observer_unavailable'),
+])
+def test_observer_process_failures_are_bounded_and_do_not_expose_child_output(tmp_path,error,code):
+    def runner(*args,**kwargs): raise error
+    with pytest.raises(profile.RuntimeProfileError,match=code) as caught:
+        profile._observe_installed_inventory(tmp_path,runner=runner)
+    assert 'SOFTWARE_SECRET' not in str(caught.value)
+
+
+@pytest.mark.parametrize('status,raw,expected',[
+    (2,profile._raw({'error':'runtime_profile_conflicting_installed_distributions'}),'conflicting_installed'),
+    (2,profile._raw({'error':'SOFTWARE_SECRET'}),'observer_failed'),
+    (0,b'SOFTWARE_SECRET not JSON','observer_output_invalid'),
+    (0,b'[]\n','observer_output_invalid'),
+    (0,b'[{"name":"fixture","version":"1"}]\n','observer_output_invalid'),
+    (0,profile._raw([{'name':'fixture','version':'1','secret':'SOFTWARE_SECRET'}]),'observer_output_invalid'),
+    (0,profile._raw([{'name':'fixture','version':'1'},{'name':'fixture','version':'2'}]),'observer_output_invalid'),
+    (0,profile._raw([{'name':'z','version':'1'},{'name':'a','version':'1'}]),'observer_output_invalid'),
+    (0,b'x'*(profile.INVENTORY_OBSERVER_MAX_BYTES+1),'observer_output_invalid'),
+])
+def test_observer_output_is_canonical_complete_bounded_and_safe(tmp_path,status,raw,expected):
+    def runner(*args,**kwargs):
+        return SimpleNamespace(returncode=status,stdout=raw,stderr=b'SOFTWARE_SECRET')
+    with pytest.raises(profile.RuntimeProfileError,match=expected) as caught:
+        profile._observe_installed_inventory(tmp_path,runner=runner)
+    assert 'SOFTWARE_SECRET' not in str(caught.value)
+
+
+def _distribution(folder,name,version):
+    info=folder/(name.replace('-','_')+'-'+version+'.dist-info')
+    info.mkdir(parents=True)
+    (info/'METADATA').write_text('Metadata-Version: 2.1\nName: '+name+'\nVersion: '+version+'\n')
+    return info
+
+
+def test_real_fresh_observer_ignores_only_parent_dynamic_path_not_installed_packages(tmp_path,monkeypatch):
+    """Actual stdlib metadata subprocess; no model, optimizer, CUDA or fit."""
+    baseline=profile._observe_installed_inventory(tmp_path)
+    assert baseline
+    selected=next(row for row in baseline if row['name']=='packaging')
+    vendor=tmp_path/'dynamic-vendor'
+    _distribution(vendor,selected['name'],'0.0.0')
+    # This reproduces setuptools' runtime sys.path.extend(_vendor) mechanism.
+    monkeypatch.syspath_prepend(str(vendor))
+    with pytest.raises(profile.RuntimeProfileError,match='conflicting_installed'):
+        profile._installed_inventory()
+    assert profile._observe_installed_inventory(tmp_path) == baseline
+
+
+def test_real_fresh_observer_detects_installed_package_add_version_change_and_removal(tmp_path,monkeypatch):
+    """An ordinary startup search-root change remains complete evidence."""
+    baseline=profile._observe_installed_inventory(tmp_path)
+    site=tmp_path/'software-fixture-site'
+    info=_distribution(site,'paper3-observer-software-fixture','1.0')
+    prior=os.environ.get('PYTHONPATH')
+    monkeypatch.setenv('PYTHONPATH',str(site)+(os.pathsep+prior if prior else ''))
+    installed=profile._observe_installed_inventory(tmp_path)
+    assert installed == sorted([*baseline,{'name':'paper3-observer-software-fixture','version':'1.0'}],
+                              key=lambda row:row['name'])
+    (info/'METADATA').write_text('Metadata-Version: 2.1\nName: paper3-observer-software-fixture\nVersion: 1.1\n')
+    changed=profile._observe_installed_inventory(tmp_path)
+    assert changed != installed
+    assert {'name':'paper3-observer-software-fixture','version':'1.1'} in changed
+    (info/'METADATA').unlink();info.rmdir()
+    assert profile._observe_installed_inventory(tmp_path) == baseline
+
+
+def test_actual_setuptools_import_cannot_change_fresh_installed_inventory(tmp_path):
+    script = '''
+import json,sys
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+from hpc.runtime_profile import _observe_installed_inventory, _installed_inventory, RuntimeProfileError
+root=Path.cwd()
+before=_observe_installed_inventory(root)
+paths=list(sys.path)
+import setuptools
+try:
+    parent_inventory=_installed_inventory()
+    parent_status='changed' if parent_inventory!=before else 'unchanged'
+except RuntimeProfileError as exc:
+    parent_status=str(exc)
+after=_observe_installed_inventory(root)
+assert before==after
+assert 'torch' not in sys.modules
+print(json.dumps({'scope':'ACTUAL_METADATA_IMPORT_NO_CUDA_FIT_OR_INSTALL',
+                  'fresh_inventory_unchanged':True,'parent_status':parent_status,
+                  'dynamic_path_added':len(sys.path)>len(paths)}))
+'''
+    result=subprocess.run([sys.executable,'-B','-c',script,str(ROOT)],cwd=tmp_path,
+                          stdin=subprocess.DEVNULL,capture_output=True,check=False,timeout=15)
+    assert result.returncode==0, result.stderr.decode(errors='replace')
+    observation=json.loads(result.stdout)
+    assert observation['fresh_inventory_unchanged'] is True
+    assert observation['scope']=='ACTUAL_METADATA_IMPORT_NO_CUDA_FIT_OR_INSTALL'

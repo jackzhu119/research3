@@ -8,9 +8,11 @@ or an explicit handoff flush on a network-permitted transfer host.
 from __future__ import annotations
 
 import argparse
+import ast
 from contextlib import contextmanager
 from datetime import datetime, timezone
 import fcntl
+import hashlib
 import json
 import math
 import os
@@ -18,6 +20,7 @@ from pathlib import Path
 import re
 import signal
 import socket
+import stat
 import subprocess
 import sys
 import tempfile
@@ -220,6 +223,98 @@ def verify_pilot(root):
     return verify_engineering_pilot(cache, 'runs/controlled_source_pilot_seed20261018/engineering_receipt.json')
 
 
+def pilot_receipt_summary(root):
+    """Read bounded production evidence for diagnosis, never confer completion."""
+    relative = 'runs/controlled_source_pilot_seed20261018/engineering_receipt.json'
+    unavailable = {'status': 'PILOT_RECEIPT_DIAGNOSTIC_NOT_AVAILABLE', 'receipt': relative}
+    try:
+        from hpc.start import safe
+        path = safe(root / relative)
+        info = path.stat()
+        if not stat.S_ISREG(info.st_mode) or info.st_size > 256 * 1024:
+            return unavailable
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        with os.fdopen(fd, 'rb') as stream:
+            raw = stream.read(256 * 1024 + 1)
+        if len(raw) > 256 * 1024:
+            return unavailable
+        value = json.loads(raw)
+        if (not isinstance(value, dict) or value.get('scope') != 'ENGINEERING_SOURCE_PILOT_ONLY'
+                or value.get('status') not in {'RUNNING', 'ENGINEERING_PILOT_FAILED', 'ENGINEERING_PILOT_COMPLETE'}):
+            return unavailable
+        result = {'status': 'PILOT_RECEIPT_OBSERVED_DIAGNOSTIC_ONLY', 'receipt': relative,
+                  'receipt_sha256': hashlib.sha256(raw).hexdigest(), 'receipt_bytes': len(raw),
+                  'reported_status': value['status'], 'scientific_completion_claimed': False}
+        errors = {'PilotGateError', 'FileNotFoundError', 'TimeoutError', 'RuntimeError', 'ValueError',
+                  'OSError', 'KeyError', 'TypeError', 'PermissionError', 'FloatingPointError',
+                  'ImportError', 'ModuleNotFoundError', 'AssertionError', 'MemoryError', 'OutOfMemoryError'}
+        for key in ('failure_type', 'result_manifest_error_type'):
+            if value.get(key) in errors:
+                result[key] = value[key]
+        for key in ('actual_completed_updates', 'optimizer_updates_dispatched',
+                    'prediction_replay_optimizer_updates', 'seed', 'max_jobs'):
+            if type(value.get(key)) is int and 0 <= value[key] <= 10**12:
+                result[key] = value[key]
+        for key in ('training_started', 'exact_resume_verified', 'user_started_gpu_attested'):
+            if type(value.get(key)) is bool:
+                result[key] = value[key]
+        for key in ('total_monotonic_wall_seconds',):
+            if type(value.get(key)) in (int, float) and math.isfinite(value[key]) and value[key] >= 0:
+                result[key] = round(value[key], 6)
+        for key in ('checkpoint_files', 'checkpoint_io_timings', 'timing_segments'):
+            if isinstance(value.get(key), (dict, list)) and len(value[key]) <= 10000:
+                result[key + '_count'] = len(value[key])
+        if value.get('result_manifest_status') == 'BLOCKED_NO_COMPLETE_BACKUP_MANIFEST':
+            result.update(result_manifest_status=value['result_manifest_status'],
+                          failure_phase='result_manifest_publication')
+        result['artifact_manifest_declared'] = isinstance(value.get('artifact_manifest'), dict)
+        result['backup_manifest_declared'] = isinstance(value.get('backup_manifest'), dict)
+        known = {
+            'Controlled engineering pilot wall-time budget reached': 'engineering_pilot_wall_budget_exhausted',
+            'CUBLAS workspace configuration is incompatible with deterministic execution': 'cublas_determinism_configuration_invalid',
+            'Actual complete resolved dependency list is required before the pilot': 'resolved_dependency_inventory_incomplete',
+            'Resolved dependency evidence differs from the running Torch/NumPy': 'resolved_dependency_runtime_mismatch',
+            'Resolved dependencies do not satisfy every exact GPU profile pin': 'gpu_profile_dependency_pin_mismatch',
+            'Engineering deployment runtime profile changed': 'engineering_runtime_profile_changed',
+            'Nonfinite source engineering loss': 'nonfinite_engineering_loss',
+            'Continuous and resume branches did not share the exact initial state': 'engineering_initial_state_replay_mismatch',
+            'Same-device 100 versus 50+50 checkpoint continuation differs': 'engineering_exact_resume_mismatch',
+            'Same-device continuous/resumed source predictions or metrics differ': 'engineering_prediction_replay_mismatch',
+        }
+        failure = value.get('failure')
+        if isinstance(failure, str) and failure in known:
+            result['reason_code'] = known[failure]
+        missing = str(FileNotFoundError(2, 'No such file or directory', str(root / 'audit/gpu_resolved_dependencies.json')))
+        if value.get('failure_type') == 'FileNotFoundError' and failure == missing:
+            result['reason_code'] = 'resolved_dependency_inventory_missing'
+        return result
+    except (OSError, ValueError, TypeError):
+        return unavailable
+
+
+def handoff_error_code(error):
+    """Only literal codes from the actual handoff adapter may leave this log."""
+    try:
+        from hpc import handoff
+        if not isinstance(error, handoff.HandoffError) or not isinstance(error.code, str):
+            return None
+        if not re.fullmatch(r'[a-z][a-z0-9_]{1,159}', error.code):
+            return None
+        tree = ast.parse(Path(handoff.__file__).read_bytes())
+        known = set()
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Name):
+                continue
+            index = 1 if node.func.id == 'need' else 0 if node.func.id == 'HandoffError' else None
+            if index is not None and len(node.args) > index:
+                argument = node.args[index]
+                if isinstance(argument, ast.Constant) and isinstance(argument.value, str):
+                    known.add(argument.value)
+        return error.code if error.code in known else None
+    except (OSError, ValueError, SyntaxError, TypeError, AttributeError):
+        return None
+
+
 def coordinator_result(root, relative, output, code, stop):
     """Summarize the actual child exit without echoing arbitrary log contents.
 
@@ -262,28 +357,64 @@ def coordinator_result(root, relative, output, code, stop):
             result['error_type'] = value['error_type']
         if value.get('reason') in {pilot_error, 'stage_blocked:SourceTrainingError:' + pilot_error}:
             result['reason_code'] = 'engineering_pilot_evidence_invalid'
+            result['pilot_receipt'] = pilot_receipt_summary(root)
     except (OSError, ValueError, TypeError):
         pass
     return result
 
 
-def run_training(root, stage, output, stop, *, runner=child):
+def completed_pilot_preflight(root, stage, output, environment, identity):
+    """Bind explicit post-update recovery before expensive frozen-data reads."""
+    if stage != 'train':
+        return None
+    from hpc.resume_completed_pilot import allocated_resume_proof
+    proof = allocated_resume_proof(root, verified_identity=identity)
+    if proof is None:
+        return None
+    from hpc.pilot_finalize import require_runtime_identity
+    runtime = environment.get('runtime')
+    result = require_runtime_identity(root, runtime)
+    write(output / 'completed_pilot_resume.json', proof)
+    write(output / 'completed_pilot_runtime.json', result)
+    print(json.dumps({'completed_pilot_runtime': result}), flush=True)
+    return proof
+
+
+def run_training(root, stage, output, stop, *, runner=child, completed_resume=None):
     if os.environ.get('PAPER3_HPC_RUNTIME_PROFILE'):
         from hpc.runtime_profile import prepare_runtime_profile
-        from hpc.pilot_prefit import prepare_prefit_resume
         profile = prepare_runtime_profile(root, os.environ['PAPER3_HPC_RUNTIME_PROFILE'])
-        prefit = prepare_prefit_resume(root)
         write(output / 'runtime_profile.json', profile)
-        write(output / 'pilot_prefit.json', prefit)
-        print(json.dumps({'deployment_runtime_profile': profile, 'pilot_prefit': prefit}), flush=True)
+        print(json.dumps({'deployment_runtime_profile': profile}), flush=True)
+        if completed_resume is not None:
+            from hpc.pilot_finalize import finalize_completed_pilot
+            from tools.run_controlled_pilot import verify_inputs
+            from tools.train_source import cuda_runtime
+            print('Verifying existing 200-update pilot; no pilot optimizer updates will run.', flush=True)
+            finalized = finalize_completed_pilot(root, cache=verify_inputs(root), runtime=cuda_runtime(),
+                                                inspection=completed_resume['inspection'])
+            write(output / 'pilot_finalization.json', finalized)
+            print(json.dumps({'pilot_finalization': finalized}), flush=True)
+        else:
+            from hpc.pilot_prefit import prepare_prefit_resume
+            prefit = prepare_prefit_resume(root)
+            write(output / 'pilot_prefit.json', prefit)
+            print(json.dumps({'pilot_prefit': prefit}), flush=True)
+    elif completed_resume is not None:
+        raise StageError('completed_pilot_explicit_runtime_profile_required')
     from p3work import training_campaign as campaign
     signal_flags = ['--handle-slurm-signals', '--stop-grace-seconds', '120']
     common = ['--execute', '--user-started-gpu', *signal_flags]
     observations = []
 
     def launch(entry, args, log):
+        previous_pilot = pilot_receipt_summary(root) if entry == 'tools/run_training_campaign.py' else None
         code = runner(root, entry, args, log, stop, cooperative=True)
         summary = coordinator_result(root, entry, log, code, stop)
+        pilot = summary.get('pilot_receipt')
+        if isinstance(pilot, dict) and previous_pilot and previous_pilot.get('receipt_sha256'):
+            pilot['previous_receipt_sha256'] = previous_pilot['receipt_sha256']
+            pilot['receipt_changed_during_coordinator'] = pilot.get('receipt_sha256') != previous_pilot['receipt_sha256']
         observations.append(summary)
         write(output / 'training_result.json', {'status': 'COORDINATOR_EXIT_RECORDED_NOT_STAGE_COMPLETION',
               'coordinators': observations, 'scientific_completion_claimed': False})
@@ -333,6 +464,7 @@ def run(root, stage):
     output = root / '.paper3-hpc/jobs' / os.environ['SLURM_JOB_ID']
     output.mkdir(parents=True, exist_ok=True)
     code, result, snapshot_error, safe_snapshot = 2, None, None, True
+    snapshot_error_code = None
     frozen_data_verification = None
     diagnostic_summary = None
     with stop_signals() as stop:
@@ -388,6 +520,7 @@ def run(root, stage):
                             write(output / 'data_prepared.json', result)
                         else:
                             tested(root, identity, environment)
+                            completed_resume = completed_pilot_preflight(root, stage, output, environment, identity)
                             result = prepare_data(root, mode='check',
                                 progress=lambda event: print(json.dumps({'data_progress': event},
                                     ensure_ascii=False), flush=True))
@@ -395,7 +528,10 @@ def run(root, stage):
                             write(output / 'frozen_data_verified.json', result)
                             if result.get('status') != 'ready':
                                 raise StageError('frozen_data_gate_blocked_inspect_frozen_data_verified_json')
-                            code = run_training(root, stage, output, stop)
+                            if completed_resume is None:
+                                code = run_training(root, stage, output, stop)
+                            else:
+                                code = run_training(root, stage, output, stop, completed_resume=completed_resume)
                             training_path = output / 'training_result.json'
                             result = (json.loads(training_path.read_text()) if training_path.is_file() else
                                       {'status': 'TRAINING_RESULT_UNAVAILABLE_INSPECT_COORDINATOR_LOGS',
@@ -417,10 +553,13 @@ def run(root, stage):
             safe_snapshot = not isinstance(exc, CleanupUnconfirmed)
             reason = str(exc) if isinstance(exc, (StageError, EnvironmentError)) else type(exc).__name__
             if (isinstance(exc, ValueError) and type(exc).__module__ in
-                    {'hpc.runtime_profile', 'hpc.pilot_prefit'}
+                    {'hpc.runtime_profile', 'hpc.pilot_prefit', 'hpc.pilot_finalize',
+                     'hpc.resume_completed_pilot'}
                     and re.fullmatch(r'[a-z][a-z0-9_]{1,159}', str(exc))):
                 reason = str(exc)
             result = {'status': 'BLOCKED_PRESERVE_EXISTING_JOBS', 'reason': reason}
+            if type(exc).__module__ == 'hpc.pilot_finalize' and isinstance(getattr(exc, 'details', None), dict):
+                result['finalization_diagnostic'] = exc.details
             code = 2
         finally:
             if stage in {'pilot', 'train'} and safe_snapshot:
@@ -430,6 +569,7 @@ def run(root, stage):
                     write(output / 'handoff.json', handoff)
                 except Exception as exc:
                     snapshot_error = type(exc).__name__
+                    snapshot_error_code = handoff_error_code(exc)
                     if code == 0:
                         code = 2
             elif stage in {'pilot', 'train'}:
@@ -438,6 +578,7 @@ def run(root, stage):
                        'job_id': os.environ['SLURM_JOB_ID'], 'returncode': code,
                        'status': 'STAGE_RETURNED_ZERO_INSPECT_ORIGINAL_RECEIPTS' if code == 0 else 'STOPPED_OR_BLOCKED_NOT_COMPLETE',
                        'result': result, 'snapshot_error_type': snapshot_error,
+                       'snapshot_error_code': snapshot_error_code,
                        'frozen_data_verification': frozen_data_verification,
                        'startup_probe': diagnostic_summary,
                        'scientific_completion_claimed': False, 'external_query_accessed': False,
