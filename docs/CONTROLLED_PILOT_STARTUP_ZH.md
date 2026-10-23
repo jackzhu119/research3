@@ -1,3 +1,5 @@
+> 历史资料：以下是切换到学校HPC之前或早期恢复阶段的原文；其中RunPod入口、未训练状态、12小时预算和重复测试要求不作为当前操作指令。当前请看[实验导航](https://github.com/jackzhu119/research3)。
+
 # 论文3固定包：受控 source pilot 启动说明
 
 此说明适用于通过实际交付验收的 READY 包。就绪以外层最终交付回执及 `BUILD.json.ready_for_user_boot_pilot` 为准；包内 `status/delivery.json` 是打包前快照。完整命令以**包内 `STARTUP.md`** 为准。正式科研 fits 尚未发生，W7 尚未冻结；外测 query 保持封存。
