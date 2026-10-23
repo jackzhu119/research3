@@ -1,47 +1,58 @@
-# 论文3：直接从 GitHub 启动
+# 论文3 · 学校HPC训练与后续实验
 
-在本人已经开机的 RunPod Linux GPU 服务器上，新开 Terminal 执行：
+**当前实验和下一轮实验均使用学校云服务器（Slurm / NVIDIA A100）；不再使用RunPod。**
 
-```bash
-cd /workspace
-git clone --single-branch --branch research/paper3-online-20261021 https://github.com/jackzhu119/research3.git paper3-online
-bash /workspace/paper3-online/RUN_ON_RUNPOD.sh
-```
+更新时间：2026-10-23（北京时间）。当前运行状态依据研究者最新反馈；最近收到的具体训练日志截至 **2026-10-23 14:59:30（北京时间）**。本页不是Slurm实时查询结果，未取得新回执时不推算完成率或宣称全部训练完成。
 
-如果 `/workspace/paper3-online` 已经存在，直接执行最后一行即可，不需要再次 clone。
+## 当前正在运行，与下一轮计划
 
-本入口自动查找已有论文3进程及原工作锁。有正在运行的任务时直接接入其 tmux 窗口，新增只读状态面板，不重新启动、不重新解包。上方输入窗口保持焦点，凭证只在真实提示出现后输入。
+| 项目 | 当前原实验 | 下一轮扩展实验 V2 |
+|---|---|---|
+| 状态 | **学校HPC运行中：研究者最新反馈** | **设计、代码与软件验证完成；尚未提交** |
+| 范围 | 原论文3源模型、元学习筛选/比较及原计划后续阶段 | 12方法核心消融＋参数敏感性＋低成本参考 |
+| 最近具体运行证据 | 作业770043，gpu4；日志已进入B8元学习筛选，r=2、ρ=.15、seed=20261018 | 66项计划任务；60个元训练任务、6个无元训练参考任务；完成数0 |
+| 资源说明 | 按当前学校作业实际分配；不因新规划改变运行任务 | 最多3张A100并行，每项1GPU、24CPU、128GiB内存 |
+| 输出位置 | `runs/training_campaign_v1/`、`runs/source_training_v2/`、`runs/meta/` 等原目录 | 新目录 `runs/followup_20261023_v2/` |
+| 结果含义 | 已有实际训练进度，最终科学结果尚未汇总确认 | 87项CPU软件测试通过；不是66项实验完成，也没有真实提升结果 |
 
-确实没有任务时，入口会自动从本仓库的固定提交下载 17.7 MB 的代码/SDK 启动 ZIP，完整核对 SHA256，安全补齐尚未存在的文件，创建 tmux 并沿用原 START。无需手工下载、上传或解压 ZIP。软件包绑定固定提交 `4e4fa1504e01bf2d04875c9ce04d543f3248f826`；固定身份是 `5bb056d39254854707e91c4eb2ce2a4cc6e8e922a9337a52f3daea08b0fb5489`（17,717,251 字节）。
+原日志曾报告15个源神经网络拟合完成、待运行神经任务为空；这不等于整个论文实验完成。B8的某一配置步数也不是整个计划的完成百分比。作业号770043是最近日志的身份，若学校续跑产生新号，应以实际队列为准。
 
-原入口仍按顺序隐藏输入 GitHub Token、R2 Account ID/Endpoint、Bucket、Access Key ID、Secret Access Key。GitHub Token 须具有目标仓库 Contents 读写权限，R2 凭证须具有保存固定数据包的已有桶的对象读写权限。凭证不进入命令参数、URL、文件或日志。
+- [当前阶段、下一轮任务与状态来源](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/CURRENT_AND_NEXT_ZH.md)
+- [学校服务器环境与运行注意事项](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
+- [下一轮完整设计、公式和文献](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/experiments/followup_20261023/DESIGN_ZH.md)
+- [下一轮三卡代码与启动说明](https://github.com/jackzhu119/research3/tree/paper3-v2-progress/experiments/followup_20261023)
+- [下一轮V2自动同步状态](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) — 该页面不代表当前原实验的进度。
 
-GitHub 保存代码、启动器、公开依赖 wheel 和不含凭证的发布清单。研究数据、固定缓存和实际结果继续使用已有 Cloudflare R2，逐对象完整 GET/SHA256 核验。
+## 当前实验如何查看
 
-## 当前任务只读检查
-
-这条命令不会下载数据、启动训练或中断任务，每10秒刷新文件数量、控制进程CPU活动和GPU数值状态：
-
-```bash
-bash /workspace/paper3-online/RUN_ON_RUNPOD.sh --status
-```
-
-只查看一次：
-
-```bash
-bash /workspace/paper3-online/RUN_ON_RUNPOD.sh --status --once
-```
-
-按 Ctrl+C 只退出该检查。准备阶段 GPU 空闲是正常现象；解包期间进度 JSON 可能只在整包完成后更新，请结合落盘文件数和进程 CPU 活动判断。单次计数不变不能认定失败，GPU占用也不能证明科学训练完成。
-
-## 原科学门禁
-
-原197份软件输入及固定数据闭包不变。原入口恢复数据与离线依赖后检查CUDA，先完成200 update的受控source pilot及中断恢复验证，再推进主线14方法、3 seeds。主线真实冻结后才推进Yang/Dreyer两条独立source扩展臂；Ma不训练，CAR3不增加独立受试者，W7外测query保持封存，`legacy_baseline_v1`是历史基线。
-
-训练入口返回或暂停并释放锁后，原程序自动备份已实际产生的有限结果，并完整GET/SHA256回读。备份失败不改变训练原状态。只重试备份时执行：
+在学校 `login1` 查看自己的队列：
 
 ```bash
-bash /workspace/Paper3_OneClick/START.sh --backup-only
+squeue -u zhuziyuan -o '%.20i %.24j %.10T %.12M %R'
 ```
 
-GPU驱动、CUDA兼容性、实际训练和恢复效果以服务器上的真实回执为准。本次发布不操作RunPod API，不创建、启动或重启实例，也不将CPU测试称为训练完成。
+查看最近已知作业；若作业号已变化，把770043替换为当前作业号：
+
+```bash
+sacct -j 770043 --format=JobID,State,ExitCode,Elapsed,NodeList
+```
+
+```bash
+tail -n 60 /public/home/zhuziyuan/projects/paper3/.paper3-hpc/logs/train-770043.out /public/home/zhuziyuan/projects/paper3/.paper3-hpc/jobs/770043/campaign.log
+```
+
+以上只查看状态。恢复当前实验时沿用它自己的已部署续跑入口；不要用下一轮安装包替代当前任务，也不要照旧RunPod说明重新安装、重复pilot或重提test链。
+
+## 下一轮准备了什么
+
+36项核心元训练（12方法×3种子）＋24项秩/幅度敏感性元训练＋6项参考任务，共66项。另附5档校准预算、6种预定义误标/未来空间漂移诊断，以及概率质量、负翻转和配对统计。
+
+已有源模型、数据缓存及匹配的完成基线可以复用；独立数组最多三项并行。断点包含优化器状态，完成项跳过，失败项可续跑；本地30秒进度、GitHub约180秒独立同步。没有人为累计12小时限额；Slurm单作业时限和requeue权限仍由学校配置决定。
+
+下一轮在当前实验结束后使用独立输出启动。目前GitHub状态是 `DESIGN_V2_READY_NOT_SUBMITTED`，并非正在训练。此前24项V1方案已由66项V2取代，不是额外一批正在运行的任务。
+
+## 分支与历史资料
+
+仓库默认分支保留论文协议与准备历史；学校部署工具维护入口位于 [HPC分支](https://github.com/jackzhu119/research3/tree/research/paper3-slurm-hpc-20261021)，下一轮独立实现位于 `paper3-v2-progress/experiments/followup_20261023/`。无需为了查看本页而更新学校正在运行的代码。
+
+旧RunPod入口、CUDA12.8锁文件、初始“尚未训练”说明、旧pilot和恢复规则均为历史版本资料，不能继续作为当前学校训练指令。`ONLINE_RELEASE.json`、`ONLINE_VALIDATION.json`绑定各自历史发布提交，不是本页最新训练状态，也不是本次文档更新的验证清单。旧科学协议、数据角色和原始证据保留，不把软件测试当作科研效果。
