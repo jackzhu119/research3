@@ -1,0 +1,263 @@
+{
+  "status": "PASSED_EXACT_PACKAGE_VERSIONS_CPU_EXECUTION",
+  "verified_utc": "2026-10-23T09:12:39.653691+00:00",
+  "verified_asia_shanghai": "2026-10-23T17:12:39.653691+08:00",
+  "command": "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /tmp/paper3-cu121-env/bin/python -m pytest -q -ra tests",
+  "passed": 87,
+  "failed": 0,
+  "skipped": 0,
+  "duration_seconds": 11.98,
+  "python": "3.12.3",
+  "torch": "2.5.1+cu121",
+  "numpy": "2.2.6",
+  "compiled_cuda": "12.1",
+  "cuda_available": false,
+  "execution_device": "CPU",
+  "bash42_tests_passed": [
+    "tests/test_pipeline.py::test_bash42_signal_checkpoint_and_requeue",
+    "tests/test_runtime_v2.py::test_explicit_termination_saves_but_does_not_requeue"
+  ],
+  "isolated_entry_checks": {
+    "worker_help": "PASSED",
+    "monitor_help": "PASSED",
+    "flags": "-I -S -B -u"
+  },
+  "school_hardware_executed": false,
+  "limitations": [
+    "No A100/CUDA kernel execution",
+    "Host glibc2.41/kernel differs from school CentOS7/Linux3.10",
+    "School Slurm service, shared storage, driver and network not live-tested"
+  ],
+  "source_sha256": {
+    "START.py": "870f94a478c41c50c6b3864dc3a436c1d575525d925165fe616d143bba067f91",
+    "entry.py": "2eee1067b1deaca69880ede3282287941bddee3c777c65e6a8c82aa2b423b0e2",
+    "train.sbatch": "ebb068bf1eb4f615e6ca64ebb87cab138a11c3d592ee9a2fe56029bd610313c3",
+    "paper3v2/__init__.py": "c958894fb9a1107c4dc342a993bdeff09c58d66b10fb2b8b83dd611359d98943",
+    "paper3v2/algorithm.py": "7dbf9c5712a80b1dead59bc6b01a6657f265557b3c4fac7dd0dd538adaa7b93e",
+    "paper3v2/data.py": "265347482a5f862af7fe82fdad0ab602eb81c852e953bc36023bb8bf01c2a34b",
+    "paper3v2/diagnostics.py": "d0ef02e47e3e6b90529726c79388c03339696d482b28c83c98e6de6b8b1422ce",
+    "paper3v2/io.py": "0a6d8087f6a0902733bb428196b7f1a23b21c91509286f38e48f05e77b5d6de7",
+    "paper3v2/monitor.py": "c1ffae2ba882c6e881ad87bc62a7feb67ece94582b70e4ff1b2fcc15e917bfbf",
+    "paper3v2/report.py": "b2a366bb5b4715e7fbfd60cd5e5525cf78bd3dbfb8b24b67c28baa0e83199b9e",
+    "paper3v2/worker.py": "734847cfa46318a5056190eb99db5c8d6684ccb85106af5b6831feb91bc0ce2d",
+    "p3work/__init__.py": "fe960b6635ec478538248fa04ae8f764fc725c023b521b724259bfd3f0553250",
+    "p3work/adapt.py": "3fa787123abe054b795ca6fc3386ce8f4bfba401e33a88acf108b5ef6097c520",
+    "p3work/contracts.py": "c1ecd6c7c8496064deecdcc8222b4e87d43a8ffe41065fa4350b113a0cea52ca",
+    "p3work/f0_bridge.py": "0b8b6bb76cf64fd786ff61f35e2fc3c1b9275fbf81ebb6369ac2043507c474f6",
+    "p3work/spatial_geometry.py": "2c739b2f0967aad718da3173c6c273a6c64e612a0d5e1b79fdfc6753c9f6e47a",
+    "p3work/splits.py": "7daadaa03701b4edcbedab1f8e03832808fb4374ce16e5714fde58a5e32d34e5",
+    "p3work/window_amendment.py": "865d1c086d0f98319cdcf897e7242cd221ef67c82888c285cabf7aa8511d56da",
+    "tests/conftest.py": "76cd423002a9e97c557386966b60cb72fef8e88ca6512b8a585ada2097525e7a",
+    "tests/test_algorithm.py": "3922fcf2efe6b28f06df393fd7557eaaf0ab86d82cf9eae2b09a07ff04fd5e11",
+    "tests/test_algorithm_v2.py": "a57aec7f825a866f5a0ff2a7f84f070b18cd7a52dd5ecd0054fde110135ecdfc",
+    "tests/test_diagnostics_v2.py": "b2890c7418693f63cc6bea048075c46af52ed5c805c9d2271a42c20c8a463538",
+    "tests/test_execution.py": "2fb176df0b712ff9aa910a5d2c6aac265aeca695a973c9a8a5ee2c44b58ab7eb",
+    "tests/test_pipeline.py": "119758f90d05ec4ebd33cca58ae5f96eed250eb456b3636351322d3369dea871",
+    "tests/test_report_v2.py": "a5edd1de5cfa057760f997106324562d5d56ed14a62185ad02e7347ab60a18be",
+    "tests/test_runtime_v2.py": "5b50be0ffbb1769087b200f723ba5af6779d9c7fa7e738ca6bf6f0018eccfe58",
+    "tests/test_worker_v2.py": "264ef6f6ee4dc2803227e868a2c9847b100654180451dd09fd36b06bcbcf7c94"
+  },
+  "isolated_reference_subprocess_cli": {
+    "status": "PASSED",
+    "scope": "SYNTHETIC_SOFTWARE_TEST_ONLY",
+    "fixture": "/tmp/paper3-isolated-reference-cli-ie5fgffx",
+    "startup_command": [
+      "/tmp/paper3-cu121-env/bin/python",
+      "-I",
+      "-S",
+      "-B",
+      "-u",
+      "/workspace/paper3-v2-design/START.py",
+      "--root",
+      "/tmp/paper3-isolated-reference-cli-ie5fgffx",
+      "--output",
+      "/tmp/paper3-isolated-reference-cli-ie5fgffx/followup",
+      "--python",
+      "/tmp/paper3-cu121-env/bin/python"
+    ],
+    "startup_status": "PREPARED",
+    "slurm_submission": false,
+    "network_used": false,
+    "tasks": [
+      {
+        "variant": "head_only",
+        "command": [
+          "/tmp/paper3-cu121-env/bin/python",
+          "-I",
+          "-S",
+          "-B",
+          "-u",
+          "/workspace/paper3-v2-design/entry.py",
+          "/tmp/paper3-isolated-reference-cli-ie5fgffx",
+          "worker",
+          "--plan",
+          "/tmp/paper3-isolated-reference-cli-ie5fgffx/followup/plan.json",
+          "--task",
+          "0",
+          "--device",
+          "cpu"
+        ],
+        "returncode": 0,
+        "duration_seconds": 1.508,
+        "status": "COMPLETE",
+        "outer_updates": 0,
+        "budgets": [
+          {
+            "budget": 20,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "head_only",
+              "support_trials": 19,
+              "uses_support_labels": true,
+              "optimizer_updates": 10,
+              "fallback_reason": null
+            }
+          },
+          {
+            "budget": 4,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "head_only",
+              "support_trials": 3,
+              "uses_support_labels": true,
+              "optimizer_updates": 10,
+              "fallback_reason": null
+            }
+          },
+          {
+            "budget": 8,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "head_only",
+              "support_trials": 7,
+              "uses_support_labels": true,
+              "optimizer_updates": 10,
+              "fallback_reason": null
+            }
+          },
+          {
+            "budget": 12,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "head_only",
+              "support_trials": 11,
+              "uses_support_labels": true,
+              "optimizer_updates": 10,
+              "fallback_reason": null
+            }
+          },
+          {
+            "budget": 16,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "head_only",
+              "support_trials": 15,
+              "uses_support_labels": true,
+              "optimizer_updates": 10,
+              "fallback_reason": null
+            }
+          }
+        ],
+        "completed_task_reuse": "PASSED_NO_CHECKPOINT_REWRITE",
+        "log": "compatibility/isolated_cli_head_only.txt"
+      },
+      {
+        "variant": "support_EA",
+        "command": [
+          "/tmp/paper3-cu121-env/bin/python",
+          "-I",
+          "-S",
+          "-B",
+          "-u",
+          "/workspace/paper3-v2-design/entry.py",
+          "/tmp/paper3-isolated-reference-cli-ie5fgffx",
+          "worker",
+          "--plan",
+          "/tmp/paper3-isolated-reference-cli-ie5fgffx/followup/plan.json",
+          "--task",
+          "1",
+          "--device",
+          "cpu"
+        ],
+        "returncode": 0,
+        "duration_seconds": 1.531,
+        "status": "COMPLETE",
+        "outer_updates": 0,
+        "budgets": [
+          {
+            "budget": 20,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "support_EA",
+              "support_trials": 19,
+              "uses_support_labels": false,
+              "optimizer_updates": 0,
+              "fallback_reason": null,
+              "shrinkage": 0.05,
+              "covariance_normalization": "per_trial_unit_trace",
+              "source_reference_recoloring": true
+            }
+          },
+          {
+            "budget": 4,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "support_EA",
+              "support_trials": 3,
+              "uses_support_labels": false,
+              "optimizer_updates": 0,
+              "fallback_reason": null,
+              "shrinkage": 0.05,
+              "covariance_normalization": "per_trial_unit_trace",
+              "source_reference_recoloring": true
+            }
+          },
+          {
+            "budget": 8,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "support_EA",
+              "support_trials": 7,
+              "uses_support_labels": false,
+              "optimizer_updates": 0,
+              "fallback_reason": null,
+              "shrinkage": 0.05,
+              "covariance_normalization": "per_trial_unit_trace",
+              "source_reference_recoloring": true
+            }
+          },
+          {
+            "budget": 12,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "support_EA",
+              "support_trials": 11,
+              "uses_support_labels": false,
+              "optimizer_updates": 0,
+              "fallback_reason": null,
+              "shrinkage": 0.05,
+              "covariance_normalization": "per_trial_unit_trace",
+              "source_reference_recoloring": true
+            }
+          },
+          {
+            "budget": 16,
+            "query_predictions": 40,
+            "reference_fit": {
+              "variant": "support_EA",
+              "support_trials": 15,
+              "uses_support_labels": false,
+              "optimizer_updates": 0,
+              "fallback_reason": null,
+              "shrinkage": 0.05,
+              "covariance_normalization": "per_trial_unit_trace",
+              "source_reference_recoloring": true
+            }
+          }
+        ],
+        "completed_task_reuse": "PASSED_NO_CHECKPOINT_REWRITE",
+        "log": "compatibility/isolated_cli_support_EA.txt"
+      }
+    ]
+  }
+}

@@ -39,7 +39,7 @@ def test_full_unroll_finite_and_source_frozen(variant):
     prior = {k: v.clone() for k,v in source.state_dict().items()}
     cfg = Config(variant=variant)
     gate = init_gate(cfg, "cpu")
-    nb, ng, _ = outer_update(source, geometry, b, gate, [e], cfg)
+    nb, ng, _, _ = outer_update(source, geometry, b, gate, [e], cfg)
     assert torch.isfinite(nb).all() and torch.isfinite(ng).all()
     torch.testing.assert_close(nb.T @ nb, torch.eye(4, dtype=torch.float64), atol=1e-10, rtol=1e-10)
     for k, v in prior.items():

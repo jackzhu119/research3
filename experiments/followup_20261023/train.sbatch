@@ -10,9 +10,14 @@ export PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONUTF8=1
 export OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1
 export CUBLAS_WORKSPACE_CONFIG=:4096:8
 child_pid=
-forward_stop() { if [ -n "$child_pid" ]; then kill -USR1 "$child_pid" 2>/dev/null || true; fi; }
-trap forward_stop USR1 TERM INT
-"$python" -I -B -u "$package/entry.py" "$project" worker --plan "$plan" --task "$SLURM_ARRAY_TASK_ID" &
+stop_reason=
+forward_stop() {
+  stop_reason=$1
+  if [ -n "$child_pid" ]; then kill -USR1 "$child_pid" 2>/dev/null || true; fi
+}
+trap 'forward_stop time_limit' USR1
+trap 'forward_stop terminated' TERM INT
+"$python" -I -S -B -u "$package/entry.py" "$project" worker --plan "$plan" --task "$SLURM_ARRAY_TASK_ID" &
 child_pid=$!
 while true; do
   wait "$child_pid"
@@ -28,6 +33,10 @@ while true; do
   fi
 done
 if [ "$result" -eq 75 ]; then
+  if [ "$stop_reason" = terminated ]; then
+    printf 'CHECKPOINT_SAVED after termination; resume explicitly with START.py --submit\n'
+    exit 75
+  fi
   printf 'CHECKPOINT_SAVED requesting Slurm requeue job=%s\n' "$SLURM_JOB_ID"
   if scontrol requeue "$SLURM_JOB_ID"; then exit 0; fi
   printf 'REQUEUE_UNAVAILABLE: rerun START.py --submit; checkpoint is preserved\n'

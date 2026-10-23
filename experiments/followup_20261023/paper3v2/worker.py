@@ -4,6 +4,7 @@ from dataclasses import asdict
 import fcntl
 import math
 import os
+import platform
 from pathlib import Path
 import random
 import signal
@@ -12,9 +13,11 @@ import time
 import traceback
 import numpy as np
 import torch
-from .algorithm import Config, init_gate, fit, logits, outer_update
+from .algorithm import (Config, init_gate, fit, logits, outer_update, support_evidence,
+                        REFERENCE_VARIANTS, fit_reference, reference_logits)
 from .data import Catalog, load_source
 from .io import read, put, atomic, digest, sha, artifact, emit
+from .diagnostics import perturb_episode
 from p3work.adapt import balanced_bce
 from p3work.spatial_geometry import initialize_dictionary
 
@@ -47,12 +50,14 @@ def save_checkpoint(folder, state):
     put(pointer, {"path": filename, "generation": generation, "sha256": sha(path),
                   "outer_update": state["update"], "previous": {k: v for k, v in (old or {}).items() if k != "previous"}})
 
-def load_checkpoint(folder):
+def load_checkpoint(folder, *, expected_identity=None):
     pointer = read(Path(folder) / "latest.json")
     for entry in (pointer, pointer.get("previous", {})):
         path = Path(folder) / entry.get("path", "missing")
         if path.is_file() and sha(path) == entry.get("sha256"):
             state = torch.load(path, map_location="cpu", weights_only=True)
+            if expected_identity is not None and state.get("identity") != expected_identity:
+                raise ValueError("Checkpoint belongs to a different numerical experiment")
             torch.set_rng_state(state["rng_cpu"])
             if torch.cuda.is_available() and state["rng_cuda"]:
                 torch.cuda.set_rng_state_all(state["rng_cuda"])
@@ -77,10 +82,11 @@ def summarize(rows):
             "participant_mean_bce": float(np.mean([r["bce"] for r in p])), "participants": p,
             "sessions": len(rows)}
 
-def evaluate(source, geometry, b, gate, catalog, config, folder, stop, progress, *, budget=20):
+def evaluate(source, geometry, b, gate, catalog, config, folder, stop, progress, *, budget=20, scenario="clean"):
     rows = []
     parameter_id = digest({"B": b.detach().cpu().tolist(), "gate": gate.detach().cpu().tolist(),
-                           "data": catalog.identity, "config": asdict(config), "budget": budget})
+                           "data": catalog.identity, "config": asdict(config), "budget": budget,
+                           "scenario": scenario, "evaluation_schema": 2})
     folder = Path(folder); folder.mkdir(parents=True, exist_ok=True)
     for number, plan in enumerate(catalog.plans):
         if stop.is_set():
@@ -91,40 +97,68 @@ def evaluate(source, geometry, b, gate, catalog, config, folder, stop, progress,
             row = None
         if row is None:
             episode = catalog.materialize(plan, b.device, budget=budget)
+            episode, perturbation = perturb_episode(episode, geometry, plan, scenario)
             start = time.monotonic()
-            weights, alpha, fallback = fit(source, geometry, b, gate, episode.support, config)
+            reference_metadata = None
+            if config.variant in REFERENCE_VARIANTS:
+                reference_state, reference_metadata = fit_reference(source, geometry, episode.support, config.variant)
+                alpha = b.new_empty(0)
+                fallback = reference_metadata['fallback_reason'] is not None
+            else:
+                weights, alpha, fallback = fit(source, geometry, b, gate, episode.support, config)
             if b.device.type == "cuda":
                 torch.cuda.synchronize()
             calibration = time.monotonic() - start
             with torch.no_grad():
-                pred = source.source_logits(episode.query_x) if fallback else logits(source, geometry, b, weights, alpha, episode.query_x)
+                if config.variant in REFERENCE_VARIANTS:
+                    pred = reference_logits(source, geometry, reference_state, episode.query_x)
+                else:
+                    pred = source.source_logits(episode.query_x) if fallback else logits(source, geometry, b, weights, alpha, episode.query_x)
                 prediction = pred.argmax(1)
                 # Prediction is computed before labels enter the metric calculation.
                 y = episode.query_y
                 ba = .5 * sum(float((prediction[y == c] == c).double().mean()) for c in (0, 1))
-                base = source.source_logits(episode.query_x).argmax(1)
-                run_ba = []
+                base_logits = source.source_logits(episode.query_x)
+                base = base_logits.argmax(1)
+                run_ba, run_metrics = [], []
                 for rid in sorted(set(episode.run_ids)):
                     mask = torch.tensor([r == rid for r in episode.run_ids], device=y.device)
                     if all(bool((y[mask] == c).any()) for c in (0, 1)):
-                        run_ba.append(.5 * sum(float((prediction[mask & (y == c)] == c).double().mean()) for c in (0, 1)))
+                        run_score = .5 * sum(float((prediction[mask & (y == c)] == c).double().mean()) for c in (0, 1))
+                        run_ba.append(run_score)
+                        run_metrics.append({"run_id": rid, "n": int(mask.sum()),
+                            "class_counts": [int((mask & (y == c)).sum()) for c in (0, 1)], "ba": run_score})
                 flips = lambda mask: .5 * sum(float(mask[y == c].double().mean()) for c in (0, 1))
                 row = {"parameter_id": parameter_id, "participant_id": plan.participant_id,
                     "session_id": plan.session_id, "budget": budget, "ba": ba,
                     "bce": float(balanced_bce(pred, y)), "gate": alpha.detach().cpu().tolist(),
                     "calibration_seconds": calibration, "fallback": fallback,
                     "future_runs_with_both_classes": len(run_ba),
+                    "per_run_metrics": run_metrics,
+                    "run_ba_min": min(run_ba) if run_ba else None,
                     "run_ba_p10": float(np.quantile(run_ba, .1)) if run_ba else None,
                     "negative_flip_rate": flips((base == y) & (prediction != y)),
                     "corrected_error_rate": flips((base != y) & (prediction == y)),
                     "f0_ba": flips(base == y),
                     "event_uids": list(episode.query_ids), "run_ids": list(episode.run_ids),
                     "predictions": prediction.cpu().tolist(), "labels": y.cpu().tolist(),
-                    "f0_predictions": base.cpu().tolist()}
+                    "probabilities": pred.double().softmax(1).cpu().tolist(),
+                    "f0_probabilities": base_logits.double().softmax(1).cpu().tolist(),
+                    "f0_predictions": base.cpu().tolist(), "scenario": scenario, "perturbation": perturbation,
+                    "query_signature": digest({"uids": list(episode.query_ids), "labels": y.cpu().tolist()})}
+                if gate.numel():
+                    row["support_evidence"] = support_evidence(source, geometry, episode.support).cpu().tolist()
+                if reference_metadata is not None:
+                    row['reference_fit'] = reference_metadata
             put(path, row)
         rows.append(row)
-        progress.update(stage=catalog.role, session=number + 1, sessions_total=len(catalog.plans), budget=budget)
+        progress.update(stage=catalog.role if scenario == "clean" else "diagnostics", status="EVALUATING",
+                        session=number + 1, sessions_total=len(catalog.plans), budget=budget, scenario=scenario)
     result = summarize(rows)
+    result.update(expected_sessions=[{"participant_id": p.participant_id, "session_id": p.session_id,
+        "query_signature": digest({"uids": list(p.audit["query_uids"]),
+                                    "labels": [p.rows[u]["label"] for u in p.audit["query_uids"]]})}
+        for p in catalog.plans], data_identity=catalog.identity, budget=budget, scenario=scenario)
     put(folder / "summary.json", result)
     return result
 
@@ -174,8 +208,11 @@ def train_loop(*, state, step, validate, save, stop, total_updates, checkpoint_e
         if update >= total_updates:
             return state
         # step is functional: an exception cannot partially mutate the committed state.
-        b, gate, metrics = step(state)
+        answer = step(state)
+        b, gate, metrics = answer[:3]
         state.update(b=b, gate=gate, update=update + 1, metrics=metrics)
+        if len(answer) == 4:
+            state["gate_optimizer"] = answer[3]
         if state["update"] % checkpoint_every == 0:
             save(state)
 
@@ -227,9 +264,7 @@ def run(args):
         scientific_id = digest({"task": task, "data": train.identity, "source": inputs,
                                 "recipe": plan["recipe_sha256"]})
         if (output / "latest.json").exists():
-            state = load_checkpoint(output)
-            if state["identity"] != scientific_id:
-                raise ValueError("Model/data configuration changed; use a new experiment output")
+            state = load_checkpoint(output, expected_identity=scientific_id)
             state["b"] = state["b"].to(device).requires_grad_(True)
             state["gate"] = state["gate"].to(device).requires_grad_(True)
             emit("CHECKPOINT_RESUMED", update=state["update"])
@@ -243,6 +278,14 @@ def run(args):
                 state.update(b=b.to(device).requires_grad_(True), update=1000, validated_update=1000,
                     best_b=b, best_gate=cpu_tree(state["gate"]), best_score=score, reused_receipt=receipt)
             save_checkpoint(output, state)
+        runtime = {"python": platform.python_version(), "torch": str(torch.__version__),
+                   "numpy": np.__version__, "cuda_build": torch.version.cuda,
+                   "device": torch.cuda.get_device_name(device) if device.type == "cuda" else "cpu"}
+        prior_runtime = state.get("runtime")
+        state["runtime"] = runtime
+        if prior_runtime is not None and prior_runtime != runtime:
+            emit("RESUME_RUNTIME_CHANGED", previous=prior_runtime, current=runtime, bitwise_equivalence_claimed=False)
+        put(output / "runtime.json", runtime)
         start = time.monotonic(); prior_elapsed = state.get("elapsed_seconds", 0.)
         def save(s):
             s["elapsed_seconds"] = prior_elapsed + time.monotonic() - start
@@ -250,24 +293,31 @@ def run(args):
         def step(s):
             progress.update(stage="meta_train", status="TRAINING", outer_update=s["update"], total_updates=1000)
             episodes = [train.materialize(train.draw(seed, s["update"] * 4 + k), device) for k in range(4)]
-            answer = outer_update(source, geometry, s["b"], s["gate"], episodes, config)
+            answer = outer_update(source, geometry, s["b"], s["gate"], episodes, config, gate_state=s.get("gate_optimizer"))
             progress.update(outer_update=s["update"] + 1, **answer[2])
             return answer
         def validate(s):
             return evaluate(source, geometry, s["b"], s["gate"], validation, config,
                             output / f"validation/{s['update']:04d}", stop, progress)
-        train_loop(state=state, step=step, validate=validate, save=save, stop=stop, total_updates=1000)
+        if config.variant in REFERENCE_VARIANTS:
+            state.update(best_b=cpu_tree(state['b']), best_gate=cpu_tree(state['gate']), best_score=None)
+        else:
+            train_loop(state=state, step=step, validate=validate, save=save, stop=stop, total_updates=1000)
         # Configuration and chosen checkpoint are saved BEFORE opening the holdout catalog.
-        selected = {"status": "SELECTED_ON_VALIDATION", "identity": scientific_id,
+        selected = {"status": "FIXED_REFERENCE_NO_MODEL_SELECTION" if config.variant in REFERENCE_VARIANTS else "SELECTED_ON_VALIDATION", "identity": scientific_id,
                     "task": task, "selection": state["best_score"], "holdout_used_for_selection": False}
         put(output / "selected.json", selected)
         best_b = state["best_b"].to(device).requires_grad_(True)
         best_gate = state["best_gate"].to(device).requires_grad_(True)
         holdout = Catalog(plan["root"], "internal_holdout")
-        for budget in plan["budgets"]:
+        for budget in task.get("budgets", plan["budgets"]):
             score = evaluate(source, geometry, best_b, best_gate, holdout, config,
                              output / f"holdout/B{budget}", stop, progress, budget=budget)
-            emit("HOLDOUT_RESULT", task=task["key"], budget=budget, **score)
+            emit("HOLDOUT_RESULT", task=task["key"], **score)
+        for scenario in task.get("diagnostics", []):
+            score = evaluate(source, geometry, best_b, best_gate, holdout, config,
+                output / f"diagnostics/{scenario}", stop, progress, budget=20, scenario=scenario)
+            emit("DIAGNOSTIC_RESULT", task=task["key"], synthetic_stress=True, **score)
         save(state)
         result = {**selected, "status": "COMPLETE", "elapsed_seconds": state["elapsed_seconds"],
                   "outer_updates": state["update"], "reused_receipt": state.get("reused_receipt"),

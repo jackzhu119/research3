@@ -50,7 +50,8 @@ def test_failed_update_does_not_commit_half_state(tmp_path):
 
 def test_three_gpu_24cpu_queue(tmp_path):
     plan=START.make_plan(tmp_path,tmp_path/"out")
-    assert len(plan["tasks"]) == 24 and len({t["key"] for t in plan["tasks"]}) == 24
+    assert len(plan["tasks"]) == 66 and len({t["key"] for t in plan["tasks"]}) == 66
+    assert [sum(t['arm'] == arm for t in plan['tasks']) for arm in ('core','sensitivity','reference')] == [36,24,6]
     command=START.submit_command(plan,"/path with space/python",[0,2,23])
     assert "--array=0,2,23%3" in command
     assert "--cpus-per-task=24" in command and "--mem=128G" in command
@@ -116,22 +117,27 @@ def test_recovered_checkpoint_preserved_if_next_write_is_torn(tmp_path,monkeypat
 
 def test_report_uses_same_11_people_across_seeds_and_curves(tmp_path):
     from paper3v2.report import aggregate
+    from paper3v2.io import digest
     plan=START.make_plan(tmp_path,tmp_path)
     plan['budgets']=[20,4]
     for task in plan['tasks']:
+        task['diagnostics']=[]
         folder=tmp_path/task['key'];put(folder/'result.json',{'status':'COMPLETE'})
         delta=.03 if task['config']['variant']=='dual' else 0.
-        for budget in plan['budgets']:
+        for budget in task.get('budgets',plan['budgets']):
+            expected=[]
             for i in range(1,12):
                 put(folder/f'holdout/B{budget}/S{i}-1.json',{
                     'participant_id':f'S{i}','session_id':'1','ba':.6+delta,'bce':.5,
                     'f0_ba':.5,'negative_flip_rate':.1,'corrected_error_rate':.2+delta,
                     'run_ba_p10':.55,'calibration_seconds':.12,'future_runs_with_both_classes':2,
                     'event_uids':['a','b'],'labels':[0,1],'fallback':None})
+                expected.append({'participant_id':f'S{i}','session_id':'1','query_signature':digest({'uids':['a','b'],'labels':[0,1]})})
+            put(folder/f'holdout/B{budget}/summary.json',{'expected_sessions':expected,'budget':budget})
     report=aggregate(plan)
     row=report['comparisons'][0]
     assert row['n_participants']==11 and row['delta_ba_pp']==pytest.approx(3.)
-    assert len(report['budget_curves'])==16
+    assert len(report['budget_curves'])==(len(plan['variants'])+len(plan.get('reference_variants',[]))+1)*len(plan['budgets'])
     assert (tmp_path/'comparisons.csv').is_file() and (tmp_path/'budget_curves.csv').is_file()
     bad=tmp_path/'P-seed20261018/holdout/B20/S1-1.json';v=read(bad);v['event_uids']=['other','b'];put(bad,v)
     with pytest.raises(ValueError,match='Query trial'):aggregate(plan)

@@ -70,11 +70,11 @@ def test_prefix_budget_never_replaces_invalid_or_changes_future_query(tmp_path):
 def test_real_cpu_update_exact_resume(tmp_path):
     _,source,geometry,episode,b=fixture();cfg=Config(variant='dual',inner_steps=2)
     gate=init_gate(cfg,'cpu')
-    nb,ng,_=outer_update(source,geometry,b,gate,[episode],cfg)
-    worker.save_checkpoint(tmp_path,{"update":1,"b":nb,"gate":ng})
-    continuous=outer_update(source,geometry,nb,ng,[episode],cfg)
+    nb,ng,_,opt=outer_update(source,geometry,b,gate,[episode],cfg)
+    worker.save_checkpoint(tmp_path,{"update":1,"b":nb,"gate":ng,"gate_optimizer":opt})
+    continuous=outer_update(source,geometry,nb,ng,[episode],cfg,gate_state=opt)
     state=worker.load_checkpoint(tmp_path)
-    restored=outer_update(source,geometry,state['b'].requires_grad_(True),state['gate'].requires_grad_(True),[episode],cfg)
+    restored=outer_update(source,geometry,state['b'].requires_grad_(True),state['gate'].requires_grad_(True),[episode],cfg,gate_state=state['gate_optimizer'])
     assert torch.equal(continuous[0],restored[0]) and torch.equal(continuous[1],restored[1])
 
 

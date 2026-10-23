@@ -8,6 +8,7 @@ import zlib
 root=Path(__file__).resolve().parent
 files=[root/n for n in ('START.py','entry.py','train.sbatch','README.md','DESIGN_ZH.md','KERNEL_ORIGIN.json','VALIDATION.json')]
 files += sorted((root/'paper3v2').glob('*.py')) + sorted((root/'p3work').glob('*.py'))
+files += [root/'compatibility'/n for n in ('exact_environment.json','final_suite_exact_versions.json','elf_required_symbols.json')]
 files += [root/'private/github.json']
 payload=json.dumps({str(p.relative_to(root)):base64.b64encode(p.read_bytes()).decode() for p in files},sort_keys=True,separators=(',',':')).encode()
 compressed=zlib.compress(payload,9); bundle=hashlib.sha256(compressed).hexdigest()
