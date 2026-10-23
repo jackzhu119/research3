@@ -1,52 +1,58 @@
-# Paper3 protocol implementation
+# 论文3 · 学校HPC训练与后续实验
 
-本仓库在独立研究分支实现论文3协议及可恢复科研流程。原始协议 ZIP 的52份 manifest 文件已逐一 SHA256 核验；`protocol/legacy_baseline_v1` 保留为旧基线，不作为新算法。实验输入以已获授权的 v2.1 信号合同和冻结角色为准。
+**当前实验和下一轮实验均使用学校云服务器（Slurm / NVIDIA A100）；不再使用RunPod。**
 
-## 当前数据与软件验收
+更新时间：2026-10-23（北京时间）。当前运行状态依据研究者最新反馈；最近收到的具体训练日志截至 **2026-10-23 14:59:30（北京时间）**。本页不是Slurm实时查询结果，未取得新回执时不推算完成率或宣称全部训练完成。
 
-source4、Stieger、Yang、Dreyer、Ma 和 CAR3 数值缓存均已完成原生解析、缓存校验及原生产 R2 完整 GET/SHA256 验证。各数据的实际覆盖、有效 trial 数量、单位限制和用途见[真实缓存与训练分工](plans/data_plan_20261019/VERIFIED_DATA_ZH.md)。provider ID 不代表已核实的跨库独立自然人总数；CAR3 来自相同 source4 trial，不增加独立 N。
+## 当前正在运行，与下一轮计划
 
-最终 CPU 软件回归实际通过 **3641项测试**，耗时557.99秒；197项软件输入（196份 Python 文件及 `pyproject.toml`）在真实退出后全部复核 SHA/bytes。软件 acceptance、完整 stdout 和原117/189份历史清单分别保留。当前软件验收不表示真实模型已拟合。
+| 项目 | 当前原实验 | 下一轮扩展实验 V2 |
+|---|---|---|
+| 状态 | **学校HPC运行中：研究者最新反馈** | **设计、代码与软件验证完成；尚未提交** |
+| 范围 | 原论文3源模型、元学习筛选/比较及原计划后续阶段 | 12方法核心消融＋参数敏感性＋低成本参考 |
+| 最近具体运行证据 | 作业770043，gpu4；日志已进入B8元学习筛选，r=2、ρ=.15、seed=20261018 | 66项计划任务；60个元训练任务、6个无元训练参考任务；完成数0 |
+| 资源说明 | 按当前学校作业实际分配；不因新规划改变运行任务 | 最多3张A100并行，每项1GPU、24CPU、128GiB内存 |
+| 输出位置 | `runs/training_campaign_v1/`、`runs/source_training_v2/`、`runs/meta/` 等原目录 | 新目录 `runs/followup_20261023_v2/` |
+| 结果含义 | 已有实际训练进度，最终科学结果尚未汇总确认 | 87项CPU软件测试通过；不是66项实验完成，也没有真实提升结果 |
 
-Stieger 全62人598会话的独立质量审计实际通过，固定40/11/11人、396/97/105会话；全部训练开发和验证会话具备真实 B20/future-query资格，没有跨分组完全相同信号。内部105会话只核缓存 SHA，没有调用内部 episode 或进行内部科学检验。最终数据契约见 `contracts/data_plan_final_validation_20261020.json`；部署回读与固定包验收另以最终交付回执为准。
+原日志曾报告15个源神经网络拟合完成、待运行神经任务为空；这不等于整个论文实验完成。B8的某一配置步数也不是整个计划的完成百分比。作业号770043是最近日志的身份，若学校续跑产生新号，应以实际队列为准。
 
-此阶段科研 fit、GPU训练、内部科学检验及科研性能结果均为0。用户本人开启已有云服务器后，按固定包的[启动说明](plans/data_plan_20261019/STARTUP_ZH.md)恢复缓存与离线依赖，先运行唯一受控 GPU 恢复 pilot。真实检查点、预测/数值恢复、预算和阶段门通过后，才继续主线及两条独立 source 增强支路。脚本不启动或重启 RunPod，不创建实例。
+- [当前阶段、下一轮任务与状态来源](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/CURRENT_AND_NEXT_ZH.md)
+- [学校服务器环境与运行注意事项](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
+- [下一轮完整设计、公式和文献](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/experiments/followup_20261023/DESIGN_ZH.md)
+- [下一轮三卡代码与启动说明](https://github.com/jackzhu119/research3/tree/paper3-v2-progress/experiments/followup_20261023)
+- [下一轮V2自动同步状态](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) — 该页面不代表当前原实验的进度。
 
-## 科研边界
+## 当前实验如何查看
 
-主线使用固定四source、11通道合同及 Stieger 40/11/11。Yang 和 Dreyer 各自与 source4 组成一条独立五source支路，不合并为默认六库。Dreyer 在论文1已有暴露，不能作新盲法外测。比较方法共享各支路真实 f0/Rref、seed、校准/未来query与选择预算；不能把来源变化单独解释成人数增加的因果效应。
-
-Ma 分组未冻结，不进入 fit；原删除 trial 的采集位置未知，不能还原原始付费 B20。完整三通道 Rref/G/方法比较有独立门禁。HS、Wang、Leeuwis、MILimbEEG 等封存外测遵循 W7 权限，当前未下载或解封其 query。未完成的科学参数保持 null，软件示例不作为估计或训练结果。
-
-受控 source pilot 比较100次连续更新与50次更新后保存/重载再更新50次，总计200次；之后只对固定source训练UID重放预测及指标。任何失败保留原 claim、预算、检查点及结果，不能换目录重复 fit。GPU驱动兼容性及数值恢复等待用户开机后实际检验。
-
-## 交付与启动
-
-正式固定包必须同时具有冻结 index、cache-only manifest、archive PUT/full-GET回执、archive独立完整回读与成员SHA证明、全部 index 对象独立完整 GET/SHA256证明、fresh目录只读启动验收及 late-control 完整 GET回执。历史 preparation checkpoint 是可恢复快照，不是训练就绪包。
-
-用户将最终固定包校验SHA并解压至新的论文3目录，保留原有R2环境变量，然后执行：
-
-```bash
-python3 tools/bootstrap_data_plan.py --index audit/data_plan_20261020/final_deployment/bootstrap_index.json
-```
-
-默认只读；用户开机并决定开始受控pilot及后续阶段后：
+在学校 `login1` 查看自己的队列：
 
 ```bash
-python3 tools/bootstrap_data_plan.py --index audit/data_plan_20261020/final_deployment/bootstrap_index.json --execute --launch-training --user-started-gpu
+squeue -u zhuziyuan -o '%.20i %.24j %.10T %.12M %R'
 ```
 
-固定包携带原协议 ZIP、新数据方案 DOCX、代码/元数据、CPython3.12.15原归档及最小SDK wheel；完整固定依赖与数值缓存从已有R2按 exact paths恢复。100个固定依赖已完成独立CPU离线安装、版本/pip check及CPU导入验收；这不证明GPU兼容。启动器不自动训练未冻结的Ma/CAR3或进入W7外测。
+查看最近已知作业；若作业号已变化，把770043替换为当前作业号：
 
-## 仓库与隐私
+```bash
+sacct -j 770043 --format=JobID,State,ExitCode,Elapsed,NodeList
+```
 
-GitHub仓库为PUBLIC。公开分支保留代码、授权导入协议和汇总验收；新增EEG、逐trial清单、原生catalog、R2回执及批处理状态仅保存在本地与用户已有R2。固定包不包含完整原始EEG、旧NPZ、论文1/2配置、旧权重或凭据。
+```bash
+tail -n 60 /public/home/zhuziyuan/projects/paper3/.paper3-hpc/logs/train-770043.out /public/home/zhuziyuan/projects/paper3/.paper3-hpc/jobs/770043/campaign.log
+```
 
-- `protocol/`：原始研究规格和52文件校验来源。
-- `p3work/`：原生适配、方法、可恢复训练、真实episode及预测存档。
-- `contracts/input_contract.json`：冻结的v2.1信号合同。
-- `status/tasks.json`：已完成准备门与待完成科学阶段。
-- `plans/data_plan_20261019/`：数据分工、限制和固定启动说明。
-- `p3work/methods/STATUS.md`：方法软件实现范围，W5科学验证仍待实际执行。
+以上只查看状态。恢复当前实验时沿用它自己的已部署续跑入口；不要用下一轮安装包替代当前任务，也不要照旧RunPod说明重新安装、重复pilot或重提test链。
 
-R2工具默认dry-run，只有显式 `--execute` 才使用已有配置，按明确manifest执行条件PUT和完整GET/SHA256；不扫描或复制密钥。已完成的数据协调器不应重启。运行结果只有实际上传并回读通过后才报告已备份。
+## 下一轮准备了什么
+
+36项核心元训练（12方法×3种子）＋24项秩/幅度敏感性元训练＋6项参考任务，共66项。另附5档校准预算、6种预定义误标/未来空间漂移诊断，以及概率质量、负翻转和配对统计。
+
+已有源模型、数据缓存及匹配的完成基线可以复用；独立数组最多三项并行。断点包含优化器状态，完成项跳过，失败项可续跑；本地30秒进度、GitHub约180秒独立同步。没有人为累计12小时限额；Slurm单作业时限和requeue权限仍由学校配置决定。
+
+下一轮在当前实验结束后使用独立输出启动。目前GitHub状态是 `DESIGN_V2_READY_NOT_SUBMITTED`，并非正在训练。此前24项V1方案已由66项V2取代，不是额外一批正在运行的任务。
+
+## 分支与历史资料
+
+仓库默认分支保留论文协议与准备历史；学校部署工具维护入口位于 [HPC分支](https://github.com/jackzhu119/research3/tree/research/paper3-slurm-hpc-20261021)，下一轮独立实现位于 `paper3-v2-progress/experiments/followup_20261023/`。无需为了查看本页而更新学校正在运行的代码。
+
+旧RunPod入口、CUDA12.8锁文件、初始“尚未训练”说明、旧pilot和恢复规则均为历史版本资料，不能继续作为当前学校训练指令。`ONLINE_RELEASE.json`、`ONLINE_VALIDATION.json`绑定各自历史发布提交，不是本页最新训练状态，也不是本次文档更新的验证清单。旧科学协议、数据角色和原始证据保留，不把软件测试当作科研效果。
