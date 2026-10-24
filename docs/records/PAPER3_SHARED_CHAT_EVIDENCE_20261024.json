@@ -1,0 +1,222 @@
+{
+  "schema_version": "paper3-chat-evidence-extract-v1",
+  "archived_at": "2026-10-24T16:12:17+08:00",
+  "source_title": "排查Slurm提交限制",
+  "source_share_url": "https://chatgpt.com/share/6adc6269-a39c-83e9-80f1-1731466f0762",
+  "scope": "Selected self-contained factual excerpts; not full transcript, attachments, credentials or executable migration scripts",
+  "message_index_note": "Indices refer to this extraction, not a visible ChatGPT UI numbering scheme",
+  "records": [
+    {
+      "id": "E01",
+      "source_type": "user_terminal_output",
+      "source_extraction_index": 2,
+      "facts": [
+        "installer download SHA passed",
+        "66-task plan prepared",
+        "bulk sbatch rejected"
+      ],
+      "verbatim_errors": [
+        "sbatch: error: QOSMaxSubmitJobPerUserLimit",
+        "Batch job submission failed: Job violates accounting/QOS policy (job submit limit, user's size and/or time limits)"
+      ]
+    },
+    {
+      "id": "E02",
+      "source_type": "user_scontrol_output",
+      "source_extraction_index": 67,
+      "facts": {
+        "job": "770043",
+        "qos": "user_zhuziyuan",
+        "partition": "hpc_gpu1",
+        "cpus": 24,
+        "host_memory": "128G",
+        "gpus": 1
+      },
+      "verbatim": [
+        "Priority=1000 Nice=0 Account=zhuziyuan QOS=user_zhuziyuan",
+        "TRES=cpu=24,mem=128G,node=1,billing=24,gres/gpu=1"
+      ],
+      "not_proven": "No numeric maximum submit/run policy is printed in this preserved output"
+    },
+    {
+      "id": "E03",
+      "source_type": "user_pasted_source",
+      "source_extraction_index": 107,
+      "facts": [
+        "core r4/rho0.15",
+        "sensitivity P and dual only, budgets=[20]",
+        "reference arm=no_meta_fit",
+        "completed_task requires result.json status COMPLETE",
+        "original START monitor launches after sbatch stage"
+      ],
+      "verbatim_source_excerpt": [
+        "def completed_task(path):",
+        "value = read(path)",
+        "return isinstance(value, dict) and value.get(\"status\") == \"COMPLETE\"",
+        "if (output / \"plan.json\").exists() and read(output / \"plan.json\")[\"recipe_sha256\"] != plan[\"recipe_sha256\"]:",
+        "monitor_log = (output / \"monitor.log\").open(\"ab\", buffering=0)",
+        "subprocess.Popen([args.python, \"-I\", \"-S\", \"-B\", \"-u\", str(PACKAGE / \"entry.py\"), str(root), \"monitor\","
+      ],
+      "file": "/public/home/zhuziyuan/paper3-followup/0e55dba2a78b43464e8c/START.py"
+    },
+    {
+      "id": "E04",
+      "source_type": "user_training_log",
+      "source_extraction_index": 789,
+      "trajectory": [
+        {
+          "utc": "2026-10-24T04:39:59.903345Z",
+          "outer_updates_completed": 186,
+          "inner_updates_actual": 7440
+        },
+        {
+          "utc": "2026-10-24T04:40:29.940374Z",
+          "outer_updates_completed": 198,
+          "inner_updates_actual": 7920
+        },
+        {
+          "utc": "2026-10-24T04:40:59.978518Z",
+          "outer_updates_completed": 199,
+          "inner_updates_actual": 7960
+        }
+      ],
+      "job": "770043",
+      "method": "B11",
+      "dimension": 2,
+      "radius": 0.05,
+      "seed": 20261018,
+      "caveat": "Fresh worker progress alongside older campaign/source status; CampaignError and CLASSICAL_PENDING do not alone prove present failure"
+    },
+    {
+      "id": "E05",
+      "source_type": "user_squeue_and_scontrol_output",
+      "source_extraction_index": 996,
+      "terminal_last_login": "2026-10-24 15:08:44; this is not the exact query timestamp",
+      "queue_rows": [
+        "771064_14      hpc_gpu    RUNNING     12      p3f40-14-d1cc754cda5d                                gpu1",
+        "771065_13      hpc_gpu    RUNNING     12      p3f40-13-1f43fb6573a4                                gpu2",
+        "771066_12      hpc_gpu    RUNNING     12      p3f40-12-b0a72a37d01a                                gpu2",
+        "770043     hpc_gpu1    RUNNING     24        paper3-train-direct                                gpu4"
+      ],
+      "scontrol_rows": [
+        "JobState=RUNNING Reason=None Dependency=(null)",
+        "Partition=hpc_gpu AllocNode:Sid=login1:673013",
+        "NumNodes=1 NumCPUs=12 NumTasks=1 CPUs/Task=12 ReqB:S:C:T=0:0:*:*",
+        "TRES=cpu=12,mem=64G,node=1,billing=12,gres/gpu=1",
+        "JobState=RUNNING Reason=None Dependency=(null)",
+        "Partition=hpc_gpu AllocNode:Sid=login1:673013",
+        "NumNodes=1 NumCPUs=12 NumTasks=1 CPUs/Task=12 ReqB:S:C:T=0:0:*:*",
+        "TRES=cpu=12,mem=64G,node=1,billing=12,gres/gpu=1",
+        "JobState=RUNNING Reason=None Dependency=(null)",
+        "Partition=hpc_gpu AllocNode:Sid=login1:673013",
+        "NumNodes=1 NumCPUs=12 NumTasks=1 CPUs/Task=12 ReqB:S:C:T=0:0:*:*",
+        "TRES=cpu=12,mem=64G,node=1,billing=12,gres/gpu=1"
+      ],
+      "listed_log_paths": [
+        "/public/home/zhuziyuan/paper3-submit-three16/install.log",
+        "/public/home/zhuziyuan/paper3-submit-three40/switch.log"
+      ],
+      "proves": "Three new hpc_gpu jobs each 1GPU/12CPU/64G RUNNING, plus original job hpc_gpu1 RUNNING",
+      "not_proven": "GPU model/VRAM is not printed; job IDs and RUNNING are historical sample, not live forever"
+    },
+    {
+      "id": "E06",
+      "source_type": "independently_read_github_status",
+      "commit": "1effccac6b6d1ddc761b88f1d13eab300de63e3b",
+      "path": "monitoring/paper3-followup-v2/status.json",
+      "status_blob_sha": "7e3bfbf7e0283bafdf08f5db74a4a064835f96d3",
+      "updated_utc": "2026-10-24T07:45:44Z",
+      "complete_tasks": 12,
+      "total_tasks": 66,
+      "report_status": "PARTIAL",
+      "core_complete": false,
+      "active_tasks": [
+        {
+          "task": "P-seed20261019",
+          "status": "EVALUATING",
+          "stage": "internal_holdout",
+          "outer_update": 1000
+        },
+        {
+          "task": "global-seed20261019",
+          "status": "EVALUATING",
+          "stage": "meta_validation",
+          "outer_update": 1000
+        },
+        {
+          "task": "scalar-seed20261019",
+          "status": "TRAINING",
+          "stage": "meta_train",
+          "outer_update": 950
+        }
+      ],
+      "resource_fields": {
+        "max_parallel_gpus": 1,
+        "cpus_per_gpu": 24
+      },
+      "resource_fields_interpretation": "legacy plan metadata, contradicted by newer actual deployment allocation; not edited by this archive"
+    },
+    {
+      "id": "E07",
+      "source_type": "independently_read_github_commits",
+      "commits": [
+        {
+          "sha": "1effccac6b6d1ddc761b88f1d13eab300de63e3b",
+          "time": "2026-10-24T07:51:35Z",
+          "message": "Update Paper3 follow-up progress"
+        },
+        {
+          "sha": "c6f7c126289c0530f330ade17f9c9e191e29b276",
+          "time": "2026-10-24T07:48:44Z",
+          "message": "Update Paper3 follow-up progress"
+        },
+        {
+          "sha": "8d9f1bdce97efa018a88b848aafdb4b9196b6bf5",
+          "time": "2026-10-24T07:45:55Z",
+          "message": "Update Paper3 follow-up progress"
+        }
+      ],
+      "interpretation": "Repeated progress commits confirm current second-round sync, not full checkpoint offsite backup"
+    },
+    {
+      "id": "E09",
+      "source_type": "user_pasted_checkpoint_wrapper",
+      "source_extraction_index": 80,
+      "verbatim_excerpt": [
+        "  if [ -n \"$child_pid\" ]; then kill -USR1 \"$child_pid\" 2>/dev/null || true; fi",
+        "trap 'forward_stop time_limit' USR1",
+        "trap 'forward_stop terminated' TERM INT",
+        "  result=$?",
+        "  # Bash retains its exit status, including checkpoint exit 75.",
+        "    final_result=$?",
+        "    if [ \"$final_result\" -ne 127 ]; then result=$final_result; fi",
+        "  if [ \"$stop_reason\" = terminated ]; then",
+        "    exit 75",
+        "  printf 'CHECKPOINT_SAVED requesting Slurm requeue job=%s\\n' \"$SLURM_JOB_ID\"",
+        "  if scontrol requeue \"$SLURM_JOB_ID\"; then exit 0; fi"
+      ],
+      "scope": "Signal handling and requeue mechanism, not a guarantee of zero replay or successful scheduler permission"
+    },
+    {
+      "id": "E08",
+      "source_type": "chat_proposal_or_screenshot_interpretation",
+      "source_extraction_indices": [
+        651,
+        685,
+        884,
+        898,
+        988,
+        996
+      ],
+      "facts": [
+        "80GB to 40GB change explicitly accepted by user",
+        "three40/switch.log is listed by the final user terminal output; _threejobs16/controller.log is confirmed only for the intermediate controller",
+        "four-GPU and 16CPU schemes were superseded"
+      ],
+      "limitations": [
+        "GPU model/complete node specifications need original hardware output for fresh verification",
+        "do not elevate historical ETA, CPU speed speculation or unseen numeric QoS limits to confirmed results"
+      ]
+    }
+  ]
+}
