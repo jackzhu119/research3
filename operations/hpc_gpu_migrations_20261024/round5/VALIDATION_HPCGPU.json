@@ -1,0 +1,65 @@
+{
+  "status": "PASSED_TARGETED_OPERATIONAL_AND_OLD_WORK_RESUME_CHECKS_NOT_SCHOOL_GPU_RUN",
+  "recorded_utc": "2026-10-24T14:49:36.141337+00:00",
+  "round": 5,
+  "resource_request": {
+    "partition": "hpc_gpu",
+    "gpu_model": "A100-PCIe-40GB",
+    "nodes": 1,
+    "jobs": 1,
+    "gpus": 3,
+    "cpus_total": 36,
+    "cpus_per_slot": 12,
+    "memory_total": "128G"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "cuda_build": "12.1",
+    "gpu_used": false
+  },
+  "full_suite": {
+    "tests": 254,
+    "passed": 253,
+    "failed": 1,
+    "seconds": 56.19,
+    "failure": "One old online test expected hpc_gpu1 while the correct production command used hpc_gpu; updated operational fixture, no numerical code change."
+  },
+  "followup_checks": [
+    {
+      "suite": "tests/test_online.py",
+      "passed": 8,
+      "failed": 0,
+      "seconds": 1.96
+    },
+    {
+      "suite": "tests/test_hpcgpu_migration.py tests/test_runtime.py tests/test_allocation.py",
+      "passed": 61,
+      "failed": 0,
+      "seconds": 8.36
+    },
+    {
+      "suite": "tests/test_round5_integration.py plus new migration tests",
+      "passed": 7,
+      "failed": 0,
+      "seconds": 11.31
+    }
+  ],
+  "covered": [
+    "Original and migrated scientific code SHA maps and generated recipe/task dictionaries are identical",
+    "Existing plan bytes/mtime, completed task bytes/mtime and checkpoints retained on resource reprepare",
+    "Original R5 checkpoint resumes through migrated isolated worker with the same scientific identity",
+    "Original completed basis is not launched or rewritten by new allocation",
+    "Committed session row reused while remaining evaluation budget completes",
+    "Single CPU-simulated allocation uses three worker slots; no school GPU execution claimed",
+    "Exact whole-job128G memory and36CPU propagated to prepared launch, sbatch and GitHub monitor snapshot",
+    "Same-resource live controller with only package-path change is reused without launch rewrite; different live resources require the migration entry",
+    "Bash syntax and Python operational modules compile"
+  ],
+  "school_jobs_submitted": false,
+  "school_gpu_runtime_verified": false,
+  "private_credentials_embedded": false,
+  "publication_performed": false,
+  "migration_handoff_and_installer": "Parent-owned MIGRATE.py and online wrapper need their independent final verification after integration."
+}

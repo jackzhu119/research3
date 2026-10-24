@@ -1,0 +1,4029 @@
+{
+  "version": "paper3-round5-reversible-spatial-coupling-v1",
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "budgets": [
+    20,
+    4,
+    8,
+    12,
+    16
+  ],
+  "updates": 1000,
+  "episodes_per_update": 4,
+  "validate_every": 50,
+  "checkpoint_every": 10,
+  "outer_lr": 0.01,
+  "comparisons": [
+    [
+      "single:left_rotation",
+      "single:single"
+    ],
+    [
+      "single:right_rotation",
+      "single:single"
+    ],
+    [
+      "single:symmetric",
+      "single:single"
+    ],
+    [
+      "single:symmetric",
+      "single:left_rotation"
+    ],
+    [
+      "single:symmetric",
+      "single:right_rotation"
+    ],
+    [
+      "left_rotation:left_rotation",
+      "single:left_rotation"
+    ],
+    [
+      "right_rotation:right_rotation",
+      "single:right_rotation"
+    ],
+    [
+      "symmetric:symmetric",
+      "single:symmetric"
+    ]
+  ],
+  "tasks": [
+    {
+      "key": "basis-single-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:single",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-single-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:single",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-single-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:single",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "core-single-single-main-seed20261018",
+      "family": "core",
+      "group": "single:single",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-left_rotation-main-seed20261018",
+      "family": "core",
+      "group": "single:left_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-right_rotation-main-seed20261018",
+      "family": "core",
+      "group": "single:right_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-symmetric-main-seed20261018",
+      "family": "core",
+      "group": "single:symmetric",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-single-main-seed20261019",
+      "family": "core",
+      "group": "single:single",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-left_rotation-main-seed20261019",
+      "family": "core",
+      "group": "single:left_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-right_rotation-main-seed20261019",
+      "family": "core",
+      "group": "single:right_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-symmetric-main-seed20261019",
+      "family": "core",
+      "group": "single:symmetric",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-single-main-seed20261020",
+      "family": "core",
+      "group": "single:single",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-left_rotation-main-seed20261020",
+      "family": "core",
+      "group": "single:left_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-right_rotation-main-seed20261020",
+      "family": "core",
+      "group": "single:right_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-single-symmetric-main-seed20261020",
+      "family": "core",
+      "group": "single:symmetric",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "coupled_ks15",
+        "coupled_sk15",
+        "coupled_null15",
+        "coupled_ks35",
+        "coupled_sk35",
+        "coupled_null35"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "basis-left_rotation-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:left_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-left_rotation-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:left_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-left_rotation-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:left_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-right_rotation-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:right_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-right_rotation-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:right_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-right_rotation-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:right_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-symmetric-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:symmetric",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-symmetric-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:symmetric",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "basis-symmetric-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:symmetric",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false,
+      "source_model_reused": true
+    },
+    {
+      "key": "core-left_rotation-single-main-seed20261018",
+      "family": "core",
+      "group": "left_rotation:single",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261018",
+      "requires": [
+        "basis-left_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-left_rotation-main-seed20261018",
+      "family": "core",
+      "group": "left_rotation:left_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261018",
+      "requires": [
+        "basis-left_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-right_rotation-main-seed20261018",
+      "family": "core",
+      "group": "left_rotation:right_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261018",
+      "requires": [
+        "basis-left_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-symmetric-main-seed20261018",
+      "family": "core",
+      "group": "left_rotation:symmetric",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261018",
+      "requires": [
+        "basis-left_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-single-main-seed20261019",
+      "family": "core",
+      "group": "left_rotation:single",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261019",
+      "requires": [
+        "basis-left_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-left_rotation-main-seed20261019",
+      "family": "core",
+      "group": "left_rotation:left_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261019",
+      "requires": [
+        "basis-left_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-right_rotation-main-seed20261019",
+      "family": "core",
+      "group": "left_rotation:right_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261019",
+      "requires": [
+        "basis-left_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-symmetric-main-seed20261019",
+      "family": "core",
+      "group": "left_rotation:symmetric",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261019",
+      "requires": [
+        "basis-left_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-single-main-seed20261020",
+      "family": "core",
+      "group": "left_rotation:single",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261020",
+      "requires": [
+        "basis-left_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-left_rotation-main-seed20261020",
+      "family": "core",
+      "group": "left_rotation:left_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261020",
+      "requires": [
+        "basis-left_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-right_rotation-main-seed20261020",
+      "family": "core",
+      "group": "left_rotation:right_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261020",
+      "requires": [
+        "basis-left_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-left_rotation-symmetric-main-seed20261020",
+      "family": "core",
+      "group": "left_rotation:symmetric",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-left_rotation-r4-seed20261020",
+      "requires": [
+        "basis-left_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-single-main-seed20261018",
+      "family": "core",
+      "group": "right_rotation:single",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261018",
+      "requires": [
+        "basis-right_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-left_rotation-main-seed20261018",
+      "family": "core",
+      "group": "right_rotation:left_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261018",
+      "requires": [
+        "basis-right_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-right_rotation-main-seed20261018",
+      "family": "core",
+      "group": "right_rotation:right_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261018",
+      "requires": [
+        "basis-right_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-symmetric-main-seed20261018",
+      "family": "core",
+      "group": "right_rotation:symmetric",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261018",
+      "requires": [
+        "basis-right_rotation-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-single-main-seed20261019",
+      "family": "core",
+      "group": "right_rotation:single",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261019",
+      "requires": [
+        "basis-right_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-left_rotation-main-seed20261019",
+      "family": "core",
+      "group": "right_rotation:left_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261019",
+      "requires": [
+        "basis-right_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-right_rotation-main-seed20261019",
+      "family": "core",
+      "group": "right_rotation:right_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261019",
+      "requires": [
+        "basis-right_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-symmetric-main-seed20261019",
+      "family": "core",
+      "group": "right_rotation:symmetric",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261019",
+      "requires": [
+        "basis-right_rotation-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-single-main-seed20261020",
+      "family": "core",
+      "group": "right_rotation:single",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261020",
+      "requires": [
+        "basis-right_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-left_rotation-main-seed20261020",
+      "family": "core",
+      "group": "right_rotation:left_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261020",
+      "requires": [
+        "basis-right_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-right_rotation-main-seed20261020",
+      "family": "core",
+      "group": "right_rotation:right_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261020",
+      "requires": [
+        "basis-right_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-right_rotation-symmetric-main-seed20261020",
+      "family": "core",
+      "group": "right_rotation:symmetric",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-right_rotation-r4-seed20261020",
+      "requires": [
+        "basis-right_rotation-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-single-main-seed20261018",
+      "family": "core",
+      "group": "symmetric:single",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261018",
+      "requires": [
+        "basis-symmetric-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-left_rotation-main-seed20261018",
+      "family": "core",
+      "group": "symmetric:left_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261018",
+      "requires": [
+        "basis-symmetric-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-right_rotation-main-seed20261018",
+      "family": "core",
+      "group": "symmetric:right_rotation",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261018",
+      "requires": [
+        "basis-symmetric-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-symmetric-main-seed20261018",
+      "family": "core",
+      "group": "symmetric:symmetric",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261018",
+      "requires": [
+        "basis-symmetric-r4-seed20261018"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-single-main-seed20261019",
+      "family": "core",
+      "group": "symmetric:single",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261019",
+      "requires": [
+        "basis-symmetric-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-left_rotation-main-seed20261019",
+      "family": "core",
+      "group": "symmetric:left_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261019",
+      "requires": [
+        "basis-symmetric-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-right_rotation-main-seed20261019",
+      "family": "core",
+      "group": "symmetric:right_rotation",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261019",
+      "requires": [
+        "basis-symmetric-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-symmetric-main-seed20261019",
+      "family": "core",
+      "group": "symmetric:symmetric",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261019",
+      "requires": [
+        "basis-symmetric-r4-seed20261019"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-single-main-seed20261020",
+      "family": "core",
+      "group": "symmetric:single",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261020",
+      "requires": [
+        "basis-symmetric-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-left_rotation-main-seed20261020",
+      "family": "core",
+      "group": "symmetric:left_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261020",
+      "requires": [
+        "basis-symmetric-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:left_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-right_rotation-main-seed20261020",
+      "family": "core",
+      "group": "symmetric:right_rotation",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261020",
+      "requires": [
+        "basis-symmetric-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:right_rotation",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-symmetric-symmetric-main-seed20261020",
+      "family": "core",
+      "group": "symmetric:symmetric",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-symmetric-r4-seed20261020",
+      "requires": [
+        "basis-symmetric-r4-seed20261020"
+      ],
+      "setting": "main",
+      "baseline_group": "single:symmetric",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-single-0.05-radius0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:single:0.05",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-single-0.05-radius0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:single:0.05",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-single-0.05-radius0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:single:0.05",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-left_rotation-0.05-radius0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:left_rotation:0.05",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-left_rotation-0.05-radius0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:left_rotation:0.05",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-left_rotation-0.05-radius0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:left_rotation:0.05",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-right_rotation-0.05-radius0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:right_rotation:0.05",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-right_rotation-0.05-radius0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:right_rotation:0.05",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-right_rotation-0.05-radius0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:right_rotation:0.05",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:symmetric:0.05",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:symmetric:0.05",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:symmetric:0.05",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.05",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:single:0.35",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:single:0.35",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:single:0.35",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:left_rotation:0.35",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:left_rotation:0.35",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:left_rotation:0.35",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:right_rotation:0.35",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:right_rotation:0.35",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:right_rotation:0.35",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261018",
+      "family": "sensitivity",
+      "group": "radius:symmetric:0.35",
+      "seed": 20261018,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261019",
+      "family": "sensitivity",
+      "group": "radius:symmetric:0.35",
+      "seed": 20261019,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261020",
+      "family": "sensitivity",
+      "group": "radius:symmetric:0.35",
+      "seed": 20261020,
+      "variant": "geometry_refined",
+      "config": {
+        "variant": "geometry_refined",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "radius0.35",
+      "baseline_group": "single:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-probe-single-shared-theta-probe-seed20261018",
+      "family": "sensitivity",
+      "group": "probe:single",
+      "seed": 20261018,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-single-shared-theta-probe-seed20261019",
+      "family": "sensitivity",
+      "group": "probe:single",
+      "seed": 20261019,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-single-shared-theta-probe-seed20261020",
+      "family": "sensitivity",
+      "group": "probe:single",
+      "seed": 20261020,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-left_rotation-shared-theta-probe-seed20261018",
+      "family": "sensitivity",
+      "group": "probe:left_rotation",
+      "seed": 20261018,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-left_rotation-shared-theta-probe-seed20261019",
+      "family": "sensitivity",
+      "group": "probe:left_rotation",
+      "seed": 20261019,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-left_rotation-shared-theta-probe-seed20261020",
+      "family": "sensitivity",
+      "group": "probe:left_rotation",
+      "seed": 20261020,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "left_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-right_rotation-shared-theta-probe-seed20261018",
+      "family": "sensitivity",
+      "group": "probe:right_rotation",
+      "seed": 20261018,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-right_rotation-shared-theta-probe-seed20261019",
+      "family": "sensitivity",
+      "group": "probe:right_rotation",
+      "seed": 20261019,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-right_rotation-shared-theta-probe-seed20261020",
+      "family": "sensitivity",
+      "group": "probe:right_rotation",
+      "seed": 20261020,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "right_rotation",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-symmetric-shared-theta-probe-seed20261018",
+      "family": "sensitivity",
+      "group": "probe:symmetric",
+      "seed": 20261018,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-symmetric-shared-theta-probe-seed20261019",
+      "family": "sensitivity",
+      "group": "probe:symmetric",
+      "seed": 20261019,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-symmetric-shared-theta-probe-seed20261020",
+      "family": "sensitivity",
+      "group": "probe:symmetric",
+      "seed": 20261020,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "symmetric",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-bch2-shared-theta-probe-seed20261018",
+      "family": "sensitivity",
+      "group": "probe:bch2",
+      "seed": 20261018,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "bch2",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261018",
+      "requires": [
+        "basis-single-r4-seed20261018"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-bch2-shared-theta-probe-seed20261019",
+      "family": "sensitivity",
+      "group": "probe:bch2",
+      "seed": 20261019,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "bch2",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261019",
+      "requires": [
+        "basis-single-r4-seed20261019"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "sensitivity-probe-bch2-shared-theta-probe-seed20261020",
+      "family": "sensitivity",
+      "group": "probe:bch2",
+      "seed": 20261020,
+      "variant": "geometry_tangent",
+      "config": {
+        "variant": "geometry_tangent",
+        "geometry": "bch2",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "basis_key": "basis-single-r4-seed20261020",
+      "requires": [
+        "basis-single-r4-seed20261020"
+      ],
+      "setting": "shared-theta-probe",
+      "baseline_group": "probe:single",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20,
+      "mechanism_probe": true,
+      "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim"
+    },
+    {
+      "key": "reference-head_newton-seed20261018",
+      "family": "reference",
+      "group": "head_newton",
+      "variant": "head_newton",
+      "seed": 20261018,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "single:single"
+    },
+    {
+      "key": "reference-head_newton-seed20261019",
+      "family": "reference",
+      "group": "head_newton",
+      "variant": "head_newton",
+      "seed": 20261019,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "single:single"
+    },
+    {
+      "key": "reference-head_newton-seed20261020",
+      "family": "reference",
+      "group": "head_newton",
+      "variant": "head_newton",
+      "seed": 20261020,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "single:single"
+    },
+    {
+      "key": "reference-support_EA-seed20261018",
+      "family": "reference",
+      "group": "support_EA",
+      "variant": "support_EA",
+      "seed": 20261018,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "single:single"
+    },
+    {
+      "key": "reference-support_EA-seed20261019",
+      "family": "reference",
+      "group": "support_EA",
+      "variant": "support_EA",
+      "seed": 20261019,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "single:single"
+    },
+    {
+      "key": "reference-support_EA-seed20261020",
+      "family": "reference",
+      "group": "support_EA",
+      "variant": "support_EA",
+      "seed": 20261020,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "geometry": "single",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "inner_steps": 5,
+        "initializer": "tangent",
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "theta_lr": 0.05,
+        "head_lr": 0.01,
+        "damping": 0.0001,
+        "max_transform_deviation": null
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "single:single"
+    }
+  ],
+  "primary_partition": "holdout",
+  "primary_budget": 20,
+  "primary_scenario": "clean",
+  "interpretation": "exploratory internal replication; cohort already used by earlier rounds",
+  "counts": {
+    "basis": 12,
+    "core": 48,
+    "sensitivity": 39,
+    "reference": 6
+  },
+  "task_breakdown": {
+    "basis": 12,
+    "core": 48,
+    "radius_sensitivity": 24,
+    "shared_theta_probe": 15,
+    "reference": 6
+  },
+  "external_data_required_for_core": false,
+  "scientific_question": "Does reversible rotation/gain coupling improve fixed-prefix, fixed-rank spatial calibration?",
+  "support_scope": "Only acquired prefix; future query excluded from fitting and model selection",
+  "root": "/public/home/zhuziyuan/projects/paper3",
+  "output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5",
+  "gpus": 3,
+  "cpus": 12,
+  "recipe_sha256": "7b7b39043aa7e659a3782e17df6b256eb927f7bfff0de728242a84e5b245f8af"
+}
