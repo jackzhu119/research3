@@ -1,0 +1,143 @@
+{
+  "schema_version": "paper3-experiment-overview-v2",
+  "updated_at": "2026-10-24T16:12:17+08:00",
+  "timezone": "Asia/Shanghai",
+  "status_type": "manual_configuration_and_evidence_snapshot_not_live_scheduler",
+  "compute_platform": "school_slurm_hpc",
+  "runpod_in_use": false,
+  "round1": {
+    "experiment": "original_campaign_v1",
+    "status": "RUNNING_AT_LAST_USER_QUEUE_EVIDENCE",
+    "job": "770043",
+    "partition": "hpc_gpu1",
+    "node": "gpu4",
+    "resources": {
+      "gpus": 1,
+      "cpus": 24,
+      "host_memory": "128G"
+    },
+    "gpu_model_record": "NVIDIA A100 SXM4 80GB",
+    "last_training_log_utc": "2026-10-24T04:40:59Z",
+    "stage": "meta_screening",
+    "method": "B11",
+    "configuration": {
+      "dimension": 2,
+      "radius": 0.05,
+      "seed": 20261018
+    },
+    "last_observed_outer_update": 199,
+    "reported_source_neural_fits_complete": 15,
+    "automatic_github_sync": "not_confirmed",
+    "scientific_completion_claimed": false,
+    "output_directories": [
+      "runs/source_training_v2",
+      "runs/meta",
+      "runs/training_campaign_v1"
+    ]
+  },
+  "round2": {
+    "experiment": "followup_20261023_v2",
+    "status": "STARTED_PARTIAL_RESULTS_AVAILABLE",
+    "submitted": true,
+    "total_tasks": 66,
+    "meta_training_tasks": 60,
+    "core_meta_tasks": 36,
+    "sensitivity_meta_tasks": 24,
+    "reference_tasks": 6,
+    "seeds": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "reported_scientific_plan_preserved": true,
+    "deployed_code_hash_audit_performed": false,
+    "current_deployment": {
+      "partition": "hpc_gpu",
+      "strategy": "three_independent_single_gpu_jobs_with_rolling_submission",
+      "max_parallel_jobs": 3,
+      "resources_per_job": {
+        "gpus": 1,
+        "cpus": 12,
+        "host_memory": "64G"
+      },
+      "gpu_model_record": "NVIDIA A100 PCIe 40GB",
+      "gpu_model_evidence": "selected configuration and prior hardware/screenshot record; latest pasted TRES confirms count, not model",
+      "latest_user_queue_jobs": [
+        {
+          "job": "771066_12",
+          "task_index": 12,
+          "task": "P-seed20261019",
+          "node": "gpu2"
+        },
+        {
+          "job": "771065_13",
+          "task_index": 13,
+          "task": "global-seed20261019",
+          "node": "gpu2"
+        },
+        {
+          "job": "771064_14",
+          "task_index": 14,
+          "task": "scalar-seed20261019",
+          "node": "gpu1"
+        }
+      ]
+    },
+    "output": "runs/followup_20261023_v2",
+    "package_path": "/public/home/zhuziyuan/paper3-followup/0e55dba2a78b43464e8c",
+    "switch_install_dir": "/public/home/zhuziyuan/paper3-submit-three40",
+    "historical_controller_log": "runs/followup_20261023_v2/_threejobs16/controller.log",
+    "current_controller_log": "not_independently_verified",
+    "switch_log": "/public/home/zhuziyuan/paper3-submit-three40/switch.log",
+    "automatic_github_sync": "confirmed_by_repeated_remote_commits",
+    "progress_branch": "paper3-v2-progress",
+    "progress_path": "monitoring/paper3-followup-v2/status.json",
+    "github_snapshot": {
+      "commit": "1effccac6b6d1ddc761b88f1d13eab300de63e3b",
+      "updated_utc": "2026-10-24T07:45:44Z",
+      "completed_tasks": 12,
+      "total_tasks": 66,
+      "report_status": "PARTIAL",
+      "core_complete": false,
+      "active_tasks": [
+        {
+          "task": "P-seed20261019",
+          "status": "EVALUATING",
+          "stage": "internal_holdout",
+          "outer_update": 1000
+        },
+        {
+          "task": "global-seed20261019",
+          "status": "EVALUATING",
+          "stage": "meta_validation",
+          "outer_update": 1000
+        },
+        {
+          "task": "scalar-seed20261019",
+          "status": "TRAINING",
+          "stage": "meta_train",
+          "outer_update": 950
+        }
+      ]
+    },
+    "resource_metadata_caveat": "automatic status still reports legacy max_parallel_gpus=1 / cpus_per_gpu=24; do not use for current allocation",
+    "full_checkpoint_offsite_backup_verified": false,
+    "scientific_completion_claimed": false
+  },
+  "combined_last_observed_allocation": {
+    "gpus": 4,
+    "cpus": 60,
+    "host_memory": "320G"
+  },
+  "historical_followup_v1": {
+    "total_tasks": 24,
+    "status": "SUPERSEDED_DESIGN_NOT_SUBMITTED"
+  },
+  "source_records": {
+    "handoff": "docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md",
+    "evidence": "docs/records/PAPER3_SHARED_CHAT_EVIDENCE_20261024.json",
+    "prior_allocation_snapshot": "status/HPC_ALLOCATION_SNAPSHOT_20261024.json"
+  },
+  "scope": "Documentation and manual JSON only; no live school job actions, code deployment, monitoring-file overwrite, or numerical experiment change"
+}
+

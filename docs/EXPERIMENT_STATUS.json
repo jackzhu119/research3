@@ -1,10 +1,13 @@
 {
-  "schema_version": "paper3-experiment-overview-v2",
-  "updated_at": "2026-10-24T16:12:17+08:00",
+  "schema_version": "paper3-experiment-overview-v3",
+  "updated_at": "2026-10-24T19:30:49+08:00",
   "timezone": "Asia/Shanghai",
-  "status_type": "manual_configuration_and_evidence_snapshot_not_live_scheduler",
+  "status_type": "manual_five_round_configuration_and_asynchronous_evidence_snapshot_not_live_scheduler",
   "compute_platform": "school_slurm_hpc",
   "runpod_in_use": false,
+  "index": "docs/experiments/README_ZH.md",
+  "evidence_snapshot": "docs/experiments/STATUS_SNAPSHOT_20261024.json",
+  "scope": "Documentation/manual overview only. No school code changes, job actions, numerical recipe changes or automatic status overwrite.",
   "round1": {
     "experiment": "original_campaign_v1",
     "status": "RUNNING_AT_LAST_USER_QUEUE_EVIDENCE",
@@ -33,7 +36,9 @@
       "runs/source_training_v2",
       "runs/meta",
       "runs/training_campaign_v1"
-    ]
+    ],
+    "details": "docs/experiments/ROUND1_ZH.md",
+    "evidence_scope": "Historical user training and queue evidence, not rechecked live"
   },
   "round2": {
     "experiment": "followup_20261023_v2",
@@ -93,50 +98,283 @@
     "progress_branch": "paper3-v2-progress",
     "progress_path": "monitoring/paper3-followup-v2/status.json",
     "github_snapshot": {
-      "commit": "1effccac6b6d1ddc761b88f1d13eab300de63e3b",
-      "updated_utc": "2026-10-24T07:45:44Z",
-      "completed_tasks": 12,
+      "experiment": "paper3-followup-20261023",
+      "updated_utc": "2026-10-24T10:17:15Z",
       "total_tasks": 66,
       "report_status": "PARTIAL",
       "core_complete": false,
-      "active_tasks": [
+      "task_status_counts": {
+        "COMPLETE": 23,
+        "TRAINING": 2,
+        "QUEUED_OR_NOT_STARTED": 41
+      },
+      "active": [
         {
-          "task": "P-seed20261019",
-          "status": "EVALUATING",
-          "stage": "internal_holdout",
-          "outer_update": 1000
-        },
-        {
-          "task": "global-seed20261019",
-          "status": "EVALUATING",
-          "stage": "meta_validation",
-          "outer_update": 1000
-        },
-        {
-          "task": "scalar-seed20261019",
+          "task": "skewonly-seed20261019",
           "status": "TRAINING",
           "stage": "meta_train",
-          "outer_update": 950
+          "outer_update": 127,
+          "total_updates": 1000,
+          "session": 97,
+          "sessions_total": 97,
+          "budget": 20,
+          "updated_utc": "2026-10-24T10:17:01Z",
+          "objective": 0.7148528397083282,
+          "gate_mean": [
+            0,
+            1
+          ],
+          "progress_age_seconds": 14
+        },
+        {
+          "task": "P-seed20261020",
+          "status": "TRAINING",
+          "stage": "meta_train",
+          "outer_update": 0,
+          "total_updates": 1000,
+          "updated_utc": "2026-10-24T10:16:45Z",
+          "progress_age_seconds": 30
+        },
+        {
+          "task": "global-seed20261020",
+          "status": "QUEUED_OR_NOT_STARTED"
+        },
+        {
+          "task": "scalar-seed20261020",
+          "status": "QUEUED_OR_NOT_STARTED"
         }
-      ]
+      ],
+      "source_blob_sha": "032cd1402f9f785be13459e0f757ec0f152685d5",
+      "source_branch": "paper3-v2-progress",
+      "source_path": "monitoring/paper3-followup-v2/status.json",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json",
+      "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/032cd1402f9f785be13459e0f757ec0f152685d5",
+      "completed_tasks": 23
     },
     "resource_metadata_caveat": "automatic status still reports legacy max_parallel_gpus=1 / cpus_per_gpu=24; do not use for current allocation",
     "full_checkpoint_offsite_backup_verified": false,
-    "scientific_completion_claimed": false
+    "scientific_completion_claimed": false,
+    "details": "docs/experiments/ROUND2_ZH.md"
   },
-  "combined_last_observed_allocation": {
-    "gpus": 4,
-    "cpus": 60,
-    "host_memory": "320G"
+  "round3": {
+    "experiment": "paper3-round3-profiled-information",
+    "updated_utc": "2026-10-24T10:55:27Z",
+    "complete_tasks": 6,
+    "total_tasks": 174,
+    "requested_resources": {
+      "partition": "hpc_gpu",
+      "gres": "gpu:1",
+      "cpus": 12,
+      "memory": "64G",
+      "max_inflight": 3
+    },
+    "controller_status": "RUNNING",
+    "report_status": "PARTIAL",
+    "primary_family_complete": false,
+    "scientific_completion_claimed": false,
+    "task_status_counts": {
+      "COMPLETE": 6,
+      "ACTIVE": 2,
+      "NEW": 112,
+      "WAITING_INPUT": 54
+    },
+    "active": [
+      {
+        "task": "core-legacy-legacy-head_sgd-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "ACTIVE"
+      },
+      {
+        "task": "core-legacy-legacy-head_newton-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "ACTIVE"
+      },
+      {
+        "task": "core-legacy-legacy-tangent_diag-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "NEW"
+      },
+      {
+        "task": "core-legacy-legacy-tangent_joint-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "NEW"
+      }
+    ],
+    "source_blob_sha": "b8b28dbfa865e37fed42fdf543bf26232a1d2d83",
+    "source_branch": "paper3-r3-progress",
+    "source_path": "monitoring/paper3-round3/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/b8b28dbfa865e37fed42fdf543bf26232a1d2d83",
+    "details": "docs/experiments/ROUND3_ZH.md",
+    "output": "runs/followup_20261024_r3",
+    "task_breakdown": {
+      "basis": 21,
+      "core": 78,
+      "sensitivity": 72,
+      "reference": 3
+    },
+    "optional_external_tasks": 18,
+    "software_tests": 131,
+    "software_test_scope": "local_CPU_not_school_GPU",
+    "max_inflight_jobs": 3,
+    "gpus_per_job": 1,
+    "cpus_per_job": 12,
+    "memory_per_job": "64G"
   },
-  "historical_followup_v1": {
-    "total_tasks": 24,
-    "status": "SUPERSEDED_DESIGN_NOT_SUBMITTED"
+  "round4": {
+    "experiment": "paper3-round4",
+    "updated_utc": "2026-10-24T11:22:43Z",
+    "complete_tasks": 0,
+    "total_tasks": 204,
+    "requested_resources": {
+      "partition": "hpc_gpu1",
+      "gres": "gpu:3",
+      "cpus": 16,
+      "memory": "64G",
+      "slots": 3,
+      "nodes": 1,
+      "slurm_jobs": 1,
+      "cpus_per_gpu": 16,
+      "memory_per_gpu": "64G",
+      "cpus_per_job": 48,
+      "memory_per_job": "192G"
+    },
+    "allocation": {
+      "job_id": "771366",
+      "slurm_state": "PENDING",
+      "queue_reason": "(AssocGrpGRES)"
+    },
+    "controller_status": "QUEUED",
+    "report_status": "PARTIAL",
+    "primary_family_complete": false,
+    "scientific_completion_claimed": false,
+    "task_status_counts": {
+      "QUEUED_ALLOCATION": 204
+    },
+    "active": [
+      {
+        "task": "basis-legacy-r4-seed20261018",
+        "family": "basis",
+        "seed": 20261018,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      },
+      {
+        "task": "basis-legacy-r4-seed20261019",
+        "family": "basis",
+        "seed": 20261019,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      },
+      {
+        "task": "basis-legacy-r4-seed20261020",
+        "family": "basis",
+        "seed": 20261020,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      },
+      {
+        "task": "core-legacy-legacy-sgd10-main-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      }
+    ],
+    "source_blob_sha": "6a103f61fd323bf081bcd8f96a73abd0d9e1f14d",
+    "source_branch": "paper3-r4-progress",
+    "source_path": "monitoring/paper3-round4/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/6a103f61fd323bf081bcd8f96a73abd0d9e1f14d",
+    "details": "docs/experiments/ROUND4_ZH.md",
+    "output": "runs/followup_20261024_r4",
+    "task_breakdown": {
+      "basis": 21,
+      "core": 90,
+      "sensitivity": 90,
+      "reference": 3
+    },
+    "optional_external_tasks": 21,
+    "software_tests": 180,
+    "software_test_scope": "local_CPU_not_school_GPU",
+    "slurm_jobs": 1,
+    "nodes": 1,
+    "gpus_per_job": 3,
+    "cpus_per_job": 48,
+    "memory_per_job": "192G"
   },
-  "source_records": {
-    "handoff": "docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md",
-    "evidence": "docs/records/PAPER3_SHARED_CHAT_EVIDENCE_20261024.json",
-    "prior_allocation_snapshot": "status/HPC_ALLOCATION_SNAPSHOT_20261024.json"
+  "round5": {
+    "experiment": "paper3-round5",
+    "updated_utc": "2026-10-24T11:21:41Z",
+    "complete_tasks": 0,
+    "total_tasks": 105,
+    "requested_resources": {
+      "partition": "hpc_gpu1",
+      "gres": "gpu:3",
+      "cpus": 12,
+      "memory_total": "164G",
+      "slots": 3,
+      "nodes": 1,
+      "slurm_jobs": 1,
+      "cpus_per_gpu": 12,
+      "cpus_per_job": 36,
+      "memory_per_job": "164G",
+      "memory_per_gpu_budget_gib": 54.666666666666664,
+      "memory_scope": "Shared job total; equal-share budget is not a process memory limit"
+    },
+    "allocation": {
+      "job_id": "771408"
+    },
+    "controller_status": "AWAITING_ACCOUNTING",
+    "report_status": "PARTIAL",
+    "primary_family_complete": false,
+    "scientific_completion_claimed": false,
+    "task_status_counts": {
+      "NOT_STARTED": 105
+    },
+    "active": [],
+    "source_blob_sha": "30c345beafb89b2ec45a9d86133efe5b8283660b",
+    "source_branch": "paper3-r5-progress",
+    "source_path": "monitoring/paper3-round5/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/30c345beafb89b2ec45a9d86133efe5b8283660b",
+    "details": "docs/experiments/ROUND5_ZH.md",
+    "output": "runs/followup_20261024_r5",
+    "task_breakdown": {
+      "basis": 12,
+      "core": 48,
+      "radius_sensitivity": 24,
+      "shared_theta_probe": 15,
+      "reference": 6
+    },
+    "optional_external_tasks": 21,
+    "software_tests": 248,
+    "software_test_scope": "local_CPU_not_school_GPU",
+    "slurm_jobs": 1,
+    "nodes": 1,
+    "gpus_per_job": 3,
+    "cpus_per_job": 36,
+    "memory_per_job": "164G",
+    "memory_semantics": "shared_job_total_not_per_gpu"
   },
-  "scope": "Documentation and manual JSON only; no live school job actions, code deployment, monitoring-file overwrite, or numerical experiment change"
+  "scientific_improvement_claimed": false,
+  "completed_tasks_are_not_gpu_time_percentage": true,
+  "previous_overview_archive": "docs/records/PAPER3_TWO_ROUND_STATUS_20261024.json"
 }
+

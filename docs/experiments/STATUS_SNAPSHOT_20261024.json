@@ -1,0 +1,263 @@
+{
+  "schema_version": "paper3-five-round-evidence-snapshot-v1",
+  "recorded_utc": "2026-10-24T11:30:49Z",
+  "recorded_beijing": "2026-10-24T19:30:49+08:00",
+  "scope": "Read-only GitHub observations archived for documentation; not a live scheduler query or new training run",
+  "round1": {
+    "experiment": "original_campaign_v1",
+    "status": "RUNNING_AT_LAST_USER_QUEUE_EVIDENCE",
+    "job": "770043",
+    "partition": "hpc_gpu1",
+    "node": "gpu4",
+    "resources": {
+      "gpus": 1,
+      "cpus": 24,
+      "host_memory": "128G"
+    },
+    "gpu_model_record": "NVIDIA A100 SXM4 80GB",
+    "last_training_log_utc": "2026-10-24T04:40:59Z",
+    "stage": "meta_screening",
+    "method": "B11",
+    "configuration": {
+      "dimension": 2,
+      "radius": 0.05,
+      "seed": 20261018
+    },
+    "last_observed_outer_update": 199,
+    "reported_source_neural_fits_complete": 15,
+    "automatic_github_sync": "not_confirmed",
+    "scientific_completion_claimed": false,
+    "output_directories": [
+      "runs/source_training_v2",
+      "runs/meta",
+      "runs/training_campaign_v1"
+    ]
+  },
+  "round2": {
+    "experiment": "paper3-followup-20261023",
+    "updated_utc": "2026-10-24T10:17:15Z",
+    "complete_tasks": 23,
+    "total_tasks": 66,
+    "report_status": "PARTIAL",
+    "core_complete": false,
+    "task_status_counts": {
+      "COMPLETE": 23,
+      "TRAINING": 2,
+      "QUEUED_OR_NOT_STARTED": 41
+    },
+    "active": [
+      {
+        "task": "skewonly-seed20261019",
+        "status": "TRAINING",
+        "stage": "meta_train",
+        "outer_update": 127,
+        "total_updates": 1000,
+        "session": 97,
+        "sessions_total": 97,
+        "budget": 20,
+        "updated_utc": "2026-10-24T10:17:01Z",
+        "objective": 0.7148528397083282,
+        "gate_mean": [
+          0,
+          1
+        ],
+        "progress_age_seconds": 14
+      },
+      {
+        "task": "P-seed20261020",
+        "status": "TRAINING",
+        "stage": "meta_train",
+        "outer_update": 0,
+        "total_updates": 1000,
+        "updated_utc": "2026-10-24T10:16:45Z",
+        "progress_age_seconds": 30
+      },
+      {
+        "task": "global-seed20261020",
+        "status": "QUEUED_OR_NOT_STARTED"
+      },
+      {
+        "task": "scalar-seed20261020",
+        "status": "QUEUED_OR_NOT_STARTED"
+      }
+    ],
+    "source_blob_sha": "032cd1402f9f785be13459e0f757ec0f152685d5",
+    "source_branch": "paper3-v2-progress",
+    "source_path": "monitoring/paper3-followup-v2/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/032cd1402f9f785be13459e0f757ec0f152685d5"
+  },
+  "round3": {
+    "experiment": "paper3-round3-profiled-information",
+    "updated_utc": "2026-10-24T10:55:27Z",
+    "complete_tasks": 6,
+    "total_tasks": 174,
+    "requested_resources": {
+      "partition": "hpc_gpu",
+      "gres": "gpu:1",
+      "cpus": 12,
+      "memory": "64G",
+      "max_inflight": 3
+    },
+    "controller_status": "RUNNING",
+    "report_status": "PARTIAL",
+    "primary_family_complete": false,
+    "scientific_completion_claimed": false,
+    "task_status_counts": {
+      "COMPLETE": 6,
+      "ACTIVE": 2,
+      "NEW": 112,
+      "WAITING_INPUT": 54
+    },
+    "active": [
+      {
+        "task": "core-legacy-legacy-head_sgd-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "ACTIVE"
+      },
+      {
+        "task": "core-legacy-legacy-head_newton-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "ACTIVE"
+      },
+      {
+        "task": "core-legacy-legacy-tangent_diag-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "NEW"
+      },
+      {
+        "task": "core-legacy-legacy-tangent_joint-r4-rho0p15-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "NEW"
+      }
+    ],
+    "source_blob_sha": "b8b28dbfa865e37fed42fdf543bf26232a1d2d83",
+    "source_branch": "paper3-r3-progress",
+    "source_path": "monitoring/paper3-round3/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/b8b28dbfa865e37fed42fdf543bf26232a1d2d83"
+  },
+  "round4": {
+    "experiment": "paper3-round4",
+    "updated_utc": "2026-10-24T11:22:43Z",
+    "complete_tasks": 0,
+    "total_tasks": 204,
+    "requested_resources": {
+      "partition": "hpc_gpu1",
+      "gres": "gpu:3",
+      "cpus": 16,
+      "memory": "64G",
+      "slots": 3,
+      "nodes": 1,
+      "slurm_jobs": 1,
+      "cpus_per_gpu": 16,
+      "memory_per_gpu": "64G",
+      "cpus_per_job": 48,
+      "memory_per_job": "192G"
+    },
+    "allocation": {
+      "job_id": "771366",
+      "slurm_state": "PENDING",
+      "queue_reason": "(AssocGrpGRES)"
+    },
+    "controller_status": "QUEUED",
+    "report_status": "PARTIAL",
+    "primary_family_complete": false,
+    "scientific_completion_claimed": false,
+    "task_status_counts": {
+      "QUEUED_ALLOCATION": 204
+    },
+    "active": [
+      {
+        "task": "basis-legacy-r4-seed20261018",
+        "family": "basis",
+        "seed": 20261018,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      },
+      {
+        "task": "basis-legacy-r4-seed20261019",
+        "family": "basis",
+        "seed": 20261019,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      },
+      {
+        "task": "basis-legacy-r4-seed20261020",
+        "family": "basis",
+        "seed": 20261020,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      },
+      {
+        "task": "core-legacy-legacy-sgd10-main-seed20261018",
+        "family": "core",
+        "seed": 20261018,
+        "status": "QUEUED_ALLOCATION",
+        "job_id": "771366",
+        "slurm_state": "PENDING",
+        "queue_reason": "(AssocGrpGRES)",
+        "last_worker_status": "NOT_STARTED"
+      }
+    ],
+    "source_blob_sha": "6a103f61fd323bf081bcd8f96a73abd0d9e1f14d",
+    "source_branch": "paper3-r4-progress",
+    "source_path": "monitoring/paper3-round4/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/6a103f61fd323bf081bcd8f96a73abd0d9e1f14d"
+  },
+  "round5": {
+    "experiment": "paper3-round5",
+    "updated_utc": "2026-10-24T11:21:41Z",
+    "complete_tasks": 0,
+    "total_tasks": 105,
+    "requested_resources": {
+      "partition": "hpc_gpu1",
+      "gres": "gpu:3",
+      "cpus": 12,
+      "memory_total": "164G",
+      "slots": 3,
+      "nodes": 1,
+      "slurm_jobs": 1,
+      "cpus_per_gpu": 12,
+      "cpus_per_job": 36,
+      "memory_per_job": "164G",
+      "memory_per_gpu_budget_gib": 54.666666666666664,
+      "memory_scope": "Shared job total; equal-share budget is not a process memory limit"
+    },
+    "allocation": {
+      "job_id": "771408"
+    },
+    "controller_status": "AWAITING_ACCOUNTING",
+    "report_status": "PARTIAL",
+    "primary_family_complete": false,
+    "scientific_completion_claimed": false,
+    "task_status_counts": {
+      "NOT_STARTED": 105
+    },
+    "active": [],
+    "source_blob_sha": "30c345beafb89b2ec45a9d86133efe5b8283660b",
+    "source_branch": "paper3-r5-progress",
+    "source_path": "monitoring/paper3-round5/status.json",
+    "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/status.json",
+    "immutable_blob_url": "https://api.github.com/repos/jackzhu119/research3/git/blobs/30c345beafb89b2ec45a9d86133efe5b8283660b"
+  },
+  "round1_evidence": "../records/PAPER3_SHARED_CHAT_EVIDENCE_20261024.json",
+  "observations_are_asynchronous": true,
+  "completion_percentage_is_not_compute_time_percentage": true,
+  "scientific_improvement_claimed": false
+}
+

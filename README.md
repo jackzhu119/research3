@@ -1,41 +1,42 @@
-# 论文3 · 学校HPC两轮并行实验
+# 论文3 · 学校HPC五轮实验记录
 
-更新日期：2026-10-24（北京时间）。两轮均使用学校Slurm云服务器，不再使用RunPod。本页保存可追溯的配置与观测快照，不是Slurm实时查询器。
+五轮的研究问题、算法公式、实验数量、服务器配置、断点与GitHub回传已分类归档。全部使用学校Slurm云服务器，不再使用RunPod。
 
-**第一轮原实验和第二轮V2均已实际启动；第二轮不是“尚未提交”的未来方案。** 分享聊天中的配置变更已独立整理到[完整交接记录](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md)，删除原分享链接后仍可查阅。
+**[进入五轮完整分类总档案](docs/experiments/README_ZH.md)** · [数据/环境/历史故障与连续运行](docs/experiments/COMMON_DATA_RUNTIME_ZH.md) · [带源证据的状态快照](docs/experiments/STATUS_SNAPSHOT_20261024.json)
 
-| 项目 | 第一轮：原论文3主线 | 第二轮：扩展V2 |
-|---|---|---|
-| 最近资源记录 | `770043`，`hpc_gpu1`，节点`gpu4` | `771066_12`、`771065_13`、`771064_14`，`hpc_gpu`，节点`gpu1/gpu2` |
-| 每作业资源 | 1 GPU、24 CPU、128G主机内存 | **1 GPU、12 CPU、64G主机内存**；最多3个独立作业 |
-| GPU配置记录 | A100 SXM4 80GB | 已选A100 PCIe 40GB；终端TRES记录直接证明GPU数量，型号来自既有硬件/迁移记录 |
-| 最近科学进度 | 10月24日12:40:59日志：B11、r=2、ρ=.05、seed20261018，199步 | 10月24日15:45:44自动快照：**12/66 COMPLETE**；第二个种子3项在训练/验证/留出评价 |
-| 实验范围 | 源模型、45组元筛选、10组元确认、开发评估及主线内部检查 | 36核心元训练＋24敏感性元训练＋6参考；另有预算曲线和诊断评估 |
-| 结果目录 | `runs/source_training_v2/`、`runs/meta/`、`runs/training_campaign_v1/` | `runs/followup_20261023_v2/` |
-| GitHub回传 | 有人工归档快照；未确认持续自动回传 | [独立进度与部分汇总](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json)持续提交，报告仍为`PARTIAL` |
+| 轮次 | 研究内容 | 计划规模 | 学校配置 | 详细记录 |
+|---|---|---|---|---|
+| 第一轮 | 原Lie空间校准P/PCT及完整基线比较 | 15源神经fit；45元筛选＋10额外元确认；开发/内部检查分阶段 | hpc_gpu1，原单卡作业24CPU/128G | [第一轮](docs/experiments/ROUND1_ZH.md) |
+| 第二轮V2 | 空间成分门控、可靠性保护、未来run稳定性 | **66**：36核心＋24敏感性＋6参考 | hpc_gpu，最多3独立单卡作业，各12CPU/64G | [第二轮](docs/experiments/ROUND2_ZH.md) |
+| 第三轮 | 解析切线、Schur消头、信息半径、支持KL保护 | **174**：21字典＋78核心＋72敏感性＋3EA；外测另18 | hpc_gpu，最多3独立单卡作业，各12CPU/64G | [第三轮](docs/experiments/ROUND3_ZH.md) |
+| 第四轮 | OOF收缩、凸堆叠、one-SE选择、GCE稳健校准 | **204**：21字典＋90核心＋90敏感性＋3EA；外测另21 | **hpc_gpu1，1节点1作业3GPU，总48CPU/192G** | [第四轮](docs/experiments/ROUND4_ZH.md) |
+| 第五轮 | 旋转—相对增益耦合、真实图精化、共同θ机制探针 | **105**：12字典＋48交叉评价＋24半径＋15探针＋6参考；外测另21 | **hpc_gpu1，1节点1作业3GPU，总36CPU/164G** | [第五轮](docs/experiments/ROUND5_ZH.md) |
 
-最近现场同时分配合计4 GPU、60 CPU、320G主机内存。节点名`gpu1`不是分区`hpc_gpu1`；第二轮可以分散到不同节点，每个模型仍是独立单卡计算，不是DDP。
+各轮任务成本不同；174/204/105不是从头重训EEGNet的次数。候选算法尚需完整配对实验检验，不能由数学性质或软件测试宣称显著提升。
 
-## 当前使用的提交方式
+## 已核实的进度记录
 
-第二轮已采用**三个独立单GPU作业滚动补交**，完成一个再接后续未完成任务。一次提交66个数组元素、`%2/%3`整批提交、单个四卡作业及三作业16CPU/128G方案均属于此前尝试。当前已部署的40GB提交控制器负责后续补交，查看本页无需重新运行旧安装器或`START.py --submit`。
+归档日期：2026-10-24。以下为**各自更新时间的异步快照**，不是实时调度页面；查看最新状态请点对应自动回传。
 
-服务器安装路径记录：`/public/home/zhuziyuan/paper3-submit-three40/`；切换日志`switch.log`；历史三作业控制日志为`runs/followup_20261023_v2/_threejobs16/controller.log`；最新40GB控制进程是否继续使用此文件尚未独立核实。当前切换定位优先看`paper3-submit-three40/switch.log`，不根据旧目录名推断资源。
+| 轮次 | 本次读取证据（北京时间） | 最新可确认情况 | 回传/记录 |
+|---|---|---|---|
+| 第一轮 | 10月24日12:40:59训练日志，另有后续队列归档 | 15源神经fit完成；B11/r2/ρ.05/seed18 outer199；整轮未确认完成 | [人工证据](docs/records/PAPER3_SHARED_CHAT_EVIDENCE_20261024.json) |
+| 第二轮 | 10月24日18:17:15 | **23/66 COMPLETE**，PARTIAL | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) |
+| 第三轮 | 10月24日18:55:27 | **6/174 COMPLETE**，控制器RUNNING、PARTIAL | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) |
+| 第四轮 | 10月24日19:22:43 | **771366已提交**，PENDING / AssocGrpGRES，0/204 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) |
+| 第五轮 | 10月24日19:21:41 | **771408已有提交记录**，AWAITING_ACCOUNTING，0/105 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/status.json) |
 
-## 交接入口
+“已提交”不等于GPU已开始优化；实际outer/session计数增长才说明计算推进。第四、五轮交付时旧页面的“尚未提交”早于这些后续回传，应按时间解释。
 
-- [完整配置、变更经过、续跑约定与证据](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md)
-- [两轮状态与后续阶段](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/CURRENT_AND_NEXT_ZH.md)
-- [机器可读实验配置](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/EXPERIMENT_STATUS.json)
-- [学校环境与调度经验](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
-- [此前资源快照（保留原记录）](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/HPC_RUN_STATUS_20261024_ZH.md)
-- [第二轮完整算法设计](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/experiments/followup_20261023/DESIGN_ZH.md)
-- [第二轮自动同步结果](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json)
+## 结果、代码与续跑入口
 
-## 保存与解释
+- [五轮总索引：各轮源码、输出目录、精确矩阵与统计口径](docs/experiments/README_ZH.md)
+- [学校环境、数据复用、连续运行与历史故障处理](docs/experiments/COMMON_DATA_RUNTIME_ZH.md)
+- [原分享聊天配置交接](docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md) · [原学校环境记录](docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
+- [机器可读五轮概览](docs/EXPERIMENT_STATUS.json) · [旧两轮首页留档](docs/records/PAPER3_TWO_ROUND_README_20261024_ZH.md)
 
-模型、两代checkpoint、逐会话预测和日志先写学校共享目录`/public/home/zhuziyuan/projects/paper3`；GitHub进度上传失败不等于本地计算结果丢失。GitHub目前回传进度与部分汇总，未据此确认全部checkpoint已异地备份。
+结果先保存学校共享项目`/public/home/zhuziyuan/projects/paper3/runs/`。第二至五轮每180秒尝试独立GitHub汇总同步；网络失败不停止训练。完整checkpoint、逐会话预测和CSV仍保存在学校本地，进度同步不等于模型完整异地备份。
 
-已完成项以各任务`result.json.status == COMPLETE`为准；换作业号或新种子从0开始不代表前12项重算。未完成项由原worker读取匹配断点，调度/迁移本身不证明每次恢复都逐位等价。已完成1000步而仍在验证/留出评价的任务也还不能计为完整完成。
+各轮保留独立输出、完成项复用与断点；学校启动不反复重跑全量test/pilot/数据树扫描，没有累计12小时总上限。集群单次作业时限仍存在，由各轮保存/续交机制处理。
 
-本次配置归档只修改文档与人工概览JSON，不部署学校代码、不重启或取消作业、不修改数据划分或科学训练参数，也不覆盖自动同步的`monitoring/.../status.json`。旧RunPod入口、最初24任务V1和原80GB整批启动说明保留为历史资料。
+本次更新只涉及分类文档与人工概览，不修改训练程序、科学配方或运行中的学校作业，也不覆盖自动回传文件。
