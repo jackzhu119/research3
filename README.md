@@ -1,42 +1,51 @@
-# 论文3 · 学校HPC五轮实验记录
+# 论文3第六轮：曲率引导的受限空间预测平均
 
-五轮的研究问题、算法公式、实验数量、服务器配置、断点与GitHub回传已分类归档。全部使用学校Slurm云服务器，不再使用RunPod。
+本轮方案、程序和新Pan2023数据均已准备。没有提交学校第六轮作业，没有生成第六轮识别效果。软件验证与线上交付范围见 VALIDATION.json 和 online/ONLINE_LAUNCH.json。
 
-**[进入五轮完整分类总档案](docs/experiments/README_ZH.md)** · [数据/环境/历史故障与连续运行](docs/experiments/COMMON_DATA_RUNTIME_ZH.md) · [带源证据的状态快照](docs/experiments/STATUS_SNAPSHOT_20261024.json)
+**主问题：只有20个支持位置时，保留空间校准方向的不确定性，是否比只取一个拟合点更稳？** 继续冻结EEGNet、固定rank4和相同未来查询，不根据前五轮部分结果挑选几何图。
 
-| 轮次 | 研究内容 | 计划规模 | 学校配置 | 详细记录 |
-|---|---|---|---|---|
-| 第一轮 | 原Lie空间校准P/PCT及完整基线比较 | 15源神经fit；45元筛选＋10额外元确认；开发/内部检查分阶段 | hpc_gpu1，原单卡作业24CPU/128G | [第一轮](docs/experiments/ROUND1_ZH.md) |
-| 第二轮V2 | 空间成分门控、可靠性保护、未来run稳定性 | **66**：36核心＋24敏感性＋6参考 | hpc_gpu，最多3独立单卡作业，各12CPU/64G | [第二轮](docs/experiments/ROUND2_ZH.md) |
-| 第三轮 | 解析切线、Schur消头、信息半径、支持KL保护 | **174**：21字典＋78核心＋72敏感性＋3EA；外测另18 | hpc_gpu，最多3独立单卡作业，各12CPU/64G | [第三轮](docs/experiments/ROUND3_ZH.md) |
-| 第四轮 | OOF收缩、凸堆叠、one-SE选择、GCE稳健校准 | **204**：21字典＋90核心＋90敏感性＋3EA；外测另21 | **hpc_gpu1，1节点1作业3GPU，总48CPU/192G** | [第四轮](docs/experiments/ROUND4_ZH.md) |
-| 第五轮 | 旋转—相对增益耦合、真实图精化、共同θ机制探针 | **105**：12字典＋48交叉评价＋24半径＋15探针＋6参考；外测另21 | **hpc_gpu1，1节点1作业3GPU，总36CPU/164G** | [第五轮](docs/experiments/ROUND5_ZH.md) |
+## 算法与机制
 
-各轮任务成本不同；174/204/105不是从头重训EEGNet的次数。候选算法尚需完整配对实验检验，不能由数学性质或软件测试宣称显著提升。
+共同中心为10步固定身份切线Newton/Schur拟合，预测使用原单指数空间图。曲率分块消去分类头竞争，得到 S=A−CD⁻¹Cᵀ；以 Σθ=τS⁻¹、τ=κρ²/tr(S⁻¹) 固定投影前总迹。主点κ=.25、ρ=.15、空间/头先验.01/.1。
 
-## 已核实的进度记录
+rank4使用9个正权空间点，投影至原参数球，每点分类头作负相关补偿，并用GH9积分头余项；实际预测经过每点真实空间变换与冻结网络。没有新增目标会话可学习参数。这是受限曲率形状预测平均，不是精确Bayes后验或准确率不降保证。
 
-归档日期：2026-10-24。以下为**各自更新时间的异步快照**，不是实时调度页面；查看最新状态请点对应自动回传。
+控制包括投影后同中心单点、同迹各向同性、保留完整边际但删除空间/头配对相关性的独立组合，以及仅头/局部线性Gaussian平滑。**对称logit平滑不改变硬标签**，可区分概率校准改善和真实识别改善。投影中心偏移、非线性曲率与有限求积方向依赖分别记录。
 
-| 轮次 | 本次读取证据（北京时间） | 最新可确认情况 | 回传/记录 |
-|---|---|---|---|
-| 第一轮 | 10月24日12:40:59训练日志，另有后续队列归档 | 15源神经fit完成；B11/r2/ρ.05/seed18 outer199；整轮未确认完成 | [人工证据](docs/records/PAPER3_SHARED_CHAT_EVIDENCE_20261024.json) |
-| 第二轮 | 10月24日18:17:15 | **23/66 COMPLETE**，PARTIAL | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) |
-| 第三轮 | 10月24日18:55:27 | **6/174 COMPLETE**，控制器RUNNING、PARTIAL | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) |
-| 第四轮 | 10月24日19:22:43 | **771366已提交**，PENDING / AssocGrpGRES，0/204 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) |
-| 第五轮 | 10月24日19:21:41 | **771408已有提交记录**，AWAITING_ACCOUNTING，0/105 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/status.json) |
+[数学设计与成立条件](DESIGN_ZH.md) · [一手文献及经典归属](LITERATURE.md) · [统计方案](STATISTICS.md)
 
-“已提交”不等于GPU已开始优化；实际outer/session计数增长才说明计算推进。第四、五轮交付时旧页面的“尚未提交”早于这些后续回传，应按时间解释。
+## 198项主计划
 
-## 结果、代码与续跑入口
+| 类别 | 数量 | 内容 |
+|---|---:|---|
+| 字典训练 | 6 | map/joint两种目标×3种子 |
+| 内部核心评价 | 60 | 两字典×10预测器×3种子，五档预算 |
+| 内部敏感性 | 48 | 迹预算、GH阶、中心权、轴旋转、半径 |
+| 内部参考 | 12 | 仅头Newton、支持EA、第五轮真实图精化、第四轮OOF堆叠 |
+| 新Pan外部评价 | 72 | 两字典×10预测器×3种子及12参考 |
+| **主包总计** | **198** | **只有6项训练字典，源EEGNet复用** |
+| 可选Weibo | 另36 | 独立手动阶段，不阻塞主包 |
 
-- [五轮总索引：各轮源码、输出目录、精确矩阵与统计口径](docs/experiments/README_ZH.md)
-- [学校环境、数据复用、连续运行与历史故障处理](docs/experiments/COMMON_DATA_RUNTIME_ZH.md)
-- [原分享聊天配置交接](docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md) · [原学校环境记录](docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
-- [机器可读五轮概览](docs/EXPERIMENT_STATUS.json) · [旧两轮首页留档](docs/records/PAPER3_TWO_ROUND_README_20261024_ZH.md)
+字典依赖满足后优先新Pan评价。精确矩阵见 [EXPERIMENT_MATRIX.json](EXPERIMENT_MATRIX.json)。主要证据为新Pan B20：预定8项方法比较，NLL和BA共16项统一Holm；参与者为单位，会话与三种子在人内聚合。概率改善不能冒充BA显著提升，内部既有队列仍为探索性复验。
 
-结果先保存学校共享项目`/public/home/zhuziyuan/projects/paper3/runs/`。第二至五轮每180秒尝试独立GitHub汇总同步；网络失败不停止训练。完整checkpoint、逐会话预测和CSV仍保存在学校本地，进度同步不等于模型完整异地备份。
+## 新数据已下载校验并随包携带
 
-各轮保留独立输出、完成项复用与断点；学校启动不反复重跑全量test/pilot/数据树扫描，没有累计12小时总上限。集群单次作业时限仍存在，由各轮保存/续交机制处理。
+Pan2023的28个原MAT已全部下载、逐文件SHA验证，总736,301,987bytes。实际14人、每人两会话、3360条二类左右手MI；B20支持560位置、固定查询2800条。原数据CC0许可与来源已核对。
 
-本次更新只涉及分类文档与人工概览，不修改训练程序、科学配方或运行中的学校作业，也不覆盖自动回传文件。
+全部3360条在Python3.12.3/NumPy2.2.6/SciPy1.15.3环境重做，与缓存float32逐位一致；独立解包后禁止联网，28会话和五个预算均已读取比对。原D1/D2是真实会话身份，但缺少物理时间戳/区段边界，因此准确称“原会话MAT发布trial前缀”，不称前瞻真实采集前缀。
+
+**单文件安装器内含约23.4MB预处理缓存，计算节点不再下载原MAT、不访问原数据网站，也不安装SciPy/h5py。** 小bootstrap保留持久分片，断点续传、raw/API双地址与持续重试；完整缓存下次直接离线执行。线上实际下载、断网安装和准备证据见 online/。
+
+[数据说明](PAN2023_DATA_NOTES.md) · [28文件原清单](PAN2023_DOWNLOAD_MANIFEST.json) · [全部会话核验](compatibility/pan2023_all28.json) · [精确环境复验](compatibility/pan2023_exact_environment.json)
+
+## 学校资源与连续运行
+
+**hpc_gpu1，1节点1作业3GPU，总36CPU、共享164G主机内存**，每槽12CPU亲和组。不是每卡164G。Slurm为 `--nodes=1 --ntasks=1 --cpus-per-task=36 --mem=164G --gres=gpu:3`；入口为 `--partition hpc_gpu1 --gpus 3 --cpus 12 --memory-total 164G --submit`。
+
+新包安装在 ~/paper3-round6/<包hash>/，输出为 /public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6。前五轮源码、作业和结果独立保留。
+
+无累计12小时限制，学校启动不重跑全量test/pilot/全数据树扫描。双代训练checkpoint、逐会话评价保存、完成项复用；单任务失败不取消全部独立任务。单次Slurm到期前保存，由控制器对账续交；明确主动取消保持停止。
+
+GitHub每180秒尝试同步 paper3-r6-progress:monitoring/paper3-round6/status.json，网络失败不停止训练。完整checkpoint、逐会话概率及真实log概率、CSV先保存在学校本地。支持拟合、支持诊断、查询预测耗时分别记录，不隐藏多点预测的成本。
+
+[运行、日志、续跑手册](RUNBOOK_ZH.md)。本地CPU软件和模拟三槽验证不能替代学校A100三卡现场实测；是否形成创新结论由完整预定实验回答。
