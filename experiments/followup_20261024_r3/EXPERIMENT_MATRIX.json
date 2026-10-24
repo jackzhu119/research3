@@ -1,0 +1,5834 @@
+{
+  "version": "paper3-round3-profiled-information-v1",
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "budgets": [
+    20,
+    4,
+    8,
+    12,
+    16
+  ],
+  "updates": 1000,
+  "episodes_per_update": 4,
+  "validate_every": 50,
+  "checkpoint_every": 10,
+  "outer_lr": 0.01,
+  "comparisons": [
+    [
+      "legacy:tangent_profiled",
+      "legacy:sgd10"
+    ],
+    [
+      "legacy:tangent_profiled",
+      "legacy:sgd100"
+    ],
+    [
+      "legacy:tangent_profiled",
+      "legacy:head_newton"
+    ],
+    [
+      "legacy:tangent_profiled",
+      "legacy:tangent_diag"
+    ],
+    [
+      "legacy:tangent_profiled",
+      "legacy:tangent_joint"
+    ],
+    [
+      "legacy:tangent_information",
+      "legacy:tangent_profiled"
+    ],
+    [
+      "legacy:tangent_protected",
+      "legacy:tangent_profiled"
+    ],
+    [
+      "legacy:information_protected",
+      "legacy:tangent_information"
+    ],
+    [
+      "profiled:tangent_profiled",
+      "matched_sgd:tangent_profiled"
+    ],
+    [
+      "protected:information_protected",
+      "matched_sgd:information_protected"
+    ]
+  ],
+  "tasks": [
+    {
+      "key": "basis-legacy-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:legacy:r4",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:legacy:r4",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:legacy:r4",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "core-legacy-legacy-original_sgd10-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:original_sgd10",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-sgd10-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:sgd10",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-sgd100-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:sgd100",
+      "seed": 20261018,
+      "variant": "sgd100",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "sgd100",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-head_sgd-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:head_sgd",
+      "seed": 20261018,
+      "variant": "head_sgd",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "head_sgd",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-head_newton-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:head_newton",
+      "seed": 20261018,
+      "variant": "head_newton",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "head_newton",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_diag-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:tangent_diag",
+      "seed": 20261018,
+      "variant": "tangent_diag",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_diag",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_joint-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:tangent_joint",
+      "seed": 20261018,
+      "variant": "tangent_joint",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_joint",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_profiled-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:tangent_profiled",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_information-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:tangent_information",
+      "seed": 20261018,
+      "variant": "tangent_information",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_protected-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:tangent_protected",
+      "seed": 20261018,
+      "variant": "tangent_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-information_protected-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:information_protected",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-relinearized-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "legacy:relinearized",
+      "seed": 20261018,
+      "variant": "relinearized",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "relinearized",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-original_sgd10-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:original_sgd10",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-sgd10-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:sgd10",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-sgd100-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:sgd100",
+      "seed": 20261019,
+      "variant": "sgd100",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "sgd100",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-head_sgd-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:head_sgd",
+      "seed": 20261019,
+      "variant": "head_sgd",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "head_sgd",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-head_newton-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:head_newton",
+      "seed": 20261019,
+      "variant": "head_newton",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "head_newton",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_diag-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:tangent_diag",
+      "seed": 20261019,
+      "variant": "tangent_diag",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_diag",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_joint-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:tangent_joint",
+      "seed": 20261019,
+      "variant": "tangent_joint",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_joint",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_profiled-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:tangent_profiled",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_information-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:tangent_information",
+      "seed": 20261019,
+      "variant": "tangent_information",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_protected-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:tangent_protected",
+      "seed": 20261019,
+      "variant": "tangent_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-information_protected-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:information_protected",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-relinearized-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "legacy:relinearized",
+      "seed": 20261019,
+      "variant": "relinearized",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "relinearized",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-original_sgd10-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:original_sgd10",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-sgd10-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:sgd10",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-sgd100-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:sgd100",
+      "seed": 20261020,
+      "variant": "sgd100",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "sgd100",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-head_sgd-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:head_sgd",
+      "seed": 20261020,
+      "variant": "head_sgd",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "head_sgd",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-head_newton-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:head_newton",
+      "seed": 20261020,
+      "variant": "head_newton",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "head_newton",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_diag-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:tangent_diag",
+      "seed": 20261020,
+      "variant": "tangent_diag",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_diag",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_joint-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:tangent_joint",
+      "seed": 20261020,
+      "variant": "tangent_joint",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_joint",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_profiled-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:tangent_profiled",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_information-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:tangent_information",
+      "seed": 20261020,
+      "variant": "tangent_information",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-tangent_protected-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:tangent_protected",
+      "seed": 20261020,
+      "variant": "tangent_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-information_protected-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:information_protected",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-legacy-legacy-relinearized-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "legacy:relinearized",
+      "seed": 20261020,
+      "variant": "relinearized",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "relinearized",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "basis-matched_sgd-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:matched_sgd:r4",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-matched_sgd-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:matched_sgd:r4",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-matched_sgd-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:matched_sgd:r4",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "core-matched_sgd-matched_sgd-tangent_profiled-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "matched_sgd:tangent_profiled",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-matched_sgd-r4-seed20261018",
+      "requires": [
+        "basis-matched_sgd-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-matched_sgd-matched_sgd-information_protected-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "matched_sgd:information_protected",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-matched_sgd-r4-seed20261018",
+      "requires": [
+        "basis-matched_sgd-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-matched_sgd-matched_sgd-tangent_profiled-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "matched_sgd:tangent_profiled",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-matched_sgd-r4-seed20261019",
+      "requires": [
+        "basis-matched_sgd-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-matched_sgd-matched_sgd-information_protected-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "matched_sgd:information_protected",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-matched_sgd-r4-seed20261019",
+      "requires": [
+        "basis-matched_sgd-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-matched_sgd-matched_sgd-tangent_profiled-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "matched_sgd:tangent_profiled",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-matched_sgd-r4-seed20261020",
+      "requires": [
+        "basis-matched_sgd-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-matched_sgd-matched_sgd-information_protected-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "matched_sgd:information_protected",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-matched_sgd-r4-seed20261020",
+      "requires": [
+        "basis-matched_sgd-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "basis-profiled-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:profiled:r4",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-profiled-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:profiled:r4",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-profiled-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:profiled:r4",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-information-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:information:r4",
+      "seed": 20261018,
+      "variant": "tangent_information",
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-information-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:information:r4",
+      "seed": 20261019,
+      "variant": "tangent_information",
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-information-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:information:r4",
+      "seed": 20261020,
+      "variant": "tangent_information",
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-protected-r4-seed20261018",
+      "family": "basis",
+      "group": "basis:protected:r4",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-protected-r4-seed20261019",
+      "family": "basis",
+      "group": "basis:protected:r4",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "basis-protected-r4-seed20261020",
+      "family": "basis",
+      "group": "basis:protected:r4",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": false
+    },
+    {
+      "key": "core-profiled-profiled-sgd10-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "profiled:sgd10",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "basis_key": "basis-profiled-r4-seed20261018",
+      "requires": [
+        "basis-profiled-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-tangent_profiled-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "profiled:tangent_profiled",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-profiled-r4-seed20261018",
+      "requires": [
+        "basis-profiled-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-tangent_information-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "profiled:tangent_information",
+      "seed": 20261018,
+      "variant": "tangent_information",
+      "basis_key": "basis-profiled-r4-seed20261018",
+      "requires": [
+        "basis-profiled-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-information_protected-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "profiled:information_protected",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-profiled-r4-seed20261018",
+      "requires": [
+        "basis-profiled-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-sgd10-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "profiled:sgd10",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "basis_key": "basis-profiled-r4-seed20261019",
+      "requires": [
+        "basis-profiled-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-tangent_profiled-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "profiled:tangent_profiled",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-profiled-r4-seed20261019",
+      "requires": [
+        "basis-profiled-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-tangent_information-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "profiled:tangent_information",
+      "seed": 20261019,
+      "variant": "tangent_information",
+      "basis_key": "basis-profiled-r4-seed20261019",
+      "requires": [
+        "basis-profiled-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-information_protected-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "profiled:information_protected",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-profiled-r4-seed20261019",
+      "requires": [
+        "basis-profiled-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-sgd10-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "profiled:sgd10",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "basis_key": "basis-profiled-r4-seed20261020",
+      "requires": [
+        "basis-profiled-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-tangent_profiled-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "profiled:tangent_profiled",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-profiled-r4-seed20261020",
+      "requires": [
+        "basis-profiled-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-tangent_information-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "profiled:tangent_information",
+      "seed": 20261020,
+      "variant": "tangent_information",
+      "basis_key": "basis-profiled-r4-seed20261020",
+      "requires": [
+        "basis-profiled-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-profiled-profiled-information_protected-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "profiled:information_protected",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-profiled-r4-seed20261020",
+      "requires": [
+        "basis-profiled-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-sgd10-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "information:sgd10",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "basis_key": "basis-information-r4-seed20261018",
+      "requires": [
+        "basis-information-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-tangent_profiled-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "information:tangent_profiled",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-information-r4-seed20261018",
+      "requires": [
+        "basis-information-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-tangent_information-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "information:tangent_information",
+      "seed": 20261018,
+      "variant": "tangent_information",
+      "basis_key": "basis-information-r4-seed20261018",
+      "requires": [
+        "basis-information-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-information_protected-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "information:information_protected",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-information-r4-seed20261018",
+      "requires": [
+        "basis-information-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-sgd10-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "information:sgd10",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "basis_key": "basis-information-r4-seed20261019",
+      "requires": [
+        "basis-information-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-tangent_profiled-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "information:tangent_profiled",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-information-r4-seed20261019",
+      "requires": [
+        "basis-information-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-tangent_information-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "information:tangent_information",
+      "seed": 20261019,
+      "variant": "tangent_information",
+      "basis_key": "basis-information-r4-seed20261019",
+      "requires": [
+        "basis-information-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-information_protected-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "information:information_protected",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-information-r4-seed20261019",
+      "requires": [
+        "basis-information-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-sgd10-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "information:sgd10",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "basis_key": "basis-information-r4-seed20261020",
+      "requires": [
+        "basis-information-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-tangent_profiled-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "information:tangent_profiled",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-information-r4-seed20261020",
+      "requires": [
+        "basis-information-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-tangent_information-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "information:tangent_information",
+      "seed": 20261020,
+      "variant": "tangent_information",
+      "basis_key": "basis-information-r4-seed20261020",
+      "requires": [
+        "basis-information-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-information-information-information_protected-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "information:information_protected",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-information-r4-seed20261020",
+      "requires": [
+        "basis-information-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-sgd10-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "protected:sgd10",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "basis_key": "basis-protected-r4-seed20261018",
+      "requires": [
+        "basis-protected-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-tangent_profiled-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "protected:tangent_profiled",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-protected-r4-seed20261018",
+      "requires": [
+        "basis-protected-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-tangent_information-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "protected:tangent_information",
+      "seed": 20261018,
+      "variant": "tangent_information",
+      "basis_key": "basis-protected-r4-seed20261018",
+      "requires": [
+        "basis-protected-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-information_protected-r4-rho0p15-seed20261018",
+      "family": "core",
+      "group": "protected:information_protected",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-protected-r4-seed20261018",
+      "requires": [
+        "basis-protected-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-sgd10-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "protected:sgd10",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "basis_key": "basis-protected-r4-seed20261019",
+      "requires": [
+        "basis-protected-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-tangent_profiled-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "protected:tangent_profiled",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-protected-r4-seed20261019",
+      "requires": [
+        "basis-protected-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-tangent_information-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "protected:tangent_information",
+      "seed": 20261019,
+      "variant": "tangent_information",
+      "basis_key": "basis-protected-r4-seed20261019",
+      "requires": [
+        "basis-protected-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-information_protected-r4-rho0p15-seed20261019",
+      "family": "core",
+      "group": "protected:information_protected",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-protected-r4-seed20261019",
+      "requires": [
+        "basis-protected-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-sgd10-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "protected:sgd10",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "basis_key": "basis-protected-r4-seed20261020",
+      "requires": [
+        "basis-protected-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "sgd10",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:sgd10",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-tangent_profiled-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "protected:tangent_profiled",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-protected-r4-seed20261020",
+      "requires": [
+        "basis-protected-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-tangent_information-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "protected:tangent_information",
+      "seed": 20261020,
+      "variant": "tangent_information",
+      "basis_key": "basis-protected-r4-seed20261020",
+      "requires": [
+        "basis-protected-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_information",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:tangent_information",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "core-protected-protected-information_protected-r4-rho0p15-seed20261020",
+      "family": "core",
+      "group": "protected:information_protected",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-protected-r4-seed20261020",
+      "requires": [
+        "basis-protected-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "r4-rho0p15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "basis-legacy-r2-seed20261018",
+      "family": "basis",
+      "group": "basis:legacy:r2",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r2-seed20261019",
+      "family": "basis",
+      "group": "basis:legacy:r2",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r2-seed20261020",
+      "family": "basis",
+      "group": "basis:legacy:r2",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r8-seed20261018",
+      "family": "basis",
+      "group": "basis:legacy:r8",
+      "seed": 20261018,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r8-seed20261019",
+      "family": "basis",
+      "group": "basis:legacy:r8",
+      "seed": 20261019,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "basis-legacy-r8-seed20261020",
+      "family": "basis",
+      "group": "basis:legacy:r8",
+      "seed": 20261020,
+      "variant": "sgd10",
+      "config": {
+        "variant": "sgd10",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "updates": 1000,
+      "requires": [],
+      "reuse_completed_earlier_P": true
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank2-radius0.15-rank2-radius0.15-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank2-radius0.15",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r2-seed20261018",
+      "requires": [
+        "basis-legacy-r2-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank2-radius0.15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank2-radius0.15-rank2-radius0.15-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank2-radius0.15",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r2-seed20261019",
+      "requires": [
+        "basis-legacy-r2-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank2-radius0.15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank2-radius0.15-rank2-radius0.15-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank2-radius0.15",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r2-seed20261020",
+      "requires": [
+        "basis-legacy-r2-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank2-radius0.15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank2-radius0.15-rank2-radius0.15-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank2-radius0.15",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r2-seed20261018",
+      "requires": [
+        "basis-legacy-r2-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank2-radius0.15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank2-radius0.15-rank2-radius0.15-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank2-radius0.15",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r2-seed20261019",
+      "requires": [
+        "basis-legacy-r2-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank2-radius0.15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank2-radius0.15-rank2-radius0.15-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank2-radius0.15",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r2-seed20261020",
+      "requires": [
+        "basis-legacy-r2-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 2,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank2-radius0.15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank8-radius0.15-rank8-radius0.15-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank8-radius0.15",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r8-seed20261018",
+      "requires": [
+        "basis-legacy-r8-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank8-radius0.15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank8-radius0.15-rank8-radius0.15-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank8-radius0.15",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r8-seed20261019",
+      "requires": [
+        "basis-legacy-r8-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank8-radius0.15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank8-radius0.15-rank8-radius0.15-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank8-radius0.15",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r8-seed20261020",
+      "requires": [
+        "basis-legacy-r8-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank8-radius0.15",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank8-radius0.15-rank8-radius0.15-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank8-radius0.15",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r8-seed20261018",
+      "requires": [
+        "basis-legacy-r8-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank8-radius0.15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank8-radius0.15-rank8-radius0.15-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank8-radius0.15",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r8-seed20261019",
+      "requires": [
+        "basis-legacy-r8-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank8-radius0.15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank8-radius0.15-rank8-radius0.15-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank8-radius0.15",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r8-seed20261020",
+      "requires": [
+        "basis-legacy-r8-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 8,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank8-radius0.15",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank4-radius0.05-rank4-radius0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank4-radius0.05",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.05",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank4-radius0.05-rank4-radius0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank4-radius0.05",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.05",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank4-radius0.05-rank4-radius0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank4-radius0.05",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.05",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank4-radius0.05-rank4-radius0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank4-radius0.05",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.05",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank4-radius0.05-rank4-radius0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank4-radius0.05",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.05",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank4-radius0.05-rank4-radius0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank4-radius0.05",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.05,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.05",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank4-radius0.35-rank4-radius0.35-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank4-radius0.35",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.35",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank4-radius0.35-rank4-radius0.35-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank4-radius0.35",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.35",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-rank4-radius0.35-rank4-radius0.35-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:rank4-radius0.35",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.35",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank4-radius0.35-rank4-radius0.35-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank4-radius0.35",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.35",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank4-radius0.35-rank4-radius0.35-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank4-radius0.35",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.35",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-rank4-radius0.35-rank4-radius0.35-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:rank4-radius0.35",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.35,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "rank4-radius0.35",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior0.001-headprior0.001-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior0.001",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.001",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior0.001-headprior0.001-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior0.001",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.001",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior0.001-headprior0.001-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior0.001",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.001",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior0.001-headprior0.001-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior0.001",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.001",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior0.001-headprior0.001-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior0.001",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.001",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior0.001-headprior0.001-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior0.001",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.001,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.001",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior0.01-headprior0.01-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior0.01",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.01,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.01",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior0.01-headprior0.01-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior0.01",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.01,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.01",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior0.01-headprior0.01-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior0.01",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.01,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.01",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior0.01-headprior0.01-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior0.01",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.01,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.01",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior0.01-headprior0.01-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior0.01",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.01,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.01",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior0.01-headprior0.01-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior0.01",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.01,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior0.01",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior1.0-headprior1.0-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior1.0",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 1.0,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior1.0",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior1.0-headprior1.0-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior1.0",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 1.0,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior1.0",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-headprior1.0-headprior1.0-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:headprior1.0",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 1.0,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior1.0",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior1.0-headprior1.0-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior1.0",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 1.0,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior1.0",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior1.0-headprior1.0-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior1.0",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 1.0,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior1.0",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-headprior1.0-headprior1.0-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:headprior1.0",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 1.0,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "headprior1.0",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations1-iterations1-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations1",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 1,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations1",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations1-iterations1-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations1",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 1,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations1",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations1-iterations1-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations1",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 1,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations1",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations1-iterations1-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations1",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 1,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations1",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations1-iterations1-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations1",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 1,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations1",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations1-iterations1-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations1",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 1,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations1",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations3-iterations3-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations3",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 3,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations3",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations3-iterations3-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations3",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 3,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations3",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations3-iterations3-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations3",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 3,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations3",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations3-iterations3-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations3",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 3,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations3",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations3-iterations3-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations3",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 3,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations3",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations3-iterations3-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations3",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 3,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations3",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations20-iterations20-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations20",
+      "seed": 20261018,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 20,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations20",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations20-iterations20-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations20",
+      "seed": 20261019,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 20,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations20",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-tangent_profiled-iterations20-iterations20-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:tangent_profiled:iterations20",
+      "seed": 20261020,
+      "variant": "tangent_profiled",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "tangent_profiled",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 20,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations20",
+      "baseline_group": "legacy:tangent_profiled",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations20-iterations20-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations20",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 20,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations20",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations20-iterations20-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations20",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 20,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations20",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-iterations20-iterations20-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:iterations20",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 20,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "iterations20",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-KL0.002-KL0.002-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:KL0.002",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.002
+      },
+      "setting": "KL0.002",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-KL0.002-KL0.002-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:KL0.002",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.002
+      },
+      "setting": "KL0.002",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-KL0.002-KL0.002-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:KL0.002",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.002
+      },
+      "setting": "KL0.002",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-KL0.05-KL0.05-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:KL0.05",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.05
+      },
+      "setting": "KL0.05",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-KL0.05-KL0.05-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:KL0.05",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.05
+      },
+      "setting": "KL0.05",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-KL0.05-KL0.05-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:KL0.05",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.05
+      },
+      "setting": "KL0.05",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-information0.1-information0.1-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:information0.1",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 0.1,
+        "kl_epsilon": 0.01
+      },
+      "setting": "information0.1",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-information0.1-information0.1-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:information0.1",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 0.1,
+        "kl_epsilon": 0.01
+      },
+      "setting": "information0.1",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-information0.1-information0.1-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:information0.1",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 0.1,
+        "kl_epsilon": 0.01
+      },
+      "setting": "information0.1",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-information10.0-information10.0-seed20261018",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:information10.0",
+      "seed": 20261018,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261018",
+      "requires": [
+        "basis-legacy-r4-seed20261018"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 10.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "information10.0",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-information10.0-information10.0-seed20261019",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:information10.0",
+      "seed": 20261019,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261019",
+      "requires": [
+        "basis-legacy-r4-seed20261019"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 10.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "information10.0",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "sensitivity-legacy-sensitivity-information_protected-information10.0-information10.0-seed20261020",
+      "family": "sensitivity",
+      "group": "sensitivity:information_protected:information10.0",
+      "seed": 20261020,
+      "variant": "information_protected",
+      "basis_key": "basis-legacy-r4-seed20261020",
+      "requires": [
+        "basis-legacy-r4-seed20261020"
+      ],
+      "config": {
+        "variant": "information_protected",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 10.0,
+        "kl_epsilon": 0.01
+      },
+      "setting": "information10.0",
+      "baseline_group": "legacy:information_protected",
+      "partition": "holdout",
+      "budgets": [
+        20
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "diagnostics_budget": 20
+    },
+    {
+      "key": "reference-supportEA-seed20261018",
+      "family": "reference",
+      "group": "support_EA",
+      "variant": "support_EA",
+      "seed": 20261018,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "legacy:head_newton"
+    },
+    {
+      "key": "reference-supportEA-seed20261019",
+      "family": "reference",
+      "group": "support_EA",
+      "variant": "support_EA",
+      "seed": 20261019,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "legacy:head_newton"
+    },
+    {
+      "key": "reference-supportEA-seed20261020",
+      "family": "reference",
+      "group": "support_EA",
+      "variant": "support_EA",
+      "seed": 20261020,
+      "requires": [],
+      "config": {
+        "variant": "head_newton",
+        "rank": 4,
+        "radius": 0.15,
+        "tangent_steps": 10,
+        "theta_l2": 0.01,
+        "head_l2": 0.1,
+        "damping": 0.0001,
+        "information_scale": 1.0,
+        "kl_epsilon": 0.01
+      },
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean"
+      ],
+      "partition": "holdout",
+      "baseline_group": "legacy:head_newton"
+    }
+  ],
+  "primary_partition": "holdout",
+  "primary_budget": 20,
+  "primary_scenario": "clean",
+  "interpretation": "exploratory internal replication; cohort already used by earlier rounds",
+  "counts": {
+    "basis": 21,
+    "core": 78,
+    "sensitivity": 72,
+    "reference": 3
+  },
+  "external_data_required_for_core": false,
+  "root": "/public/home/zhuziyuan/projects/paper3",
+  "output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r3",
+  "gpus": 3,
+  "cpus": 12,
+  "recipe_sha256": "78e16a139923db2f58593cdae4a4b4a075ca11b19f60208e3f314f3012f606f1"
+}
