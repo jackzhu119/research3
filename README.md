@@ -1,5 +1,8 @@
 # 论文3 · 学校HPC训练与后续实验
 
+> **2026-10-24部署记录更新：两轮已经并行运行。** 第二轮当前使用hpc_gpu的三个独立单GPU作业滚动补交，每项12CPU/64G、已选A100 PCIe40GB。下文尚未提交/24CPU128G等为历史说明。[完整独立交接记录](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md) · [当前人工概览](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/EXPERIMENT_STATUS.json)。查看文档无需执行旧启动或恢复命令。
+
+
 **当前实验和下一轮实验均使用学校云服务器（Slurm / NVIDIA A100）；不再使用RunPod。**
 
 更新时间：2026-10-23（北京时间）。当前运行状态依据研究者最新反馈；最近收到的具体训练日志截至 **2026-10-23 14:59:30（北京时间）**。本页不是Slurm实时查询结果，未取得新回执时不推算完成率或宣称全部训练完成。
