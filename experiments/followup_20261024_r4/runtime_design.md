@@ -1,0 +1,21 @@
+# Round 4 single-allocation runtime
+
+The launcher submits exactly one ordinary Slurm job on one node of `hpc_gpu1`. It does not submit three jobs or any array. Default scheduler arguments are `--nodes=1 --ntasks=1 --cpus-per-task=48 --mem=192G --gres=gpu:3`. The user-facing `--cpus 16 --memory 64G` values are budgets per GPU slot. Three child workers run inside the allocation, each restricted to its own assigned CUDA token and a disjoint 16-CPU affinity group. `hpc_gpu1` is a partition, never an invented node name. Queue fallback is not performed.
+
+`START.py` prepares an immutable numerical plan with the standard library and existing interpreter. `--submit` starts the independent monitor before the outer allocation controller. There is no full test/pilot/data-scan/install gate at school startup. Preparation acknowledges paths and plan identity; it does not establish an allocation or successful neural optimization.
+
+The outer `SingleAllocationController` owns only its exact `paper3r4-<hash>` comment and previously durable exact attempt names. Before each `sbatch`, it fsyncs an allocation intent. Queue and accounting observations adopt a lost acknowledgement without a duplicate. An uncertain or disappeared request reserves the sole allocation until evidence resolves it. Observation failures stop new submissions while existing work continues.
+
+Slurm queue output preserves `PENDING` and its reason. A pending allocation is reported as queued, not training. The monitor reads actual per-slot worker progress from the allocation scheduler; a Slurm `RUNNING` record alone is not a model-update claim. Primary logs are `logs/train-%j.out/.err`, with immediate batch identity and 30-second allocation progress; each task attempt has separate stdout/stderr.
+
+`allocation.py` owns the within-node task DAG. It launches at most three isolated workers, chooses ready dependencies dynamically, and starts another ready task when a slot is free. Task failures remain visible while unrelated ready tasks continue. A saved COMPLETE result is reused; a paused worker resumes its own numerical checkpoint or session outputs. Explicit failed tasks are not silently erased and retrained.
+
+Batch signals forward to the whole allocation scheduler, which requests checkpoint saves from its children. Exit 75 and terminal Slurm timeouts/preemptions permit another single allocation after accounting reconciliation. Explicit cancellation, TERM termination receipts and STOP markers prevent revival. Scientific failure/missing results returns NOT_COMPLETE rather than a false success. There is no cumulative 12-hour budget. The single-allocation Slurm time limit is configurable and defaults to `5-03:00:00`.
+
+QoS rejections wait with capped backoff instead of flooding the account with arrays. Unknown socket outcomes are reconciled, not assumed rejected. Transient node startup failures have a separate bounded retry allowance; scientific task failures are handled inside the allocation without cancelling siblings. No action cancels or edits another round's jobs, source, credentials or result directories.
+
+The package is standalone under `~/paper3-round4/<payloadhash>/`; all imports target `paper3r4` plus explicitly vendored frozen kernels. Isolated `-I -S -B -u` startup adds the package, project and existing venv site directories without executing `.pth` hooks. No recent Linux rename syscall or new Slurm GPU-binding option is required. The installer serializes a standard same-filesystem rename with `flock` and verifies pinned source hashes before reuse.
+
+GitHub synchronization is independent and retries failures without controlling training. The public destination is `paper3-r4-progress:monitoring/paper3-round4/status.json`; the optional external phase uses `weibo-status.json`. Existing R2/R3 credential files can be selected read-only. Tokens, raw predictions and participant-level arrays are not embedded in the installer or public progress. Actual slot CPU counts are distinguished from requested resource budgets; logical slot IDs are published rather than hardware UUIDs.
+
+`RUNBOOK_ZH.md` provides the operational commands. `VALIDATION.json` records final exact-version CPU tests, actual Bash 4.2 signal forwarding, isolated installation and mocked Slurm checks. These do not establish school GPU execution or scientific accuracy.
