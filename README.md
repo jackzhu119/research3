@@ -1,61 +1,41 @@
-# 论文3 · 学校HPC训练与后续实验
+# 论文3 · 学校HPC两轮并行实验
 
-> **2026-10-24 学校HPC最新可核实运行快照（非实时）**：第一轮作业 `770043` 在 `hpc_gpu1` 使用1×A100 80GB/24CPU/128G；第二轮V2**已经实际启动**，切换到 `hpc_gpu` 的3个独立1×A100 PCIe 40GB/12CPU/64G作业，已知 `12/66` 完成、任务12–14正在运行/验证（2026-10-24 15:25北京时间附近的证据）。[完整资源与科研状态交接](docs/HPC_RUN_STATUS_20261024_ZH.md) · [机器可读快照](status/HPC_ALLOCATION_SNAPSHOT_20261024.json) · [第二轮实时更新源](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json)。**下方2026-10-23描述是历史快照，不能据此认为第二轮“尚未提交”。**
+更新日期：2026-10-24（北京时间）。两轮均使用学校Slurm云服务器，不再使用RunPod。本页保存可追溯的配置与观测快照，不是Slurm实时查询器。
 
+**第一轮原实验和第二轮V2均已实际启动；第二轮不是“尚未提交”的未来方案。** 分享聊天中的配置变更已独立整理到[完整交接记录](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md)，删除原分享链接后仍可查阅。
 
-**当前实验和下一轮实验均使用学校云服务器（Slurm / NVIDIA A100）；不再使用RunPod。**
-
-更新时间：2026-10-23（北京时间）。当前运行状态依据研究者最新反馈；最近收到的具体训练日志截至 **2026-10-23 14:59:30（北京时间）**。本页不是Slurm实时查询结果，未取得新回执时不推算完成率或宣称全部训练完成。
-
-## 当前正在运行，与下一轮计划
-
-| 项目 | 当前原实验 | 下一轮扩展实验 V2 |
+| 项目 | 第一轮：原论文3主线 | 第二轮：扩展V2 |
 |---|---|---|
-| 状态 | **学校HPC运行中：研究者最新反馈** | **设计、代码与软件验证完成；尚未提交** |
-| 范围 | 原论文3源模型、元学习筛选/比较及原计划后续阶段 | 12方法核心消融＋参数敏感性＋低成本参考 |
-| 最近具体运行证据 | 作业770043，gpu4；日志已进入B8元学习筛选，r=2、ρ=.15、seed=20261018 | 66项计划任务；60个元训练任务、6个无元训练参考任务；完成数0 |
-| 资源说明 | 按当前学校作业实际分配；不因新规划改变运行任务 | 最多3张A100并行，每项1GPU、24CPU、128GiB内存 |
-| 输出位置 | `runs/training_campaign_v1/`、`runs/source_training_v2/`、`runs/meta/` 等原目录 | 新目录 `runs/followup_20261023_v2/` |
-| 结果含义 | 已有实际训练进度，最终科学结果尚未汇总确认 | 87项CPU软件测试通过；不是66项实验完成，也没有真实提升结果 |
+| 最近资源记录 | `770043`，`hpc_gpu1`，节点`gpu4` | `771066_12`、`771065_13`、`771064_14`，`hpc_gpu`，节点`gpu1/gpu2` |
+| 每作业资源 | 1 GPU、24 CPU、128G主机内存 | **1 GPU、12 CPU、64G主机内存**；最多3个独立作业 |
+| GPU配置记录 | A100 SXM4 80GB | 已选A100 PCIe 40GB；终端TRES记录直接证明GPU数量，型号来自既有硬件/迁移记录 |
+| 最近科学进度 | 10月24日12:40:59日志：B11、r=2、ρ=.05、seed20261018，199步 | 10月24日15:45:44自动快照：**12/66 COMPLETE**；第二个种子3项在训练/验证/留出评价 |
+| 实验范围 | 源模型、45组元筛选、10组元确认、开发评估及主线内部检查 | 36核心元训练＋24敏感性元训练＋6参考；另有预算曲线和诊断评估 |
+| 结果目录 | `runs/source_training_v2/`、`runs/meta/`、`runs/training_campaign_v1/` | `runs/followup_20261023_v2/` |
+| GitHub回传 | 有人工归档快照；未确认持续自动回传 | [独立进度与部分汇总](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json)持续提交，报告仍为`PARTIAL` |
 
-原日志曾报告15个源神经网络拟合完成、待运行神经任务为空；这不等于整个论文实验完成。B8的某一配置步数也不是整个计划的完成百分比。作业号770043是最近日志的身份，若学校续跑产生新号，应以实际队列为准。
+最近现场同时分配合计4 GPU、60 CPU、320G主机内存。节点名`gpu1`不是分区`hpc_gpu1`；第二轮可以分散到不同节点，每个模型仍是独立单卡计算，不是DDP。
 
-- [当前阶段、下一轮任务与状态来源](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/CURRENT_AND_NEXT_ZH.md)
-- [学校服务器环境与运行注意事项](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
-- [下一轮完整设计、公式和文献](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/experiments/followup_20261023/DESIGN_ZH.md)
-- [下一轮三卡代码与启动说明](https://github.com/jackzhu119/research3/tree/paper3-v2-progress/experiments/followup_20261023)
-- [下一轮V2自动同步状态](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) — 该页面不代表当前原实验的进度。
+## 当前使用的提交方式
 
-## 当前实验如何查看
+第二轮已采用**三个独立单GPU作业滚动补交**，完成一个再接后续未完成任务。一次提交66个数组元素、`%2/%3`整批提交、单个四卡作业及三作业16CPU/128G方案均属于此前尝试。当前已部署的40GB提交控制器负责后续补交，查看本页无需重新运行旧安装器或`START.py --submit`。
 
-在学校 `login1` 查看自己的队列：
+服务器安装路径记录：`/public/home/zhuziyuan/paper3-submit-three40/`；切换日志`switch.log`；历史三作业控制日志为`runs/followup_20261023_v2/_threejobs16/controller.log`；最新40GB控制进程是否继续使用此文件尚未独立核实。当前切换定位优先看`paper3-submit-three40/switch.log`，不根据旧目录名推断资源。
 
-```bash
-squeue -u zhuziyuan -o '%.20i %.24j %.10T %.12M %R'
-```
+## 交接入口
 
-查看最近已知作业；若作业号已变化，把770043替换为当前作业号：
+- [完整配置、变更经过、续跑约定与证据](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md)
+- [两轮状态与后续阶段](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/CURRENT_AND_NEXT_ZH.md)
+- [机器可读实验配置](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/EXPERIMENT_STATUS.json)
+- [学校环境与调度经验](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
+- [此前资源快照（保留原记录）](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/HPC_RUN_STATUS_20261024_ZH.md)
+- [第二轮完整算法设计](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/experiments/followup_20261023/DESIGN_ZH.md)
+- [第二轮自动同步结果](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json)
 
-```bash
-sacct -j 770043 --format=JobID,State,ExitCode,Elapsed,NodeList
-```
+## 保存与解释
 
-```bash
-tail -n 60 /public/home/zhuziyuan/projects/paper3/.paper3-hpc/logs/train-770043.out /public/home/zhuziyuan/projects/paper3/.paper3-hpc/jobs/770043/campaign.log
-```
+模型、两代checkpoint、逐会话预测和日志先写学校共享目录`/public/home/zhuziyuan/projects/paper3`；GitHub进度上传失败不等于本地计算结果丢失。GitHub目前回传进度与部分汇总，未据此确认全部checkpoint已异地备份。
 
-以上只查看状态。恢复当前实验时沿用它自己的已部署续跑入口；不要用下一轮安装包替代当前任务，也不要照旧RunPod说明重新安装、重复pilot或重提test链。
+已完成项以各任务`result.json.status == COMPLETE`为准；换作业号或新种子从0开始不代表前12项重算。未完成项由原worker读取匹配断点，调度/迁移本身不证明每次恢复都逐位等价。已完成1000步而仍在验证/留出评价的任务也还不能计为完整完成。
 
-## 下一轮准备了什么
-
-36项核心元训练（12方法×3种子）＋24项秩/幅度敏感性元训练＋6项参考任务，共66项。另附5档校准预算、6种预定义误标/未来空间漂移诊断，以及概率质量、负翻转和配对统计。
-
-已有源模型、数据缓存及匹配的完成基线可以复用；独立数组最多三项并行。断点包含优化器状态，完成项跳过，失败项可续跑；本地30秒进度、GitHub约180秒独立同步。没有人为累计12小时限额；Slurm单作业时限和requeue权限仍由学校配置决定。
-
-下一轮在当前实验结束后使用独立输出启动。目前GitHub状态是 `DESIGN_V2_READY_NOT_SUBMITTED`，并非正在训练。此前24项V1方案已由66项V2取代，不是额外一批正在运行的任务。
-
-## 分支与历史资料
-
-仓库默认分支保留论文协议与准备历史；学校部署工具维护入口位于 [HPC分支](https://github.com/jackzhu119/research3/tree/research/paper3-slurm-hpc-20261021)，下一轮独立实现位于 `paper3-v2-progress/experiments/followup_20261023/`。无需为了查看本页而更新学校正在运行的代码。
-
-旧RunPod入口、CUDA12.8锁文件、初始“尚未训练”说明、旧pilot和恢复规则均为历史版本资料，不能继续作为当前学校训练指令。`ONLINE_RELEASE.json`、`ONLINE_VALIDATION.json`绑定各自历史发布提交，不是本页最新训练状态，也不是本次文档更新的验证清单。旧科学协议、数据角色和原始证据保留，不把软件测试当作科研效果。
+本次配置归档只修改文档与人工概览JSON，不部署学校代码、不重启或取消作业、不修改数据划分或科学训练参数，也不覆盖自动同步的`monitoring/.../status.json`。旧RunPod入口、最初24任务V1和原80GB整批启动说明保留为历史资料。
