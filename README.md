@@ -1,8 +1,8 @@
-# 论文3 · 学校HPC五轮实验记录
+# 论文3 · 学校HPC六轮实验记录
 
-五轮的研究问题、算法公式、实验数量、服务器配置、断点与GitHub回传已分类归档。全部使用学校Slurm云服务器，不再使用RunPod。
+六轮的研究问题、算法公式、实验数量、服务器配置、断点与GitHub回传已分类归档。全部使用学校Slurm云服务器，不再使用RunPod。
 
-**[进入五轮完整分类总档案](docs/experiments/README_ZH.md)** · [数据/环境/历史故障与连续运行](docs/experiments/COMMON_DATA_RUNTIME_ZH.md) · [带源证据的状态快照](docs/experiments/STATUS_SNAPSHOT_20261024.json)
+**[进入六轮完整分类总档案](docs/experiments/README_ZH.md)** · [数据/环境/历史故障与连续运行](docs/experiments/COMMON_DATA_RUNTIME_ZH.md) · [带源证据的状态快照](docs/experiments/STATUS_SNAPSHOT_20261024.json)
 
 | 轮次 | 研究内容 | 计划规模 | 学校配置 | 详细记录 |
 |---|---|---|---|---|
@@ -11,6 +11,7 @@
 | 第三轮 | 解析切线、Schur消头、信息半径、支持KL保护 | **174**：21字典＋78核心＋72敏感性＋3EA；外测另18 | hpc_gpu，最多3独立单卡作业，各12CPU/64G | [第三轮](docs/experiments/ROUND3_ZH.md) |
 | 第四轮 | OOF收缩、凸堆叠、one-SE选择、GCE稳健校准 | **204**：21字典＋90核心＋90敏感性＋3EA；外测另21 | **hpc_gpu1，1节点1作业3GPU，总48CPU/192G** | [第四轮](docs/experiments/ROUND4_ZH.md) |
 | 第五轮 | 旋转—相对增益耦合、真实图精化、共同θ机制探针 | **105**：12字典＋48交叉评价＋24半径＋15探针＋6参考；外测另21 | **hpc_gpu1，1节点1作业3GPU，总36CPU/164G** | [第五轮](docs/experiments/ROUND5_ZH.md) |
+| 第六轮 | 曲率引导空间预测平均、同中心/同边际机制、新Pan外部验证 | **198**：6字典＋60内部核心＋48敏感性＋12参考＋72Pan；Weibo另36 | **hpc_gpu1，1节点1作业3GPU，总36CPU/164G** | [第六轮](docs/experiments/ROUND6_ZH.md) |
 
 各轮任务成本不同；174/204/105不是从头重训EEGNet的次数。候选算法尚需完整配对实验检验，不能由数学性质或软件测试宣称显著提升。
 
@@ -25,18 +26,19 @@
 | 第三轮 | 10月24日18:55:27 | **6/174 COMPLETE**，控制器RUNNING、PARTIAL | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) |
 | 第四轮 | 10月24日19:22:43 | **771366已提交**，PENDING / AssocGrpGRES，0/204 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) |
 | 第五轮 | 10月24日19:21:41 | **771408已有提交记录**，AWAITING_ACCOUNTING，0/105 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/status.json) |
+| 第六轮 | 10月24日20:36交付核验 | 设计、数据和线上包就绪；**未提交学校作业**，无效果结果 | [固定启动指令](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/experiments/followup_20261024_r6/online/LAUNCH_ZH.md) |
 
 “已提交”不等于GPU已开始优化；实际outer/session计数增长才说明计算推进。第四、五轮交付时旧页面的“尚未提交”早于这些后续回传，应按时间解释。
 
 ## 结果、代码与续跑入口
 
-- [五轮总索引：各轮源码、输出目录、精确矩阵与统计口径](docs/experiments/README_ZH.md)
+- [六轮总索引：各轮源码、输出目录、精确矩阵与统计口径](docs/experiments/README_ZH.md)
 - [学校环境、数据复用、连续运行与历史故障处理](docs/experiments/COMMON_DATA_RUNTIME_ZH.md)
 - [原分享聊天配置交接](docs/PAPER3_CONFIGURATION_HANDOFF_20261024_ZH.md) · [原学校环境记录](docs/SCHOOL_HPC_ENVIRONMENT_ZH.md)
 - [机器可读五轮概览](docs/EXPERIMENT_STATUS.json) · [旧两轮首页留档](docs/records/PAPER3_TWO_ROUND_README_20261024_ZH.md)
 
-结果先保存学校共享项目`/public/home/zhuziyuan/projects/paper3/runs/`。第二至五轮每180秒尝试独立GitHub汇总同步；网络失败不停止训练。完整checkpoint、逐会话预测和CSV仍保存在学校本地，进度同步不等于模型完整异地备份。
+结果先保存学校共享项目`/public/home/zhuziyuan/projects/paper3/runs/`。第二至六轮每180秒尝试独立GitHub汇总同步；网络失败不停止训练。完整checkpoint、逐会话预测和CSV仍保存在学校本地，进度同步不等于模型完整异地备份。
 
 各轮保留独立输出、完成项复用与断点；学校启动不反复重跑全量test/pilot/数据树扫描，没有累计12小时总上限。集群单次作业时限仍存在，由各轮保存/续交机制处理。
 
-本次更新只涉及分类文档与人工概览，不修改训练程序、科学配方或运行中的学校作业，也不覆盖自动回传文件。
+默认分支本次仅更新分类文档与人工概览；第六轮程序和已准备Pan缓存另在独立分支发布。没有修改前五轮训练程序、科学配方或学校运行作业，也不覆盖其自动回传。
