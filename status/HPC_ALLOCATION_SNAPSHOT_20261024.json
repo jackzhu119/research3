@@ -1,0 +1,144 @@
+{
+  "schema": "paper3-hpc-observed-snapshot-v1",
+  "status_type": "historical_manual_evidence_snapshot_not_live_scheduler",
+  "source_evidence": {
+    "github_live_status_url": "https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json",
+    "github_last_status_updated_utc": "2026-10-24T07:25:53Z",
+    "job_evidence": "user-provided Slurm squeue and scontrol outputs on 2026-10-24",
+    "first_round_last_log_utc": "2026-10-24T04:40:59Z"
+  },
+  "repo": "jackzhu119/research3",
+  "round1": {
+    "job_id": "770043",
+    "partition": "hpc_gpu1",
+    "node": "gpu4",
+    "state_at_last_evidence": "RUNNING",
+    "gpu_type": "NVIDIAA100-SXM4-80GB",
+    "requested_gpus": 1,
+    "cpus": 24,
+    "requested_ram": "128G",
+    "scientific_stage": "meta_screening",
+    "active_job": {
+      "method": "B11",
+      "dimension": 2,
+      "radius": 0.05,
+      "seed": 20261018,
+      "outer_updates_completed": 199,
+      "inner_updates_actual": 7960,
+      "outer_attempts_dispatched": 200,
+      "error_type_field": "CampaignError"
+    },
+    "source_neural_fit_completed": 15,
+    "source_classical_status_not_independently_verified": true,
+    "whole_campaign_finished": false
+  },
+  "round2": {
+    "campaign": "followup_20261023_v2",
+    "output_dir": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261023_v2",
+    "partition": "hpc_gpu",
+    "strategy": "3 independent one-element Slurm array jobs, rolling submission, one GPU per task, checkpoint-aware",
+    "gpu_type": "NVIDIAA100-PCIE-40GB",
+    "max_parallel_jobs": 3,
+    "resources_per_job": {
+      "gpu": 1,
+      "cpu": 12,
+      "memory": "64G"
+    },
+    "parallel_requested_total": {
+      "gpu": 3,
+      "cpu": 36,
+      "memory": "192G"
+    },
+    "tasks": {
+      "total": 66,
+      "core": 36,
+      "sensitivity": 24,
+      "reference": 6,
+      "complete": 12,
+      "evaluating": 3,
+      "queued_or_not_started": 51,
+      "not_complete": 54
+    },
+    "core_variants": [
+      "P",
+      "global",
+      "scalar",
+      "dual",
+      "PCT",
+      "softPCT",
+      "temporal",
+      "dual_temporal",
+      "softPCT_mean",
+      "runmean",
+      "symonly",
+      "skewonly"
+    ],
+    "seeds": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "data": {
+      "meta_train_people": 40,
+      "meta_train_sessions": 396,
+      "meta_validation_people": 11,
+      "meta_validation_sessions": 97
+    },
+    "jobs_at_last_evidence": [
+      {
+        "job_id": "771066_12",
+        "index": 12,
+        "task_key": "P-seed20261019",
+        "node": "gpu2",
+        "state": "RUNNING",
+        "monitor_stage": "meta_validation",
+        "monitor_outer_update": 150,
+        "monitor_validation_sessions_done": 52,
+        "monitor_validation_sessions_total": 97
+      },
+      {
+        "job_id": "771065_13",
+        "index": 13,
+        "task_key": "global-seed20261019",
+        "node": "gpu2",
+        "state": "RUNNING",
+        "monitor_stage": "meta_validation",
+        "monitor_outer_update": 150,
+        "monitor_validation_sessions_done": 64,
+        "monitor_validation_sessions_total": 97
+      },
+      {
+        "job_id": "771064_14",
+        "index": 14,
+        "task_key": "scalar-seed20261019",
+        "node": "gpu1",
+        "state": "RUNNING",
+        "monitor_stage": "meta_validation",
+        "monitor_outer_update": 150,
+        "monitor_validation_sessions_done": 70,
+        "monitor_validation_sessions_total": 97
+      }
+    ],
+    "report_status": "PARTIAL",
+    "core_complete": false,
+    "monitor_status_planned_resource_fields_are_stale": true,
+    "completion_is_based_on_result_json_status_complete": true,
+    "checkpoint_resume_logic_available": true,
+    "peak_gpu_memory_unverified_for_all_remaining_methods": true,
+    "controller_log": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261023_v2/_threejobs16/controller.log",
+    "switch_log": "/public/home/zhuziyuan/paper3-submit-three40/switch.log"
+  },
+  "combined_resources_at_last_evidence": {
+    "allocated_gpus": 4,
+    "allocated_cpus": 60,
+    "allocated_host_memory": "320G"
+  },
+  "caveats": [
+    "not a live Slurm query",
+    "GPU requested/allocated counts do not prove utilization",
+    "40GB compatibility not established for all 54 unfinished tests",
+    "partial internal report is not final or clinical efficacy",
+    "GitHub progress sync does not verify offsite full checkpoint backup",
+    "no scientific code or running server job was changed by this GitHub archival commit"
+  ]
+}
