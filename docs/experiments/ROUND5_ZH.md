@@ -1,6 +1,20 @@
 # 第五轮：旋转与相对增益的耦合方式
 
-[返回五轮总索引](README_ZH.md)。本页记录已实现的设计、程序和可核验运行证据，不把数学性质当成准确率提升。
+[返回七轮总索引](README_ZH.md)。本页记录已实现的设计、程序和可核验运行证据，不把数学性质当成准确率提升。
+
+## 2026-10-24追加：迁移至hpc_gpu（包已发布核验，学校未执行）
+
+用户最新目标为**hpc_gpu、A100-PCIe-40GB、一个节点一个Slurm作业内部3GPU，总36CPU、128G共享主机内存**，每槽12CPU。原hpc_gpu1、36CPU、164G共享主机内存保留为历史发布/提交配置，不代表迁移已在学校生效。新提交应请求`--partition=hpc_gpu --nodes=1 --ntasks=1 --gres=gpu:3 --cpus-per-task=36 --mem=128G`；使用迁移入口处理原CLI语义，128G不乘三。
+
+本次只迁移资源与提交封装，不改变本轮算法、数据划分、种子、105项矩阵或原输出目录；完成项和匹配checkpoint/逐会话结果继续复用。使用现有学校项目缓存，不临时补取新原始数据或在GPU节点安装环境。
+
+独立操作分支：`paper3-hpc-gpu-migrations-20261024`，目录`operations/hpc_gpu_migrations_20261024/round5`；[迁移交付目录](https://github.com/jackzhu119/research3/tree/paper3-hpc-gpu-migrations-20261024/operations/hpc_gpu_migrations_20261024/round5)已真实发布。固定源码提交`79eabe6c456aa443e18c35c53b6c39a33d27a639`，小bootstrap提交`1d3e4860fc8a138e7be2717dae75ed55a0657e47`。本轮包324,043bytes，SHA256 `b32ba85331f25ec4e10d0ba41348d033eab7a60e29b8bcce59c0f5aca2d01e66`。
+
+本轮266项本地迁移全套软件测试通过；实际raw保留分片续传收到HTTP206，API完整下载HTTP200及正确缓存禁网复用通过。下载包在禁socket/DNS和子进程场景实际安装、prepare105项，保留原计划字节及result/checkpoint/session的字节和mtime；不下载新增原始数据。线上小bootstrap本身已从raw/API下载核SHA，并实际调用本轮缓存包安装/prepare。以上为本地CPU与交付网络验证，不是学校GPU/学校网络现场实测。
+
+[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/LAUNCH_ZH.md)交付对应`MIGRATE --submit`；用户执行后才精准处理本轮同标记旧排队，已进入运行的作业不当作排队直接取消。截至本次记录，学校取消/提交均为0，没有迁移后实际GPU训练或结果数据；启动说明固定提交为`c7c903fb126e3e60a7e69556bea9f7ac8ce7e489`；[本轮固定启动shell](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/RUN-ROUND5.sh)已实际下载并通过shell安装/prepare，未执行`--submit`。
+
+本轮继续单独回传`paper3-r5-progress:monitoring/paper3-round5/status.json`，不写到其他轮或操作分支。下文旧资源、作业号与状态均保留原时点语境，不能据迁移计划重写为已经切换或已经训练。
 
 ## 1. 研究问题与论文主线
 
@@ -65,7 +79,7 @@
 
 本次实际读取的自动快照时间为 **2026-10-24 11:21:41 UTC / 北京19:21:41**：作业 **771408**，控制器 `AWAITING_ACCOUNTING`，0/105 COMPLETE，105项NOT_STARTED。说明已有提交记录，尚不能证明节点训练开始；不是全轮失败结论。精简快照及源blob身份已存 [STATUS_SNAPSHOT_20261024.json](STATUS_SNAPSHOT_20261024.json)。
 
-| 项目 | 申请配置 |
+| 项目 | 原申请配置（历史记录） |
 |---|---|
 | 分区 | `hpc_gpu1`，不是节点名gpu1 |
 | 拓扑 | 一个节点、一个普通Slurm作业、三张GPU内部并行 |

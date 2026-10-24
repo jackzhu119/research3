@@ -1,6 +1,20 @@
 # 第六轮：曲率形状预测平均与新Pan双会话外部验证
 
-[返回六轮总档案](README_ZH.md)。交付记录：2026-10-24北京时间20:36；未向学校提交第六轮作业，无本轮准确率结果。
+[返回七轮总档案](README_ZH.md)。交付记录：2026-10-24北京时间20:36；未向学校提交第六轮作业，无本轮准确率结果。
+
+## 2026-10-24追加：迁移至hpc_gpu（包已发布核验，学校未执行）
+
+用户最新目标为**hpc_gpu、A100-PCIe-40GB、一个节点一个Slurm作业内部3GPU，总36CPU、128G共享主机内存**，每槽12CPU。原hpc_gpu1、36CPU、164G共享主机内存保留为历史发布/提交配置，不代表迁移已在学校生效。新提交应请求`--partition=hpc_gpu --nodes=1 --ntasks=1 --gres=gpu:3 --cpus-per-task=36 --mem=128G`；使用迁移入口处理原CLI语义，128G不乘三。
+
+本次只迁移资源与提交封装，不改变本轮算法、数据划分、种子、198项矩阵或原输出目录；完成项和匹配checkpoint/逐会话结果继续复用。约23.4MB已准备Pan缓存随迁移包交付，计算节点不重新下载原MAT或安装环境。
+
+独立操作分支：`paper3-hpc-gpu-migrations-20261024`，目录`operations/hpc_gpu_migrations_20261024/round6`；[迁移交付目录](https://github.com/jackzhu119/research3/tree/paper3-hpc-gpu-migrations-20261024/operations/hpc_gpu_migrations_20261024/round6)已真实发布。固定源码提交`79eabe6c456aa443e18c35c53b6c39a33d27a639`，小bootstrap提交`1d3e4860fc8a138e7be2717dae75ed55a0657e47`。本轮包24,659,326bytes，SHA256 `d993c7408b1510a061c715a32ee45002903534b148e9adfe8e18798e26dc053e`。
+
+本轮347项本地迁移全套软件测试通过；实际raw保留分片续传收到HTTP206，API完整下载HTTP200及正确缓存禁网复用通过。下载包在禁socket/DNS和子进程场景实际安装、prepare198项，保留原计划字节及result/checkpoint/session的字节和mtime；额外读取28会话×5预算140个Pan视图。线上小bootstrap本身已从raw/API下载核SHA，并实际调用本轮缓存包安装/prepare。以上为本地CPU与交付网络验证，不是学校GPU/学校网络现场实测。
+
+[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/LAUNCH_ZH.md)交付对应`MIGRATE --submit`；用户执行后才精准处理本轮同标记旧排队，已进入运行的作业不当作排队直接取消。截至本次记录，学校取消/提交均为0，没有迁移后实际GPU训练或结果数据；启动说明固定提交为`c7c903fb126e3e60a7e69556bea9f7ac8ce7e489`；[本轮固定启动shell](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/RUN-ROUND6.sh)已实际下载并通过shell安装/prepare，未执行`--submit`。
+
+本轮继续单独回传`paper3-r6-progress:monitoring/paper3-round6/status.json`，不写到其他轮或操作分支。下文旧资源、作业号与状态均保留原时点语境，不能据迁移计划重写为已经切换或已经训练。
 
 ## 科研问题与数学改动
 
@@ -34,7 +48,7 @@ Pan2023为14人、每人两份真实会话、3360条二类左右手MI。28个原
 
 统计单位为14人，会话和三种子在人内聚合。8项预定方法比较×NLL/BA合计16项统一Holm；NLL改善不能当成BA显著提升。外部方法在查看Pan预测效果前固定，不用外部query调参或选字典。
 
-## 资源、保存与回传
+## 原发布资源、保存与回传（历史配置）
 
 `hpc_gpu1`，一个节点、一个Slurm作业、三张GPU，总36CPU与164G共享主机内存；每槽12CPU亲和组。入口使用`--memory-total 164G`，不乘三。
 

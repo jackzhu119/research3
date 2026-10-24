@@ -2,7 +2,21 @@
 
 归档日期：2026-10-24。本文将算法实现、实验计划、软件验证和真实调度状态分别记录；已提交排队不等于已经更新模型。
 
-返回[五轮总目录](README_ZH.md)；相邻记录：[第三轮](ROUND3_ZH.md)、[第五轮](ROUND5_ZH.md)。
+返回[七轮总目录](README_ZH.md)；相邻记录：[第三轮](ROUND3_ZH.md)、[第五轮](ROUND5_ZH.md)。
+
+## 2026-10-24追加：迁移至hpc_gpu（包已发布核验，学校未执行）
+
+用户最新目标为**hpc_gpu、A100-PCIe-40GB、一个节点一个Slurm作业内部3GPU，总36CPU、128G共享主机内存**，每槽12CPU。原hpc_gpu1、48CPU、192G共享主机内存（每槽16CPU/64G规划）保留为历史发布/提交配置，不代表迁移已在学校生效。新提交应请求`--partition=hpc_gpu --nodes=1 --ntasks=1 --gres=gpu:3 --cpus-per-task=36 --mem=128G`；使用迁移入口处理原CLI语义，128G不乘三。
+
+本次只迁移资源与提交封装，不改变本轮算法、数据划分、种子、204项矩阵或原输出目录；完成项和匹配checkpoint/逐会话结果继续复用。使用现有学校项目缓存，不临时补取新原始数据或在GPU节点安装环境。
+
+独立操作分支：`paper3-hpc-gpu-migrations-20261024`，目录`operations/hpc_gpu_migrations_20261024/round4`；[迁移交付目录](https://github.com/jackzhu119/research3/tree/paper3-hpc-gpu-migrations-20261024/operations/hpc_gpu_migrations_20261024/round4)已真实发布。固定源码提交`79eabe6c456aa443e18c35c53b6c39a33d27a639`，小bootstrap提交`1d3e4860fc8a138e7be2717dae75ed55a0657e47`。本轮包323,081bytes，SHA256 `a1ef49e5e888d67477b59f8db0ec8ee798bdba51335b667ae8631cc595c9516a`。
+
+本轮198项本地迁移全套软件测试通过；实际raw保留分片续传收到HTTP206，API完整下载HTTP200及正确缓存禁网复用通过。下载包在禁socket/DNS和子进程场景实际安装、prepare204项，保留原计划字节及result/checkpoint/session的字节和mtime；不下载新增原始数据。线上小bootstrap本身已从raw/API下载核SHA，并实际调用本轮缓存包安装/prepare。以上为本地CPU与交付网络验证，不是学校GPU/学校网络现场实测。
+
+[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/LAUNCH_ZH.md)交付对应`MIGRATE --submit`；用户执行后才精准处理本轮同标记旧排队，已进入运行的作业不当作排队直接取消。截至本次记录，学校取消/提交均为0，没有迁移后实际GPU训练或结果数据；启动说明固定提交为`c7c903fb126e3e60a7e69556bea9f7ac8ce7e489`；[本轮固定启动shell](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/RUN-ROUND4.sh)已实际下载并通过shell安装/prepare，未执行`--submit`。
+
+本轮继续单独回传`paper3-r4-progress:monitoring/paper3-round4/status.json`，不写到其他轮或操作分支。下文旧资源、作业号与状态均保留原时点语境，不能据迁移计划重写为已经切换或已经训练。
 
 ## 本轮要回答什么
 
@@ -103,7 +117,7 @@ GitHub回传 `updated_utc = 2026-10-24T11:22:43Z`，即北京时间19:22:43：
 实验分支README的发布时“未提交”句子早于这份调度回传，应以带时间的作业证据解释当前阶段。
 状态证据：[monitoring/paper3-round4/status.json](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json)。链接会继续更新；本文仅记录上述时点。
 
-## 资源与单作业三卡执行
+## 原提交资源与单作业三卡执行（历史配置）
 
 资源组为 **hpc_gpu1**，A100-SXM4-80GB配置；一个节点、一个Slurm作业，内部三个独立单卡worker动态领取DAG就绪任务。
 精确请求：`--nodes=1 --ntasks=1 --cpus-per-task=48 --mem=192G --gres=gpu:3 --partition=hpc_gpu1`。
