@@ -23,6 +23,8 @@ class Scheduler:
         self.old_job={5:'772012',6:'772013'}[round_number]
         self.old_state='PENDING';self.old_terminal=False;self.race=False
         self.bad_memory=False;self.queue_failure=False;self.calls=[];self.nodes='1';self.cpus='12'
+        self.accounting_extra=[];self.accounting_user='u';self.accounting_partition='hpc_gpu'
+        self.accounting_marker=old_marker;self.live_partition='hpc_gpu';self.accounting_missing_current=False
         self.new={str(900001+s):dict(slot=s,held=True,state='PENDING') for s in range(3)}
     def __call__(self,command,**kwargs):
         self.calls.append(command)
@@ -30,7 +32,7 @@ class Scheduler:
             if self.queue_failure:return SimpleNamespace(returncode=1,stdout='',stderr='controller temporarily down')
             rows=[]
             if not self.old_terminal:
-                rows.append(f'{self.old_job}|u|{self.old_marker}|{self.old_state}|{self.old_marker}-a2|hpc_gpu|(AssocGrpGRES)')
+                rows.append(f'{self.old_job}|u|{self.old_marker}|{self.old_state}|{self.old_marker}-a2|{self.live_partition}|(AssocGrpGRES)')
             for job,row in self.new.items():
                 reason='(JobHeldUser)' if row['held'] else '(AssocGrpGRES)'
                 rows.append(f"{job}|u|{self.new_marker}|{row['state']}|{self.new_marker}-s{row['slot']}-a1|hpc_gpu1|{reason}")
@@ -39,7 +41,11 @@ class Scheduler:
             return SimpleNamespace(returncode=0,stdout='\n'.join(rows)+'\n',stderr='')
         if command[0]=='sacct':
             state='CANCELLED' if self.old_terminal else self.old_state
-            return SimpleNamespace(returncode=0,stdout=f'{self.old_job}|u|{state}|0:0|{self.old_marker}-a2|hpc_gpu|{self.old_marker}\n',stderr='')
+            text=(f'{self.old_job}|{self.accounting_user}|{state}|0:0|{self.old_marker}-a2|'
+                  f'{self.accounting_partition}|{self.accounting_marker}\n')
+            if self.accounting_missing_current:text=''
+            text+='\n'.join(self.accounting_extra)
+            return SimpleNamespace(returncode=0,stdout=text,stderr='')
         if command[0]=='scontrol' and '--oneliner' in command:
             job=command[-1];row=self.new[job];memory='32G' if self.bad_memory else '64G'
             reason='JobHeldUser' if row['held'] else 'AssocGrpGRES';priority=0 if row['held'] else 100
@@ -83,6 +89,11 @@ class MigrationTests(unittest.TestCase):
         self.migration=HeldQueueMigration(self.path,self.runtime,5,self.launch,runner=self.scheduler,clock=lambda:100000,account='u')
         self.summary={'marker':self.new_marker,'jobs':[{'slot':s,'job_id':str(900001+s)} for s in range(3)]}
     def tearDown(self):self.temp.cleanup()
+    def add_old_attempt(self,**fields):
+        path=self.output/'runtime/state.json'
+        state=json.loads(path.read_text())
+        state['attempts'].append(fields)
+        path.write_text(json.dumps(state))
     def test_three_real_held_jobs_before_old_cancel_then_release(self):
         first=self.migration.step(self.summary)
         self.assertEqual(first['status'],'WAITING_OLD_ALLOCATION_TERMINAL')
@@ -103,6 +114,113 @@ class MigrationTests(unittest.TestCase):
         self.scheduler.nodes='1-1'
         self.assertEqual(self.migration.step(self.summary)['status'],'WAITING_OLD_ALLOCATION_TERMINAL')
         self.assertEqual(self.migration.step(self.summary)['status'],'READY')
+    def test_finished_original_gpu1_attempt_is_history_not_current_partition(self):
+        events=[];self.migration.emit=lambda event,**fields:events.append((event,fields))
+        self.add_old_attempt(sequence=1,job_id='771900',name=self.old_marker+'-a1',
+            marker=self.old_marker,status='FINISHED',outcome='RESOURCE_MIGRATION_HANDOFF',
+            command=['sbatch','--partition=hpc_gpu1','--memory=164G',
+                     '--comment='+self.old_marker,'--job-name='+self.old_marker+'-a1'])
+        self.scheduler.accounting_extra=[
+            f'771900|u|CANCELLED|0:0|{self.old_marker}-a1|hpc_gpu1|{self.old_marker}']
+        self.assertEqual(self.migration.step(self.summary)['status'],'WAITING_OLD_ALLOCATION_TERMINAL')
+        self.assertEqual(self.migration.step(self.summary)['status'],'READY')
+        gate=json.loads((self.runtime/'HANDOFF_READY.json').read_text())
+        self.assertEqual(gate['old_terminal_jobs']['771900']['partition'],'hpc_gpu1')
+        self.assertEqual(gate['old_terminal_jobs']['772012']['partition'],'hpc_gpu')
+        self.assertIn('771900',self.migration.state['historical_terminal_jobs'])
+        self.assertTrue(any(event=='OWNED_TERMINAL_HISTORY_ACCEPTED' for event,fields in events))
+        self.assertEqual(sum(c[:2]==['scontrol','release'] for c in self.scheduler.calls),3)
+        exact=[c for c in self.scheduler.calls if c[0]=='sacct']
+        self.assertTrue(all('--jobs=771900,772012' in c for c in exact))
+        self.assertEqual(self.path.read_bytes(),self.original_plan)
+        self.assertEqual(self.ckpt.read_bytes(),b'PRESERVE_CHECKPOINT')
+    def test_terminal_current_known_cancelled_with_empty_partition_is_accepted(self):
+        self.scheduler.accounting_partition=''
+        self.migration.step(self.summary)
+        self.assertEqual(self.migration.step(self.summary)['status'],'READY')
+        gate=json.loads((self.runtime/'HANDOFF_READY.json').read_text())
+        self.assertEqual(gate['old_terminal_jobs']['772012']['partition'],'')
+    def test_bound_terminal_history_other_partition_or_null_is_audit_only(self):
+        for partition in ('retired_gpu_partition','(null)',''):
+            with self.subTest(partition=partition):
+                attempt={'sequence':1,'job_id':'771901','name':self.old_marker+'-a1',
+                         'marker':self.old_marker,'status':'FINISHED'}
+                self.scheduler.accounting_extra=[
+                    f'771901|u|FAILED|2:0|{self.old_marker}-a1|{partition}|{self.old_marker}']
+                observed=self.migration._old_accounting({'772012'},[attempt])
+                self.assertEqual(observed['771901']['partition'],partition)
+                self.assertEqual(observed['771901']['state'],'FAILED')
+        self.assertFalse(any(c[0] in ('scancel',) or c[:2]==['scontrol','release']
+                             for c in self.scheduler.calls))
+    def test_unknown_ack_exact_durable_name_still_resolved_by_history_lookup(self):
+        self.add_old_attempt(sequence=3,name=self.old_marker+'-a3',marker=self.old_marker,
+                             status='UNCERTAIN',job_id=None)
+        self.scheduler.accounting_extra=[
+            f'771902|u|CANCELLED by 1000|0:0|{self.old_marker}-a3||(null)',
+            '800000|other-user|RUNNING|0:0|paper2-other|hpc_gpu1|paper2-marker']
+        self.migration.step(self.summary)
+        self.assertEqual(self.migration.step(self.summary)['status'],'READY')
+        gate=json.loads((self.runtime/'HANDOFF_READY.json').read_text())
+        self.assertEqual(gate['old_terminal_jobs']['771902']['state'],'CANCELLED')
+        self.assertEqual(gate['old_terminal_jobs']['771902']['partition'],'')
+        self.assertNotIn('800000',gate['old_terminal_jobs'])
+        accounting=[c for c in self.scheduler.calls if c[0]=='sacct']
+        self.assertTrue(any(any(x.startswith('--jobs=') for x in c) for c in accounting))
+        self.assertTrue(any(not any(x.startswith('--jobs=') for x in c) for c in accounting))
+    def test_terminal_history_never_substitutes_for_missing_current_job_accounting(self):
+        self.add_old_attempt(sequence=1,job_id='771904',name=self.old_marker+'-a1',
+                             marker=self.old_marker,status='FINISHED')
+        self.scheduler.accounting_extra=[
+            f'771904|u|CANCELLED|0:0|{self.old_marker}-a1|hpc_gpu1|{self.old_marker}']
+        self.scheduler.accounting_missing_current=True
+        self.migration.step(self.summary)
+        self.assertEqual(self.migration.step(self.summary)['status'],'WAITING_OLD_ALLOCATION_TERMINAL')
+        self.assertFalse((self.runtime/'HANDOFF_READY.json').exists())
+        self.assertFalse(any(c[:2]==['scontrol','release'] for c in self.scheduler.calls))
+    def test_unresolved_unknown_ack_still_waits_after_current_job_cancelled(self):
+        name=self.old_marker+'-a3'
+        self.add_old_attempt(sequence=3,name=name,marker=self.old_marker,status='UNCERTAIN',job_id=None)
+        self.migration.step(self.summary)
+        value=self.migration.step(self.summary)
+        self.assertEqual(value['status'],'WAITING_OLD_ALLOCATION_TERMINAL')
+        self.assertEqual(value['unresolved_old_names'],[name])
+        self.assertFalse((self.runtime/'HANDOFF_READY.json').exists())
+        self.assertFalse(any(c[:2]==['scontrol','release'] for c in self.scheduler.calls))
+    def test_active_historical_wrong_partition_waits_without_release_or_accounting_signal(self):
+        self.add_old_attempt(sequence=1,job_id='771903',name=self.old_marker+'-a1',
+                             marker=self.old_marker,status='FINISHED')
+        self.scheduler.accounting_extra=[
+            f'771903|u|RUNNING|0:0|{self.old_marker}-a1|hpc_gpu1|{self.old_marker}']
+        with self.assertRaises(MigrationTransient) as caught:self.migration.step(self.summary)
+        self.assertIn('active_old_accounting_unexpected_partition_wait',str(caught.exception))
+        self.assertIn('"partition": "hpc_gpu1"',str(caught.exception))
+        self.assertFalse((self.runtime/'HANDOFF_READY.json').exists())
+        self.assertFalse(any(c[:2]==['scontrol','release'] for c in self.scheduler.calls))
+        self.assertFalse(any(c[0]=='scancel' and c[-1]=='771903' for c in self.scheduler.calls))
+    def test_live_old_partition_mismatch_remains_strict(self):
+        self.scheduler.live_partition='hpc_gpu1'
+        with self.assertRaises(MigrationOwnershipError):self.migration.step(self.summary)
+        self.assertFalse(any(c[0]=='scancel' for c in self.scheduler.calls))
+        self.assertFalse((self.runtime/'HANDOFF_READY.json').exists())
+    def test_foreign_accounting_owner_and_marker_are_still_rejected_with_observed_fields(self):
+        for field,value,reason in (('accounting_user','foreign-user','old_accounting_owner_mismatch'),
+                                   ('accounting_marker','foreign-marker','old_accounting_marker_mismatch')):
+            with self.subTest(field=field):
+                before=getattr(self.scheduler,field);setattr(self.scheduler,field,value)
+                try:
+                    with self.assertRaises(MigrationOwnershipError) as caught:
+                        self.migration.step(self.summary)
+                    self.assertIn(reason,str(caught.exception))
+                    self.assertIn(value,str(caught.exception))
+                    self.assertIn('"job_id": "772012"',str(caught.exception))
+                finally:setattr(self.scheduler,field,before)
+        self.assertFalse((self.runtime/'HANDOFF_READY.json').exists())
+        self.assertFalse(any(c[:2]==['scontrol','release'] for c in self.scheduler.calls))
+    def test_terminal_row_without_comment_requires_matching_durable_job_name(self):
+        self.scheduler.accounting_marker='(null)'
+        self.assertIn('772012',self.migration._old_accounting({'772012'},self.migration._old_attempts()))
+        with self.assertRaises(MigrationOwnershipError):
+            self.migration._old_accounting({'772012'},[])
     def test_exact_school_r5_and_r6_held_job_fixtures(self):
         for round_number,text in SCHOOL_SCONTROL.items():
             with self.subTest(round=round_number):

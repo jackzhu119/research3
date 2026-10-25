@@ -1,21 +1,15 @@
 {
   "status": "PASS",
-  "local_r1_tests": 109,
-  "local_r56_tests": 60,
-  "local_repair_takeover_tests": 12,
-  "total_local_tests_passed": 181,
-  "actual_school_fixture_NumNodes": "1-1",
-  "actual_school_fixture_jobs": [
-    "772076",
-    "772070",
-    "772073"
+  "scope": "Terminal historical accounting partitions no longer block R5/R6 handoff",
+  "production_files_changed_from_node_range_fix": [
+    "round56/migrate.py"
   ],
-  "held_jobs_to_adopt": {
-    "1": [
-      "772076",
-      "772077",
-      "772078"
-    ],
+  "round1_unchanged": true,
+  "repair_manager_unchanged": true,
+  "round1_previous_tests_passed": 109,
+  "round56_current_tests_passed": 70,
+  "repair_manager_previous_tests_passed": 12,
+  "existing_job_ids_to_preserve": {
     "5": [
       "772070",
       "772071",
@@ -27,31 +21,15 @@
       "772075"
     ]
   },
-  "preserve_original_immutable_package": true,
-  "preserve_original_checkpoint_and_success_receipts": true,
-  "no_full_pytest_or_pilot_at_school": true,
-  "no_cumulative_12_hour_limit": true,
-  "installer_all_21_file_hashes_verified": true,
-  "manager": {
-    "status": "PASS",
-    "targeted_tests_passed": 12,
-    "actual_school_actions": false,
-    "scope": "login controller and monitor replacement only after existing three held workers verified",
-    "real_isolated_dummy_process_and_lock_takeover": true,
-    "existing_scheduler_state_and_launch_bytes_mtime_preserved": true,
-    "readonly_slurm_commands_only_in_manager": true,
-    "non_single_node_ranges_rejected": true,
-    "independent_repair_lock": true,
-    "old_immutable_package_modified": false,
-    "files": {
-      "repair_manager.py": "d499e0530e8b5ba7729ead49be8d09cbb77ad5898b8e7ca47d5c06acca2bb29a",
-      "test_repair_manager.py": "02eed3a6dfa6b9d45ef24c135b12ab6c0c249bb405a8d085669521803fbf30a5"
-    }
-  },
-  "school_repair_executed_by_tools": false,
-  "actual_school_GPU_execution_claimed": false,
+  "first_round_handoff_observed_ready": true,
+  "first_round_pending_reasons": [
+    "Resources",
+    "Priority"
+  ],
+  "do_not_change_first_round_jobs": true,
+  "school_execution_of_this_fix": false,
   "package": {
-    "payload_sha256": "348897176d04a4a9e9c543377eccc5185cdc07b3c5f0f545da41c7ade1f6691b",
+    "payload_sha256": "d007d60a0b990a63e14ba59b6d598f699ab7c12c6fa8274847d7847df793c6f0",
     "files": {
       "round1/START.py": "a03cb53e89f19f6a48dc6159e61e322042bba8bf709c4a97a3e6db8bfe7b2987",
       "round1/worker.py": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836",
@@ -68,84 +46,20 @@
       "round56/coordinator.py": "990e11bb88dd123b69b8845dc7c8d5b7f12cffc32aba34165bb231787ed4e63d",
       "round56/three_jobs.py": "b1620be3b102398c4ec2ebe2e99aa0d84ba06ef8ebf74bbc56fabc54a601247f",
       "round56/generic_scheduler.py": "f4dff12087db07793a8956c92642e5c9a4619699b45b736bb068f52ccf656bb8",
-      "round56/migrate.py": "43d835ad981f3706c54ef83798764d03070daf756427dc755f6048c0f9e696b2",
+      "round56/migrate.py": "dbb253ffa2bdda369abc3445b779a9140a963b28fad2e54406c985330c6a1b3a",
       "round56/backend_entry.py": "c57f9b06a8ea12be577e5ada4f994c898ab5d6df9a468f0506822dc3816494f5",
       "round56/monitor.py": "c67925d67037e740246716df1fd98394ef0a3ad017ef36db2327395f5f20cb48",
       "round56/auto_summary.py": "aac37015d460541221224d83fa1ca676748233713fd9c48c89fb81581fe63415",
       "round56/summary_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3",
       "repair_manager.py": "d499e0530e8b5ba7729ead49be8d09cbb77ad5898b8e7ca47d5c06acca2bb29a"
     },
-    "bootstrap_sha256": "1090856b7a22a21250d04f1c09c788a20e9112a35a90f2cd92e218c62a2c5413",
-    "bootstrap_bytes": 121176,
+    "bootstrap_sha256": "6c27d840b443bd20e88ee31b20a4019e048ccb7e90e332d4640284b7de6a60f6",
+    "bootstrap_bytes": 122206,
     "rounds": [
       1,
       5,
       6
     ]
   },
-  "source_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
-  "remote_delivery_verified": true,
-  "download_proof": {
-    "status": "PASS",
-    "source_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
-    "bootstrap_sha256": "1090856b7a22a21250d04f1c09c788a20e9112a35a90f2cd92e218c62a2c5413",
-    "endpoints": [
-      {
-        "endpoint": "raw",
-        "sha256_verified": true,
-        "bytes": 121176
-      },
-      {
-        "endpoint": "api",
-        "sha256_verified": true,
-        "bytes": 121176
-      }
-    ],
-    "actual_one_line_command_download_install_cache_refresh": true,
-    "installed_file_hashes_verified": 21,
-    "school_processes_signalled": 0,
-    "school_slurm_mutations": 0,
-    "scope": "Published download and stdlib install only; real school repair still requires user execution"
-  },
-  "shell_prepare_proof": {
-    "status": "PASS",
-    "source_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
-    "rounds": [
-      {
-        "round": 1,
-        "status": "PASS",
-        "command_substitutions": [
-          "host interpreter",
-          "temporary download directory",
-          "fixture root",
-          "prepare instead of execute"
-        ],
-        "school_actions": false
-      },
-      {
-        "round": 5,
-        "status": "PASS",
-        "command_substitutions": [
-          "host interpreter",
-          "temporary download directory",
-          "fixture root",
-          "prepare instead of execute"
-        ],
-        "school_actions": false
-      },
-      {
-        "round": 6,
-        "status": "PASS",
-        "command_substitutions": [
-          "host interpreter",
-          "temporary download directory",
-          "fixture root",
-          "prepare instead of execute"
-        ],
-        "school_actions": false
-      }
-    ],
-    "source_bytes_and_mtime_unchanged": true,
-    "actual_school_GPU_execution": false
-  }
+  "current_and_reused_test_evidence_count": 191
 }

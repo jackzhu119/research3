@@ -245,22 +245,72 @@ class HeldQueueMigration:
 
     def _old_accounting(self,known,attempts):
         start=time.strftime('%Y-%m-%d',time.gmtime(float(self.plan.get('prepared_at',self.clock()))-86400))
-        result=self._call(['sacct','--allocations','--noheader','--parsable2','--user',self.account,
-            '--starttime='+start,'--format=JobIDRaw,User%64,State%32,ExitCode,JobName%128,Partition%64,Comment%128'])
-        if result.returncode:raise MigrationTransient('old_accounting_not_available')
-        names={a.get('name') for a in attempts if a.get('name')}
+        known={str(job) for job in known}
+        by_id={str(a['job_id']):a for a in attempts if a.get('job_id')}
+        uncertain_names={a['name'] for a in attempts if a.get('name') and not a.get('job_id')
+                         and a.get('status') in ('INTENT','UNCERTAIN')}
+        # Read exact durable IDs normally. Only an unacknowledged submission
+        # needs a date-bounded name lookup; unrelated user history cannot block
+        # this handoff merely because it came from another earlier partition.
+        ids=sorted(known|set(by_id))
+        base=['sacct','--allocations','--noheader','--parsable2','--user',self.account,
+              '--starttime='+start,
+              '--format=JobIDRaw,User%64,State%32,ExitCode,JobName%128,Partition%64,Comment%128']
+        outputs=[]
+        if ids:
+            result=self._call(base+['--jobs='+','.join(ids)])
+            if result.returncode:raise MigrationTransient('old_accounting_not_available')
+            outputs.append(result.stdout or '')
+        if uncertain_names:
+            result=self._call(base)
+            if result.returncode:raise MigrationTransient('unacknowledged_old_accounting_not_available')
+            outputs.append(result.stdout or '')
         rows={}
-        for raw in (result.stdout or '').splitlines():
+        for raw in '\n'.join(outputs).splitlines():
             f=[s.strip() for s in raw.split('|')]
             if len(f)<7 or not re.fullmatch(r'\d+',f[0]):continue
-            if f[0] not in known and f[6]!=self.old_marker and f[4] not in names:continue
-            if f[1] not in ('',self.account) or f[5]!=self.old_partition:
-                raise MigrationOwnershipError('old_accounting_owner_or_partition_mismatch')
+            if f[0] not in known and f[0] not in by_id and f[4] not in uncertain_names:continue
+            observed=dict(job_id=f[0],user=f[1],state=_migration_state(f[2]),
+                          exit_code=f[3],name=f[4],partition=f[5],marker=f[6])
+            def mismatch(reason,transient=False):
+                self._emit('OLD_ACCOUNTING_OBSERVATION_MISMATCH',reason=reason,
+                           observed=observed,expected_user=self.account,
+                           expected_marker=self.old_marker,live_partition=self.old_partition)
+                error=MigrationTransient if transient else MigrationOwnershipError
+                raise error(reason+'; observed='+json.dumps(observed,sort_keys=True))
+            if f[1] not in ('',self.account):
+                mismatch('old_accounting_owner_mismatch')
             if f[6] not in ('','(null)',self.old_marker):
-                raise MigrationOwnershipError('old_accounting_marker_mismatch')
-            if f[6] in ('','(null)') and f[4] not in names:
-                raise MigrationOwnershipError('commentless_old_job_has_no_durable_matching_name')
-            rows[f[0]]=dict(job_id=f[0],state=_migration_state(f[2]),exit_code=f[3],name=f[4])
+                mismatch('old_accounting_marker_mismatch')
+            attempt=by_id.get(f[0])
+            expected_name=attempt.get('name') if attempt else None
+            name_bound=(expected_name==f[4] or f[4] in uncertain_names)
+            if expected_name and expected_name!=f[4]:
+                mismatch('old_accounting_durable_job_name_mismatch')
+            if f[6] in ('','(null)') and not name_bound:
+                mismatch('commentless_old_job_has_no_durable_matching_name')
+            if observed['state'] not in TERMINAL:
+                if f[5]!=self.old_partition:
+                    # Accounting is observation only. It never authorizes a
+                    # signal, and an active historical allocation must drain.
+                    mismatch('active_old_accounting_unexpected_partition_wait',transient=True)
+            else:
+                # A terminal record is history, not an allocation to control.
+                # The same scientific marker survives resource migrations; old
+                # rows may name hpc_gpu1, an earlier partition, or no partition.
+                # Ownership was verified above. Preserve the recorded fields
+                # without inventing an allocation/compute-completion claim.
+                pass
+            previous=rows.get(f[0])
+            if previous and previous!=observed:
+                mismatch('old_accounting_conflicting_rows_wait',transient=True)
+            rows[f[0]]=observed
+            if observed['state'] in TERMINAL and f[5]!=self.old_partition:
+                historical=self.state.setdefault('historical_terminal_jobs',{})
+                if historical.get(f[0])!=observed:
+                    historical[f[0]]=observed
+                    self._emit('OWNED_TERMINAL_HISTORY_ACCEPTED',observed=observed,
+                               reason='historical_terminal_partition_preserved')
         return rows
 
     def _stop_old(self,queue):
@@ -372,7 +422,8 @@ class HeldQueueMigration:
         self.state['known_old_jobs']=sorted(known)
         if old_rows or unresolved or any(job not in observed or observed[job]['state'] not in TERMINAL for job in known):
             return self._save('WAITING_OLD_ALLOCATION_TERMINAL',unresolved_old_names=[a.get('name') for a in unresolved])
-        if not self._archive_and_open_gate({job:observed[job] for job in sorted(known)}):
+        if not self._archive_and_open_gate({job:row for job,row in sorted(observed.items())
+                                           if row['state'] in TERMINAL}):
             return self._save('WAITING_OLD_CONTROLLER_AND_ALLOCATION_LOCKS')
         released=self._release(summary,self._queue())
         return self._save('READY',released_jobs=released)
