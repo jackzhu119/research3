@@ -3,7 +3,7 @@
   "all_original_complete": false,
   "completed_by_kind": {
     "classical": 1,
-    "meta_engineering": 4,
+    "meta_engineering": 5,
     "meta_screening": 33,
     "meta_selection": 3,
     "pilot": 1,
@@ -12,10 +12,10 @@
   },
   "coordinator": {
     "phase": "META_SCREENING",
-    "progress_age_seconds": 12.4,
+    "progress_age_seconds": 13.4,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-25T04:48:31Z"
+    "updated_utc": "2026-10-25T04:51:30Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -53,7 +53,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 2348.4,
+    "progress_age_seconds": 2528.4,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -118,7 +118,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "31:39",
+        "elapsed": "34:39",
         "job_id": "772076",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a1",
@@ -128,41 +128,11 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T04:48:43Z",
+    "observed_utc": "2026-10-25T04:51:43Z",
     "status": "OBSERVED"
   },
   "mainline": {
     "active_actions": [
-      {
-        "configuration": {
-          "dimension": 8,
-          "method": "P+PCT",
-          "phase": "engineering",
-          "radius": 0.35,
-          "seed": 20261018
-        },
-        "job_id": "772076",
-        "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
-        "kind": "meta_engineering",
-        "method": "P+PCT",
-        "observations": [
-          {
-            "age_seconds": 3.4,
-            "path": "runs/meta/c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096/progress.json",
-            "values": {
-              "confirmed_outer_updates_observed": 98,
-              "inner_updates_actual": 3920,
-              "outer_attempts_dispatched": 99,
-              "outer_updates_completed": 98,
-              "replayed_observed_outer_updates": 0,
-              "status": "OUTER_ATTEMPT_DISPATCHED",
-              "validation_checkpoints": 1
-            }
-          }
-        ],
-        "slot": 0,
-        "status": "RUNNING"
-      },
       {
         "configuration": {
           "dimension": 8,
@@ -171,12 +141,13 @@
           "radius": 0.05,
           "seed": 20261018
         },
+        "job_id": "772076",
         "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
         "kind": "meta_screening",
         "method": "P",
         "observations": [
           {
-            "age_seconds": 2348.4,
+            "age_seconds": 2528.4,
             "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
             "values": {
               "confirmed_outer_updates_observed": 350,
@@ -189,7 +160,8 @@
             }
           }
         ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "slot": 0,
+        "status": "RUNNING"
       },
       {
         "configuration": {
@@ -230,6 +202,7 @@
         "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
         "kind": "meta_screening",
         "method": "P+PCT",
+        "observations": [],
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
@@ -357,13 +330,13 @@
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       }
     ],
-    "completed_observed_actions": 46,
+    "completed_observed_actions": 47,
     "coordinator_declares_complete": false,
     "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
     "observed_actions": 61
   },
   "mainline_complete": false,
-  "parallel_plan_complete_tasks": 46,
+  "parallel_plan_complete_tasks": 47,
   "parallel_plan_total_tasks": 61,
   "planned_counts": {
     "calibration_profile": 14,
@@ -395,16 +368,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1792903723.3796053,
+  "sampled_unix": 1792903903.3809772,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 250212.4,
+    "age_seconds": 250392.4,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 250556.4,
+    "age_seconds": 250736.4,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -949,23 +922,8 @@
       "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
       "kind": "meta_engineering",
       "method": "P+PCT",
-      "observations": [
-        {
-          "age_seconds": 3.4,
-          "path": "runs/meta/c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096/progress.json",
-          "values": {
-            "confirmed_outer_updates_observed": 98,
-            "inner_updates_actual": 3920,
-            "outer_attempts_dispatched": 99,
-            "outer_updates_completed": 98,
-            "replayed_observed_outer_updates": 0,
-            "status": "OUTER_ATTEMPT_DISPATCHED",
-            "validation_checkpoints": 1
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "configuration": {
@@ -975,12 +933,13 @@
         "radius": 0.05,
         "seed": 20261018
       },
+      "job_id": "772076",
       "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
       "kind": "meta_screening",
       "method": "P",
       "observations": [
         {
-          "age_seconds": 2348.4,
+          "age_seconds": 2528.4,
           "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
           "values": {
             "confirmed_outer_updates_observed": 350,
@@ -993,7 +952,8 @@
           }
         }
       ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "configuration": {
@@ -1034,6 +994,7 @@
       "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
@@ -1163,5 +1124,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-25T04:48:43Z"
+  "updated_utc": "2026-10-25T04:51:43Z"
 }
