@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-06",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 120,
+  "complete_tasks": 123,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 5.8,
+    "progress_age_seconds": 4.8,
     "progress_path": "runs/followup_20261024_r6/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T16:54:32Z"
+    "updated_utc": "2026-10-25T16:57:33Z"
   },
   "experiment": "paper3-round6",
   "families": {
@@ -16,7 +16,7 @@
       "total": 6
     },
     "core": {
-      "complete": 42,
+      "complete": 45,
       "total": 60
     },
     "reference": {
@@ -35,33 +35,47 @@
   "gpu_slots": {
     "0": {
       "job_id": "772073",
-      "pid": 43624,
+      "pid": 45581,
       "status": "RUNNING",
-      "task_key": "core-joint-uq_joint-main-seed20261019",
+      "task_key": "core-joint-uq_isotropic-main-seed20261019",
       "worker_progress": {
+        "budget": 8,
         "outer_update": 0,
-        "stage": "loading",
-        "status": "STARTING",
-        "updated_utc": "2026-10-25T16:53:59Z"
+        "session": 79,
+        "sessions_total": 105,
+        "stage": "holdout",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-25T16:56:48Z"
       }
     },
     "1": {
       "job_id": "772074",
-      "pid": 43669,
+      "pid": 45561,
       "status": "RUNNING",
-      "task_key": "core-joint-uq_joint-main-seed20261020",
-      "worker_progress": {}
+      "task_key": "core-joint-uq_isotropic-main-seed20261018",
+      "worker_progress": {
+        "budget": 8,
+        "outer_update": 0,
+        "session": 95,
+        "sessions_total": 105,
+        "stage": "holdout",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-25T16:56:48Z"
+      }
     },
     "2": {
       "job_id": "772075",
-      "pid": 43622,
+      "pid": 45821,
       "status": "RUNNING",
-      "task_key": "core-joint-uq_joint-main-seed20261018",
+      "task_key": "core-joint-uq_isotropic-main-seed20261020",
       "worker_progress": {
+        "budget": 8,
         "outer_update": 0,
-        "stage": "loading",
-        "status": "STARTING",
-        "updated_utc": "2026-10-25T16:53:59Z"
+        "session": 85,
+        "sessions_total": 105,
+        "stage": "holdout",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-25T16:56:55Z"
       }
     }
   },
@@ -110,7 +124,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1:41:07",
+        "elapsed": "1:44:07",
         "job_id": "772075",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s2-a1",
@@ -120,7 +134,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1:41:31",
+        "elapsed": "1:44:31",
         "job_id": "772073",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s0-a1",
@@ -130,7 +144,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1:41:31",
+        "elapsed": "1:44:31",
         "job_id": "772074",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s1-a1",
@@ -140,7 +154,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T16:54:38Z",
+    "observed_utc": "2026-10-25T16:57:38Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -166,7 +180,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 6,
-  "sampled_unix": 1792947277.8213863,
+  "sampled_unix": 1792947457.8215106,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1258,23 +1272,8 @@
       "index": 120,
       "job_id": "772075",
       "key": "core-joint-uq_joint-main-seed20261018",
-      "observations": [
-        {
-          "age_seconds": 6.8,
-          "path": "runs/followup_20261024_r6/core-joint-uq_joint-main-seed20261018/progress.json",
-          "values": {
-            "budget": 4,
-            "outer_update": 0,
-            "session": 29,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-25T16:54:31Z"
-          }
-        }
-      ],
       "slot": 2,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -1282,18 +1281,60 @@
       "index": 121,
       "job_id": "772073",
       "key": "core-joint-uq_joint-main-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 122,
+      "job_id": "772074",
+      "key": "core-joint-uq_joint-main-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 123,
+      "job_id": "772074",
+      "key": "core-joint-uq_isotropic-main-seed20261018",
       "observations": [
         {
-          "age_seconds": 6.8,
-          "path": "runs/followup_20261024_r6/core-joint-uq_joint-main-seed20261019/progress.json",
+          "age_seconds": 8.8,
+          "path": "runs/followup_20261024_r6/core-joint-uq_isotropic-main-seed20261018/progress.json",
           "values": {
-            "budget": 4,
+            "budget": 16,
             "outer_update": 0,
-            "session": 21,
+            "session": 105,
             "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-25T16:54:31Z"
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-25T16:57:29Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 124,
+      "job_id": "772073",
+      "key": "core-joint-uq_isotropic-main-seed20261019",
+      "observations": [
+        {
+          "age_seconds": 4.8,
+          "path": "runs/followup_20261024_r6/core-joint-uq_isotropic-main-seed20261019/progress.json",
+          "values": {
+            "budget": 16,
+            "outer_update": 0,
+            "session": 105,
+            "sessions_total": 105,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-25T16:57:33Z"
           }
         }
       ],
@@ -1303,56 +1344,26 @@
     {
       "attempt": 1,
       "family": "core",
-      "index": 122,
-      "job_id": "772074",
-      "key": "core-joint-uq_joint-main-seed20261020",
+      "index": 125,
+      "job_id": "772075",
+      "key": "core-joint-uq_isotropic-main-seed20261020",
       "observations": [
         {
-          "age_seconds": 6.8,
-          "path": "runs/followup_20261024_r6/core-joint-uq_joint-main-seed20261020/progress.json",
+          "age_seconds": 12.8,
+          "path": "runs/followup_20261024_r6/core-joint-uq_isotropic-main-seed20261020/progress.json",
           "values": {
-            "budget": 4,
+            "budget": 16,
             "outer_update": 0,
-            "session": 35,
+            "session": 30,
             "sessions_total": 105,
             "stage": "holdout",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-25T16:54:31Z"
+            "updated_utc": "2026-10-25T16:57:25Z"
           }
         }
       ],
-      "slot": 1,
+      "slot": 2,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 123,
-      "job_id": null,
-      "key": "core-joint-uq_isotropic-main-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 124,
-      "job_id": null,
-      "key": "core-joint-uq_isotropic-main-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 125,
-      "job_id": null,
-      "key": "core-joint-uq_isotropic-main-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
     },
     {
       "attempt": 0,
@@ -1390,6 +1401,7 @@
       "index": 129,
       "job_id": null,
       "key": "core-joint-uq_mean-main-seed20261018",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1399,6 +1411,7 @@
       "index": 130,
       "job_id": null,
       "key": "core-joint-uq_mean-main-seed20261019",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1408,6 +1421,7 @@
       "index": 131,
       "job_id": null,
       "key": "core-joint-uq_mean-main-seed20261020",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -2011,5 +2025,5 @@
   ],
   "total_tasks": 198,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T16:54:38Z"
+  "updated_utc": "2026-10-25T16:57:38Z"
 }
