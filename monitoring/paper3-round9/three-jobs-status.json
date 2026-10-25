@@ -4,10 +4,10 @@
   "complete_tasks": 0,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 31.0,
+    "progress_age_seconds": 24.8,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T22:42:54Z"
+    "updated_utc": "2026-10-25T22:45:54Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -43,14 +43,16 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 18277,
+      "pid": 22187,
       "status": "RUNNING",
-      "task_key": "feature-reference-raw-seed20261018",
+      "task_key": "feature-reference-raw-seed20261020",
       "worker_progress": {
         "outer_update": 0,
-        "stage": "loading",
-        "status": "STARTING",
-        "updated_utc": "2026-10-25T22:42:14Z"
+        "session": 395,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_features",
+        "status": "FAILED",
+        "updated_utc": "2026-10-25T22:45:14Z"
       }
     },
     "1": {
@@ -125,7 +127,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "1:17",
+        "elapsed": "4:10",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -135,7 +137,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T22:43:25Z",
+    "observed_utc": "2026-10-25T22:46:18Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -161,27 +163,38 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792968205.020304,
+  "sampled_unix": 1792968378.7948537,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 1,
+      "attempt": 2,
       "family": "feature_reference",
       "index": 0,
       "job_id": "773686",
       "key": "feature-reference-raw-seed20261018",
+      "slot": 0,
+      "status": "RETRYING"
+    },
+    {
+      "attempt": 2,
+      "family": "feature_reference",
+      "index": 1,
+      "job_id": "773686",
+      "key": "feature-reference-raw-seed20261019",
       "observations": [
         {
-          "age_seconds": 11.0,
-          "path": "runs/followup_20261025_r9/feature-reference-raw-seed20261018/progress.json",
+          "age_seconds": 28.8,
+          "path": "runs/followup_20261025_r9/feature-reference-raw-seed20261019/progress.json",
           "values": {
             "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T22:43:14Z"
+            "session": 395,
+            "sessions_total": 396,
+            "stage": "meta_train_prefix_features",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T22:45:50Z"
           }
         }
       ],
@@ -189,31 +202,22 @@
       "status": "RUNNING"
     },
     {
-      "attempt": 0,
-      "family": "feature_reference",
-      "index": 1,
-      "job_id": null,
-      "key": "feature-reference-raw-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
+      "attempt": 1,
       "family": "feature_reference",
       "index": 2,
-      "job_id": null,
+      "job_id": "773686",
       "key": "feature-reference-raw-seed20261020",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "feature_reference",
       "index": 3,
-      "job_id": null,
+      "job_id": "773686",
       "key": "feature-reference-ea-seed20261018",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
       "attempt": 0,
@@ -14125,5 +14129,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T22:43:25Z"
+  "updated_utc": "2026-10-25T22:46:18Z"
 }
