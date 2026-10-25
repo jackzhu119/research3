@@ -20,7 +20,7 @@ SOURCES = {
     1: ("paper3-r1-progress", "monitoring/paper3-round1/status.json"),
     2: ("paper3-v2-progress", "monitoring/paper3-followup-v2/status.json"),
     **{n: (f"paper3-r{n}-progress", f"monitoring/paper3-round{n}/status.json") for n in (3, 4, 7)},
-    **{n: (f"paper3-r{n}-progress", f"monitoring/paper3-round{n}/three-jobs-status.json") for n in (5, 6, 8)},
+    **{n: (f"paper3-r{n}-progress", f"monitoring/paper3-round{n}/three-jobs-status.json") for n in (5, 6, 8, 9)},
 }
 R1_PHASES = {
     "EXISTING_PREREQUISITES_PENDING": "既有前序产物待齐备",
@@ -172,19 +172,32 @@ def normalize(number, snapshot, known=None):
     return row
 
 
-def collect(client, previous, known, now):
+def collect(client, previous, known, now, navigation=None):
     old_rounds = {r["round"]: r for r in previous.get("rounds", [])}
     rows = []
+    declared_rounds = {r["round"]: r for r in (navigation or {}).get("rounds", [])}
     for number, (branch, path) in SOURCES.items():
         old = old_rounds.get(number, {})
         row = dict(old)
         completion = known.get("rounds", {}).get(str(number), {})
+        declaration = declared_rounds.get(number, {})
+        designed = declaration.get("status") == "DESIGNED_NOT_SUBMITTED"
         try:
             value, commit = client.file(branch, path)
-            if value is None:
+            if value is None and designed and not old.get("source_commit"):
+                row = {"round": number, "status": "方案已发布；尚未提交学校作业",
+                       "declared_status": "DESIGNED_NOT_SUBMITTED", "progress_expected": False,
+                       "complete_tasks": None, "total_tasks": declaration.get("total_tasks"),
+                       "queue": {"observed": False, "running": None, "pending": None, "jobs": []},
+                       "updated_utc": None, "source_branch": branch, "source_path": path,
+                       "source_state": "NOT_YET_PUBLISHED",
+                       "source_url": declaration.get("source_url", f"https://github.com/{client.repository}/tree/{branch}")}
+            elif value is None:
                 raise ValueError("ProgressNotPublished")
-            row = normalize(number, value, completion)
-            row.update(source_branch=branch, source_path=path, source_commit=commit,
+            else:
+                row = normalize(number, value, completion)
+            if value is not None:
+                row.update(source_branch=branch, source_path=path, source_commit=commit,
                        source_url=f"https://github.com/{client.repository}/blob/{branch}/{path}")
             row.pop("source_error", None)
         except Exception as error:
@@ -195,17 +208,28 @@ def collect(client, previous, known, now):
                        source_error=type(error).__name__, status=row.get("status", "尚无可读回传"))
         age = timestamp(now)
         updated = timestamp(row.get("updated_utc"))
-        row["snapshot_stale"] = updated is None or age - updated > 900
+        row["snapshot_stale"] = (updated is None or age - updated > 900) if row.get("progress_expected", True) else False
         if number == 1:
             row["last_manual_resume_observation"] = known.get("round1_resume_observation")
-        for filename, field in (("LATEST.json", "full_archive"),
-                                ("AUTO_SUMMARY_LATEST.json", "automatic_summary"),
-                                ("PAPER_DATA_LATEST.json", "paper_reports")):
+        receipts = [("LATEST.json", "full_archive"),
+                    ("AUTO_SUMMARY_LATEST.json", "automatic_summary"),
+                    ("PAPER_DATA_LATEST.json", "paper_reports")]
+        if number == 7:
+            receipts.append(("REPORT_JSON_LATEST.json", "aggregate_report"))
+        for filename, field in receipts:
             try:
                 receipt, commit = client.file("paper3-results", f"results/paper3/round-{number:02d}/{filename}")
                 verified = bool(receipt and receipt.get("round") == number)
                 if field == "full_archive":
-                    verified = verified and receipt.get("status") == "COMPLETE_OUTPUT_UPLOADED"
+                    verified = verified and (receipt.get("status") == "COMPLETE_OUTPUT_UPLOADED" or
+                        (receipt.get("status") == "FULL_DECLARED_SCIENTIFIC_OUTPUT_UPLOADED"
+                         and receipt.get("scientific_completion_claimed") is True
+                         and receipt.get("full_raw_results_uploaded") is True))
+                elif field == "aggregate_report":
+                    if receipt and (receipt.get("round") != number or receipt.get("status") != "REPORT_JSON_LOSSLESS_UPLOADED"
+                                    or receipt.get("all_original_report_bytes_uploaded") is not True):
+                        raise ValueError("UnrecognizedAggregateReportReceipt")
+                    verified = verified and receipt.get("status") == "REPORT_JSON_LOSSLESS_UPLOADED" and receipt.get("all_original_report_bytes_uploaded") is True
                 elif field == "automatic_summary":
                     verified = verified and receipt.get("status") == "AUTOMATIC_EXISTING_RESULT_SUMMARY_UPLOADED"
                 else:
@@ -239,7 +263,9 @@ def compact_table(data):
         number = row["round"]
         count = f'{row["complete_tasks"]}/{row["total_tasks"]}' if row.get("complete_tasks") is not None else "分阶段，不合并百分比"
         queue = row.get("queue", {})
-        state = f'{queue["running"]}运行 / {queue["pending"]}排队' if queue.get("observed") else "本源未查询队列"
+        if row.get("declared_status") == "DESIGNED_NOT_SUBMITTED":
+            count = f'计划{row["total_tasks"]}项；尚未执行' if row.get("total_tasks") is not None else "尚未执行"
+        state = f'{queue["running"]}运行 / {queue["pending"]}排队' if queue.get("observed") else ("尚未提交；无队列观测" if row.get("declared_status") == "DESIGNED_NOT_SUBMITTED" else "本源未查询队列")
         tag = "；快照滞后" if row.get("snapshot_stale") else ""
         if row.get("source_error"):
             tag += "；读取失败，保留上次记录"
@@ -252,6 +278,14 @@ def compact_table(data):
             paper_label = "论文报告已上传" if paper.get("complete") else "部分论文文件已上传"
             paper_url = f"https://github.com/{data['repository']}/blob/paper3-results/results/paper3/round-{number:02d}/PAPER_DATA_ZH.md"
             paper_text = f"[{paper_label}]({paper_url})"
+        aggregate = row.get("aggregate_report", {})
+        if aggregate.get("published"):
+            aggregate_url = f"https://github.com/{data['repository']}/blob/paper3-results/results/paper3/round-{number:02d}/REPORT_JSON_ZH.md"
+            paper_text += f"；[聚合JSON已补传]({aggregate_url})"
+        elif number == 7:
+            paper_text += "；聚合JSON未见补传完成回执"
+        if aggregate.get("read_error"):
+            paper_text += "；聚合JSON回执读取失败，状态待核实"
         if paper.get("read_error"):
             paper_text += "；读取失败，保留上次记录" if paper.get("published") else "；读取失败，状态待核实"
         status = row.get("status", "未知") + tag
@@ -261,10 +295,10 @@ def compact_table(data):
 
 
 def render(data):
-    lines = ["# 八轮最新回传状态", "", f'最近汇集：**{local_time(data["refreshed_utc"])} 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。', "",
+    lines = ["# 各轮最新回传状态", "", f'最近汇集：**{local_time(data["refreshed_utc"])} 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。', "",
              compact_table(data), "", "任务完成、报告完成、Slurm作业运行和完整文件上传分别记录。控制器的 RUNNING 不代表 GPU 已开始优化。任务数量不能换算成剩余时间。",
              "", "第一轮按阶段保存断点；进程心跳不等于模型更新。第七轮旧监控计数与已完成证据冲突时，保留两个口径，不让旧快照抹去已确认完成项。",
-             "", "论文报告以 PAPER_DATA_LATEST.json 回执为准，包含该回执声明的既有报告、CSV和任务元数据；部分回执不表示已传齐所需文件。论文报告与 AUTO_SUMMARY_LATEST.json 分析摘要都不表示完整预测或模型断点已备份。完整包以 paper3-results 各轮 LATEST.json 的上传器回执为准。回执是已发布声明，本页面不重新下载或核验大型归档。"]
+             "", "论文报告以 PAPER_DATA_LATEST.json 回执为准，包含该回执声明的既有报告、CSV和任务元数据；部分回执不表示已传齐所需文件。第七轮大聚合JSON另以 REPORT_JSON_LATEST.json 补传回执为准，CSV回执不等于该JSON已经补齐。论文报告与 AUTO_SUMMARY_LATEST.json 分析摘要都不表示完整预测或模型断点已备份。完整包以 paper3-results 各轮 LATEST.json 的上传器回执为准。回执是已发布声明，本页面不重新下载或核验大型归档。"]
     upload = data.get("last_school_upload_observation")
     if upload:
         lines += ["", "## 学校完整上传器：最后人工观测", "", "```json", json.dumps(upload, ensure_ascii=False, indent=2), "```", "", "这段学校本地打包进度不是实时远端推送；后续完整上传完成后，以上各轮归档回执会自动刷新。"]
@@ -304,7 +338,8 @@ def main():
     known = read_json(args.root / "docs/records/KNOWN_COMPLETIONS_20261025.json", {})
     previous = read_json(args.root / "docs/LIVE_STATUS.json", {})
     client = Client(args.repository, os.environ.get("GITHUB_TOKEN"))
-    value = collect(client, previous, known, utc_now())
+    navigation = read_json(args.root / "docs/EXPERIMENT_STATUS.json", {})
+    value = collect(client, previous, known, utc_now(), navigation)
     changed = update(args.root, value)
     print(json.dumps({"status": "UPDATED" if changed else "UNCHANGED", "rounds": len(value["rounds"]),
         "source_read_errors": sum(bool(r.get("source_error")) for r in value["rounds"]),

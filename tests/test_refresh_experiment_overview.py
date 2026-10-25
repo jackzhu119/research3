@@ -143,5 +143,57 @@ class StatusTests(unittest.TestCase):
             self.assertEqual(before, [p.stat().st_mtime_ns for p in paths])
 
 
+class RoundNineAndSupplementTests(unittest.TestCase):
+    def navigation(self):
+        return {"rounds": [{"round": 9, "status": "DESIGNED_NOT_SUBMITTED", "total_tasks": 1836,
+            "source_url": "https://github.com/jackzhu119/research3/tree/paper3-round9-20261025"}]}
+
+    def test_existing_round_monitor_paths_are_unchanged(self):
+        self.assertEqual(m.SOURCES[1], ("paper3-r1-progress", "monitoring/paper3-round1/status.json"))
+        self.assertEqual(m.SOURCES[6], ("paper3-r6-progress", "monitoring/paper3-round6/three-jobs-status.json"))
+        self.assertEqual(m.SOURCES[7], ("paper3-r7-progress", "monitoring/paper3-round7/status.json"))
+        self.assertEqual(m.SOURCES[9], ("paper3-r9-progress", "monitoring/paper3-round9/three-jobs-status.json"))
+
+    def test_declared_unsubmitted_round_has_no_fake_failure_or_queue(self):
+        data=m.collect(FixtureClient(), {}, {}, "2026-10-25T08:30:00Z", self.navigation())
+        row=data['rounds'][8]
+        self.assertEqual(row['declared_status'], 'DESIGNED_NOT_SUBMITTED')
+        self.assertFalse(row['queue']['observed'])
+        self.assertFalse(row['snapshot_stale'])
+        self.assertNotIn('source_error',row)
+        self.assertIsNone(row['complete_tasks'])
+        self.assertIn('尚未提交',m.compact_table(data))
+        self.assertIn('计划1836项',m.compact_table(data))
+
+    def test_observed_monitor_overrides_design_declaration(self):
+        c=FixtureClient(snapshots={'paper3-r9-progress':{'complete_tasks':0,'total_tasks':1836,
+            'updated_utc':'2026-10-25T08:29:00Z','live_queue':{'status':'OBSERVED','jobs':[{'job_id':'900','state':'PENDING'}]}}})
+        row=m.collect(c,{}, {}, '2026-10-25T08:30:00Z',self.navigation())['rounds'][8]
+        self.assertEqual(row['status'],'作业排队')
+        self.assertNotIn('declared_status',row)
+
+    def test_r7_aggregate_receipt_is_distinct_from_csv_and_full_archive(self):
+        path='results/paper3/round-07/REPORT_JSON_LATEST.json'
+        r={'round':7,'status':'REPORT_JSON_LOSSLESS_UPLOADED','all_original_report_bytes_uploaded':True,'full_raw_results_uploaded':False}
+        data=m.collect(FixtureClient(receipts={path:r}),{}, {},'2026-10-25T08:30:00Z')
+        row=data['rounds'][6]
+        self.assertTrue(row['aggregate_report']['published'])
+        self.assertFalse(row['paper_reports']['published'])
+        self.assertFalse(row['full_archive']['published'])
+        self.assertIn('聚合JSON已补传',m.compact_table(data))
+        self.assertIn('REPORT_JSON_ZH.md',m.compact_table(data))
+        bad=m.collect(FixtureClient(receipts={path:{**r,'all_original_report_bytes_uploaded':False}}),{}, {},'2026-10-25T08:30:00Z')['rounds'][6]
+        self.assertFalse(bad['aggregate_report']['published'])
+        self.assertIn('read_error',bad['aggregate_report'])
+
+    def test_new_full_archive_receipt_requires_completion_and_scope_flags(self):
+        path='results/paper3/round-09/LATEST.json'
+        r={'round':9,'status':'FULL_DECLARED_SCIENTIFIC_OUTPUT_UPLOADED','scientific_completion_claimed':True,'full_raw_results_uploaded':True}
+        good=m.collect(FixtureClient(receipts={path:r}),{}, {},'2026-10-25T08:30:00Z')['rounds'][8]
+        self.assertTrue(good['full_archive']['published'])
+        bad=m.collect(FixtureClient(receipts={path:{**r,'scientific_completion_claimed':False}}),{}, {},'2026-10-25T08:30:00Z')['rounds'][8]
+        self.assertFalse(bad['full_archive']['published'])
+
+
 if __name__ == "__main__":
     unittest.main()

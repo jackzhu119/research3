@@ -1,35 +1,36 @@
-# 八轮最新回传状态
+# 各轮最新回传状态
 
-最近汇集：**10-25 14:20:42 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。
+最近汇集：**10-25 16:24:11 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。
 
 | 轮次 | 最近确认状态 | 任务完成 | 队列观测 | 来源时间（北京） | 论文报告 | 完整结果包 |
 |---|---|---|---|---|---|---|
-| [第1轮](https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json) | 阶段记录：元学习参数筛选 | 分阶段，不合并百分比 | 1运行 / 2排队 | 10-25 14:12:37 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
-| [第2轮](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) | 任务完成；快照滞后 | 66/66 | 本源未查询队列 | 10-25 10:16:55 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
-| [第3轮](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) | 任务完成；快照滞后 | 174/174 | 本源未查询队列 | 10-25 08:09:10 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第1轮](https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json) | 阶段记录：元学习参数筛选 | 分阶段，不合并百分比 | 0运行 / 3排队 | 10-25 16:15:24 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第2轮](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) | 任务完成；快照滞后 | 66/66 | 本源未查询队列 | 10-25 10:16:55 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-02/PAPER_DATA_ZH.md) | 未见完整上传完成回执 |
+| [第3轮](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) | 任务完成；快照滞后 | 174/174 | 本源未查询队列 | 10-25 08:09:10 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-03/PAPER_DATA_ZH.md) | 未见完整上传完成回执 |
 | [第4轮](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) | 最近回传状态；未确认当前调度；快照滞后 | 48/204 | 本源未查询队列 | 10-25 11:09:51 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
-| [第5轮](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json) | 作业排队 | 0/105 | 0运行 / 3排队 | 10-25 14:13:44 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
-| [第6轮](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json) | 作业排队 | 0/198 | 0运行 / 3排队 | 10-25 14:13:44 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
-| [第7轮](https://github.com/jackzhu119/research3/blob/paper3-r7-progress/monitoring/paper3-round7/status.json) | 任务完成；快照滞后 | 273/273 | 本源未查询队列 | 10-25 09:03:06 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
-| [第8轮](https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json) | 作业排队 | 0/2835 | 0运行 / 3排队 | 10-25 14:14:33 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第5轮](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json) | 作业运行；优化进度另见任务计数 | 0/105 | 3运行 / 0排队 | 10-25 16:16:31 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第6轮](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json) | 作业排队 | 0/198 | 0运行 / 3排队 | 10-25 16:16:31 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第7轮](https://github.com/jackzhu119/research3/blob/paper3-r7-progress/monitoring/paper3-round7/status.json) | 任务完成；快照滞后 | 273/273 | 本源未查询队列 | 10-25 09:03:06 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-07/PAPER_DATA_ZH.md)；聚合JSON未见补传完成回执 | 未见完整上传完成回执 |
+| [第8轮](https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json) | 作业运行；优化进度另见任务计数 | 3/2835 | 1运行 / 2排队 | 10-25 16:17:15 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第9轮](https://github.com/jackzhu119/research3/tree/paper3-round9-20261025/experiments/followup_20261025_r9) | 方案已发布；尚未提交学校作业 | 计划1548项；尚未执行 | 尚未提交；无队列观测 | 未提供 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
 
 任务完成、报告完成、Slurm作业运行和完整文件上传分别记录。控制器的 RUNNING 不代表 GPU 已开始优化。任务数量不能换算成剩余时间。
 
 第一轮按阶段保存断点；进程心跳不等于模型更新。第七轮旧监控计数与已完成证据冲突时，保留两个口径，不让旧快照抹去已确认完成项。
 
-论文报告以 PAPER_DATA_LATEST.json 回执为准，包含该回执声明的既有报告、CSV和任务元数据；部分回执不表示已传齐所需文件。论文报告与 AUTO_SUMMARY_LATEST.json 分析摘要都不表示完整预测或模型断点已备份。完整包以 paper3-results 各轮 LATEST.json 的上传器回执为准。回执是已发布声明，本页面不重新下载或核验大型归档。
+论文报告以 PAPER_DATA_LATEST.json 回执为准，包含该回执声明的既有报告、CSV和任务元数据；部分回执不表示已传齐所需文件。第七轮大聚合JSON另以 REPORT_JSON_LATEST.json 补传回执为准，CSV回执不等于该JSON已经补齐。论文报告与 AUTO_SUMMARY_LATEST.json 分析摘要都不表示完整预测或模型断点已备份。完整包以 paper3-results 各轮 LATEST.json 的上传器回执为准。回执是已发布声明，本页面不重新下载或核验大型归档。
 
 ## 学校完整上传器：最后人工观测
 
 ```json
 {
-  "observed_at": "2026-10-25T13:28:46+08:00",
+  "observed_at": "2026-10-25T15:44:38+08:00",
   "round": 2,
   "event": "PACK_PROGRESS",
-  "files": 57227,
+  "files": 92377,
   "total_files": 152481,
-  "source_bytes": 1594428302,
-  "archive_bytes": 310071381,
+  "source_bytes": 2577783849,
+  "archive_bytes": 502931153,
   "process_pid": 645884,
   "process_present": true,
   "rounds_pending_in_order": [
@@ -37,8 +38,8 @@
     3,
     7
   ],
-  "scope": "local packing before network upload; latest known manual snapshot, not live",
-  "source": "user_pasted_school_readonly_diagnostic"
+  "scope": "local packing before network upload; latest user-provided manual snapshot, not live",
+  "source": "user_pasted_school_readonly_diagnostic_20261025_1544"
 }
 ```
 

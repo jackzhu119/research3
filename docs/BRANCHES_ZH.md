@@ -1,6 +1,6 @@
 # 论文3分支分类目录
 
-分支审计：2026-10-25 13:41:53（北京时间）；共 **26** 个分支。默认分支为 `research/paper3-protocol-v2-w0`。分支名称保留，已发布固定提交下载、运行监控和实验输出通过统一导航衔接。
+分支审计：2026-10-25 16:28（北京时间）；共 **27** 个分支。默认分支为 `research/paper3-protocol-v2-w0`。这是审计时快照，各进度分支随后仍会更新。原有分支和固定下载提交保持可访问。
 
 ## 默认主页与核心协议（1）
 
@@ -8,15 +8,16 @@
 
 | 分支 | 用途 | 审计时提交 |
 |---|---|---|
-| [research/paper3-protocol-v2-w0](https://github.com/jackzhu119/research3/tree/research/paper3-protocol-v2-w0) | 默认主页、核心 p3work/ 与 protocol/、八轮实验总索引。 | [`c961ceba6c96`](https://github.com/jackzhu119/research3/commit/c961ceba6c96cd803c09bb608ffec61d7ee6f659) |
+| [research/paper3-protocol-v2-w0](https://github.com/jackzhu119/research3/tree/research/paper3-protocol-v2-w0) | 默认主页、核心 p3work/ 与 protocol/、八轮实验总索引。 | [`1c5d2bc01eaf`](https://github.com/jackzhu119/research3/commit/1c5d2bc01eaf5e2ad381d08b7949cb9be1b590e4) |
 
-## 独立实验发布（1）
+## 独立实验发布（2）
 
-第八轮单独发布；第二至七轮的代码和设计位于各轮进度分支的 experiments/ 子目录。
+第八、九轮各自独立发布；第二至七轮代码和设计位于各轮进度分支 experiments/ 子目录。
 
 | 分支 | 用途 | 审计时提交 |
 |---|---|---|
-| [paper3-round8-20261025](https://github.com/jackzhu119/research3/tree/paper3-round8-20261025) | 第八轮部分协方差输运、Bures 几何与保持协方差的类别方向校正；experiments/followup_20261025_r8/。 | [`f1d5f6b543ee`](https://github.com/jackzhu119/research3/commit/f1d5f6b543ee90d4b7371da4331e20da0cb39bf9) |
+| [paper3-round8-20261025](https://github.com/jackzhu119/research3/tree/paper3-round8-20261025) | 第八轮部分协方差输运、Bures 几何与保持协方差的类别方向校正；experiments/followup_20261025_r8/。 | [`8f922f765c0c`](https://github.com/jackzhu119/research3/commit/8f922f765c0c8f87a4aba783cfd58c700ad73af2) |
+| [paper3-round9-20261025](https://github.com/jackzhu119/research3/tree/paper3-round9-20261025) | 第九轮源残差GP、支持信息局部锚定；1548项设计与开发验证，未提交学校GPU作业。 | [`a6563a9e20b5`](https://github.com/jackzhu119/research3/commit/a6563a9e20b5f3cbf3249cd06714d3a179c45311) |
 
 ## 按轮实时回传与对应实验源码（8）
 
@@ -24,14 +25,14 @@
 
 | 分支 | 用途 | 审计时提交 |
 |---|---|---|
-| [paper3-r1-progress](https://github.com/jackzhu119/research3/tree/paper3-r1-progress) | 第1轮并行续跑状态；monitoring/paper3-round1/status.json。 | [`0799bf9cfc73`](https://github.com/jackzhu119/research3/commit/0799bf9cfc732908f1b709b4dc4cb05b53bddf97) |
-| [paper3-r3-progress](https://github.com/jackzhu119/research3/tree/paper3-r3-progress) | 第3轮代码 experiments/followup_20261024_r3/；状态 monitoring/paper3-round3/status.json。 | [`b56484bff67f`](https://github.com/jackzhu119/research3/commit/b56484bff67fd593b70e972a9e4c62d9d44d98aa) |
-| [paper3-r4-progress](https://github.com/jackzhu119/research3/tree/paper3-r4-progress) | 第4轮代码 experiments/followup_20261024_r4/；状态与资源交接记录。 | [`7bcf9580e6f8`](https://github.com/jackzhu119/research3/commit/7bcf9580e6f83b5e037837b722519987f1f2e409) |
-| [paper3-r5-progress](https://github.com/jackzhu119/research3/tree/paper3-r5-progress) | 第5轮代码 experiments/followup_20261024_r5/；状态与三作业交接记录。 | [`322bdee29070`](https://github.com/jackzhu119/research3/commit/322bdee29070c7c59cb1502497717303f13be2d7) |
-| [paper3-r6-progress](https://github.com/jackzhu119/research3/tree/paper3-r6-progress) | 第6轮代码及 Pan 缓存 experiments/followup_20261024_r6/；状态与三作业交接记录。 | [`e46b70333449`](https://github.com/jackzhu119/research3/commit/e46b70333449b8d812144920218ba45ed5eb2f3f) |
-| [paper3-r7-progress](https://github.com/jackzhu119/research3/tree/paper3-r7-progress) | 第7轮时空与可辨识性实验源码、缓存与异步摘要；experiments/followup_20261024_r7/。 | [`f6804b9a72ff`](https://github.com/jackzhu119/research3/commit/f6804b9a72ff118b732643e6b8e05b9f0f6c3cc6) |
-| [paper3-r8-progress](https://github.com/jackzhu119/research3/tree/paper3-r8-progress) | 第8轮三个单卡作业的轻量运行状态；实验实现从独立第8轮发布分支读取。 | [`347928bb8e62`](https://github.com/jackzhu119/research3/commit/347928bb8e626560bac579cb5cb4660439fccf05) |
-| [paper3-v2-progress](https://github.com/jackzhu119/research3/tree/paper3-v2-progress) | 第2轮代码 experiments/followup_20261023/；状态 monitoring/paper3-followup-v2/status.json。 | [`4706017ef85f`](https://github.com/jackzhu119/research3/commit/4706017ef85ff2fcf702e55da9258fd101fdbbf0) |
+| [paper3-r1-progress](https://github.com/jackzhu119/research3/tree/paper3-r1-progress) | 第1轮并行续跑状态；monitoring/paper3-round1/status.json。 | [`e6ce0aeb76b9`](https://github.com/jackzhu119/research3/commit/e6ce0aeb76b9f0ae3fe794f069aa795e63534e18) |
+| [paper3-r3-progress](https://github.com/jackzhu119/research3/tree/paper3-r3-progress) | 第3轮代码 experiments/followup_20261024_r3/；状态 monitoring/paper3-round3/status.json。 | [`c79a092eb243`](https://github.com/jackzhu119/research3/commit/c79a092eb243b9a8eefe7a7fdc14990fe1ffe0dd) |
+| [paper3-r4-progress](https://github.com/jackzhu119/research3/tree/paper3-r4-progress) | 第4轮代码 experiments/followup_20261024_r4/；状态与资源交接记录。 | [`dcde34685dfa`](https://github.com/jackzhu119/research3/commit/dcde34685dfa36166e6f2a2d1380557c29253537) |
+| [paper3-r5-progress](https://github.com/jackzhu119/research3/tree/paper3-r5-progress) | 第5轮代码 experiments/followup_20261024_r5/；状态与三作业交接记录。 | [`8b64443cc2c3`](https://github.com/jackzhu119/research3/commit/8b64443cc2c3b597352064cd4580a6275758dae2) |
+| [paper3-r6-progress](https://github.com/jackzhu119/research3/tree/paper3-r6-progress) | 第6轮代码及 Pan 缓存 experiments/followup_20261024_r6/；状态与三作业交接记录。 | [`aa9a3d5cea3e`](https://github.com/jackzhu119/research3/commit/aa9a3d5cea3ed525f3682c2d07fdf1097a7e7ab8) |
+| [paper3-r7-progress](https://github.com/jackzhu119/research3/tree/paper3-r7-progress) | 第7轮时空与可辨识性实验源码、缓存与异步摘要；experiments/followup_20261024_r7/。 | [`8b0f721b70f2`](https://github.com/jackzhu119/research3/commit/8b0f721b70f27903289c084d5877bad716930347) |
+| [paper3-r8-progress](https://github.com/jackzhu119/research3/tree/paper3-r8-progress) | 第8轮三个单卡作业的轻量运行状态；实验实现从独立第8轮发布分支读取。 | [`e32d75b5ddee`](https://github.com/jackzhu119/research3/commit/e32d75b5ddeebdbd3bd703e42c1a5086e04f32b9) |
+| [paper3-v2-progress](https://github.com/jackzhu119/research3/tree/paper3-v2-progress) | 第2轮代码 experiments/followup_20261023/；状态 monitoring/paper3-followup-v2/status.json。 | [`988e13150c80`](https://github.com/jackzhu119/research3/commit/988e13150c80f3e96c1d58ffd884cb2061c26b1c) |
 
 ## 按轮结果分类与归档（1）
 
@@ -39,7 +40,7 @@
 
 | 分支 | 用途 | 审计时提交 |
 |---|---|---|
-| [paper3-results](https://github.com/jackzhu119/research3/tree/paper3-results) | 统一结果分区 results/paper3/round-01/ 至 round-08/；原始回传、自动摘要和完整归档按实际存在分开。 | [`919be7973d31`](https://github.com/jackzhu119/research3/commit/919be7973d312d940f82bc58a28266cf5ac51742) |
+| [paper3-results](https://github.com/jackzhu119/research3/tree/paper3-results) | 统一结果分区 results/paper3/round-01/ 至 round-08/；原始回传、自动摘要和完整归档按实际存在分开。 | [`1aa6851bb0fa`](https://github.com/jackzhu119/research3/commit/1aa6851bb0fad2b920c299e3f9155c0c71cb81dd) |
 
 ## 运行与资源迁移（2）
 
@@ -47,8 +48,8 @@
 
 | 分支 | 用途 | 审计时提交 |
 |---|---|---|
-| [paper3-hpc-gpu-migrations-20261024](https://github.com/jackzhu119/research3/tree/paper3-hpc-gpu-migrations-20261024) | 第4至6轮迁往 hpc_gpu 的早期单节点三卡交付；第5、6轮最新部署已由10月25日方案取代。 | [`00d337fb2ba8`](https://github.com/jackzhu119/research3/commit/00d337fb2ba8368e6eae2317db6522a7586c02f7) |
-| [paper3-parallel-migrations-20261025](https://github.com/jackzhu119/research3/tree/paper3-parallel-migrations-20261025) | 第1轮 hpc_gpu 与第5、6轮 hpc_gpu1 三个独立单卡作业方案；operations/parallel_20261025/。 | [`ecf4313561ba`](https://github.com/jackzhu119/research3/commit/ecf4313561bacdc35b96f2f976a4bf25e0ac9858) |
+| [paper3-hpc-gpu-migrations-20261024](https://github.com/jackzhu119/research3/tree/paper3-hpc-gpu-migrations-20261024) | 第4至6轮迁往 hpc_gpu 的早期单节点三卡交付；第5、6轮最新部署已由10月25日方案取代。 | [`cef9fc877338`](https://github.com/jackzhu119/research3/commit/cef9fc8773389df29fef015297c1b203f39cdefd) |
+| [paper3-parallel-migrations-20261025](https://github.com/jackzhu119/research3/tree/paper3-parallel-migrations-20261025) | 第1轮 hpc_gpu 与第5、6轮 hpc_gpu1 三个独立单卡作业方案；operations/parallel_20261025/。 | [`491c87a249ed`](https://github.com/jackzhu119/research3/commit/491c87a249ed7a61ca0eb925bc3f6d743c986d13) |
 
 ## 历史启动与学校部署版本（3）
 
@@ -77,14 +78,5 @@
 | [distribution/paper3-hpc-offline-7371f0c](https://github.com/jackzhu119/research3/tree/distribution/paper3-hpc-offline-7371f0c) | 学校 HPC 离线分发快照；按分支名中的包标识和原提交追溯。 | [`81fd44418f17`](https://github.com/jackzhu119/research3/commit/81fd44418f1777b6be76157120f73501c5e72388) |
 | [distribution/paper3-hpc-offline-e35f055](https://github.com/jackzhu119/research3/tree/distribution/paper3-hpc-offline-e35f055) | 学校 HPC 离线分发快照；按分支名中的包标识和原提交追溯。 | [`6444d6f3265f`](https://github.com/jackzhu119/research3/commit/6444d6f3265f4a672f05ad9f017bc0135cc0efd4) |
 
-## 源码与结果怎么找
-
-- 核心原始主线：默认分支 `p3work/`、`protocol/`；第1轮并行封装在 `paper3-parallel-migrations-20261025`。
-- 第2至7轮代码：各轮进度分支的 `experiments/` 对应目录；这些分支同时承载运行摘要，不代表应把实验混成一个目录或总计数。
-- 第8轮代码：`paper3-round8-20261025/experiments/followup_20261025_r8/`；轻量状态由 `paper3-r8-progress` 回传。
-- 统一结果：`paper3-results/results/paper3/round-NN/`；`previous/` 是历史摘要，`automatic-summary/` 是独立分析摘要，`final/` 与 `LATEST.json` 为完整归档确认。目录是否存在应按本轮远端证据判断。
-
-## 保留与入口维护
-
-这些分支被运行中的监控、固定提交下载地址和历史恢复命令引用。此次整理通过分组目录、准确状态和清晰入口实现；不改分支名，不合并监控，不移动正在使用的源码或结果路径。后续新增轮次沿用独立源码、独立回传、独立结果分区，并在默认主页索引登记。
-
+结果的论文数据、聚合JSON补传、科学完成、完整归档分别记录。第九轮源码发布不等于已提交学校任务；未来运行时才会建立其进度分支。
+[主页](../README.md) · [九轮实验索引](experiments/README_ZH.md) · [机器目录](BRANCH_INDEX.json)
