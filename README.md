@@ -1,30 +1,27 @@
-# 论文3第四轮：支持内交叉拟合与稳健校准
+# 论文3 · 第4轮状态与源码
 
-状态：独立实验设计与程序已准备，未向学校提交第四轮作业，尚无第四轮识别效果或显著性结果。前轮结果仅作为冻结输入和匹配字典的只读复用来源。
+本分支承载第4轮的异步 GitHub 回传，并保留本轮实验源码与设计。支持内交叉拟合、OOF 收缩、凸堆叠、one-SE 选择与 GCE 校准。
 
-第四轮从“这20条数据支持多大的几何调整”进一步研究“校准后的预测是否值得信任”：用支持前缀内部的交叉拟合产生样本外预测，再选择源模型、仅头校准、空间校准的概率混合；另检验GCE对支持错标的收益与代价。所有适配和选择仅接收已获取的支持数据，未来查询不参与候选选择、混合权重或阈值估计。
+## 先看当前状态
 
-| 内容 | 逻辑任务数 |
-|---|---:|
-| 字典训练或匹配复用 | 21 |
-| 核心方法与字典交叉评价 | 90 |
-| 折分、先验、维数、半径、GCE敏感性 | 90 |
-| 支持EA参考 | 3 |
-| **核心合计** | **204** |
-| 可选Weibo独立评价 | **另21** |
+- [第4轮最新回传](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json)：`monitoring/paper3-round4/status.json`。
+- [本轮设计与实现](https://github.com/jackzhu119/research3/tree/paper3-r4-progress/experiments/followup_20261024_r4)。
+- [第4轮分类结果](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3/round-04)。
 
-21个字典任务最多各1000次outer更新；符合种子、源模型、数据、正则及选择规则的已完成旧字典可复用，否则独立训练。204不是204次完整元训练。核心90项各报告支持预算4/8/12/16/20，始终使用同一个B20之后的未来查询；108组压力评价嵌在18个核心任务中，仅B20运行。
+运行、排队、实际模型更新、报告生成和完整文件上传分别记录。请查看状态文件内的源更新时间；心跳或 `RUNNING` 字样本身不能证明模型更新次数正在增长。旧快照不覆盖更新后的学校本地回执。
 
-主方法包括OOF闭式收缩、源/头/空间三成员凸堆叠、支持内one-SE候选选择、GCE稳健空间拟合及其组合。固定二等分、均匀堆叠、同支持拟合权重是明确的消融，避免把增加计算或训练集拟合得更好误写成OOF改进。训练阶段匹配分类头正则的SGD字典对照用于分离新元学习目标的贡献。完整公式、12项主要比较、文献和保证边界见 [DESIGN_ZH.md](experiments/followup_20261024_r4/DESIGN_ZH.md)；精确任务在 [EXPERIMENT_MATRIX.json](experiments/followup_20261024_r4/EXPERIMENT_MATRIX.json)。
+## 学校资源与结果保存
 
-采用用户指定的**一个节点、一个Slurm作业、三张GPU在作业内并行**：队列 `hpc_gpu1`，A100-SXM4-80GB资源组，整作业48CPU/192G，每个GPU槽16CPU/64G预算。Slurm申请为 `--nodes=1 --ntasks=1 --cpus-per-task=48 --mem=192G --gres=gpu:3`。内部三个工作进程使用互不重叠的CPU亲和组和各自单卡可见环境，动态领取已满足依赖的任务；无需DDP集合通信或额外srun。`hpc_gpu1`不是具名主机，不猜NodeName。
+当前部署记录：`hpc_gpu`，A100 PCIe 40GB；一个节点、一个作业内三卡并行，总36CPU / 128G主机内存。
 
-数据与源码安装、输出、GitHub分支均独立于前三轮。没有累计12小时限制；启动不重跑全量pytest/pilot/全树数据扫描，不重新安装环境。字典每10步保存双代断点，评价逐会话保存。一个任务失败时保留错误，其他可运行任务继续；配额不足等待一个三卡分配。每30秒的节点日志列出三槽任务及实际进度。详见 [RUNBOOK_ZH.md](experiments/followup_20261024_r4/RUNBOOK_ZH.md)。
+学校共享项目：`/public/home/zhuziyuan/projects/paper3`。模型断点、逐会话预测和本轮输出先保存在学校共享目录。进度回传及分析摘要不等于全部模型或逐试次文件已完成异地归档；完整归档以 `paper3-results` 对应轮次的 `LATEST.json` 及其引用 manifest/分片确认。
 
-GitHub每180秒尝试回传至 `paper3-r4-progress:monitoring/paper3-round4/status.json`；外部阶段使用单独 `weibo-status.json`。同步与报告错误不会停止训练。checkpoint、逐会话预测和完整CSV始终保存在学校本地；公开同步只包含汇总。已有私有凭据自动发现，不改写旧轮配置。
+源码、启动说明和固定提交下载地址供部署与恢复查阅。已有作业的实际运行状态通过上述回传查看，不凭本分支首页重新提交。
 
-本轮重复使用既有内部队列，仍属于探索性内部复验。参与者是统计单位，12项主要比较完整后统一Holm；不能把试次、会话或种子当作独立受试者。OOF改进只针对被优化的支持内经验目标，不保证重新拟合后未来准确率提高。GCE可能压制真正困难样本，故同时报告clean及10/20%错标压力。外部Weibo仅用于发布顺序LR子任务稳健性，其真实采集顺序未知，不能当成前瞻确认。
+## 仓库导航
 
-软件验证与范围在 [VALIDATION.json](experiments/followup_20261024_r4/VALIDATION.json)。使用匹配Python3.12.3、PyTorch2.5.1+cu121、NumPy2.2.6环境；本地验证没有GPU，学校三卡实跑仍需实际作业确认。固定线上启动包和校验值见 [online/ONLINE_LAUNCH.json](experiments/followup_20261024_r4/online/ONLINE_LAUNCH.json)。
+[仓库主页](https://github.com/jackzhu119/research3/tree/research/paper3-protocol-v2-w0) · [八轮实验总索引](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/experiments/README_ZH.md) · [最新进展](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/LIVE_STATUS_ZH.md) · [后续安排](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/ROADMAP_ZH.md) · [全部分支分类](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/BRANCHES_ZH.md)
 
-前三轮的历史部署说明保留在[原固定版本](https://github.com/jackzhu119/research3/tree/a19c17d5a804f09c0faf876efd61b0d432374647)。当前分支只负责第四轮。
+## 历史记录
+
+本次整理前的根 README 按原 Git blob 保存在 [旧首页](docs/records/README_BEFORE_ORGANIZE_20261025.md)。旧说明保留原发布日期，当前状态通过本页上方入口读取。
