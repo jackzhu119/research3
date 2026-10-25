@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 1659,
+  "complete_tasks": 1681,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 13.7,
+    "progress_age_seconds": 47.7,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T18:39:49Z"
+    "updated_utc": "2026-10-25T18:42:15Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -28,7 +28,7 @@
       "total": 27
     },
     "sensitivity": {
-      "complete": 606,
+      "complete": 628,
       "total": 1566
     },
     "stress": {
@@ -43,23 +43,23 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 13261,
+      "pid": 15911,
       "status": "RUNNING",
-      "task_key": "sensitivity-pan2023-grid_bures_a0p125_e0p35_pooled-seed20261020-685a6540bd",
+      "task_key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261020-a8b65e376a",
       "worker_progress": {}
     },
     "1": {
       "job_id": "772122",
-      "pid": 55742,
+      "pid": 2600,
       "status": "RUNNING",
-      "task_key": "sensitivity-holdout-grid_bures_a0p125_e0p35_class_balanced-seed20261019-1e216d2fe0",
+      "task_key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261020-209ab53c0c",
       "worker_progress": {}
     },
     "2": {
       "job_id": "772123",
-      "pid": 55837,
+      "pid": 2605,
       "status": "RUNNING",
-      "task_key": "sensitivity-pan2023-grid_bures_a0p125_e0p35_class_balanced-seed20261019-effe6cc680",
+      "task_key": "sensitivity-holdout-grid_bures_a0p25_e0p001_pooled-seed20261018-154a5c3b35",
       "worker_progress": {}
     }
   },
@@ -108,7 +108,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1:21:31",
+        "elapsed": "1:24:31",
         "job_id": "772122",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s1-a1",
@@ -118,7 +118,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1:21:31",
+        "elapsed": "1:24:31",
         "job_id": "772123",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s2-a1",
@@ -128,7 +128,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "11:01:34",
+        "elapsed": "11:04:34",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -138,7 +138,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T18:40:03Z",
+    "observed_utc": "2026-10-25T18:43:03Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,7 +164,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792953602.7313766,
+  "sampled_unix": 1792953782.7320259,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -15062,9 +15062,8 @@
       "index": 1654,
       "job_id": "772121",
       "key": "sensitivity-pan2023-grid_bures_a0p125_e0p35_pooled-seed20261020-685a6540bd",
-      "observations": [],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -15117,221 +15116,222 @@
       "index": 1660,
       "job_id": "772123",
       "key": "sensitivity-pan2023-grid_bures_a0p125_e0p35_class_balanced-seed20261019-effe6cc680",
-      "observations": [
-        {
-          "age_seconds": 13.7,
-          "path": "runs/followup_20261025_r8/sensitivity-pan2023-grid_bures_a0p125_e0p35_class_balanced-seed20261019-effe6cc680/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 28,
-            "sessions_total": 28,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T18:39:49Z"
-          }
-        }
-      ],
       "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1661,
+      "job_id": "772122",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p35_class_balanced-seed20261019-549f52591a",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1662,
+      "job_id": "772123",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p35_class_balanced-seed20261020-568cb579af",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1663,
+      "job_id": "772122",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p35_class_balanced-seed20261020-3915cd32e9",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1664,
+      "job_id": "772123",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p35_class_balanced-seed20261020-6cc9eb4ae9",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1665,
+      "job_id": "772122",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_pooled-seed20261018-8aade259fb",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1666,
+      "job_id": "772123",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_pooled-seed20261018-c69f1ab9cc",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1667,
+      "job_id": "772123",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_pooled-seed20261018-6a928750bc",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1668,
+      "job_id": "772122",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_pooled-seed20261019-a8cbd1bc9f",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1669,
+      "job_id": "772121",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_pooled-seed20261019-b90a16f638",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1670,
+      "job_id": "772123",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_pooled-seed20261019-51ddea2ae6",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1671,
+      "job_id": "772122",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_pooled-seed20261020-0f65dc6b4c",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1672,
+      "job_id": "772123",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_pooled-seed20261020-6905938e53",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1673,
+      "job_id": "772122",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_pooled-seed20261020-cdab07b007",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1674,
+      "job_id": "772123",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_class_balanced-seed20261018-9f6cb41a94",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1675,
+      "job_id": "772122",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261018-98a898b037",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1676,
+      "job_id": "772122",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261018-f41d533e6f",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1677,
+      "job_id": "772123",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_class_balanced-seed20261019-bcf00e27db",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1678,
+      "job_id": "772122",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261019-fdf6caf65b",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1679,
+      "job_id": "772122",
+      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261019-e37f1b5a3b",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1680,
+      "job_id": "772123",
+      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_class_balanced-seed20261020-3222279fc6",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 1681,
+      "job_id": "772121",
+      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261020-a8b65e376a",
+      "observations": [],
+      "slot": 0,
       "status": "RUNNING"
     },
     {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1661,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p35_class_balanced-seed20261019-549f52591a",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1662,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p35_class_balanced-seed20261020-568cb579af",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1663,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p35_class_balanced-seed20261020-3915cd32e9",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1664,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p35_class_balanced-seed20261020-6cc9eb4ae9",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1665,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_pooled-seed20261018-8aade259fb",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1666,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_pooled-seed20261018-c69f1ab9cc",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1667,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_pooled-seed20261018-6a928750bc",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1668,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_pooled-seed20261019-a8cbd1bc9f",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1669,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_pooled-seed20261019-b90a16f638",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1670,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_pooled-seed20261019-51ddea2ae6",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1671,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_pooled-seed20261020-0f65dc6b4c",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1672,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_pooled-seed20261020-6905938e53",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1673,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_pooled-seed20261020-cdab07b007",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1674,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_class_balanced-seed20261018-9f6cb41a94",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1675,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261018-98a898b037",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1676,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261018-f41d533e6f",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1677,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_class_balanced-seed20261019-bcf00e27db",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1678,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261019-fdf6caf65b",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1679,
-      "job_id": null,
-      "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261019-e37f1b5a3b",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1680,
-      "job_id": null,
-      "key": "sensitivity-holdout-grid_bures_a0p125_e0p75_class_balanced-seed20261020-3222279fc6",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 1681,
-      "job_id": null,
-      "key": "sensitivity-pan2023-grid_bures_a0p125_e0p75_class_balanced-seed20261020-a8b65e376a",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1682,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261020-209ab53c0c",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 51.7,
+          "path": "runs/followup_20261025_r8/sensitivity-weibo2014-grid_bures_a0p125_e0p75_class_balanced-seed20261020-209ab53c0c/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 10,
+            "sessions_total": 10,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-25T18:42:11Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -25714,5 +25714,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T18:40:03Z"
+  "updated_utc": "2026-10-25T18:43:03Z"
 }
