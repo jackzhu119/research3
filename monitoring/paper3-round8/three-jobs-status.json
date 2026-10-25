@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 2800,
+  "complete_tasks": 2817,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 34.7,
+    "progress_age_seconds": 13.7,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T22:12:04Z"
+    "updated_utc": "2026-10-25T22:15:25Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -20,7 +20,7 @@
       "total": 207
     },
     "fiber_sensitivity": {
-      "complete": 181,
+      "complete": 198,
       "total": 216
     },
     "label_null": {
@@ -43,20 +43,24 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 37103,
+      "pid": 40498,
       "status": "RUNNING",
-      "task_key": "fiber_sensitivity-pan2023-fiber_grid_b0p2_class_balanced_reversed-seed20261019-c1bc041f88",
+      "task_key": "fiber_sensitivity-weibo2014-fiber_grid_b0p5_class_balanced_aligned-seed20261019-1987272ab5",
       "worker_progress": {}
     },
     "1": {
       "job_id": "772122",
-      "pid": 45454,
+      "pid": 50107,
       "status": "RUNNING",
-      "task_key": "fiber_sensitivity-holdout-fiber_grid_b0p2_class_balanced_random-seed20261018-d723a05a4a",
+      "task_key": "fiber_sensitivity-holdout-fiber_grid_b0p5_class_balanced_reversed-seed20261018-7ee70a87b1",
       "worker_progress": {}
     },
     "2": {
-      "status": "NOT_STARTED"
+      "job_id": "772123",
+      "pid": 50105,
+      "status": "RUNNING",
+      "task_key": "fiber_sensitivity-weibo2014-fiber_grid_b0p5_class_balanced_aligned-seed20261020-e643aade53",
+      "worker_progress": {}
     }
   },
   "interpretation": "Round 8 independent three-job stream; optimizer progress and scheduler state are reported separately.",
@@ -104,7 +108,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "4:54:06",
+        "elapsed": "4:57:06",
         "job_id": "772122",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s1-a1",
@@ -114,7 +118,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "4:54:06",
+        "elapsed": "4:57:06",
         "job_id": "772123",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s2-a1",
@@ -124,7 +128,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "14:34:09",
+        "elapsed": "14:37:09",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -134,7 +138,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T22:12:38Z",
+    "observed_utc": "2026-10-25T22:15:38Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -160,7 +164,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792966358.651252,
+  "sampled_unix": 1792966538.6522155,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -25318,9 +25322,8 @@
       "index": 2794,
       "job_id": "772121",
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p2_class_balanced_reversed-seed20261019-c1bc041f88",
-      "observations": [],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -25377,177 +25380,158 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2801,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-weibo2014-fiber_grid_b0p2_class_balanced_random-seed20261018-fb39cdc177",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2802,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p2_class_balanced_random-seed20261019-588047a741",
-      "observations": [
-        {
-          "age_seconds": 12.7,
-          "path": "runs/followup_20261025_r8/fiber_sensitivity-holdout-fiber_grid_b0p2_class_balanced_random-seed20261019-588047a741/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T22:12:26Z"
-          }
-        }
-      ],
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2803,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p2_class_balanced_random-seed20261019-7b5bf48bd2",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2804,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-weibo2014-fiber_grid_b0p2_class_balanced_random-seed20261019-97930ee745",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2805,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p2_class_balanced_random-seed20261020-68a1b5f411",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2806,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p2_class_balanced_random-seed20261020-372d6dc675",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2807,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-weibo2014-fiber_grid_b0p2_class_balanced_random-seed20261020-28ae558fe1",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2808,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p5_class_balanced_aligned-seed20261018-5bfbecfed5",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2809,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_aligned-seed20261018-7e43aa846a",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2810,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-weibo2014-fiber_grid_b0p5_class_balanced_aligned-seed20261018-73e2af74d7",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2811,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p5_class_balanced_aligned-seed20261019-b68b5e0ec2",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2812,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_aligned-seed20261019-ecffc042fc",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2813,
-      "job_id": null,
+      "job_id": "772121",
       "key": "fiber_sensitivity-weibo2014-fiber_grid_b0p5_class_balanced_aligned-seed20261019-1987272ab5",
-      "slot": null,
-      "status": "NEW"
+      "observations": [],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2814,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p5_class_balanced_aligned-seed20261020-7b0fdc78f6",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2815,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_aligned-seed20261020-6ba9b6b53e",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2816,
-      "job_id": null,
+      "job_id": "772123",
       "key": "fiber_sensitivity-weibo2014-fiber_grid_b0p5_class_balanced_aligned-seed20261020-e643aade53",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "fiber_sensitivity",
       "index": 2817,
-      "job_id": null,
+      "job_id": "772122",
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p5_class_balanced_reversed-seed20261018-7ee70a87b1",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -25555,6 +25539,21 @@
       "index": 2818,
       "job_id": null,
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_reversed-seed20261018-afa9c99259",
+      "observations": [
+        {
+          "age_seconds": 5.7,
+          "path": "runs/followup_20261025_r8/fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_reversed-seed20261018-afa9c99259/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 28,
+            "sessions_total": 28,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-25T22:15:33Z"
+          }
+        }
+      ],
       "slot": null,
       "status": "NEW"
     },
@@ -25583,6 +25582,7 @@
       "index": 2821,
       "job_id": null,
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_reversed-seed20261019-e591177c48",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25611,6 +25611,7 @@
       "index": 2824,
       "job_id": null,
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_reversed-seed20261020-34b1d74274",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25639,6 +25640,7 @@
       "index": 2827,
       "job_id": null,
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_random-seed20261018-438f353f78",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25667,6 +25669,7 @@
       "index": 2830,
       "job_id": null,
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_random-seed20261019-a7c20eafe8",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25695,6 +25698,7 @@
       "index": 2833,
       "job_id": null,
       "key": "fiber_sensitivity-pan2023-fiber_grid_b0p5_class_balanced_random-seed20261020-3135595b6e",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25710,5 +25714,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T22:12:38Z"
+  "updated_utc": "2026-10-25T22:15:38Z"
 }
