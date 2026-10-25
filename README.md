@@ -4,7 +4,7 @@
 
 **[最新进度](docs/LIVE_STATUS_ZH.md) · [八轮实验分类](docs/experiments/README_ZH.md) · [全部分支](docs/BRANCHES_ZH.md) · [结果分区](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3) · [后续安排](docs/ROADMAP_ZH.md)**
 
-[论文报告优先上传：不等待完整备份](operations/paper_results_upload/README_ZH.md)
+[论文报告优先上传：不等待完整备份](operations/paper_results_upload/README_ZH.md) · [后续所有轮次双通道上传约定](docs/RESULT_UPLOAD_POLICY_ZH.md)
 
 ## 各轮最新回传
 

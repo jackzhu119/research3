@@ -1,0 +1,50 @@
+{
+  "schema_version": "paper3-result-upload-policy-v1",
+  "recorded_date": "2026-10-25",
+  "timezone": "Asia/Shanghai",
+  "source": "explicit_user_instruction",
+  "applies_to": "all_future_round_designs_and_revised_or_recovery_launches",
+  "channels": {
+    "paper_analysis_priority": {
+      "required": true,
+      "wait_for_full_archive": false,
+      "include": [
+        "plan_and_configuration",
+        "code_seed_and_data_split_query_identity",
+        "complete_reports_and_csv_tables",
+        "compact_participant_and_session_metrics_with_pairing_identity",
+        "existing_statistics_and_selection_timing_failure_evidence",
+        "coverage_missingness_and_source_hashes"
+      ],
+      "truncate_rows": false,
+      "large_table_policy": "complete_record_or_json_pointer_chunks",
+      "index": "results/paper3/round-NN/PAPER_DATA_LATEST.json",
+      "readme": "results/paper3/round-NN/PAPER_DATA_ZH.md"
+    },
+    "full_output_background": {
+      "required": true,
+      "include": "all_scientific_output_files_declared_by_round_manifest_including_predictions_validation_and_model_optimizer_checkpoints",
+      "manifest_hashes": "SHA256",
+      "index": "results/paper3/round-NN/LATEST.json"
+    }
+  },
+  "operations": {
+    "independent_of_training": true,
+    "channels_independent": true,
+    "separate_progress_and_receipts": true,
+    "upload_retry_does_not_stop_training": true,
+    "resume_and_deduplicate_uploads": true,
+    "rerun_training_or_full_tests_for_upload": false,
+    "report_capture_scope_and_time_explicit": true,
+    "generate_compact_metrics_with_reports": true,
+    "startup_gate": false
+  },
+  "current_tool_support": {
+    "paper_reports_rounds": [
+      2,
+      3,
+      7
+    ],
+    "recording_does_not_claim_other_running_rounds_retrofitted": true
+  }
+}

@@ -32,3 +32,7 @@
 本地上传回执：~/paper3-paper-data-upload/round-02-PAPER-UPLOADED.json、round-03-PAPER-UPLOADED.json、round-07-PAPER-UPLOADED.json。
 
 看到 PAPER_REPORTS_UPLOADED 后按日志URL读取相应文件；该事件只确认论文报告范围，不代表完整预测和模型已上传。
+
+## 后续轮次默认约定
+
+所有后续新轮次与恢复方案均采用[双通道上传](../../docs/RESULT_UPLOAD_POLICY_ZH.md)：分析数据和结果证据先传，完整文件后台慢传。当前工具的轮次参数仍仅支持2、3、7，本次记录不声称其他运行轮次已改造。
