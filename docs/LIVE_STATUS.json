@@ -1,32 +1,32 @@
 {
   "schema_version": "paper3-live-overview-v1",
   "repository": "jackzhu119/research3",
-  "refreshed_utc": "2026-10-25T21:15:59+00:00",
+  "refreshed_utc": "2026-10-25T23:21:26+00:00",
   "scope": "Committed remote observations, not a direct school scheduler query",
   "rounds": [
     {
       "round": 1,
-      "status": "阶段记录：元学习参数筛选；当前动作仍展示旧中断断点",
+      "status": "阶段记录：元学习参数筛选",
       "complete_tasks": null,
       "total_tasks": null,
       "snapshot_complete_tasks": null,
       "snapshot_total_tasks": null,
-      "updated_utc": "2026-10-25T21:08:06Z",
+      "updated_utc": "2026-10-25T23:13:47Z",
       "queue": {
         "observed": true,
-        "running": 1,
-        "pending": 2,
+        "running": 3,
+        "pending": 0,
         "jobs": [
           {
             "job_id": "772906",
-            "state": "PENDING",
-            "reason": "(QOSMaxJobsPerUserLimit)",
+            "state": "RUNNING",
+            "reason": "gpu1",
             "partition": "hpc_gpu"
           },
           {
             "job_id": "772905",
-            "state": "PENDING",
-            "reason": "(QOSMaxJobsPerUserLimit)",
+            "state": "RUNNING",
+            "reason": "gpu2",
             "partition": "hpc_gpu"
           },
           {
@@ -36,7 +36,7 @@
             "partition": "hpc_gpu"
           }
         ],
-        "observed_utc": "2026-10-25T21:08:06Z"
+        "observed_utc": "2026-10-25T23:13:47Z"
       },
       "report_status": null,
       "controller_status": null,
@@ -58,52 +58,55 @@
             "dimension": 8,
             "method": "P",
             "phase": "screening",
-            "radius": 0.05,
+            "radius": 0.15,
             "seed": 20261018
           },
           "error_type": "ValueError",
-          "job_id": "772904",
-          "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+          "job_id": "772906",
+          "key": "meta-54beab9b2df65963498b2b965aa08226f4ae2ec45ebed4762d26d3c658859976",
           "kind": "meta_screening",
           "method": "P",
-          "observations": [
-            {
-              "age_seconds": 61111.2,
-              "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
-              "values": {
-                "confirmed_outer_updates_observed": 350,
-                "inner_updates_actual": 14000,
-                "outer_attempts_dispatched": 350,
-                "outer_updates_completed": 350,
-                "replayed_observed_outer_updates": 0,
-                "status": "INTERRUPTED_NOT_COMPLETE",
-                "validation_checkpoints": 6
-              }
-            }
-          ],
+          "observations": [],
+          "slot": 0,
+          "status": "RUNNING"
+        },
+        {
+          "configuration": {
+            "dimension": 2,
+            "method": "P+PCT",
+            "phase": "screening",
+            "radius": 0.15,
+            "seed": 20261018
+          },
+          "job_id": "772905",
+          "key": "meta-c791aea858c1d64f33374c0b9eb321ab2e502be5dacf1fda12976cbc60fe74fc",
+          "kind": "meta_screening",
+          "method": "P+PCT",
+          "observations": [],
+          "slot": 2,
+          "status": "RUNNING"
+        },
+        {
+          "configuration": {
+            "dimension": 2,
+            "method": "P+PCT",
+            "phase": "screening",
+            "radius": 0.05,
+            "seed": 20261018
+          },
+          "job_id": "772904",
+          "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
+          "kind": "meta_screening",
+          "method": "P+PCT",
+          "observations": [],
           "slot": 1,
           "status": "RUNNING"
         }
       ],
-      "old_interruption_observations": [
-        {
-          "action_key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
-          "age_seconds": 61111.2,
-          "snapshot_observed_utc": "2026-10-25T21:08:06Z",
-          "values": {
-            "confirmed_outer_updates_observed": 350,
-            "inner_updates_actual": 14000,
-            "outer_attempts_dispatched": 350,
-            "outer_updates_completed": 350,
-            "replayed_observed_outer_updates": 0,
-            "status": "INTERRUPTED_NOT_COMPLETE",
-            "validation_checkpoints": 6
-          }
-        }
-      ],
+      "old_interruption_observations": [],
       "source_branch": "paper3-r1-progress",
       "source_path": "monitoring/paper3-round1/status.json",
-      "source_commit": "2b13af85b4c5fcc6b50b5795a5e8acbadcde78d1",
+      "source_commit": "126b605116f218c6a7688e3dcac5e0a2017c028d",
       "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json",
       "snapshot_stale": false,
       "last_manual_resume_observation": {
@@ -119,12 +122,12 @@
       },
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-01/LATEST.json"
       },
       "automatic_summary": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-01/AUTO_SUMMARY_LATEST.json",
         "receipt": {
           "content_hash": "fb64d602e000bd878661cb22a6f720e9b701891161f841e95a6c73f7a6fd639a",
@@ -143,7 +146,7 @@
       },
       "paper_reports": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-01/PAPER_DATA_LATEST.json",
         "complete": false
       }
@@ -180,7 +183,7 @@
       "snapshot_stale": true,
       "full_archive": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-02/LATEST.json",
         "receipt": {
           "archive": "results/paper3/round-02/final/3963c2ab8207550eefa14664f2bb89073615e135a996e43c5240beeb602887e3/archive.json",
@@ -197,12 +200,12 @@
       },
       "automatic_summary": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-02/AUTO_SUMMARY_LATEST.json"
       },
       "paper_reports": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-02/PAPER_DATA_LATEST.json",
         "complete": true,
         "receipt": {
@@ -257,7 +260,7 @@
       "snapshot_stale": true,
       "full_archive": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-03/LATEST.json",
         "receipt": {
           "archive": "results/paper3/round-03/final/e4a88effb508bff1b806cf707fb7e6880a17eb5639e3a65dd5ef2de29b00a8ec/archive.json",
@@ -274,12 +277,12 @@
       },
       "automatic_summary": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-03/AUTO_SUMMARY_LATEST.json"
       },
       "paper_reports": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-03/PAPER_DATA_LATEST.json",
         "complete": true,
         "receipt": {
@@ -327,17 +330,17 @@
       "snapshot_stale": true,
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-04/LATEST.json"
       },
       "automatic_summary": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-04/AUTO_SUMMARY_LATEST.json"
       },
       "paper_reports": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-04/PAPER_DATA_LATEST.json",
         "complete": false
       }
@@ -349,13 +352,13 @@
       "total_tasks": 105,
       "snapshot_complete_tasks": 105,
       "snapshot_total_tasks": 105,
-      "updated_utc": "2026-10-25T21:09:07Z",
+      "updated_utc": "2026-10-25T23:14:55Z",
       "queue": {
         "observed": true,
         "running": 0,
         "pending": 0,
         "jobs": [],
-        "observed_utc": "2026-10-25T21:09:07Z"
+        "observed_utc": "2026-10-25T23:14:55Z"
       },
       "report_status": null,
       "controller_status": "COMPLETE",
@@ -363,17 +366,17 @@
       "counts_conflict": false,
       "source_branch": "paper3-r5-progress",
       "source_path": "monitoring/paper3-round5/three-jobs-status.json",
-      "source_commit": "d0bc883fcc87b1b1acb6833e38aa9d57e4a7bee5",
+      "source_commit": "4274431d02cea6be258e2b2592fd41c38f37aebf",
       "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json",
       "snapshot_stale": false,
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-05/LATEST.json"
       },
       "automatic_summary": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-05/AUTO_SUMMARY_LATEST.json",
         "receipt": {
           "content_hash": "51f257a3d8952aa09dc5a32f1f6a9cfffb67e89873977db8f8d07716c61dd6b3",
@@ -392,7 +395,7 @@
       },
       "paper_reports": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-05/PAPER_DATA_LATEST.json",
         "complete": false
       }
@@ -404,13 +407,13 @@
       "total_tasks": 198,
       "snapshot_complete_tasks": 198,
       "snapshot_total_tasks": 198,
-      "updated_utc": "2026-10-25T21:09:07Z",
+      "updated_utc": "2026-10-25T23:14:55Z",
       "queue": {
         "observed": true,
         "running": 0,
         "pending": 0,
         "jobs": [],
-        "observed_utc": "2026-10-25T21:09:07Z"
+        "observed_utc": "2026-10-25T23:14:56Z"
       },
       "report_status": null,
       "controller_status": "COMPLETE",
@@ -418,17 +421,17 @@
       "counts_conflict": false,
       "source_branch": "paper3-r6-progress",
       "source_path": "monitoring/paper3-round6/three-jobs-status.json",
-      "source_commit": "f0294a7e9d717a2c582bf9e06a1c3feafa98d678",
+      "source_commit": "5e645d2584a75a05297bac89d9795f821c3d8a45",
       "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json",
       "snapshot_stale": false,
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-06/LATEST.json"
       },
       "automatic_summary": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-06/AUTO_SUMMARY_LATEST.json",
         "receipt": {
           "content_hash": "dba328b286fd53f57f9a6adc30cfe00a30c5198148f09506d0a683ae1a1849f1",
@@ -447,7 +450,7 @@
       },
       "paper_reports": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-06/PAPER_DATA_LATEST.json",
         "complete": false
       }
@@ -484,17 +487,17 @@
       "snapshot_stale": true,
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-07/LATEST.json"
       },
       "automatic_summary": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-07/AUTO_SUMMARY_LATEST.json"
       },
       "paper_reports": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-07/PAPER_DATA_LATEST.json",
         "complete": true,
         "receipt": {
@@ -518,7 +521,7 @@
       },
       "aggregate_report": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-07/REPORT_JSON_LATEST.json",
         "receipt": {
           "all_original_report_bytes_uploaded": true,
@@ -538,55 +541,36 @@
     },
     {
       "round": 8,
-      "status": "作业运行；优化进度另见任务计数",
-      "complete_tasks": 2525,
+      "status": "任务完成",
+      "complete_tasks": 2835,
       "total_tasks": 2835,
-      "snapshot_complete_tasks": 2525,
+      "snapshot_complete_tasks": 2835,
       "snapshot_total_tasks": 2835,
-      "updated_utc": "2026-10-25T21:09:51Z",
+      "updated_utc": "2026-10-25T23:15:32Z",
       "queue": {
         "observed": true,
-        "running": 3,
+        "running": 0,
         "pending": 0,
-        "jobs": [
-          {
-            "job_id": "772122",
-            "state": "RUNNING",
-            "reason": "gpu1",
-            "partition": "hpc_gpu"
-          },
-          {
-            "job_id": "772123",
-            "state": "RUNNING",
-            "reason": "gpu1",
-            "partition": "hpc_gpu"
-          },
-          {
-            "job_id": "772121",
-            "state": "RUNNING",
-            "reason": "gpu2",
-            "partition": "hpc_gpu"
-          }
-        ],
-        "observed_utc": "2026-10-25T21:09:51Z"
+        "jobs": [],
+        "observed_utc": "2026-10-25T23:15:32Z"
       },
       "report_status": null,
-      "controller_status": "RUNNING",
+      "controller_status": "COMPLETE",
       "completion_evidence": null,
       "counts_conflict": false,
       "source_branch": "paper3-r8-progress",
       "source_path": "monitoring/paper3-round8/three-jobs-status.json",
-      "source_commit": "d745b8dc7e61fc6b42fab85fc2187d8b7098f537",
+      "source_commit": "1d94fd85a0a0171cc2799d01b2e24245f76c3fac",
       "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json",
       "snapshot_stale": false,
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-08/LATEST.json"
       },
       "automatic_summary": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-08/AUTO_SUMMARY_LATEST.json",
         "receipt": {
           "content_hash": "a1055afb1605fc65c04c1de3e9296fdc75b562929402e58146ffa89659ba3d35",
@@ -605,23 +589,23 @@
       },
       "paper_reports": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-08/PAPER_DATA_LATEST.json",
         "complete": false
       }
     },
     {
       "round": 9,
-      "status": "作业排队",
-      "complete_tasks": 0,
+      "status": "作业运行；优化进度另见任务计数",
+      "complete_tasks": 35,
       "total_tasks": 1548,
-      "snapshot_complete_tasks": 0,
+      "snapshot_complete_tasks": 35,
       "snapshot_total_tasks": 1548,
-      "updated_utc": "2026-10-25T21:07:31Z",
+      "updated_utc": "2026-10-25T23:13:18Z",
       "queue": {
         "observed": true,
-        "running": 0,
-        "pending": 3,
+        "running": 1,
+        "pending": 2,
         "jobs": [
           {
             "job_id": "773688",
@@ -637,12 +621,12 @@
           },
           {
             "job_id": "773686",
-            "state": "PENDING",
-            "reason": "(QOSMaxJobsPerUserLimit)",
+            "state": "RUNNING",
+            "reason": "gpu1",
             "partition": "hpc_gpu"
           }
         ],
-        "observed_utc": "2026-10-25T21:07:31Z"
+        "observed_utc": "2026-10-25T23:13:19Z"
       },
       "report_status": null,
       "controller_status": "RUNNING",
@@ -650,32 +634,32 @@
       "counts_conflict": false,
       "source_branch": "paper3-r9-progress",
       "source_path": "monitoring/paper3-round9/three-jobs-status.json",
-      "source_commit": "08b35a36a0da3065c173abe8dfad1c29122e610e",
+      "source_commit": "665c22d9715f2a0d354b8ef4842f88455820b2c9",
       "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r9-progress/monitoring/paper3-round9/three-jobs-status.json",
       "snapshot_stale": false,
       "full_archive": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-09/LATEST.json"
       },
       "automatic_summary": {
         "published": false,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-09/AUTO_SUMMARY_LATEST.json"
       },
       "paper_reports": {
         "published": true,
-        "source_commit": "3ba13d88ac7a15d7081190f7582430dc4e45118f",
+        "source_commit": "b20af7652c221f7ddd2b23dd5961f4fe361a7760",
         "receipt_path": "results/paper3/round-09/PAPER_DATA_LATEST.json",
         "complete": false,
         "receipt": {
-          "complete_tasks": 0,
+          "complete_tasks": 32,
           "files": 1,
           "full_raw_results_uploaded": false,
-          "manifest": "results/paper3/round-09/paper-data/18d354511855eca345a708bf99d922b5a45613cc74277b1efcd27f9c59faf91a/manifest.json",
+          "manifest": "results/paper3/round-09/paper-data/a33bb54002ae0963596eccd76825e2bb61ba887001c86b741720b5e76661cab2/manifest.json",
           "round": 9,
           "scientific_completion_claimed": false,
-          "snapshot_id": "18d354511855eca345a708bf99d922b5a45613cc74277b1efcd27f9c59faf91a",
+          "snapshot_id": "a33bb54002ae0963596eccd76825e2bb61ba887001c86b741720b5e76661cab2",
           "status": "PAPER_FILES_PARTIAL",
           "total_tasks": 1548
         }
