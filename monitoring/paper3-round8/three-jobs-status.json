@@ -1,18 +1,18 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 0,
+  "complete_tasks": 3,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 16.2,
+    "progress_age_seconds": 10.2,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T07:38:04Z"
+    "updated_utc": "2026-10-25T07:41:11Z"
   },
   "experiment": "paper3-round8",
   "families": {
     "class_reference": {
-      "complete": 0,
+      "complete": 3,
       "total": 3
     },
     "core": {
@@ -42,7 +42,19 @@
   },
   "gpu_slots": {
     "0": {
-      "status": "NOT_STARTED"
+      "job_id": "772121",
+      "pid": 38292,
+      "status": "RUNNING",
+      "task_key": "core-holdout-source_frozen-seed20261018-69ff5f5d24",
+      "worker_progress": {
+        "budget": 20,
+        "outer_update": 0,
+        "session": 0,
+        "sessions_total": 105,
+        "stage": "holdout",
+        "status": "FAILED",
+        "updated_utc": "2026-10-25T07:40:12Z"
+      }
     },
     "1": {
       "status": "NOT_STARTED"
@@ -57,13 +69,13 @@
       "attempt": 1,
       "cpus": 16,
       "job_id": "772121",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu2",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu2",
       "slot": 0,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     },
     {
@@ -116,17 +128,17 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "0:00",
+        "elapsed": "2:52",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
-        "node": "",
+        "node": "gpu2",
         "partition": "hpc_gpu",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
+        "reason_or_node": "gpu2",
+        "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T07:38:21Z",
+    "observed_utc": "2026-10-25T07:41:21Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -152,59 +164,71 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792913901.1714704,
+  "sampled_unix": 1792914081.172612,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "class_reference",
       "index": 0,
-      "job_id": null,
+      "job_id": "772121",
       "key": "class-reference-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "class_reference",
       "index": 1,
-      "job_id": null,
+      "job_id": "772121",
       "key": "class-reference-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "class_reference",
       "index": 2,
-      "job_id": null,
+      "job_id": "772121",
       "key": "class-reference-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 2,
       "family": "core",
       "index": 3,
-      "job_id": null,
+      "job_id": "772121",
       "key": "core-holdout-source_frozen-seed20261018-69ff5f5d24",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 69.2,
+          "path": "runs/followup_20261025_r8/core-holdout-source_frozen-seed20261018-69ff5f5d24/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 0,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:40:12Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 4,
-      "job_id": null,
+      "job_id": "772121",
       "key": "core-pan2023-source_frozen-seed20261018-75cde30864",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
       "attempt": 0,
@@ -1955,6 +1979,7 @@
       "index": 198,
       "job_id": null,
       "key": "core-holdout-fiber_fixed-seed20261018-e1b110ebe2",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1982,6 +2007,7 @@
       "index": 201,
       "job_id": null,
       "key": "core-holdout-fiber_fixed-seed20261019-be34b7b5ed",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25688,5 +25714,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T07:38:21Z"
+  "updated_utc": "2026-10-25T07:41:21Z"
 }
