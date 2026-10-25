@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 276,
+  "complete_tasks": 281,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 22.5,
+    "progress_age_seconds": 15.6,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T14:58:05Z"
+    "updated_utc": "2026-10-25T15:01:12Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -32,7 +32,7 @@
       "total": 1566
     },
     "stress": {
-      "complete": 42,
+      "complete": 47,
       "total": 792
     },
     "train": {
@@ -43,9 +43,9 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 29955,
+      "pid": 33781,
       "status": "RUNNING",
-      "task_key": "stress-holdout-source_frozen-seed20261019-d92c627fae",
+      "task_key": "stress-pan2023-source_frozen-seed20261019-0024f5f1c1",
       "worker_progress": {}
     },
     "1": {
@@ -120,7 +120,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "7:19:58",
+        "elapsed": "7:22:59",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -130,7 +130,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T14:58:27Z",
+    "observed_utc": "2026-10-25T15:01:28Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -156,7 +156,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792940307.549268,
+  "sampled_unix": 1792940487.5505726,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -2652,68 +2652,65 @@
       "index": 276,
       "job_id": "772121",
       "key": "stress-holdout-source_frozen-seed20261019-d92c627fae",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "stress",
+      "index": 277,
+      "job_id": "772121",
+      "key": "stress-holdout-source_frozen-seed20261019-5e6ee8144d",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "stress",
+      "index": 278,
+      "job_id": "772121",
+      "key": "stress-pan2023-source_frozen-seed20261019-624a19dd51",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "stress",
+      "index": 279,
+      "job_id": "772121",
+      "key": "stress-pan2023-source_frozen-seed20261019-f45af8f304",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "stress",
+      "index": 280,
+      "job_id": "772121",
+      "key": "stress-pan2023-source_frozen-seed20261019-4c7c8a13f2",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "stress",
+      "index": 281,
+      "job_id": "772121",
+      "key": "stress-pan2023-source_frozen-seed20261019-0024f5f1c1",
       "observations": [
         {
-          "age_seconds": 11.5,
-          "path": "runs/followup_20261025_r8/stress-holdout-source_frozen-seed20261019-d92c627fae/progress.json",
+          "age_seconds": 13.6,
+          "path": "runs/followup_20261025_r8/stress-pan2023-source_frozen-seed20261019-0024f5f1c1/progress.json",
           "values": {
-            "budget": 20,
             "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T14:58:16Z"
+            "stage": "loading",
+            "status": "STARTING",
+            "updated_utc": "2026-10-25T15:01:14Z"
           }
         }
       ],
       "slot": 0,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 0,
-      "family": "stress",
-      "index": 277,
-      "job_id": null,
-      "key": "stress-holdout-source_frozen-seed20261019-5e6ee8144d",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "stress",
-      "index": 278,
-      "job_id": null,
-      "key": "stress-pan2023-source_frozen-seed20261019-624a19dd51",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "stress",
-      "index": 279,
-      "job_id": null,
-      "key": "stress-pan2023-source_frozen-seed20261019-f45af8f304",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "stress",
-      "index": 280,
-      "job_id": null,
-      "key": "stress-pan2023-source_frozen-seed20261019-4c7c8a13f2",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "stress",
-      "index": 281,
-      "job_id": null,
-      "key": "stress-pan2023-source_frozen-seed20261019-0024f5f1c1",
-      "slot": null,
-      "status": "NEW"
     },
     {
       "attempt": 0,
@@ -25706,5 +25703,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T14:58:27Z"
+  "updated_utc": "2026-10-25T15:01:28Z"
 }
