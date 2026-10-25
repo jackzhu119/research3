@@ -4,10 +4,10 @@
   "complete_tasks": 0,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 28.2,
+    "progress_age_seconds": 24.2,
     "progress_path": "runs/followup_20261024_r5/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T07:04:16Z"
+    "updated_utc": "2026-10-25T07:07:20Z"
   },
   "experiment": "paper3-round5",
   "families": {
@@ -45,8 +45,8 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772070",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu4",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "(AssocGrpGRES)",
@@ -85,16 +85,6 @@
     "jobs": [
       {
         "elapsed": "0:00",
-        "job_id": "772072",
-        "marker": "paper3r5p-2a492b1bc14432d0",
-        "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
-        "node": "",
-        "partition": "hpc_gpu1",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
-      },
-      {
-        "elapsed": "0:00",
         "job_id": "772071",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s1-a1",
@@ -105,16 +95,26 @@
       },
       {
         "elapsed": "0:00",
-        "job_id": "772070",
+        "job_id": "772072",
         "marker": "paper3r5p-2a492b1bc14432d0",
-        "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
+        "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
         "node": "",
         "partition": "hpc_gpu1",
         "reason_or_node": "(AssocGrpGRES)",
         "state": "PENDING"
+      },
+      {
+        "elapsed": "0:16",
+        "job_id": "772070",
+        "marker": "paper3r5p-2a492b1bc14432d0",
+        "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
+        "node": "gpu4",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "gpu4",
+        "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T07:04:44Z",
+    "observed_utc": "2026-10-25T07:07:44Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -140,7 +140,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 5,
-  "sampled_unix": 1792911884.2023454,
+  "sampled_unix": 1792912064.204314,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1106,5 +1106,5 @@
   ],
   "total_tasks": 105,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T07:04:44Z"
+  "updated_utc": "2026-10-25T07:07:44Z"
 }
