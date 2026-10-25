@@ -1,0 +1,38 @@
+{
+  "status": "LOCAL_VALIDATED_NOT_SCHOOL_EXECUTED",
+  "utc": "2026-10-25T08:05:09Z",
+  "tests": 9,
+  "test_python": "3.12.3",
+  "test_command": "python3.12 -m unittest -v test_report_supplement.py",
+  "actual_large_report_test_bytes": 68000031,
+  "entrypoint": "START-PAPER3-R7-REPORT.py",
+  "entrypoint_sha256": "ae68561ba88e19bfe7422cf2eb22f22285e5b7c173e6a26dfb8bb360489e5589",
+  "bootstrap_isolated_stdlib_help_test": "PASS",
+  "bash42_compatible_one_line_syntax": "PASS bash -n (Bash4.2 syntax used)",
+  "scope": {
+    "source_files_read": 1,
+    "task_tree_scans": 0,
+    "training_jobs_changed": 0,
+    "existing_csv_pointer_changed": false,
+    "full_archive_changed": false
+  },
+  "tested": [
+    "real >64MiB UTF-8 JSON exact byte/SHA reconstruction",
+    "UTF-8 chunk boundaries",
+    "source changed during copy does not publish complete manifest",
+    "unchanged stable source cache reuse",
+    "upload interruption reuses already uploaded deterministic blobs",
+    "corrupted cached chunk cannot publish pointer",
+    "bad restore hash leaves existing target untouched",
+    "new source version gets separate cache",
+    "no glob/rglob/os.walk during preparation"
+  ],
+  "school_upload_receipt_observed": false,
+  "notes": [
+    "No source size cap; approximately 1MiB per Git blob",
+    "Top-level field index is lexical and does not claim JSON semantic validation",
+    "Upload completion is independent from full scientific-output archival"
+  ],
+  "restore_https_ca": "Reuse transport botocore/certifi CA auto-discovery under -I -S",
+  "payload_sha256": "ae7697fabdbd973a1af67b82181737e751c51f325ce087050abf405e6542c569"
+}
