@@ -1,0 +1,68 @@
+{
+  "scope": "R1 remaining phase DAG, native checkpoint/runtime transfer, owned spawned stage propagation, independent source extensions",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "school_gpu_executed": false
+  },
+  "confirmed_new_defects": [
+    {
+      "id": "R1_spawn_loses_authorized_hardware_runtime",
+      "trigger": "source extension or normal owned stage starts a fresh multiprocessing.spawn child",
+      "cause": "parent-installed audited_runtime and hardware_comparison hooks are not inherited; historical sitecustomize installs only original UUID-only transfer",
+      "reproduction": "Exact operational extension_stage_worker target; parent accepts80GB-to40GB, unbootstrapped spawned child rejects same profile",
+      "fix": "Bootstrap exact active R1 operational package and original bridge in both sourceable spawn entrypoints before native import"
+    },
+    {
+      "id": "R1_f0_stage_identity_uses_current_runtime_instead_of_arm_lineage",
+      "trigger": "R1 source-extension f0 is continued or another seed begins after Slurm allocates a different GPU UUID",
+      "cause": "ArmRun claim lineage retained by existing transfer overlay but prepare_f0 dispatch identity embeds current runtime; native verifier expects the original claim runtime",
+      "reproduction": "Exact native prepare_f0 dispatch branch raises source_f0_arm_dispatch_identity_changed for the same authorized trajectory",
+      "fix": "After typed transfer validation/journal, preserve historical runtime solely in administrative stage identity; actual sourcefit runtime remains unchanged"
+    }
+  ],
+  "new_helper": {
+    "path": "r1_spawn_bootstrap.py",
+    "sha256": "43513735525e678138d23fa848d901c3c780ece11a57cba3d675f158d13ca9d8",
+    "original_native_source_files_changed": 0,
+    "checkpoint_files_changed": 0,
+    "jobs_submitted": 0,
+    "jobs_cancelled": 0
+  },
+  "tests": {
+    "existing_repaired_components": {
+      "passed": 60,
+      "seconds": 0.93
+    },
+    "existing_original_dag_worker_scheduler": {
+      "passed": 29,
+      "seconds": 17.54
+    },
+    "new_spawn_and_identity_regressions": {
+      "files": [
+        "test_spawn_runtime_transfer.py",
+        "test_owned_stage_bootstrap.py",
+        "test_source_f0_lineage.py"
+      ],
+      "passed": 9,
+      "seconds": 10.9
+    }
+  },
+  "source_stability_review": {
+    "baseline_source_and_references": "Consumed read-only by native source_f0/source_reference loaders",
+    "new_f0_outputs": "runs/source_extensions/<arm>/seed-<seed>",
+    "new_reference_and_downstream_outputs": "runs/source_extension_downstream/<arm>/...",
+    "source_single_fit_claims": "runs/source_extensions/claims/<arm>-seed-<seed>.json",
+    "existing_rounds_2_3_7_source_fit_overwrite_path_identified": false
+  },
+  "not_changed": [
+    "registered methods/seeds/grid",
+    "screening/confirmation barriers",
+    "selection rules",
+    "original experiment identities",
+    "source caches/model files",
+    "scientific update/fit caps",
+    "actual GPU properties"
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "scope": "Round9 queued1548task future paths",
+  "date_beijing": "2026-10-25",
+  "native_source_edits": 0,
+  "server_job_actions": 0,
+  "runtime_hook_sha256": "42b16aab1338de3d301dcaddf9061d7c0b9b7914b3e5947425f703a83ebcb7cb",
+  "worker_sha256": "e9b4ebb79d945d85bb82167cc68ff8bb48726ac264d995930201745dcfe4cc33",
+  "gp_sha256": "5956354a457c95db4503494c74bb0e1a6e6e2f3cfaf661c5c04ca1d49ee93ad7",
+  "new_concrete_bugs": [],
+  "expanded_tests": {
+    "path": "test_future_r9.py",
+    "passed": 4,
+    "seconds": 13.8,
+    "planned_configurations": 104,
+    "gp_fits_and_state_roundtrip_combinations": 208,
+    "actual_worker_fixture_tasks": 40,
+    "core_methods": 26,
+    "full_selection_grids": 4,
+    "stress_scenarios": [
+      "gain25",
+      "rotation25",
+      "label_noise10",
+      "label_noise20",
+      "time_cov_plus35",
+      "time_cov_minus35",
+      "support_label_permutation"
+    ],
+    "external_real_cache_datasets": [
+      "Pan2023",
+      "Weibo2014"
+    ],
+    "checkpoint_and_completed_replay": true,
+    "report_and_csv_generation": true,
+    "cuda_index_type_contract_on_cpu": true
+  },
+  "reviewed": [
+    "entire1548taskDAGanddeclared config modes",
+    "source frozen EEGNet and raw/EA temperature controls",
+    "MAP, Laplace, information anchored and constant mixtures",
+    "all declared prior/lengthscale/anchor caps",
+    "missingclass/empty/zero prior/degenerate kernel fallbacks",
+    "featurecache identity and atomicwrites",
+    "weights-only checkpoint/reference/selection loads",
+    "per-session resumed metrics/queryidentity",
+    "participant-level report, Holm family and exact signflip"
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "actual_gpu_available": false
+  },
+  "limits": [
+    "Tests use actual CompactEEGNet on synthetic source/target software fixtures; no performance claim",
+    "Real public external caches use the exact frozen source input contract in the local fixture",
+    "CPU CUDA-index contract does not execute CUDA solvers or school scheduler",
+    "No new blocking bug reproduced after currenthook; this is not a guarantee against machine/network faults"
+  ],
+  "existing_gp_worker_report_suites": {
+    "passed": 47,
+    "seconds": 4.99,
+    "original_source_with_actual_runtime_hook": true
+  }
+}

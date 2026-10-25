@@ -1,0 +1,46 @@
+{
+  "date_beijing": "2026-10-25",
+  "scope": "Existing R4/R5/R6/R8/R9 operational launch, continuation, repaired-entry durability, and independent result uploads; R1 detailed audit delegated separately",
+  "tests": {
+    "round5_round6_original_split_runtime": {"passed": 70, "seconds": 1.97, "directory": "/tmp/paper3-r56-threejobs-build"},
+    "round8_original_runtime": {"passed": 37, "seconds": 1.86},
+    "round9_original_runtime_and_upload": {"passed": 61, "seconds": 2.32},
+    "new_existing_install_recovery": {"passed": 19, "seconds": 0.45, "test": "test_runtime_recovery.py"}
+  },
+  "concrete_findings": [
+    {
+      "id": "pinned-installer-rejects-authorized-operational-repair",
+      "status": "REPRODUCED",
+      "trigger": "Repeat the old R9 thin online launcher after backend_entry.py has received the authorized runtime repair",
+      "behavior": "verify_install raises Installed file hash mismatch; refusing to overwrite: runtime/backend_entry.py",
+      "affected": "Manual recovery through original pinned installers that hash an operational entry changed by the authorized repair; original R4/R5/R6/R8 installers have the same verification design",
+      "current_running_and_queued_children_affected": false,
+      "repair": "resume_existing.py reads the saved plan and saved launch and invokes the installed original controller_loop; it does not call an installer or prepare_context",
+      "native_hashed_scientific_files_changed": 0,
+      "plan_recipe_and_task_keys_changed": 0,
+      "new_total_wall_limit_added": false,
+      "downloads_or_compute_imports_added": false
+    }
+  ],
+  "verified_behaviors": [
+    "Three independent single-GPU requests retain their round-specific partition, CPU, memory and marker",
+    "Submission retries handle QOS limit rejection without cancelling existing workers or sending three identical rejected requests",
+    "Lost sbatch acknowledgement is adopted by durable exact attempt name; ambiguous submissions retain occupancy to avoid duplication",
+    "Worker USR1 reaches the native child, waits for cooperative checkpoint completion, and returns75",
+    "A finished worker with exit75 is resubmitted after evidence is observed; per-job time limit is5days3hours, not a cumulative12hour ceiling",
+    "A local terminal outcome covers sacct propagation delay while live queue evidence always prevents premature duplication",
+    "Native .lock and task leases protect numerical outputs and checkpoint files across supervisor/node loss",
+    "Result monitor, report dispatcher, paper upload and archive upload run independently and do not control the numerical training process",
+    "Compute backend starts only existing installed packages and verified node cache paths; no pip, package download or full-data rescan is invoked",
+    "Recovery immediately reuses held controller and upload/monitor locks without spawning duplicate components",
+    "Recovery accepts original R5/R6/R8/R9 coordinator context in fresh isolated processes without prepare_context or resource reconstruction",
+    "Recovery does not start or migrate R1/R4, since those distinct recovery interfaces were outside this helper's validated scope"
+  ],
+  "availability_limits": [
+    "An unavailable Slurm queue or accounting service causes controller observation retry; existing numerical workers continue independently, but replacement submission may wait for the service",
+    "An accepted submission whose acknowledgement and accounting evidence are both permanently lost cannot be retried safely without duplicate-job risk; current implementation waits for evidence",
+    "Physical node failure, scheduler intervention, filesystem outage or exhausted disk cannot be ruled out by software-only validation",
+    "The helper is supplied but not installed or run on the school server by this audit"
+  ],
+  "current_school_actions": {"jobs_submitted": 0, "jobs_cancelled": 0, "controllers_restarted": 0, "source_files_modified": 0}
+}

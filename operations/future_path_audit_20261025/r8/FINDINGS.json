@@ -1,0 +1,69 @@
+{
+  "scope": "R8 future planned paths, original source + deployed hook",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "cuda_available": false
+  },
+  "plan_tasks": 2835,
+  "unique_configs": 219,
+  "native_worker_sha256": "f93174dd373f9b203890a98543d19f37b7fe6d30c96e9fd2a0fde774d1efb1e2",
+  "runtime_hook_sha256": "42b16aab1338de3d301dcaddf9061d7c0b9b7914b3e5947425f703a83ebcb7cb",
+  "checks": {
+    "all_planned_numerical_configs": {
+      "passed": 219,
+      "strict_index_writes": 438
+    },
+    "scenario_by_learner_paths": {
+      "passed": 78,
+      "strict_index_writes": 158
+    },
+    "actual_meta_train_selection_dependency_eval": {
+      "passed_train_tasks": 8,
+      "passed_evaluation_tasks": 8,
+      "updates_per_train": 2,
+      "evaluation_budgets": [
+        20,
+        4
+      ]
+    },
+    "class_reference_fiber_dependencies": {
+      "reference_tasks_complete": 1,
+      "fiber_tasks_complete": 5,
+      "budgets": [
+        20,
+        4,
+        8,
+        12,
+        16
+      ],
+      "scenarios": [
+        "clean",
+        "support_label_permutation",
+        "coupled_ks35",
+        "time_cov_plus35"
+      ]
+    },
+    "bundled_external_learned_fiber_and_resume": {
+      "train_paused_at_update": 1,
+      "resumed_complete_at_update": 2,
+      "external_tasks_complete": 6,
+      "clean_session_budget_rows": 228,
+      "budgets": [
+        20,
+        4
+      ],
+      "scenarios": [
+        "clean",
+        "label_noise20",
+        "time_cov_minus35"
+      ],
+      "network_downloads": 0
+    }
+  },
+  "failures": [],
+  "native_source_unchanged": true,
+  "seconds": 28.81,
+  "status": "PASS"
+}

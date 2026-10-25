@@ -1,0 +1,77 @@
+{
+  "scope": "Remaining Round4/5/6 tasks, unique actual planned configurations, late validation/checkpoint/report/transfer paths",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "cuda_available": false
+  },
+  "source_mutations": 0,
+  "school_actions": 0,
+  "new_confirmed_native_defects": [],
+  "actual_config_sweeps": {
+    "4": {
+      "declared_tasks": 204,
+      "unique_configurations": 48,
+      "passed": 48,
+      "strict_cuda_index_assignment_contract_on_cpu": true,
+      "frozen_source": "actual CompactEEGNet on synthetic EEG",
+      "basis_outer_gradient_checked": true,
+      "original_scientific_configs_preserved": true
+    },
+    "5": {
+      "declared_tasks": 105,
+      "unique_configurations": 19,
+      "passed": 19,
+      "strict_cuda_index_assignment_contract_on_cpu": true,
+      "frozen_source": "actual CompactEEGNet on synthetic EEG",
+      "basis_outer_gradient_checked": true,
+      "original_scientific_configs_preserved": true
+    },
+    "6": {
+      "declared_tasks": 198,
+      "unique_configurations": 30,
+      "passed": 30,
+      "strict_cuda_index_assignment_contract_on_cpu": true,
+      "frozen_source": "actual CompactEEGNet on synthetic EEG",
+      "basis_outer_gradient_checked": true,
+      "original_scientific_configs_preserved": true
+    }
+  },
+  "late_path_tests": {
+    "r4": {
+      "passed": 9,
+      "deselected": 8,
+      "seconds": 12.31
+    },
+    "r5": {
+      "passed": 9,
+      "deselected": 7,
+      "seconds": 12.53
+    },
+    "r6": {
+      "passed": 76,
+      "seconds": 21.38
+    }
+  },
+  "covered": [
+    "R4 all registered variants, CV selectors, probability pools, GCE, regularization/radius sensitivity",
+    "R5 all actual geometry variants/charts/initializers/amplitude controls and finite basis outer gradients",
+    "R6 all UQ variants, head quadrature5/9/17, variance/cap/rotation probes and basis gradients",
+    "Original source model load and actual query batching",
+    "R6 one3slotallocation to Pan14person28session transfer, aggregate report and repeated completed-file reuse",
+    "Signal interruption at session boundaries and interrupted validation continuation",
+    "Two-generation checkpoint recovery and weights_only tensor/RNG state restoration",
+    "Single-class support fallback and zero meta gradient",
+    "Recipe/task identity mismatch preserves previous checkpoints/results",
+    "R4/R5 support_EA dispatch through previously published runtime correction",
+    "Report computation uses NumPy+stdlib and does not require SciPy on compute nodes"
+  ],
+  "limits": [
+    "No actualGPUwasavailable; CUDAindexedassignment contract was simulated explicitly.",
+    "Finite synthetic fixtures check execution/correctness contracts, not research performance or rare realdata numerical failures."
+  ],
+  "artifact_sha256": {
+    "audit_configs.py": "86991e54c78cb04b563b0ee960f5b09740813db20b73cab5295d85bab00d7159"
+  }
+}
