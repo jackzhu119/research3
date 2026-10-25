@@ -1144,7 +1144,7 @@
     ],
     "records": {
       "1": {
-        "status": "FIXED_MANAGERS_STARTED_EXISTING_JOB_IDS_PRESERVED",
+        "status": "HANDOFF_READY_NEW_JOBS_RELEASED_WAITING_SCHOOL_RESOURCES",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1180,7 +1180,7 @@
         "completed_outputs_reused_in_place": true,
         "checkpoint_identity_reset": false,
         "scientific_plan_or_algorithm_changed": false,
-        "school_switch_executed": false,
+        "school_switch_executed": true,
         "school_new_jobs_submitted": 3,
         "school_old_jobs_cancelled": 0,
         "full_pytest_pilot_or_deployment_rescan_on_startup": false,
@@ -1211,10 +1211,15 @@
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
         "repair_executed_on_school": true,
-        "school_handoff_completion_verified": false
+        "school_handoff_completion_verified": true,
+        "observed_queue_reasons": {
+          "772076": "Resources",
+          "772077": "Priority",
+          "772078": "Priority"
+        }
       },
       "5": {
-        "status": "FIXED_MANAGERS_STARTED_EXISTING_JOB_IDS_PRESERVED",
+        "status": "HELD_HISTORICAL_ACCOUNTING_PARTITION_FIX_PUBLISHED_PENDING_EXECUTION",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1279,10 +1284,11 @@
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
         "repair_executed_on_school": true,
-        "school_handoff_completion_verified": false
+        "school_handoff_completion_verified": false,
+        "old_job_absent_from_observed_current_queue": true
       },
       "6": {
-        "status": "FIXED_MANAGERS_STARTED_EXISTING_JOB_IDS_PRESERVED",
+        "status": "HELD_HISTORICAL_ACCOUNTING_PARTITION_FIX_PUBLISHED_PENDING_EXECUTION",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1347,7 +1353,8 @@
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
         "repair_executed_on_school": true,
-        "school_handoff_completion_verified": false
+        "school_handoff_completion_verified": false,
+        "old_job_absent_from_observed_current_queue": true
       }
     },
     "all_current_school_actions_executed": false,
@@ -1454,5 +1461,33 @@
     "round7_phase": "WAITING_IN_ORIGINAL_UPLOAD_SEQUENCE",
     "rounds_with_complete_uploaded_receipt": [],
     "training_modified": false
+  },
+  "historical_accounting_fix_20261025": {
+    "status": "PUBLISHED_NOT_YET_EXECUTED_ON_SCHOOL",
+    "source_commit": "3d9ea6d666e7ad976f1c5dcdc4eb3de9f85d0c9c",
+    "delivery_commit": "ecf4313561bacdc35b96f2f976a4bf25e0ac9858",
+    "scope_rounds": [
+      5,
+      6
+    ],
+    "observed_error": "old_accounting_owner_or_partition_mismatch",
+    "cause": "Same plan marker persists across hpc_gpu1 a1 and hpc_gpu a2; terminal historical partition was wrongly required to match current live partition",
+    "production_code_changed": [
+      "round56/migrate.py"
+    ],
+    "first_round_unchanged_and_handoff_already_ready": true,
+    "original_six_job_ids_preserved": [
+      "772070",
+      "772071",
+      "772072",
+      "772073",
+      "772074",
+      "772075"
+    ],
+    "round56_tests_passed": 70,
+    "migration_tests_passed": 21,
+    "raw_and_api_download_verified": true,
+    "actual_school_execution_of_this_fix": false,
+    "details": "docs/ACCOUNTING_HISTORY_FIX_20261025_ZH.md"
   }
 }
