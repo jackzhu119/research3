@@ -12,10 +12,10 @@
   },
   "coordinator": {
     "phase": "META_SCREENING",
-    "progress_age_seconds": 27.8,
+    "progress_age_seconds": 24.8,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-25T07:36:03Z"
+    "updated_utc": "2026-10-25T07:39:06Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -53,27 +53,27 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 12415.8,
+    "progress_age_seconds": 12595.8,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
   "jobs": [
     {
-      "attempt": 1,
+      "attempt": 2,
       "cpus": 12,
-      "job_id": "772076",
-      "live_reason_or_node": "gpu1",
-      "live_state": "RUNNING",
+      "job_id": "772906",
+      "live_reason_or_node": "(AssocGrpGRES)",
+      "live_state": "PENDING",
       "memory": "43G",
       "partition": "hpc_gpu",
-      "queue_reason": "gpu1",
+      "queue_reason": null,
       "slot": 0,
-      "slurm_state": "RUNNING"
+      "slurm_state": null
     },
     {
-      "attempt": 1,
+      "attempt": 2,
       "cpus": 12,
-      "job_id": "772077",
+      "job_id": "772904",
       "live_reason_or_node": "(AssocGrpGRES)",
       "live_state": "PENDING",
       "memory": "43G",
@@ -83,9 +83,9 @@
       "slurm_state": "PENDING"
     },
     {
-      "attempt": 1,
+      "attempt": 2,
       "cpus": 12,
-      "job_id": "772078",
+      "job_id": "772905",
       "live_reason_or_node": "(AssocGrpGRES)",
       "live_state": "PENDING",
       "memory": "42G",
@@ -99,9 +99,9 @@
     "jobs": [
       {
         "elapsed": "0:00",
-        "job_id": "772078",
+        "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
-        "name": "paper3r1p-84c2da292f724ce9-s2-a1",
+        "name": "paper3r1p-84c2da292f724ce9-s0-a2",
         "node": "",
         "partition": "hpc_gpu",
         "reason_or_node": "(AssocGrpGRES)",
@@ -109,26 +109,26 @@
       },
       {
         "elapsed": "0:00",
-        "job_id": "772077",
+        "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
-        "name": "paper3r1p-84c2da292f724ce9-s1-a1",
+        "name": "paper3r1p-84c2da292f724ce9-s2-a2",
         "node": "",
         "partition": "hpc_gpu",
         "reason_or_node": "(AssocGrpGRES)",
         "state": "PENDING"
       },
       {
-        "elapsed": "3:19:26",
-        "job_id": "772076",
+        "elapsed": "0:00",
+        "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
-        "name": "paper3r1p-84c2da292f724ce9-s0-a1",
-        "node": "gpu1",
+        "name": "paper3r1p-84c2da292f724ce9-s1-a2",
+        "node": "",
         "partition": "hpc_gpu",
-        "reason_or_node": "gpu1",
-        "state": "RUNNING"
+        "reason_or_node": "(AssocGrpGRES)",
+        "state": "PENDING"
       }
     ],
-    "observed_utc": "2026-10-25T07:36:30Z",
+    "observed_utc": "2026-10-25T07:39:30Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -136,33 +136,16 @@
       {
         "configuration": {
           "dimension": 8,
-          "method": "P",
+          "method": "P+PCT",
           "phase": "screening",
           "radius": 0.05,
           "seed": 20261018
         },
-        "error_type": "ValueError",
-        "job_id": "772076",
-        "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+        "key": "meta-03359b6962bcf552aad2c6b63030efc0b7d2f7b22804b40d21e3c2d2d6699bd4",
         "kind": "meta_screening",
-        "method": "P",
-        "observations": [
-          {
-            "age_seconds": 12415.8,
-            "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
-            "values": {
-              "confirmed_outer_updates_observed": 350,
-              "inner_updates_actual": 14000,
-              "outer_attempts_dispatched": 350,
-              "outer_updates_completed": 350,
-              "replayed_observed_outer_updates": 0,
-              "status": "INTERRUPTED_NOT_COMPLETE",
-              "validation_checkpoints": 6
-            }
-          }
-        ],
-        "slot": 0,
-        "status": "RUNNING"
+        "method": "P+PCT",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -184,54 +167,12 @@
       {
         "configuration": {
           "dimension": 8,
-          "method": "P",
-          "phase": "screening",
-          "radius": 0.35,
-          "seed": 20261018
-        },
-        "key": "meta-835cd7bb17f67c560f3e68e575632893b78909b50cc1b09d636eda98b980e41c",
-        "kind": "meta_screening",
-        "method": "P",
-        "observations": [],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "dimension": 2,
-          "method": "P+PCT",
-          "phase": "screening",
-          "radius": 0.05,
-          "seed": 20261018
-        },
-        "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
-        "kind": "meta_screening",
-        "method": "P+PCT",
-        "observations": [],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "dimension": 2,
-          "method": "P+PCT",
-          "phase": "screening",
-          "radius": 0.15,
-          "seed": 20261018
-        },
-        "key": "meta-c791aea858c1d64f33374c0b9eb321ab2e502be5dacf1fda12976cbc60fe74fc",
-        "kind": "meta_screening",
-        "method": "P+PCT",
-        "observations": [],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "dimension": 2,
           "method": "P+PCT",
           "phase": "screening",
           "radius": 0.35,
           "seed": 20261018
         },
-        "key": "meta-a3e418568036ee54ddce224630b20694a12742debe92755631642dc71ccef418",
+        "key": "meta-68e503d29700015056a50083b2b4c1381c3cf83d78735d64b87f68c0bc405f5f",
         "kind": "meta_screening",
         "method": "P+PCT",
         "observations": [],
@@ -239,27 +180,13 @@
       },
       {
         "configuration": {
-          "dimension": 4,
-          "method": "P+PCT",
-          "phase": "screening",
-          "radius": 0.05,
-          "seed": 20261018
-        },
-        "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
-        "kind": "meta_screening",
-        "method": "P+PCT",
-        "observations": [],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "dimension": 4,
+          "dimension": 8,
           "method": "P+PCT",
           "phase": "screening",
           "radius": 0.15,
           "seed": 20261018
         },
-        "key": "meta-91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1",
+        "key": "meta-6ecd2c6f9c93b8a36b880f4fae7c93fa0a4f650559046d18c33e416c5b227fe7",
         "kind": "meta_screening",
         "method": "P+PCT",
         "observations": [],
@@ -282,26 +209,40 @@
       {
         "configuration": {
           "dimension": 8,
-          "method": "P+PCT",
+          "method": "P",
           "phase": "screening",
-          "radius": 0.05,
+          "radius": 0.35,
           "seed": 20261018
         },
-        "key": "meta-03359b6962bcf552aad2c6b63030efc0b7d2f7b22804b40d21e3c2d2d6699bd4",
+        "key": "meta-835cd7bb17f67c560f3e68e575632893b78909b50cc1b09d636eda98b980e41c",
         "kind": "meta_screening",
-        "method": "P+PCT",
+        "method": "P",
         "observations": [],
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
-          "dimension": 8,
+          "dimension": 4,
           "method": "P+PCT",
           "phase": "screening",
           "radius": 0.15,
           "seed": 20261018
         },
-        "key": "meta-6ecd2c6f9c93b8a36b880f4fae7c93fa0a4f650559046d18c33e416c5b227fe7",
+        "key": "meta-91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1",
+        "kind": "meta_screening",
+        "method": "P+PCT",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "dimension": 2,
+          "method": "P+PCT",
+          "phase": "screening",
+          "radius": 0.35,
+          "seed": 20261018
+        },
+        "key": "meta-a3e418568036ee54ddce224630b20694a12742debe92755631642dc71ccef418",
         "kind": "meta_screening",
         "method": "P+PCT",
         "observations": [],
@@ -310,12 +251,71 @@
       {
         "configuration": {
           "dimension": 8,
-          "method": "P+PCT",
+          "method": "P",
           "phase": "screening",
-          "radius": 0.35,
+          "radius": 0.05,
           "seed": 20261018
         },
-        "key": "meta-68e503d29700015056a50083b2b4c1381c3cf83d78735d64b87f68c0bc405f5f",
+        "error_type": "ValueError",
+        "job_id": "772076",
+        "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+        "kind": "meta_screening",
+        "method": "P",
+        "observations": [
+          {
+            "age_seconds": 12595.8,
+            "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
+            "values": {
+              "confirmed_outer_updates_observed": 350,
+              "inner_updates_actual": 14000,
+              "outer_attempts_dispatched": 350,
+              "outer_updates_completed": 350,
+              "replayed_observed_outer_updates": 0,
+              "status": "INTERRUPTED_NOT_COMPLETE",
+              "validation_checkpoints": 6
+            }
+          }
+        ],
+        "slot": 0,
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "dimension": 2,
+          "method": "P+PCT",
+          "phase": "screening",
+          "radius": 0.15,
+          "seed": 20261018
+        },
+        "key": "meta-c791aea858c1d64f33374c0b9eb321ab2e502be5dacf1fda12976cbc60fe74fc",
+        "kind": "meta_screening",
+        "method": "P+PCT",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "dimension": 4,
+          "method": "P+PCT",
+          "phase": "screening",
+          "radius": 0.05,
+          "seed": 20261018
+        },
+        "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
+        "kind": "meta_screening",
+        "method": "P+PCT",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "dimension": 2,
+          "method": "P+PCT",
+          "phase": "screening",
+          "radius": 0.05,
+          "seed": 20261018
+        },
+        "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
         "kind": "meta_screening",
         "method": "P+PCT",
         "observations": [],
@@ -372,71 +372,47 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1792913790.7877092,
+  "sampled_unix": 1792913970.789718,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 260279.8,
+    "age_seconds": 260459.8,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 260623.8,
+    "age_seconds": 260803.8,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
-    {
-      "key": "pilot",
-      "kind": "pilot",
-      "status": "COMPLETE"
-    },
-    {
-      "key": "source",
-      "kind": "source",
-      "status": "COMPLETE"
-    },
     {
       "key": "classical",
       "kind": "classical",
       "status": "COMPLETE"
     },
     {
-      "key": "reference-20261018",
-      "kind": "reference",
-      "status": "COMPLETE"
-    },
-    {
-      "key": "reference-20261019",
-      "kind": "reference",
-      "status": "COMPLETE"
-    },
-    {
-      "key": "reference-20261020",
-      "kind": "reference",
-      "status": "COMPLETE"
-    },
-    {
       "configuration": {
         "dimension": 8,
-        "method": "B8",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-dee089adcdf9ffd04795a1e348f98765f98b72697dba0cb1d4f180199a78cbe8",
-      "kind": "meta_engineering",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "B8",
+        "method": "P+PCT",
         "phase": "screening",
         "radius": 0.05,
         "seed": 20261018
       },
-      "key": "meta-21464523523b75f20de3a2f52dbbbd7752dcc46180ba139e9add57975ddc4040",
+      "key": "meta-03359b6962bcf552aad2c6b63030efc0b7d2f7b22804b40d21e3c2d2d6699bd4",
+      "kind": "meta_screening",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-09c11a8fa118b2e8e98aec7856eb7dacdb578c096dd449e10d59ca9bb05e0e97",
       "kind": "meta_screening",
       "method": "B8",
       "status": "COMPLETE"
@@ -456,164 +432,41 @@
     },
     {
       "configuration": {
-        "dimension": 2,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-56f020324c20a581e060776516000767eef342cd040e8c23195d1adec6f9c1d8",
-      "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
         "dimension": 4,
-        "method": "B8",
+        "method": "B11",
         "phase": "screening",
         "radius": 0.05,
         "seed": 20261018
       },
-      "key": "meta-b993c1630cd54189e3bb1870eb22401c966c8a5f406fe767739c05f5d260e61e",
+      "key": "meta-0e4d1e7a013d1a47eb72f1d7f9b0b14ebb53802f59ac7bbbe1bd5d9d30677a35",
       "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-09c11a8fa118b2e8e98aec7856eb7dacdb578c096dd449e10d59ca9bb05e0e97",
-      "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-5e53852f5a5bdde3d699a5104b614e1f10ff53f2cadcbef7705a1d9feafca0b8",
-      "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-48528d41d0e5434e65c0bb290b063df00349a6590e8fbfd37e68fa5d7b506bb0",
-      "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-b059288af770484d2924795a8abb1fc39b926b6da1281011b2cfb091fd669fa2",
-      "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-cb15058f5008788c3d8dca2ab704d67b2ea8332786a44e295c37a0f5b03458a9",
-      "kind": "meta_screening",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "key": "meta-selection-B8",
-      "kind": "meta_selection",
-      "method": "B8",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-eb960a13c497761581f6a40a69992cce712dc95b1c02f99433d60c4ca08bcaac",
-      "kind": "meta_engineering",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 1,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-a4ee3065674d14d73b0c830f8d8f45da2dd0274813c54af82d5c1495a52bfa11",
-      "kind": "meta_screening",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 1,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-5d9e027283b2ada3e8e1d5b114032e25801faffb567783fbf27c3685c9e63e5f",
-      "kind": "meta_screening",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 1,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-be4f71d96dbb6135eff6edf46f89d48f8ac63a336d00041b0120e7ce5e712f67",
-      "kind": "meta_screening",
-      "method": "B10",
+      "method": "B11",
       "status": "COMPLETE"
     },
     {
       "configuration": {
         "dimension": 2,
-        "method": "B10",
+        "method": "B8",
         "phase": "screening",
         "radius": 0.05,
         "seed": 20261018
       },
-      "key": "meta-3d4b64b8e892aa8da2c8c0746425e73b7c941ae55eb1d796400960f763ce68c3",
+      "key": "meta-21464523523b75f20de3a2f52dbbbd7752dcc46180ba139e9add57975ddc4040",
       "kind": "meta_screening",
-      "method": "B10",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-217466689bf1ff93787e5f4aa360f63e07fd099761392c86e20856eda9d82f38",
+      "kind": "meta_screening",
+      "method": "P",
       "status": "COMPLETE"
     },
     {
@@ -634,193 +487,12 @@
         "dimension": 2,
         "method": "B10",
         "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-9bf21cf42ae24fe375884d6315322bf5b6e8ff8352b5149d95a62b7bf6cc2021",
-      "kind": "meta_screening",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "screening",
         "radius": 0.05,
         "seed": 20261018
       },
-      "key": "meta-8d0fb1b8a796a417dd1fffe144fe701a8f5680313fdfae85c5fbc097413d9c29",
+      "key": "meta-3d4b64b8e892aa8da2c8c0746425e73b7c941ae55eb1d796400960f763ce68c3",
       "kind": "meta_screening",
       "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-e37fc35eaa7fe949be3c03427857c5ca1f660e86bea5497539d59b9725b74910",
-      "kind": "meta_screening",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-8d1c1dabdd0f3d8ff142e89b0f20e2213a77aafe406afd5b621002292c9ffada",
-      "kind": "meta_screening",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "key": "meta-selection-B10",
-      "kind": "meta_selection",
-      "method": "B10",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-4b3ce17c1bea1692e17285311c889bc7a23bc50b22a630772dcb31e5d95f5d6f",
-      "kind": "meta_engineering",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 1,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-4680b4564c80ad69dc6adeb052a157a570394a09c2cffbd03e8bae76f8b2cbae",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 1,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-5e936bc6c7831a2a26a6fe6caa2e7f193f3febd4dc7974f1f543b75c8bd1882e",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 1,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-cce173539e514665b368827d3c2d2617fa969947f0dd60e7a358e02a23d2dcd3",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-b31ec445c58cf63ca34dcaaaec0a900922882d5890fc57282bd528ff5c3dd950",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-dd526209422533db84d2987549ab21546822e762c22f68e06f5b9a0306a32d22",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-5220adf783ca11bf5f5dc83a035f43534fdda5d7514666195e6989ae2d16fd34",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-0e4d1e7a013d1a47eb72f1d7f9b0b14ebb53802f59ac7bbbe1bd5d9d30677a35",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-b6ff5588f84e873c786661a8983b57ae7cf21cfa99ffa877a466db0517467c16",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-8a57ed60c6ee5f4d52dc4983da017cfde822f2f012ff9dee20fade02a18a2382",
-      "kind": "meta_screening",
-      "method": "B11",
-      "status": "COMPLETE"
-    },
-    {
-      "key": "meta-selection-B11",
-      "kind": "meta_selection",
-      "method": "B11",
       "status": "COMPLETE"
     },
     {
@@ -838,127 +510,55 @@
     },
     {
       "configuration": {
-        "dimension": 2,
-        "method": "P",
+        "dimension": 1,
+        "method": "B11",
         "phase": "screening",
         "radius": 0.05,
         "seed": 20261018
       },
-      "key": "meta-60a8e9ba83dcd5e9de8b73a6302f6e5b98375d1a863f5817f46c7da0c4a54a57",
+      "key": "meta-4680b4564c80ad69dc6adeb052a157a570394a09c2cffbd03e8bae76f8b2cbae",
       "kind": "meta_screening",
-      "method": "P",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-b664320275d24616d152ded711fc14aac90db2c11355ccd68032b58e47dd9f15",
-      "kind": "meta_screening",
-      "method": "P",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-9db55490e2672639cef33f71b04de362ab49ec7a1e6c34631f17bcf7e9fb704f",
-      "kind": "meta_screening",
-      "method": "P",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-ee724f04b7380c3f45530e7b684a4d1af8ce05b16c3e6d92b9d10fb65735c607",
-      "kind": "meta_screening",
-      "method": "P",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-217466689bf1ff93787e5f4aa360f63e07fd099761392c86e20856eda9d82f38",
-      "kind": "meta_screening",
-      "method": "P",
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-727327ea56bfcf5cc7cf55b054f005ab573ef46c16a40b67b8ea597f8c8105df",
-      "kind": "meta_screening",
-      "method": "P",
+      "method": "B11",
       "status": "COMPLETE"
     },
     {
       "configuration": {
         "dimension": 8,
-        "method": "P+PCT",
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-48528d41d0e5434e65c0bb290b063df00349a6590e8fbfd37e68fa5d7b506bb0",
+      "kind": "meta_screening",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B11",
         "phase": "engineering",
         "radius": 0.35,
         "seed": 20261018
       },
-      "job_id": "772076",
-      "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
+      "key": "meta-4b3ce17c1bea1692e17285311c889bc7a23bc50b22a630772dcb31e5d95f5d6f",
       "kind": "meta_engineering",
-      "method": "P+PCT",
-      "slot": 0,
+      "method": "B11",
       "status": "COMPLETE"
     },
     {
       "configuration": {
-        "dimension": 8,
-        "method": "P",
+        "dimension": 2,
+        "method": "B11",
         "phase": "screening",
-        "radius": 0.05,
+        "radius": 0.35,
         "seed": 20261018
       },
-      "error_type": "ValueError",
-      "job_id": "772076",
-      "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+      "key": "meta-5220adf783ca11bf5f5dc83a035f43534fdda5d7514666195e6989ae2d16fd34",
       "kind": "meta_screening",
-      "method": "P",
-      "observations": [
-        {
-          "age_seconds": 12415.8,
-          "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
-          "values": {
-            "confirmed_outer_updates_observed": 350,
-            "inner_updates_actual": 14000,
-            "outer_attempts_dispatched": 350,
-            "outer_updates_completed": 350,
-            "replayed_observed_outer_updates": 0,
-            "status": "INTERRUPTED_NOT_COMPLETE",
-            "validation_checkpoints": 6
-          }
-        }
-      ],
-      "slot": 0,
-      "status": "RUNNING"
+      "method": "B11",
+      "status": "COMPLETE"
     },
     {
       "configuration": {
@@ -979,111 +579,78 @@
     },
     {
       "configuration": {
-        "dimension": 8,
+        "dimension": 2,
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-56f020324c20a581e060776516000767eef342cd040e8c23195d1adec6f9c1d8",
+      "kind": "meta_screening",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 1,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-5d9e027283b2ada3e8e1d5b114032e25801faffb567783fbf27c3685c9e63e5f",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-5e53852f5a5bdde3d699a5104b614e1f10ff53f2cadcbef7705a1d9feafca0b8",
+      "kind": "meta_screening",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 1,
+        "method": "B11",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-5e936bc6c7831a2a26a6fe6caa2e7f193f3febd4dc7974f1f543b75c8bd1882e",
+      "kind": "meta_screening",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
         "method": "P",
         "phase": "screening",
-        "radius": 0.35,
+        "radius": 0.05,
         "seed": 20261018
       },
-      "key": "meta-835cd7bb17f67c560f3e68e575632893b78909b50cc1b09d636eda98b980e41c",
+      "key": "meta-60a8e9ba83dcd5e9de8b73a6302f6e5b98375d1a863f5817f46c7da0c4a54a57",
       "kind": "meta_screening",
       "method": "P",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
-      "kind": "meta_screening",
-      "method": "P+PCT",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-c791aea858c1d64f33374c0b9eb321ab2e502be5dacf1fda12976cbc60fe74fc",
-      "kind": "meta_screening",
-      "method": "P+PCT",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "dimension": 2,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-a3e418568036ee54ddce224630b20694a12742debe92755631642dc71ccef418",
-      "kind": "meta_screening",
-      "method": "P+PCT",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
-      "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
-      "kind": "meta_screening",
-      "method": "P+PCT",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
-      "key": "meta-91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1",
-      "kind": "meta_screening",
-      "method": "P+PCT",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
-      "key": "meta-7ddbcd2c73d15ad32465d8160a7128c89cc91dda83011da64fdf0f538bf13fdc",
-      "kind": "meta_screening",
-      "method": "P+PCT",
-      "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "status": "COMPLETE"
     },
     {
       "configuration": {
         "dimension": 8,
         "method": "P+PCT",
         "phase": "screening",
-        "radius": 0.05,
+        "radius": 0.35,
         "seed": 20261018
       },
-      "key": "meta-03359b6962bcf552aad2c6b63030efc0b7d2f7b22804b40d21e3c2d2d6699bd4",
+      "key": "meta-68e503d29700015056a50083b2b4c1381c3cf83d78735d64b87f68c0bc405f5f",
       "kind": "meta_screening",
       "method": "P+PCT",
       "observations": [],
@@ -1105,17 +672,425 @@
     },
     {
       "configuration": {
-        "dimension": 8,
+        "dimension": 4,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-727327ea56bfcf5cc7cf55b054f005ab573ef46c16a40b67b8ea597f8c8105df",
+      "kind": "meta_screening",
+      "method": "P",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
         "method": "P+PCT",
         "phase": "screening",
         "radius": 0.35,
         "seed": 20261018
       },
-      "key": "meta-68e503d29700015056a50083b2b4c1381c3cf83d78735d64b87f68c0bc405f5f",
+      "key": "meta-7ddbcd2c73d15ad32465d8160a7128c89cc91dda83011da64fdf0f538bf13fdc",
       "kind": "meta_screening",
       "method": "P+PCT",
       "observations": [],
       "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-835cd7bb17f67c560f3e68e575632893b78909b50cc1b09d636eda98b980e41c",
+      "kind": "meta_screening",
+      "method": "P",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B11",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-8a57ed60c6ee5f4d52dc4983da017cfde822f2f012ff9dee20fade02a18a2382",
+      "kind": "meta_screening",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-8d0fb1b8a796a417dd1fffe144fe701a8f5680313fdfae85c5fbc097413d9c29",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-8d1c1dabdd0f3d8ff142e89b0f20e2213a77aafe406afd5b621002292c9ffada",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "P+PCT",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1",
+      "kind": "meta_screening",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-9bf21cf42ae24fe375884d6315322bf5b6e8ff8352b5149d95a62b7bf6cc2021",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-9db55490e2672639cef33f71b04de362ab49ec7a1e6c34631f17bcf7e9fb704f",
+      "kind": "meta_screening",
+      "method": "P",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "P+PCT",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-a3e418568036ee54ddce224630b20694a12742debe92755631642dc71ccef418",
+      "kind": "meta_screening",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 1,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-a4ee3065674d14d73b0c830f8d8f45da2dd0274813c54af82d5c1495a52bfa11",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-b059288af770484d2924795a8abb1fc39b926b6da1281011b2cfb091fd669fa2",
+      "kind": "meta_screening",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "error_type": "ValueError",
+      "job_id": "772076",
+      "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+      "kind": "meta_screening",
+      "method": "P",
+      "observations": [
+        {
+          "age_seconds": 12595.8,
+          "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
+          "values": {
+            "confirmed_outer_updates_observed": 350,
+            "inner_updates_actual": 14000,
+            "outer_attempts_dispatched": 350,
+            "outer_updates_completed": 350,
+            "replayed_observed_outer_updates": 0,
+            "status": "INTERRUPTED_NOT_COMPLETE",
+            "validation_checkpoints": 6
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "B11",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-b31ec445c58cf63ca34dcaaaec0a900922882d5890fc57282bd528ff5c3dd950",
+      "kind": "meta_screening",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-b664320275d24616d152ded711fc14aac90db2c11355ccd68032b58e47dd9f15",
+      "kind": "meta_screening",
+      "method": "P",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B11",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-b6ff5588f84e873c786661a8983b57ae7cf21cfa99ffa877a466db0517467c16",
+      "kind": "meta_screening",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-b993c1630cd54189e3bb1870eb22401c966c8a5f406fe767739c05f5d260e61e",
+      "kind": "meta_screening",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 1,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-be4f71d96dbb6135eff6edf46f89d48f8ac63a336d00041b0120e7ce5e712f67",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "P+PCT",
+        "phase": "engineering",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "job_id": "772076",
+      "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
+      "kind": "meta_engineering",
+      "method": "P+PCT",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "P+PCT",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-c791aea858c1d64f33374c0b9eb321ab2e502be5dacf1fda12976cbc60fe74fc",
+      "kind": "meta_screening",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "B8",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-cb15058f5008788c3d8dca2ab704d67b2ea8332786a44e295c37a0f5b03458a9",
+      "kind": "meta_screening",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 1,
+        "method": "B11",
+        "phase": "screening",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-cce173539e514665b368827d3c2d2617fa969947f0dd60e7a358e02a23d2dcd3",
+      "kind": "meta_screening",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "P+PCT",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
+      "kind": "meta_screening",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "B11",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-dd526209422533db84d2987549ab21546822e762c22f68e06f5b9a0306a32d22",
+      "kind": "meta_screening",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "B8",
+        "phase": "engineering",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-dee089adcdf9ffd04795a1e348f98765f98b72697dba0cb1d4f180199a78cbe8",
+      "kind": "meta_engineering",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B10",
+        "phase": "screening",
+        "radius": 0.15,
+        "seed": 20261018
+      },
+      "key": "meta-e37fc35eaa7fe949be3c03427857c5ca1f660e86bea5497539d59b9725b74910",
+      "kind": "meta_screening",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 2,
+        "method": "P+PCT",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
+      "kind": "meta_screening",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B10",
+        "phase": "engineering",
+        "radius": 0.35,
+        "seed": 20261018
+      },
+      "key": "meta-eb960a13c497761581f6a40a69992cce712dc95b1c02f99433d60c4ca08bcaac",
+      "kind": "meta_engineering",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "P",
+        "phase": "screening",
+        "radius": 0.05,
+        "seed": 20261018
+      },
+      "key": "meta-ee724f04b7380c3f45530e7b684a4d1af8ce05b16c3e6d92b9d10fb65735c607",
+      "kind": "meta_screening",
+      "method": "P",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "meta-selection-B10",
+      "kind": "meta_selection",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "meta-selection-B11",
+      "kind": "meta_selection",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "meta-selection-B8",
+      "kind": "meta_selection",
+      "method": "B8",
+      "status": "COMPLETE"
     },
     {
       "key": "meta-selection-P",
@@ -1128,9 +1103,34 @@
       "kind": "meta_selection",
       "method": "P+PCT",
       "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "key": "pilot",
+      "kind": "pilot",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "reference-20261018",
+      "kind": "reference",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "reference-20261019",
+      "kind": "reference",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "reference-20261020",
+      "kind": "reference",
+      "status": "COMPLETE"
+    },
+    {
+      "key": "source",
+      "kind": "source",
+      "status": "COMPLETE"
     }
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-25T07:36:30Z"
+  "updated_utc": "2026-10-25T07:39:30Z"
 }
