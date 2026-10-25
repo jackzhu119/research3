@@ -1,0 +1,44 @@
+{
+  "status": "PASSED_TARGETED_RUNTIME_AND_UPLOAD_CHECKS",
+  "python_tested": [
+    "3.12.14",
+    "3.12.3"
+  ],
+  "isolated_flags": "-I -S",
+  "runtime_tests": 36,
+  "upload_channel_tests": 16,
+  "total_unique_tests": 61,
+  "slurm_backend": "mocked",
+  "real_subprocess_and_usr1_tested": true,
+  "large_evidence_file_bytes_tested": 73400320,
+  "school_gpu_execution_verified": false,
+  "scope": [
+    "three independent single-GPU jobs, each hpc_gpu16CPU64G",
+    "QOS rejection backoff without duplicate submissions",
+    "checkpoint identities/leases/native lock reuse",
+    "independent paper+archive network failure isolation",
+    "complete CSV multiline row reconstruction",
+    "exact >64MiB source reconstruction",
+    "per-completed-task archive inventory reuse",
+    "final archive pointer requires tasks and final report complete"
+  ],
+  "files": {
+    "generic_scheduler.py": "80b9cc8d70d21498f50bf90252b52b26e06e3ede357672a3034f3549c4d20e4e",
+    "result_channels.py": "966d9da8df8d963b7954cd71756ac8345dbb8161ff70a11ca7975c67105bfa09",
+    "backend_entry.py": "576118c37439261d4d721ea12daf3416d06b96d83101e46c5a302a9aef83a64b",
+    "START.py": "e41c81a2c6b62a0b8d3b1de5e1abfde6a0adb700a05b4a22911b026a01043998",
+    "report_entry.py": "86a65598dcedc48bfdaa334333411fd5e4dd87c9ae4fb4cd0560b41e0b3dad4e",
+    "three_jobs.py": "f5441bf962cbe03eb833924cb6fbcbce94f48a190ad7af25862304f26d8345b7",
+    "paper_credentials.py": "d3fe644e95c1ff25e0fa798d0421a57e23c4da2d04d97b8ed859d453234b8756",
+    "coordinator.py": "3077b9dfe785ec3420e587830ce43e60d1ddc2772b795a936095c5e1789ecb44",
+    "paper3_result_transport.py": "216ddf5b4b0c714847d2207beea2178d40005213d6c31e6ce5963395d3bc6319",
+    "monitor.py": "509c81b67d94287806ed74b5ef13ceaa446dd5d43e40882b4188506a49f7aea5",
+    "report_dispatch.py": "f970299d74e61a7557bbc5bbefd543e28377635ccfed6afb86b7f6caa5d31e1b"
+  },
+  "independent_review": "r9_result_analysis: same-content metadata refresh fixed and regression tested; stale CSV shard cleanup fixed; no remaining P1 reported",
+  "final_test_python": "3.12.3",
+  "transport_tests": 9,
+  "archive_format": "Per-complete-task deterministic tar.gz streams split32MiB; independent current plan/report archive. Per-source file SHA+bytes+tarpath in group manifests; final index only groups. No per-small-file assets.",
+  "archive_asset_cache": "Per-release id successful-list cache; invalidate after ambiguous POST acknowledgment. Lost-ack relist regression passes.",
+  "release_sharding": "64 deterministic task-key SHA first-byte mod64 buckets; receipts include release_id and actual verified URL"
+}

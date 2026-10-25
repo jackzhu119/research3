@@ -1,0 +1,78 @@
+{
+  "status": "FINAL_PAYLOAD_LOCAL_ISOLATED_VALIDATED_NO_SCHOOL_SUBMISSION",
+  "utc": "2026-10-25T08:24:06Z",
+  "python": "Python 3.12.3",
+  "flags": "-I -S -B -u",
+  "wrapper_sha256": "7dce266858e9e4bcf9b83e169e484202bf5d7472c4537c7ef5b958be3c1df6fb",
+  "payload_sha256": "5e72df4167af76d43604389c59c775c4728b30a446c6f41cd51c70934e8b232e",
+  "wrapper_bytes": 36189269,
+  "uncompressed_payload_bytes": 36603905,
+  "cases": [
+    {
+      "case": "isolated_fresh_install_only",
+      "returncode": 0,
+      "events": [
+        "PACKAGE_READY"
+      ]
+    },
+    {
+      "case": "isolated_cached_install_only",
+      "returncode": 0,
+      "events": [
+        "PACKAGE_READY"
+      ]
+    },
+    {
+      "case": "isolated_prepare_only_no_sbatch",
+      "returncode": 0,
+      "events": [
+        "PACKAGE_READY",
+        "ROUND_9_THREE_JOBS_PREPARED"
+      ]
+    },
+    {
+      "case": "isolated_default_mode_no_sbatch",
+      "returncode": 0,
+      "events": [
+        "PACKAGE_READY",
+        "ROUND_9_THREE_JOBS_PREPARED"
+      ]
+    }
+  ],
+  "tasks": 1548,
+  "counts": {
+    "feature_reference": 6,
+    "core": 234,
+    "select": 12,
+    "stress": 432,
+    "label_null": 54,
+    "prior_sensitivity": 702,
+    "anchor_sensitivity": 108
+  },
+  "resources": {
+    "partition": "hpc_gpu",
+    "jobs": 3,
+    "gpus_per_job": 1,
+    "cpus_per_job": 16,
+    "memory_per_job": "64G",
+    "hardware": "Full A100 40GB/80GB; actual device recorded without marketing-name gate"
+  },
+  "school_jobs_submitted": false,
+  "school_gpu_execution_verified": false,
+  "all_external_cache_manifest_paths_resolve": true,
+  "fresh_install_and_cached_install": true,
+  "compute_node_downloads": false,
+  "remote_raw_api_download_verified": false,
+  "prior_delivery_tests": {
+    "count": 5,
+    "python": "3.12.3",
+    "includes": [
+      "interrupted transfer",
+      "endpoint-specific partial caches",
+      "backup Range rejection preserves raw progress",
+      "tampered bytes re-download",
+      "cached no-network reuse",
+      "default and prepare no-submit"
+    ]
+  }
+}
