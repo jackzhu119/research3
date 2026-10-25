@@ -4,10 +4,10 @@
   "complete_tasks": 0,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 30.1,
+    "progress_age_seconds": 24.1,
     "progress_path": "runs/followup_20261024_r6/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T15:12:14Z"
+    "updated_utc": "2026-10-25T15:15:20Z"
   },
   "experiment": "paper3-round6",
   "families": {
@@ -34,13 +34,40 @@
   },
   "gpu_slots": {
     "0": {
-      "status": "NOT_STARTED"
+      "job_id": "772073",
+      "pid": 18265,
+      "status": "RUNNING",
+      "task_key": "basis-map-r4-seed20261019",
+      "worker_progress": {
+        "outer_update": 0,
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-25T15:14:46Z"
+      }
     },
     "1": {
-      "status": "NOT_STARTED"
+      "job_id": "772074",
+      "pid": 18260,
+      "status": "RUNNING",
+      "task_key": "basis-map-r4-seed20261018",
+      "worker_progress": {
+        "outer_update": 0,
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-25T15:14:46Z"
+      }
     },
     "2": {
-      "status": "NOT_STARTED"
+      "job_id": "772075",
+      "pid": 18679,
+      "status": "RUNNING",
+      "task_key": "basis-map-r4-seed20261020",
+      "worker_progress": {
+        "outer_update": 0,
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-25T15:14:31Z"
+      }
     }
   },
   "interpretation": "This is the new three-job stream. The original status.json and its old monitor are retained separately.",
@@ -49,76 +76,76 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772073",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu4",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu4",
       "slot": 0,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     },
     {
       "attempt": 1,
       "cpus": 12,
       "job_id": "772074",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu4",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu4",
       "slot": 1,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     },
     {
       "attempt": 1,
       "cpus": 12,
       "job_id": "772075",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu4",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu4",
       "slot": 2,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     }
   ],
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "0:00",
-        "job_id": "772073",
-        "marker": "paper3r6p-1223a296dd91e758",
-        "name": "paper3r6p-1223a296dd91e758-s0-a1",
-        "node": "",
-        "partition": "hpc_gpu1",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
-      },
-      {
-        "elapsed": "0:00",
-        "job_id": "772074",
-        "marker": "paper3r6p-1223a296dd91e758",
-        "name": "paper3r6p-1223a296dd91e758-s1-a1",
-        "node": "",
-        "partition": "hpc_gpu1",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
-      },
-      {
-        "elapsed": "0:00",
+        "elapsed": "2:13",
         "job_id": "772075",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s2-a1",
-        "node": "",
+        "node": "gpu4",
         "partition": "hpc_gpu1",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
+        "reason_or_node": "gpu4",
+        "state": "RUNNING"
+      },
+      {
+        "elapsed": "2:37",
+        "job_id": "772073",
+        "marker": "paper3r6p-1223a296dd91e758",
+        "name": "paper3r6p-1223a296dd91e758-s0-a1",
+        "node": "gpu4",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "gpu4",
+        "state": "RUNNING"
+      },
+      {
+        "elapsed": "2:37",
+        "job_id": "772074",
+        "marker": "paper3r6p-1223a296dd91e758",
+        "name": "paper3r6p-1223a296dd91e758-s1-a1",
+        "node": "gpu4",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "gpu4",
+        "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T15:12:44Z",
+    "observed_utc": "2026-10-25T15:15:44Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -144,41 +171,77 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 6,
-  "sampled_unix": 1792941164.0505176,
+  "sampled_unix": 1792941344.0517197,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "basis",
       "index": 0,
-      "job_id": null,
+      "job_id": "772074",
       "key": "basis-map-r4-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 28.1,
+          "path": "runs/followup_20261024_r6/basis-map-r4-seed20261018/progress.json",
+          "values": {
+            "outer_update": 8,
+            "stage": "meta_train",
+            "status": "TRAINING",
+            "total_updates": 1000,
+            "updated_utc": "2026-10-25T15:15:16Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "basis",
       "index": 1,
-      "job_id": null,
+      "job_id": "772073",
       "key": "basis-map-r4-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 28.1,
+          "path": "runs/followup_20261024_r6/basis-map-r4-seed20261019/progress.json",
+          "values": {
+            "outer_update": 8,
+            "stage": "meta_train",
+            "status": "TRAINING",
+            "total_updates": 1000,
+            "updated_utc": "2026-10-25T15:15:16Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "basis",
       "index": 2,
-      "job_id": null,
+      "job_id": "772075",
       "key": "basis-map-r4-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 13.1,
+          "path": "runs/followup_20261024_r6/basis-map-r4-seed20261020/progress.json",
+          "values": {
+            "outer_update": 18,
+            "stage": "meta_train",
+            "status": "TRAINING",
+            "total_updates": 1000,
+            "updated_utc": "2026-10-25T15:15:31Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -1947,5 +2010,5 @@
   ],
   "total_tasks": 198,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T15:12:44Z"
+  "updated_utc": "2026-10-25T15:15:44Z"
 }
