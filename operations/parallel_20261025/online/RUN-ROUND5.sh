@@ -1,0 +1,28 @@
+(
+set -e
+P=/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python
+D="$HOME/paper3-parallel-downloads"
+mkdir -p "$D"
+F="$D/START-PAPER3-PARALLEL.py"
+H=823ffba7c11bac6675192a578b195ac20e388ba68e395b9b8ceb081f1be33a05
+R=bf35b06816cc24b114d9b959ee4733788419beb1
+Q=operations/parallel_20261025/online/START-PAPER3-PARALLEL.py
+A="${P%/bin/python}/lib/python3.12/site-packages/botocore/cacert.pem"
+C=(); if [ -f "$A" ]; then C=(--cacert "$A"); fi
+T=""
+trap 'rm -f "${T:-}"' EXIT
+until printf '%s  %s\n' "$H" "$F" | sha256sum -c - >/dev/null 2>&1
+ do
+  T=$(mktemp "$D/.download.XXXXXX")
+  for U in "https://raw.githubusercontent.com/jackzhu119/research3/$R/$Q" "https://api.github.com/repos/jackzhu119/research3/contents/$Q?ref=$R"
+  do
+    if curl -4 "${C[@]}" -fL --retry 2 --retry-delay 2 --connect-timeout 10 --max-time 90 -H 'Accept: application/vnd.github.raw+json' "$U" -o "$T" && printf '%s  %s\n' "$H" "$T" | sha256sum -c -
+    then mv -f "$T" "$F"; break; fi
+  done
+  if ! printf '%s  %s\n' "$H" "$F" | sha256sum -c - >/dev/null 2>&1; then
+    rm -f "$T"; printf 'DOWNLOAD_RETRY: 原训练保持运行，重试下载\n'; sleep 3
+  fi
+ done
+printf '%s  %s\n' "$H" "$F" | sha256sum -c -
+"$P" -I -S -B -u "$F" --round 5 --execute
+)
