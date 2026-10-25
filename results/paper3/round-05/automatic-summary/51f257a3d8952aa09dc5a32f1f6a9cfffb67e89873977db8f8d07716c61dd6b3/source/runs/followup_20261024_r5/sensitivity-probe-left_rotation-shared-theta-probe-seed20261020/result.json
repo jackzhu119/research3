@@ -1,0 +1,78 @@
+{
+  "basis": {
+    "basis_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5",
+    "identity": "a69cda83f481cd7ad1d8dab37d21f83d8b9bda1503553593c1134b30aa2327a8",
+    "key": "basis-single-r4-seed20261020",
+    "sha256": "e110433b8b36c6891c398853156d463f36ded72cca780b6244eab8bd2d7cea3a"
+  },
+  "data_identity": {
+    "manifest_sha256": "e959323209124bfe9c407c47d95d874dd0ff7ea9a15dae47eb002e36a3e0c857",
+    "signal_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+    "split_sha256": "1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd"
+  },
+  "elapsed_seconds": 19.971423056907952,
+  "holdout_used_for_selection": false,
+  "identity": "692ef1243c63586b4a0a4726e3b0e8cb76f658c1b12289c29c5bd59c7f7041cb",
+  "internal_check_not_external_validation": true,
+  "outer_updates": 0,
+  "runtime_corrections": {
+    "CUBLAS_WORKSPACE_CONFIG": ":4096:8",
+    "corrections": [
+      "support_EA_reference_dispatch"
+    ],
+    "executed_source_sha256": "896bd5e811c25b70dc099963809e1dc2b159ee7e1130a7402d01857dc5380b63",
+    "module": "paper3r5.worker",
+    "native_source_file_changed": false,
+    "original_file": "/public/home/zhuziyuan/paper3-round5-hpcgpu/02955e93c9180dadeb6e/paper3r5/worker.py",
+    "runtime_hook_sha256": "42b16aab1338de3d301dcaddf9061d7c0b9b7914b3e5947425f703a83ebcb7cb",
+    "source_sha256": "4ad46aa87c493f815b12edb990481d3765b130e61f0335bd8860478d95fda33c",
+    "torch_already_imported_at_compile": false,
+    "version": "paper3-runtime-fix-v1"
+  },
+  "selection": null,
+  "source_identity": {
+    "reference_receipt_sha256": "e2279465308c9621fb6462e474ad1af192026839d8a6f4d264b62cceb8a45932",
+    "signal_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+    "source_checkpoint_sha256": "f6cccb0fee3438428fb5396851bce137fd25e5bf8896af93ad4124dc25674eb3",
+    "source_receipt_sha256": "9b83b817efb21ae20bff4bb6ba4a6deb6e82d2c4baabd61b779bc7af51a5aafd"
+  },
+  "status": "COMPLETE",
+  "task": {
+    "baseline_group": "probe:single",
+    "basis_key": "basis-single-r4-seed20261020",
+    "budgets": [
+      20
+    ],
+    "config": {
+      "damping": 0.0001,
+      "geometry": "left_rotation",
+      "head_l2": 0.1,
+      "head_lr": 0.01,
+      "initializer": "tangent",
+      "inner_steps": 5,
+      "max_transform_deviation": null,
+      "radius": 0.15,
+      "rank": 4,
+      "tangent_steps": 10,
+      "theta_l2": 0.01,
+      "theta_lr": 0.05,
+      "variant": "geometry_tangent"
+    },
+    "diagnostics_budget": 20,
+    "family": "sensitivity",
+    "group": "probe:left_rotation",
+    "interpretation": "common identity-tangent theta/head; chart changes predictions only; not a deployment claim",
+    "key": "sensitivity-probe-left_rotation-shared-theta-probe-seed20261020",
+    "mechanism_probe": true,
+    "partition": "holdout",
+    "requires": [
+      "basis-single-r4-seed20261020"
+    ],
+    "scenarios": [
+      "clean"
+    ],
+    "seed": 20261020,
+    "setting": "shared-theta-probe",
+    "variant": "geometry_tangent"
+  }
+}
