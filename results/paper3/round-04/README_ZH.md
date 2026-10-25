@@ -1,20 +1,19 @@
-# 第4轮结果分区
+# 第4轮结果 · 支持内交叉拟合、收缩与稳健堆叠
 
-[返回总索引](../README_ZH.md)
+[结果分类](../README_ZH.md) · [本轮设计](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/experiments/ROUND4_ZH.md) · [最新进度](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/LIVE_STATUS_ZH.md)
 
-## 学校本地确认
+## 本次分类快照
 
-用户2026-10-25贴回的诊断：**17/204**；状态为`RUNNING`。第4轮作业772011正在三卡运行；第5、6轮作业772012、772013等待AssocGrpGRES配额。
+核对日期：2026-10-25（北京时间）。772011运行；仓库11:09快照48/204（23.5%），该计数不是当前实时采样。
 
-本次只归档本轮已有回传；完整结果上传范围是第2、3、7轮。
+- [本次冻结的监控/分析快照](monitor-snapshots/824a26ce41d6fb1bc2c2304bf63a54849d7badeb/status.json)
+- [来源和blob校验](monitor-snapshots/824a26ce41d6fb1bc2c2304bf63a54849d7badeb/provenance.json)
+- [持续更新的原始回传](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json)
 
-## 已有GitHub回传归档
+## 结果范围
 
-- 原分支：`paper3-r4-progress`
-- 固定提交：`fa6fabfd70230598a1cc71cbcb4d26e30a338012`
-- 原快照时间：`2026-10-25T01:19:09Z`
-- 原计数：3/204；原报告状态：`PARTIAL`
-- [保留原字节的历史快照](previous/fa6fabfd70230598a1cc71cbcb4d26e30a338012/status.json)
-- [来源和校验值](previous/fa6fabfd70230598a1cc71cbcb4d26e30a338012/provenance.json)
+- 本次未确认自动摘要指针；原始进度分支与上方冻结快照可读。
+- 本次未见完整归档 LATEST.json，不标为完整结果已上传。之后上传器发布该文件及 final/ 快照后，以引用的manifest与分片为准。
+- previous/ 如存在，保留此前归档的历史监控快照。
 
-该快照来自旧监控，任务计数和报告可能采集于不同时间；不要把旧计数当作学校当前进度。原进度分支继续保留。
+计算完成、摘要可读和完整归档发布分别记录。[完整上传的最后人工观测](../UPLOAD_STATUS_ZH.md)。

@@ -1,30 +1,29 @@
-# 论文3：按轮次分类的实验结果
+# 论文3 · 按轮分类的结果归档
 
-本分支将旧监控回传与学校本地完成后的完整结果分开归档。原自动进度分支保留，不合并为同一个计数。
+[仓库主页](https://github.com/jackzhu119/research3) · [最新进度](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/LIVE_STATUS_ZH.md) · [八轮实验](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/experiments/README_ZH.md) · [全部分支](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/BRANCHES_ZH.md)
 
-| 轮次 | 学校本地最后确认 | 本分区 |
+## 八轮结果入口
+
+| 轮次 | 本次整理确认 | 结果分区 |
 |---|---|---|
-| 第1轮 | 运行中；元筛选已完成32项 | [第1轮](round-01/README_ZH.md) |
-| 第2轮 | 66/66全部完成 | [第2轮](round-02/README_ZH.md) |
-| 第3轮 | 174/174全部完成 | [第3轮](round-03/README_ZH.md) |
-| 第4轮 | 17/204，三卡运行 | [第4轮](round-04/README_ZH.md) |
-| 第5轮 | 0/105，等待GPU配额 | [第5轮](round-05/README_ZH.md) |
-| 第6轮 | 0/198，等待GPU配额 | [第6轮](round-06/README_ZH.md) |
-| 第7轮 | 273/273全部完成 | [第7轮](round-07/README_ZH.md) |
+| 1 | 1作业运行、2作业排队；旧350更新记录尚未见RESUMED，需查看当前attempt日志。 | [第1轮](round-01/README_ZH.md) |
+| 2 | 66/66主计划完成，报告完成；完整包正在学校打包。 | [第2轮](round-02/README_ZH.md) |
+| 3 | 174/174主计划完成，报告完成；完整归档待顺序上传。 | [第3轮](round-03/README_ZH.md) |
+| 4 | 772011运行；仓库11:09快照48/204（23.5%），该计数不是当前实时采样。 | [第4轮](round-04/README_ZH.md) |
+| 5 | 0/105；772070/772071/772072已提交，均因AssocGrpGRES排队。 | [第5轮](round-05/README_ZH.md) |
+| 6 | 0/198；772073/772074/772075已提交，均因AssocGrpGRES排队。 | [第6轮](round-06/README_ZH.md) |
+| 7 | 学校主计划273/273完成，报告COMPLETE；仓库旧20/273为滞后计数，完整归档待上传。 | [第7轮](round-07/README_ZH.md) |
+| 8 | 0/2835；772121/772122/772123已提交，均因AssocGrpGRES排队。 | [第8轮](round-08/README_ZH.md) |
 
-这些本地状态来自用户2026-10-25贴回的只读检查，不是本分支在实时查询学校调度器。
+## 文件分类
 
-## 目录约定
+| 文件或目录 | 内容 | 是否完整预测或模型备份 |
+|---|---|---|
+| monitor-snapshots/ | 本次分类冻结的原始回传及来源 | 否 |
+| previous/ | 先前归档的历史回传 | 否 |
+| automatic-summary/ 与 AUTO_SUMMARY_LATEST.json | 已声明的分析摘要与报告 | 否 |
+| final/ 与 LATEST.json | 上传器发布的完整本轮输出索引、manifest和Release分片 | 按manifest声明范围确认 |
 
-- `round-NN/previous/<source_commit>/`：此前GitHub自动回传的不可变历史快照及原始来源、SHA校验值。快照可能滞后，只作为历史数据。
-- `round-NN/final/<snapshot_id>/`：学校完成后按轮上传的完整结果快照；具体文件和存储位置由该快照manifest声明。
-- `round-NN/LATEST.json`：上传器确认本轮声明文件全部传输并校验后发布的最终入口。没有这个入口时，不宣称完整结果已上传。
-- `INDEX.json`：静态分类索引，实时完整上传以各轮`LATEST.json`为准。
+第2/3/7轮完整上传器已在学校运行，最后人工观测为第2轮打包37.53%；这不是GitHub网络上传百分比。当前表是带日期的分类记录，之后完整归档以上传器的新回执为准。
 
-第2、3、7轮已经在学校本地完成，但完整文件仍需用户在login1执行上传命令。此处先归档此前已回传的数据，避免把“运行完成”和“文件上传完成”混为一谈。
-
-## 原进度来源
-
-第2轮：`paper3-v2-progress`；第3至7轮：`paper3-r3-progress`至`paper3-r7-progress`。
-
-本次归档和上传不提交训练、不取消作业、不重新跑测试或统计，也不改第1、4、5、6轮的运行。
+完整输出归档范围不自动包括原始EEG、共享源模型与Python环境。原始回传继续写各轮progress分支，学校本地文件继续保留。

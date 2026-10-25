@@ -1,24 +1,19 @@
-# 第3轮结果分区
+# 第3轮结果 · 信息几何、解析切线与Schur消头
 
-[返回总索引](../README_ZH.md)
+[结果分类](../README_ZH.md) · [本轮设计](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/experiments/ROUND3_ZH.md) · [最新进度](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/LIVE_STATUS_ZH.md)
 
-## 学校本地确认
+## 本次分类快照
 
-用户2026-10-25贴回的只读诊断显示：**174/174任务有COMPLETE结果回执**。这表明本地运行已完成；本目录的完整数据上传状态由后续`LATEST.json`及其引用清单决定，不能用本地完成代替远端文件传输完成。
+核对日期：2026-10-25（北京时间）。174/174主计划完成，报告完成；完整归档待顺序上传。
 
-## 本次完整上传
+- [本次冻结的监控/分析快照](monitor-snapshots/59198a756412743f285f13e36365bd4926d274d4/status.json)
+- [来源和blob校验](monitor-snapshots/59198a756412743f285f13e36365bd4926d274d4/provenance.json)
+- [持续更新的原始回传](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json)
 
-上传目的目录为`final/<snapshot_id>/`，按轮次隔离。每次上传的任务计划、结果、曲线、预测、诊断和模型/断点文件由该快照清单逐项声明。只有所有声明文件完成上传和校验后，上传器才发布本轮`LATEST.json`。
+## 结果范围
 
-完整上传不覆盖或删除`previous/`历史快照，也不修改其他轮次运行目录。
+- 本次未确认自动摘要指针；原始进度分支与上方冻结快照可读。
+- 本次未见完整归档 LATEST.json，不标为完整结果已上传。之后上传器发布该文件及 final/ 快照后，以引用的manifest与分片为准。
+- previous/ 如存在，保留此前归档的历史监控快照。
 
-## 已有GitHub回传归档
-
-- 原分支：`paper3-r3-progress`
-- 固定提交：`469ff98adb7c3015532493cdac6315d52ea0d903`
-- 原快照时间：`2026-10-24T19:24:53Z`
-- 原计数：96/174；原报告状态：`COMPLETE`
-- [保留原字节的历史快照](previous/469ff98adb7c3015532493cdac6315d52ea0d903/status.json)
-- [来源和校验值](previous/469ff98adb7c3015532493cdac6315d52ea0d903/provenance.json)
-
-该快照来自旧监控，任务计数和报告可能采集于不同时间；不要把旧计数当作学校当前进度。原进度分支继续保留。
+计算完成、摘要可读和完整归档发布分别记录。[完整上传的最后人工观测](../UPLOAD_STATUS_ZH.md)。
