@@ -295,7 +295,8 @@ def controller_loop(root, runtime, launch, *, stop_requested=lambda:False):
                     legacy_retired=True
                     put(runtime/'legacy-handoff-target.json',target)
                     saved = checkpoint_handoff_step(root,runtime/'legacy-handoffs'/target['job_id'],
-                        old_job=target['job_id'],expected_comment=target['comment'],emit=emit)
+                        old_job=target['job_id'],expected_comment=target['comment'],emit=emit,
+                        replacement_queue_proof=queued)
                     publish_progress(root,runtime,frontier,snapshot,state,handoff_status=saved['status'])
                     if saved['status']!='READY': time.sleep(10);continue
                     put(runtime/'HANDOFF_READY.json',{'status':'READY','old_job':target['job_id'],

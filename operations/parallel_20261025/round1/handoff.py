@@ -143,7 +143,7 @@ def _handoff_file_sha(path):
     return digest.hexdigest()
 
 
-def inspect_checkpoint_quiescence(root, old_job=OLD_JOB):
+def inspect_checkpoint_quiescence(root, old_job=OLD_JOB, *, skip_owner_locks=False):
     """Do not load torch or read datasets; native resumed kernels verify state."""
     root = Path(root).resolve()
     campaign = _handoff_read(root/'runs/training_campaign_v1/campaign_progress.json', {})
@@ -151,18 +151,24 @@ def inspect_checkpoint_quiescence(root, old_job=OLD_JOB):
         raise HandoffTransient('original_campaign_progress_not_readable')
     active = campaign.get('active') or {}
     record = campaign.get('active_process')
-    lock_paths = [root/'.paper3-hpc/direct-train.lock', root/'runs/.training_campaign_v1.lock']
+    owner_lock_paths = [root/'.paper3-hpc/direct-train.lock', root/'runs/.training_campaign_v1.lock']
+    lock_paths = [] if skip_owner_locks else list(owner_lock_paths)
     checkpoint = None
     receipt_status = None
+    active_progress = {}
+    active_kernel_wall = {}
+    native_job_lock = None
     if active.get('expected_receipt'):
         receipt = _handoff_relative(root, active['expected_receipt'])
         folder = receipt.parent
-        lock_paths.append(folder/'.job.lock')
+        native_job_lock = folder/'.job.lock'
+        lock_paths.append(native_job_lock)
         receipt_value = _handoff_read(receipt, {}) or {}
         receipt_status = receipt_value.get('status')
-        if active.get('kind') in META_KINDS and receipt_status not in COMPLETE_META:
+        if active.get('kind') in META_KINDS:
             latest = _handoff_read(folder/'latest_checkpoint.json')
             progress = _handoff_read(folder/'progress.json', {}) or {}
+            active_progress = progress
             if latest is not None:
                 filename = latest.get('path') if isinstance(latest, dict) else None
                 if (not isinstance(filename, str) or Path(filename).name != filename
@@ -177,9 +183,10 @@ def inspect_checkpoint_quiescence(root, old_job=OLD_JOB):
                     raise HandoffTransient('checkpoint_' + type(error).__name__) from None
                 checkpoint = {**latest, 'path': str(path.relative_to(root))}
                 wall = _handoff_read(folder/'wall_budget.json', {}) or {}
+                active_kernel_wall = wall
                 if wall and wall.get('interval') is not None:
                     return {'ready': False, 'reason': 'active_kernel_wall_interval_still_open'}
-            else:
+            elif receipt_status not in COMPLETE_META:
                 observed = [progress.get(key, 0) for key in ('outer_updates_completed',
                     'outer_attempts_dispatched', 'confirmed_outer_updates_observed', 'inner_updates_actual')]
                 # An initialization that never dispatched is not a lost model.
@@ -209,12 +216,57 @@ def inspect_checkpoint_quiescence(root, old_job=OLD_JOB):
                 'checkpoint': checkpoint, 'direct_status': direct.get('status'),
                 'old_locks_observed_free': [str(p.relative_to(root)) for p in lock_paths],
                 'campaign_wall_interval_closed': True,
+                'campaign_wall_journal_present': bool(wall),
+                'active_kernel_wall_journal_present': bool(active_kernel_wall),
+                'active_kernel_wall_interval_closed': bool(active_kernel_wall) and active_kernel_wall.get('interval') is None,
+                'active_process_cleanup_verified': isinstance(record, dict) and record.get('cleanup_verified') is True,
+                'observed_outer_updates_completed': active_progress.get('outer_updates_completed'),
+                'native_job_lock_observed_free': bool(native_job_lock and native_job_lock.is_file()),
+                'owner_locks_skipped': [str(p.relative_to(root)) for p in owner_lock_paths] if skip_owner_locks else [],
                 'prior_completed_actions': len(campaign.get('actions', [])),
                 'source_outputs_rewritten': False}
 
 
+def _handoff_replacement_proof(value):
+    """Caller has already observed the replacement queue before this handoff."""
+    if not isinstance(value, dict) or value.get('ready') is not True:
+        return None
+    jobs = value.get('jobs')
+    if not isinstance(jobs, list) or len(jobs) != 3:
+        return None
+    identifiers = [str(job.get('job_id','')) for job in jobs if isinstance(job,dict)]
+    if len(identifiers)!=3 or len(set(identifiers))!=3 or any(not re.fullmatch(r'\d+',job) for job in identifiers):
+        return None
+    return {'ready':True,'marker':value.get('marker'),'jobs':jobs}
+
+
+def _handoff_legacy_backup_proof(root, old_job):
+    """A completed native cleanup and closed journals precede legacy backup.
+
+    The original execute_campaign finally closes its journal before traversing
+    backup_manifest(root). Only the native task lock is required here: the old
+    direct/campaign owner locks intentionally remain held during bookkeeping.
+    """
+    proof = inspect_checkpoint_quiescence(root, old_job, skip_owner_locks=True)
+    if not proof.get('ready'):
+        return None
+    active = proof.get('active') or {}
+    checkpoint = proof.get('checkpoint') or {}
+    cursor, observed = checkpoint.get('outer_cursor'), proof.get('observed_outer_updates_completed')
+    if (active.get('kind') not in META_KINDS or not proof.get('active_process_cleanup_verified')
+            or not proof.get('native_job_lock_observed_free')
+            or not proof.get('campaign_wall_journal_present')
+            or not proof.get('campaign_wall_interval_closed')
+            or not proof.get('active_kernel_wall_journal_present')
+            or not proof.get('active_kernel_wall_interval_closed')
+            or type(cursor) is not int or type(observed) is not int or cursor < 0 or cursor != observed):
+        return None
+    return proof
+
+
 def checkpoint_handoff_step(root, state_dir, *, old_job=OLD_JOB, run=None, emit=None,
-                            expected_comment=OLD_COMMENT, expected_partition='hpc_gpu1', account=None):
+                            expected_comment=OLD_COMMENT, expected_partition='hpc_gpu1', account=None,
+                            replacement_queue_proof=None):
     """One nonblocking controller iteration; signal only this exact old batch."""
     root, state_dir = Path(root).resolve(), Path(state_dir).resolve()
     state_dir.mkdir(parents=True, exist_ok=True)
@@ -228,6 +280,30 @@ def checkpoint_handoff_step(root, state_dir, *, old_job=OLD_JOB, run=None, emit=
              'old_job': str(old_job), 'root': str(root), 'updated_utc': time.time(),
              'old_allocation': allocation, 'training_kernel_changed': False}
     if not allocation['terminal']:
+        replacement_proof = _handoff_replacement_proof(replacement_queue_proof)
+        success_at = previous.get('last_successful_signal_utc')
+        if (success_at is not None and time.time()-success_at >= 15 and replacement_proof is not None
+                and allocation['state'] in {'RUNNING','SUSPENDED','COMPLETING'}
+                and time.time()-previous.get('legacy_backup_cancel_requested_utc',0) >= 30):
+            proof = _handoff_legacy_backup_proof(root, old_job)
+            if proof is not None:
+                # Save authorization and native checkpoint proof BEFORE asking
+                # Slurm to end legacy bookkeeping. No process-group kill or
+                # node-local PID authority is introduced by this shortcut.
+                value.update(status='CHECKPOINT_SAVED_LEGACY_BACKUP_ONLY',
+                    legacy_bookkeeping_drain={'reason':'CHECKPOINT_SAVED_LEGACY_BACKUP_ONLY',
+                        'native_checkpoint_proof':proof,'replacement_queue_proof':replacement_proof,
+                        'successful_usr1_utc':success_at,'proof_saved_utc':time.time()})
+                _handoff_atomic(path,value)
+                result = _handoff_command(run,['scancel',str(old_job)])
+                value['legacy_backup_cancel_requested_utc'] = time.time()
+                value['legacy_backup_cancel_returncode'] = result.returncode
+                value['status'] = 'WAITING_OLD_BOOKKEEPING_TERMINAL'
+                _handoff_atomic(path,value)
+                _handoff_emit(emit,'OLD_CHECKPOINT_SAVED_LEGACY_BACKUP_CANCEL_REQUESTED',
+                    old_job=str(old_job),reason='CHECKPOINT_SAVED_LEGACY_BACKUP_ONLY',
+                    checkpoint=proof['checkpoint'],returncode=result.returncode)
+                return value
         # A pending allocation has no running kernel. The scheduler-side state
         # filter prevents this request killing it if it races into RUNNING.
         if allocation['state'] == 'PENDING' and time.time()-previous.get('last_pending_cancel_utc', 0) >= 30:
@@ -244,6 +320,8 @@ def checkpoint_handoff_step(root, state_dir, *, old_job=OLD_JOB, run=None, emit=
             value['last_signal_utc'] = time.time()
             value['signal_attempts'] = previous.get('signal_attempts', 0)+1
             value['last_signal_returncode'] = result.returncode
+            if result.returncode == 0:
+                value['last_successful_signal_utc'] = value['last_signal_utc']
             _handoff_emit(emit, 'OLD_RUNNER_CHECKPOINT_REQUESTED', old_job=str(old_job),
                           signal='USR1', returncode=result.returncode)
         value['status'] = 'WAITING_OLD_JOB'
