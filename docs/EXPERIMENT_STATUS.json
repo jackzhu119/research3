@@ -1144,7 +1144,7 @@
     ],
     "records": {
       "1": {
-        "status": "USER_SUBMITTED_HELD_WAITING_NODE_RANGE_REPAIR",
+        "status": "FIXED_MANAGERS_STARTED_EXISTING_JOB_IDS_PRESERVED",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1210,10 +1210,11 @@
           "772078"
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
-        "repair_executed_on_school": false
+        "repair_executed_on_school": true,
+        "school_handoff_completion_verified": false
       },
       "5": {
-        "status": "USER_SUBMITTED_HELD_WAITING_NODE_RANGE_REPAIR",
+        "status": "FIXED_MANAGERS_STARTED_EXISTING_JOB_IDS_PRESERVED",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1277,10 +1278,11 @@
           "772072"
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
-        "repair_executed_on_school": false
+        "repair_executed_on_school": true,
+        "school_handoff_completion_verified": false
       },
       "6": {
-        "status": "USER_SUBMITTED_HELD_WAITING_NODE_RANGE_REPAIR",
+        "status": "FIXED_MANAGERS_STARTED_EXISTING_JOB_IDS_PRESERVED",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1344,7 +1346,8 @@
           "772075"
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
-        "repair_executed_on_school": false
+        "repair_executed_on_school": true,
+        "school_handoff_completion_verified": false
       }
     },
     "all_current_school_actions_executed": false,
@@ -1367,7 +1370,7 @@
   },
   "slurm_pending_node_range_fix_20261025": {
     "recorded_utc": "2026-10-25T04:13:22Z",
-    "status": "REPAIR_PUBLISHED_NOT_YET_EXECUTED_ON_SCHOOL",
+    "status": "USER_EXECUTED_FIXED_MANAGERS_STARTED_EXISTING_JOBS_PRESERVED_HANDOFF_NOT_YET_CONFIRMED",
     "cause": "Slurm20.11 NumNodes=1-1 was compared to literal 1 and legitimate held single-node jobs were rejected",
     "accepted_node_forms": [
       "1",
@@ -1399,7 +1402,43 @@
     "scientific_outputs_and_checkpoint_reused_in_place": true,
     "school_repair_executed_by_assistant_tools": false,
     "round237_uploader_modified": false,
-    "details": "docs/SLURM_NODE_RANGE_FIX_20261025_ZH.md"
+    "details": "docs/SLURM_NODE_RANGE_FIX_20261025_ZH.md",
+    "school_repair_executed_by_user": true,
+    "user_execution_observed_utc": "2026-10-25T04:09:40Z",
+    "school_execution_receipts": {
+      "round1": {
+        "status": "FIXED_CONTROLLERS_STARTED_EXISTING_JOBS_PRESERVED",
+        "utc": "2026-10-25T04:09:38Z",
+        "job_ids": [
+          "772076",
+          "772077",
+          "772078"
+        ],
+        "native_phase": "META_SCREENING",
+        "native_phase_completed": 40,
+        "native_phase_total": 55
+      },
+      "round5": {
+        "status": "FIXED_CONTROLLERS_STARTED_EXISTING_JOBS_PRESERVED",
+        "utc": "2026-10-25T04:09:39Z",
+        "job_ids": [
+          "772070",
+          "772071",
+          "772072"
+        ]
+      },
+      "round6": {
+        "status": "FIXED_CONTROLLERS_STARTED_EXISTING_JOBS_PRESERVED",
+        "utc": "2026-10-25T04:09:40Z",
+        "job_ids": [
+          "772073",
+          "772074",
+          "772075"
+        ]
+      }
+    },
+    "formal_new_gpu_training_verified": false,
+    "next_evidence_needed": "Current queue, HANDOFF_READY gates and native model update counters"
   },
   "results_upload_237_observation_20261025": {
     "observed_utc": "2026-10-25T03:55:37Z",
