@@ -198,16 +198,25 @@ def collect(client, previous, known, now):
         row["snapshot_stale"] = updated is None or age - updated > 900
         if number == 1:
             row["last_manual_resume_observation"] = known.get("round1_resume_observation")
-        for filename, field in (("LATEST.json", "full_archive"), ("AUTO_SUMMARY_LATEST.json", "automatic_summary")):
+        for filename, field in (("LATEST.json", "full_archive"),
+                                ("AUTO_SUMMARY_LATEST.json", "automatic_summary"),
+                                ("PAPER_DATA_LATEST.json", "paper_reports")):
             try:
                 receipt, commit = client.file("paper3-results", f"results/paper3/round-{number:02d}/{filename}")
                 verified = bool(receipt and receipt.get("round") == number)
                 if field == "full_archive":
                     verified = verified and receipt.get("status") == "COMPLETE_OUTPUT_UPLOADED"
-                else:
+                elif field == "automatic_summary":
                     verified = verified and receipt.get("status") == "AUTOMATIC_EXISTING_RESULT_SUMMARY_UPLOADED"
+                else:
+                    if receipt and (receipt.get("round") != number or receipt.get("status") not in
+                                    {"PAPER_REPORT_FILES_UPLOADED", "PAPER_FILES_PARTIAL"}):
+                        raise ValueError("UnrecognizedPaperReportReceipt")
+                    verified = verified and receipt.get("status") in {"PAPER_REPORT_FILES_UPLOADED", "PAPER_FILES_PARTIAL"}
                 row[field] = {"published": verified, "source_commit": commit,
                               "receipt_path": f"results/paper3/round-{number:02d}/{filename}"}
+                if field == "paper_reports":
+                    row[field]["complete"] = verified and receipt.get("status") == "PAPER_REPORT_FILES_UPLOADED"
                 if receipt:
                     row[field]["receipt"] = receipt
             except Exception as error:
@@ -224,8 +233,8 @@ def collect(client, previous, known, now):
 
 
 def compact_table(data):
-    lines = ["| 轮次 | 最近确认状态 | 任务完成 | 队列观测 | 来源时间（北京） | 完整结果包 |",
-             "|---|---|---|---|---|---|"]
+    lines = ["| 轮次 | 最近确认状态 | 任务完成 | 队列观测 | 来源时间（北京） | 论文报告 | 完整结果包 |",
+             "|---|---|---|---|---|---|---|"]
     for row in data["rounds"]:
         number = row["round"]
         count = f'{row["complete_tasks"]}/{row["total_tasks"]}' if row.get("complete_tasks") is not None else "分阶段，不合并百分比"
@@ -237,9 +246,17 @@ def compact_table(data):
         full = "上传完成回执已发布" if row.get("full_archive", {}).get("published") else "未见完整上传完成回执"
         if row.get("full_archive", {}).get("read_error"):
             full = "远端读取失败；完整上传状态待核实"
+        paper = row.get("paper_reports", {})
+        paper_text = "尚未发布论文报告回执"
+        if paper.get("published"):
+            paper_label = "论文报告已上传" if paper.get("complete") else "部分论文文件已上传"
+            paper_url = f"https://github.com/{data['repository']}/blob/paper3-results/results/paper3/round-{number:02d}/PAPER_DATA_ZH.md"
+            paper_text = f"[{paper_label}]({paper_url})"
+        if paper.get("read_error"):
+            paper_text += "；读取失败，保留上次记录" if paper.get("published") else "；读取失败，状态待核实"
         status = row.get("status", "未知") + tag
         url = row.get("source_url", f"https://github.com/{data['repository']}/tree/{row['source_branch']}")
-        lines.append(f'| [第{number}轮]({url}) | {status} | {count} | {state} | {local_time(row.get("updated_utc"))} | {full} |')
+        lines.append(f'| [第{number}轮]({url}) | {status} | {count} | {state} | {local_time(row.get("updated_utc"))} | {paper_text} | {full} |')
     return "\n".join(lines)
 
 
@@ -247,7 +264,7 @@ def render(data):
     lines = ["# 八轮最新回传状态", "", f'最近汇集：**{local_time(data["refreshed_utc"])} 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。', "",
              compact_table(data), "", "任务完成、报告完成、Slurm作业运行和完整文件上传分别记录。控制器的 RUNNING 不代表 GPU 已开始优化。任务数量不能换算成剩余时间。",
              "", "第一轮按阶段保存断点；进程心跳不等于模型更新。第七轮旧监控计数与已完成证据冲突时，保留两个口径，不让旧快照抹去已确认完成项。",
-             "", "完整包以 paper3-results 各轮 LATEST.json 的上传器回执为准；AUTO_SUMMARY_LATEST.json 只确认摘要。回执是已发布声明，本页面不重新下载或核验大型归档。"]
+             "", "论文报告以 PAPER_DATA_LATEST.json 回执为准，包含该回执声明的既有报告、CSV和任务元数据；部分回执不表示已传齐所需文件。论文报告与 AUTO_SUMMARY_LATEST.json 分析摘要都不表示完整预测或模型断点已备份。完整包以 paper3-results 各轮 LATEST.json 的上传器回执为准。回执是已发布声明，本页面不重新下载或核验大型归档。"]
     upload = data.get("last_school_upload_observation")
     if upload:
         lines += ["", "## 学校完整上传器：最后人工观测", "", "```json", json.dumps(upload, ensure_ascii=False, indent=2), "```", "", "这段学校本地打包进度不是实时远端推送；后续完整上传完成后，以上各轮归档回执会自动刷新。"]

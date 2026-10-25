@@ -80,6 +80,43 @@ class StatusTests(unittest.TestCase):
         self.assertTrue(value["rounds"][1]["full_archive"]["published"])
         self.assertFalse(value["rounds"][2]["full_archive"]["published"])
 
+    def test_paper_reports_complete_and_partial_are_separate_from_full_archive(self):
+        client = FixtureClient(receipts={
+            "results/paper3/round-02/PAPER_DATA_LATEST.json": {"round": 2, "status": "PAPER_REPORT_FILES_UPLOADED"},
+            "results/paper3/round-03/PAPER_DATA_LATEST.json": {"round": 3, "status": "PAPER_FILES_PARTIAL"}})
+        value = m.collect(client, {}, {}, "2026-10-25T06:00:00Z")
+        complete, partial = value["rounds"][1:3]
+        self.assertTrue(complete["paper_reports"]["published"])
+        self.assertTrue(complete["paper_reports"]["complete"])
+        self.assertTrue(partial["paper_reports"]["published"])
+        self.assertFalse(partial["paper_reports"]["complete"])
+        self.assertFalse(complete["full_archive"]["published"])
+        self.assertFalse(partial["automatic_summary"]["published"])
+        table = m.compact_table(value)
+        self.assertIn("[论文报告已上传]", table)
+        self.assertIn("[部分论文文件已上传]", table)
+        self.assertIn("round-02/PAPER_DATA_ZH.md", table)
+
+    def test_paper_report_read_error_and_unknown_status_preserve_last_good_receipt(self):
+        old_paper = {"published": True, "complete": True,
+                     "receipt": {"round": 2, "status": "PAPER_REPORT_FILES_UPLOADED"}}
+        previous = {"rounds": [{"round": 2, "paper_reports": old_paper}]}
+        class DeniedClient(FixtureClient):
+            def file(self, branch, path):
+                if path == "results/paper3/round-02/PAPER_DATA_LATEST.json":
+                    raise PermissionError("GitHubHTTP403")
+                return super().file(branch, path)
+        for client in (DeniedClient(), FixtureClient(receipts={
+                "results/paper3/round-02/PAPER_DATA_LATEST.json": {"round": 2, "status": "UNKNOWN"}})):
+            with self.subTest(client=type(client).__name__):
+                value = m.collect(client, previous, {}, "2026-10-25T06:00:00Z")
+                paper = value["rounds"][1]["paper_reports"]
+                self.assertTrue(paper["published"])
+                self.assertTrue(paper["complete"])
+                self.assertEqual(paper["receipt"], old_paper["receipt"])
+                self.assertIn("read_error", paper)
+                self.assertIn("读取失败，保留上次记录", m.compact_table(value))
+
     def test_fetch_failure_retains_last_good_observation_with_error(self):
         old = {"rounds": [{"round": 2, "status": "任务完成", "complete_tasks": 66, "total_tasks": 66,
                            "updated_utc": "2026-10-25T02:16:55Z"}]}
