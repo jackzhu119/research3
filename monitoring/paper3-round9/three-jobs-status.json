@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 45,
+  "complete_tasks": 47,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 19.8,
+    "progress_age_seconds": 13.8,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T23:27:59Z"
+    "updated_utc": "2026-10-25T23:31:05Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 45,
+      "complete": 47,
       "total": 234
     },
     "feature_reference": {
@@ -43,14 +43,16 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 10337,
+      "pid": 13605,
       "status": "RUNNING",
-      "task_key": "core-holdout-EA_T0p5-seed20261018-5397802d13",
+      "task_key": "feature-reference-raw-seed20261020",
       "worker_progress": {
         "outer_update": 0,
-        "stage": "loading",
-        "status": "STARTING",
-        "updated_utc": "2026-10-25T23:27:19Z"
+        "session": 395,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_features",
+        "status": "FAILED",
+        "updated_utc": "2026-10-25T23:24:16Z"
       }
     },
     "1": {
@@ -125,7 +127,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "46:11",
+        "elapsed": "49:10",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -135,7 +137,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T23:28:19Z",
+    "observed_utc": "2026-10-25T23:31:18Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -161,14 +163,14 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792970898.832452,
+  "sampled_unix": 1792971078.835295,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 10,
+      "attempt": 11,
       "family": "feature_reference",
       "index": 0,
       "job_id": "773686",
@@ -177,7 +179,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 10,
+      "attempt": 11,
       "family": "feature_reference",
       "index": 1,
       "job_id": "773686",
@@ -186,13 +188,27 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 10,
+      "attempt": 11,
       "family": "feature_reference",
       "index": 2,
       "job_id": "773686",
       "key": "feature-reference-raw-seed20261020",
+      "observations": [
+        {
+          "age_seconds": 14.8,
+          "path": "runs/followup_20261025_r9/feature-reference-raw-seed20261020/progress.json",
+          "values": {
+            "outer_update": 0,
+            "session": 237,
+            "sessions_total": 396,
+            "stage": "meta_train_prefix_features",
+            "status": "PREPARING_REFERENCE",
+            "updated_utc": "2026-10-25T23:31:04Z"
+          }
+        }
+      ],
       "slot": 0,
-      "status": "RETRYING"
+      "status": "RUNNING"
     },
     {
       "attempt": 10,
@@ -632,32 +648,17 @@
       "index": 51,
       "job_id": "773686",
       "key": "core-holdout-EA_T0p5-seed20261018-5397802d13",
-      "observations": [
-        {
-          "age_seconds": 24.8,
-          "path": "runs/followup_20261025_r9/core-holdout-EA_T0p5-seed20261018-5397802d13/progress.json",
-          "values": {
-            "budget": 16,
-            "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T23:27:54Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 52,
-      "job_id": null,
+      "job_id": "773686",
       "key": "core-pan2023-EA_T0p5-seed20261018-9b163880a6",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -14128,5 +14129,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T23:28:18Z"
+  "updated_utc": "2026-10-25T23:31:18Z"
 }
