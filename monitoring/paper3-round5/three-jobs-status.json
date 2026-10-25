@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-05",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 33,
+  "complete_tasks": 36,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 3.1,
+    "progress_age_seconds": 27.2,
     "progress_path": "runs/followup_20261024_r5/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T14:36:47Z"
+    "updated_utc": "2026-10-25T14:39:23Z"
   },
   "experiment": "paper3-round5",
   "families": {
@@ -16,7 +16,7 @@
       "total": 12
     },
     "core": {
-      "complete": 21,
+      "complete": 24,
       "total": 48
     },
     "reference": {
@@ -31,47 +31,44 @@
   "gpu_slots": {
     "0": {
       "job_id": "772070",
-      "pid": 53554,
+      "pid": 56843,
       "status": "RUNNING",
-      "task_key": "core-left_rotation-symmetric-main-seed20261020",
+      "task_key": "core-right_rotation-right_rotation-main-seed20261018",
       "worker_progress": {
-        "budget": 4,
         "outer_update": 0,
-        "session": 51,
-        "sessions_total": 105,
-        "stage": "holdout",
-        "status": "EVALUATING",
-        "updated_utc": "2026-10-25T14:36:14Z"
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-25T14:38:35Z"
       }
     },
     "1": {
       "job_id": "772071",
-      "pid": 52973,
+      "pid": 56489,
       "status": "RUNNING",
-      "task_key": "core-left_rotation-right_rotation-main-seed20261020",
+      "task_key": "core-right_rotation-single-main-seed20261018",
       "worker_progress": {
-        "budget": 4,
+        "budget": 20,
         "outer_update": 0,
-        "session": 56,
+        "session": 89,
         "sessions_total": 105,
         "stage": "holdout",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-25T14:35:57Z"
+        "updated_utc": "2026-10-25T14:38:42Z"
       }
     },
     "2": {
       "job_id": "772072",
-      "pid": 52971,
+      "pid": 56492,
       "status": "RUNNING",
-      "task_key": "core-left_rotation-left_rotation-main-seed20261020",
+      "task_key": "core-right_rotation-left_rotation-main-seed20261018",
       "worker_progress": {
-        "budget": 4,
+        "budget": 20,
         "outer_update": 0,
-        "session": 54,
+        "session": 74,
         "sessions_total": 105,
         "stage": "holdout",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-25T14:35:57Z"
+        "updated_utc": "2026-10-25T14:38:42Z"
       }
     }
   },
@@ -120,7 +117,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "7:28:46",
+        "elapsed": "7:31:46",
         "job_id": "772071",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s1-a1",
@@ -130,7 +127,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "7:28:46",
+        "elapsed": "7:31:46",
         "job_id": "772072",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
@@ -140,7 +137,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "7:29:22",
+        "elapsed": "7:32:22",
         "job_id": "772070",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
@@ -150,7 +147,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T14:36:50Z",
+    "observed_utc": "2026-10-25T14:39:50Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -176,7 +173,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 5,
-  "sampled_unix": 1792939010.149744,
+  "sampled_unix": 1792939190.1502397,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -485,23 +482,8 @@
       "index": 33,
       "job_id": "772072",
       "key": "core-left_rotation-left_rotation-main-seed20261020",
-      "observations": [
-        {
-          "age_seconds": 23.1,
-          "path": "runs/followup_20261024_r5/core-left_rotation-left_rotation-main-seed20261020/progress.json",
-          "values": {
-            "budget": 8,
-            "outer_update": 0,
-            "session": 42,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-25T14:36:27Z"
-          }
-        }
-      ],
       "slot": 2,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -509,18 +491,36 @@
       "index": 34,
       "job_id": "772071",
       "key": "core-left_rotation-right_rotation-main-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 35,
+      "job_id": "772070",
+      "key": "core-left_rotation-symmetric-main-seed20261020",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 36,
+      "job_id": "772071",
+      "key": "core-right_rotation-single-main-seed20261018",
       "observations": [
         {
-          "age_seconds": 23.1,
-          "path": "runs/followup_20261024_r5/core-left_rotation-right_rotation-main-seed20261020/progress.json",
+          "age_seconds": 8.2,
+          "path": "runs/followup_20261024_r5/core-right_rotation-single-main-seed20261018/progress.json",
           "values": {
             "budget": 8,
             "outer_update": 0,
-            "session": 43,
+            "session": 91,
             "sessions_total": 105,
             "stage": "holdout",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-25T14:36:27Z"
+            "updated_utc": "2026-10-25T14:39:42Z"
           }
         }
       ],
@@ -530,21 +530,45 @@
     {
       "attempt": 1,
       "family": "core",
-      "index": 35,
-      "job_id": "772070",
-      "key": "core-left_rotation-symmetric-main-seed20261020",
+      "index": 37,
+      "job_id": "772072",
+      "key": "core-right_rotation-left_rotation-main-seed20261018",
       "observations": [
         {
-          "age_seconds": 6.1,
-          "path": "runs/followup_20261024_r5/core-left_rotation-symmetric-main-seed20261020/progress.json",
+          "age_seconds": 7.2,
+          "path": "runs/followup_20261024_r5/core-right_rotation-left_rotation-main-seed20261018/progress.json",
           "values": {
             "budget": 8,
             "outer_update": 0,
-            "session": 36,
+            "session": 39,
             "sessions_total": 105,
             "stage": "holdout",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-25T14:36:44Z"
+            "updated_utc": "2026-10-25T14:39:43Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RUNNING"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 38,
+      "job_id": "772070",
+      "key": "core-right_rotation-right_rotation-main-seed20261018",
+      "observations": [
+        {
+          "age_seconds": 12.2,
+          "path": "runs/followup_20261024_r5/core-right_rotation-right_rotation-main-seed20261018/progress.json",
+          "values": {
+            "budget": 4,
+            "outer_update": 0,
+            "session": 47,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-25T14:39:38Z"
           }
         }
       ],
@@ -554,39 +578,10 @@
     {
       "attempt": 0,
       "family": "core",
-      "index": 36,
-      "job_id": null,
-      "key": "core-right_rotation-single-main-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 37,
-      "job_id": null,
-      "key": "core-right_rotation-left_rotation-main-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 38,
-      "job_id": null,
-      "key": "core-right_rotation-right_rotation-main-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
       "index": 39,
       "job_id": null,
       "key": "core-right_rotation-symmetric-main-seed20261018",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -626,6 +621,7 @@
       "index": 43,
       "job_id": null,
       "key": "core-right_rotation-symmetric-main-seed20261019",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -665,6 +661,7 @@
       "index": 47,
       "job_id": null,
       "key": "core-right_rotation-symmetric-main-seed20261020",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1184,5 +1181,5 @@
   ],
   "total_tasks": 105,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T14:36:50Z"
+  "updated_utc": "2026-10-25T14:39:50Z"
 }
