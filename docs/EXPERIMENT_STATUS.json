@@ -1144,7 +1144,7 @@
     ],
     "records": {
       "1": {
-        "status": "HANDOFF_READY_NEW_JOBS_RELEASED_WAITING_SCHOOL_RESOURCES",
+        "status": "ONE_ORIGINAL_REPLACEMENT_JOB_RUNNING_TWO_QUEUED",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1216,10 +1216,25 @@
           "772076": "Resources",
           "772077": "Priority",
           "772078": "Priority"
-        }
+        },
+        "observed_running_jobs": [
+          "772076"
+        ],
+        "observed_pending_jobs": [
+          "772077",
+          "772078"
+        ],
+        "observed_work_scope": {
+          "method": "P+PCT",
+          "phase": "engineering",
+          "dimension": 8,
+          "radius": 0.35,
+          "seed": 20261018
+        },
+        "new_model_updates_of_running_job_confirmed": false
       },
       "5": {
-        "status": "HELD_HISTORICAL_ACCOUNTING_PARTITION_FIX_PUBLISHED_PENDING_EXECUTION",
+        "status": "ORIGINAL_THREE_REPLACEMENTS_RELEASED_PENDING_SCHOOL_ALLOCATION",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1268,7 +1283,7 @@
         "completed_outputs_reused_in_place": true,
         "checkpoint_identity_reset": false,
         "scientific_plan_or_algorithm_changed": false,
-        "school_switch_executed": false,
+        "school_switch_executed": true,
         "school_new_jobs_submitted": 3,
         "school_old_jobs_cancelled": 0,
         "full_pytest_pilot_or_deployment_rescan_on_startup": false,
@@ -1284,11 +1299,12 @@
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
         "repair_executed_on_school": true,
-        "school_handoff_completion_verified": false,
-        "old_job_absent_from_observed_current_queue": true
+        "school_handoff_completion_verified": true,
+        "old_job_absent_from_observed_current_queue": true,
+        "release_observed": true
       },
       "6": {
-        "status": "HELD_HISTORICAL_ACCOUNTING_PARTITION_FIX_PUBLISHED_PENDING_EXECUTION",
+        "status": "ORIGINAL_THREE_REPLACEMENTS_RELEASED_PENDING_SCHOOL_ALLOCATION",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1337,7 +1353,7 @@
         "completed_outputs_reused_in_place": true,
         "checkpoint_identity_reset": false,
         "scientific_plan_or_algorithm_changed": false,
-        "school_switch_executed": false,
+        "school_switch_executed": true,
         "school_new_jobs_submitted": 3,
         "school_old_jobs_cancelled": 0,
         "full_pytest_pilot_or_deployment_rescan_on_startup": false,
@@ -1353,8 +1369,9 @@
         ],
         "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
         "repair_executed_on_school": true,
-        "school_handoff_completion_verified": false,
-        "old_job_absent_from_observed_current_queue": true
+        "school_handoff_completion_verified": true,
+        "old_job_absent_from_observed_current_queue": true,
+        "release_observed": true
       }
     },
     "all_current_school_actions_executed": false,
@@ -1463,7 +1480,7 @@
     "training_modified": false
   },
   "historical_accounting_fix_20261025": {
-    "status": "PUBLISHED_NOT_YET_EXECUTED_ON_SCHOOL",
+    "status": "USER_EXECUTED_EXISTING_SIX_JOBS_RELEASED_TO_SCHOOL_QUEUE",
     "source_commit": "3d9ea6d666e7ad976f1c5dcdc4eb3de9f85d0c9c",
     "delivery_commit": "ecf4313561bacdc35b96f2f976a4bf25e0ac9858",
     "scope_rounds": [
@@ -1487,7 +1504,35 @@
     "round56_tests_passed": 70,
     "migration_tests_passed": 21,
     "raw_and_api_download_verified": true,
-    "actual_school_execution_of_this_fix": false,
-    "details": "docs/ACCOUNTING_HISTORY_FIX_20261025_ZH.md"
+    "actual_school_execution_of_this_fix": true,
+    "details": "docs/ACCOUNTING_HISTORY_FIX_20261025_ZH.md",
+    "actual_school_execution_by_user": true,
+    "user_execution_receipt_utc": "2026-10-25T04:25:53Z",
+    "release_evidence": "User current-jobs screenshot: original six job IDs PENDING, no longer JobHeldUser; native release path requires HANDOFF_READY."
+  },
+  "latest_queue_observation_20261025": {
+    "source": "User screenshot and pinned progress commits",
+    "local_screenshot_time": "2026-10-25T12:26:25+08:00",
+    "round1_running": [
+      "772076"
+    ],
+    "round1_pending": [
+      "772077",
+      "772078"
+    ],
+    "round5_pending": [
+      "772070",
+      "772071",
+      "772072"
+    ],
+    "round6_pending": [
+      "772073",
+      "772074",
+      "772075"
+    ],
+    "round4_still_running": "772011",
+    "all_original_nine_job_ids_preserved": true,
+    "github_lag_observed_seconds_approx": 350,
+    "actual_neural_optimizer_updates_of_new_job_verified": false
   }
 }
