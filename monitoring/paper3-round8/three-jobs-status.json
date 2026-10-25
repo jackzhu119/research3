@@ -4,10 +4,10 @@
   "complete_tasks": 3,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 2.2,
+    "progress_age_seconds": 21.2,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T07:44:19Z"
+    "updated_utc": "2026-10-25T07:47:00Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -43,17 +43,17 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 41193,
+      "pid": 43463,
       "status": "RUNNING",
-      "task_key": "core-pan2023-source_frozen-seed20261018-75cde30864",
+      "task_key": "core-holdout-source_frozen-seed20261018-69ff5f5d24",
       "worker_progress": {
         "budget": 20,
         "outer_update": 0,
         "session": 0,
-        "sessions_total": 28,
-        "stage": "pan2023_published_order",
+        "sessions_total": 105,
+        "stage": "holdout",
         "status": "FAILED",
-        "updated_utc": "2026-10-25T07:42:25Z"
+        "updated_utc": "2026-10-25T07:43:56Z"
       }
     },
     "1": {
@@ -128,7 +128,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "5:52",
+        "elapsed": "8:52",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -138,7 +138,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T07:44:21Z",
+    "observed_utc": "2026-10-25T07:47:21Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,7 +164,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792914261.1741729,
+  "sampled_unix": 1792914441.1758957,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -198,32 +198,23 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 3,
+      "attempt": 4,
       "family": "core",
       "index": 3,
       "job_id": "772121",
       "key": "core-holdout-source_frozen-seed20261018-69ff5f5d24",
-      "slot": 0,
-      "status": "RETRYING"
-    },
-    {
-      "attempt": 3,
-      "family": "core",
-      "index": 4,
-      "job_id": "772121",
-      "key": "core-pan2023-source_frozen-seed20261018-75cde30864",
       "observations": [
         {
-          "age_seconds": 116.2,
-          "path": "runs/followup_20261025_r8/core-pan2023-source_frozen-seed20261018-75cde30864/progress.json",
+          "age_seconds": 18.2,
+          "path": "runs/followup_20261025_r8/core-holdout-source_frozen-seed20261018-69ff5f5d24/progress.json",
           "values": {
             "budget": 20,
             "outer_update": 0,
             "session": 0,
-            "sessions_total": 28,
-            "stage": "pan2023_published_order",
+            "sessions_total": 105,
+            "stage": "holdout",
             "status": "FAILED",
-            "updated_utc": "2026-10-25T07:42:25Z"
+            "updated_utc": "2026-10-25T07:47:03Z"
           }
         }
       ],
@@ -231,7 +222,16 @@
       "status": "RUNNING"
     },
     {
-      "attempt": 1,
+      "attempt": 3,
+      "family": "core",
+      "index": 4,
+      "job_id": "772121",
+      "key": "core-pan2023-source_frozen-seed20261018-75cde30864",
+      "slot": 0,
+      "status": "RETRYING"
+    },
+    {
+      "attempt": 2,
       "family": "core",
       "index": 5,
       "job_id": "772121",
@@ -240,13 +240,13 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 6,
-      "job_id": null,
+      "job_id": "772121",
       "key": "core-holdout-source_frozen-seed20261019-9ea862071e",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
       "attempt": 0,
@@ -25714,5 +25714,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T07:44:21Z"
+  "updated_utc": "2026-10-25T07:47:21Z"
 }
