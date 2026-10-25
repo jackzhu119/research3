@@ -4,10 +4,10 @@
   "complete_tasks": 0,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 24.2,
+    "progress_age_seconds": 15.2,
     "progress_path": "runs/followup_20261024_r5/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T07:07:20Z"
+    "updated_utc": "2026-10-25T07:10:29Z"
   },
   "experiment": "paper3-round5",
   "families": {
@@ -30,13 +30,16 @@
   },
   "gpu_slots": {
     "0": {
-      "status": "NOT_STARTED"
+      "job_id": "772070",
+      "status": "WAITING_DEPENDENCIES"
     },
     "1": {
-      "status": "NOT_STARTED"
+      "job_id": "772071",
+      "status": "WAITING_DEPENDENCIES"
     },
     "2": {
-      "status": "NOT_STARTED"
+      "job_id": "772072",
+      "status": "WAITING_DEPENDENCIES"
     }
   },
   "interpretation": "This is the new three-job stream. The original status.json and its old monitor are retained separately.",
@@ -49,62 +52,62 @@
       "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu4",
       "slot": 0,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     },
     {
       "attempt": 1,
       "cpus": 12,
       "job_id": "772071",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu4",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu4",
       "slot": 1,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     },
     {
       "attempt": 1,
       "cpus": 12,
       "job_id": "772072",
-      "live_reason_or_node": "(AssocGrpGRES)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu4",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu1",
-      "queue_reason": "(AssocGrpGRES)",
+      "queue_reason": "gpu4",
       "slot": 2,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     }
   ],
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "0:00",
+        "elapsed": "2:40",
         "job_id": "772071",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s1-a1",
-        "node": "",
+        "node": "gpu4",
         "partition": "hpc_gpu1",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
+        "reason_or_node": "gpu4",
+        "state": "RUNNING"
       },
       {
-        "elapsed": "0:00",
+        "elapsed": "2:40",
         "job_id": "772072",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
-        "node": "",
+        "node": "gpu4",
         "partition": "hpc_gpu1",
-        "reason_or_node": "(AssocGrpGRES)",
-        "state": "PENDING"
+        "reason_or_node": "gpu4",
+        "state": "RUNNING"
       },
       {
-        "elapsed": "0:16",
+        "elapsed": "3:16",
         "job_id": "772070",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
@@ -114,7 +117,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T07:07:44Z",
+    "observed_utc": "2026-10-25T07:10:44Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -140,41 +143,74 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 5,
-  "sampled_unix": 1792912064.204314,
+  "sampled_unix": 1792912244.2051003,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 0,
-      "job_id": null,
+      "job_id": "772072",
       "key": "basis-single-r4-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 63.2,
+          "path": "runs/followup_20261024_r5/basis-single-r4-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:41Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 1,
-      "job_id": null,
+      "job_id": "772071",
       "key": "basis-single-r4-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 62.2,
+          "path": "runs/followup_20261024_r5/basis-single-r4-seed20261019/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:42Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 2,
-      "job_id": null,
+      "job_id": "772070",
       "key": "basis-single-r4-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 53.2,
+          "path": "runs/followup_20261024_r5/basis-single-r4-seed20261020/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:51Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
       "attempt": 0,
@@ -285,94 +321,193 @@
       "status": "NEW"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 15,
-      "job_id": null,
+      "job_id": "772072",
       "key": "basis-left_rotation-r4-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 51.2,
+          "path": "runs/followup_20261024_r5/basis-left_rotation-r4-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:53Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 16,
-      "job_id": null,
+      "job_id": "772071",
       "key": "basis-left_rotation-r4-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 51.2,
+          "path": "runs/followup_20261024_r5/basis-left_rotation-r4-seed20261019/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:53Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 17,
-      "job_id": null,
+      "job_id": "772072",
       "key": "basis-left_rotation-r4-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 47.2,
+          "path": "runs/followup_20261024_r5/basis-left_rotation-r4-seed20261020/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:57Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 18,
-      "job_id": null,
+      "job_id": "772071",
       "key": "basis-right_rotation-r4-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 46.2,
+          "path": "runs/followup_20261024_r5/basis-right_rotation-r4-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:58Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 19,
-      "job_id": null,
+      "job_id": "772070",
       "key": "basis-right_rotation-r4-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 45.2,
+          "path": "runs/followup_20261024_r5/basis-right_rotation-r4-seed20261019/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:09:59Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 20,
-      "job_id": null,
+      "job_id": "772072",
       "key": "basis-right_rotation-r4-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 42.2,
+          "path": "runs/followup_20261024_r5/basis-right_rotation-r4-seed20261020/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:10:02Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 21,
-      "job_id": null,
+      "job_id": "772071",
       "key": "basis-symmetric-r4-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 41.2,
+          "path": "runs/followup_20261024_r5/basis-symmetric-r4-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:10:03Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 22,
-      "job_id": null,
+      "job_id": "772070",
       "key": "basis-symmetric-r4-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 40.2,
+          "path": "runs/followup_20261024_r5/basis-symmetric-r4-seed20261019/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:10:04Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "basis",
       "index": 23,
-      "job_id": null,
+      "job_id": "772072",
       "key": "basis-symmetric-r4-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 37.2,
+          "path": "runs/followup_20261024_r5/basis-symmetric-r4-seed20261020/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T07:10:07Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RETRYING"
     },
     {
       "attempt": 0,
@@ -1050,61 +1185,61 @@
       "status": "NEW"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "reference",
       "index": 99,
-      "job_id": null,
+      "job_id": "772071",
       "key": "reference-head_newton-seed20261018",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "reference",
       "index": 100,
-      "job_id": null,
+      "job_id": "772070",
       "key": "reference-head_newton-seed20261019",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "reference",
       "index": 101,
-      "job_id": null,
+      "job_id": "772072",
       "key": "reference-head_newton-seed20261020",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "reference",
       "index": 102,
-      "job_id": null,
+      "job_id": "772071",
       "key": "reference-support_EA-seed20261018",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 3,
       "family": "reference",
       "index": 103,
-      "job_id": null,
+      "job_id": "772070",
       "key": "reference-support_EA-seed20261019",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     },
     {
-      "attempt": 0,
+      "attempt": 2,
       "family": "reference",
       "index": 104,
-      "job_id": null,
+      "job_id": "772070",
       "key": "reference-support_EA-seed20261020",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "RETRYING"
     }
   ],
   "total_tasks": 105,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T07:07:44Z"
+  "updated_utc": "2026-10-25T07:10:44Z"
 }
