@@ -1,0 +1,69 @@
+{
+  "schema_version": "paper3-round1-split-repair-evidence-v1",
+  "recorded_date": "2026-10-25",
+  "source": {
+    "branch": "paper3-results",
+    "path": "results/paper3/round-01/automatic-summary/fb64d602e000bd878661cb22a6f720e9b701891161f841e95a6c73f7a6fd639a/source/runs/meta/c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096/receipt.json",
+    "status": "META_ENGINEERING_COMPLETE",
+    "runtime_profile": {
+      "autocast": false,
+      "code": {
+        "p3work/adapt.py": "3fa787123abe054b795ca6fc3386ce8f4bfba401e33a88acf108b5ef6097c520",
+        "p3work/contracts.py": "c1ecd6c7c8496064deecdcc8222b4e87d43a8ffe41065fa4350b113a0cea52ca",
+        "p3work/episodes.py": "6ee44b0adafdf080885be943a45a3df84cb7407c602a64bf8dcd549746f092cb",
+        "p3work/f0_bridge.py": "0b8b6bb76cf64fd786ff61f35e2fc3c1b9275fbf81ebb6369ac2043507c474f6",
+        "p3work/meta_artifacts.py": "1dc441f06c2a4cf813d8e526849fa5c1368cc52f48317bec5435d961fb774a39",
+        "p3work/meta_engineering.py": "0b428a1390d471e370096da7f5e7919bb8ad321c80a93d70f1e09d70eeeb4623",
+        "p3work/meta_training.py": "499427d197a7f7aaef35f7b25a41f685077419d6bddb1e197f8e8a825ed4a2f2",
+        "p3work/methods/lowrank.py": "f0c9899d7e9cbdb54c2ab5933d4e153bffd545ad7f2228146f2e9d787e2c0503",
+        "p3work/methods/meta_train.py": "ee1217a6e3cb53b39feef0cab6d0b3401c6e139b8f19c4d2a3de2620a1b915f2",
+        "p3work/recovery_budget.py": "a1448a2a7bef15793b5e55d5f64d3a73a0b4a87f444d66f0e27c7d637b93e737",
+        "p3work/runtime_clock.py": "46a5d645136c36854c17167c663b36a0487582969ff2327b6f1c1b9e0dce43b3",
+        "p3work/selection.py": "0eeaf56477e3a40ca1434f98f34d44bfe2ad6567b41c8785556228f0ee46f4cc",
+        "p3work/source_cache_acceptance.py": "44ab541c405d68e81ed9a3efe89726da17fe714368b93e8729ab3c967d74474f",
+        "p3work/source_reference_io.py": "92d9b6ee85c947a65f56b0092f1f35d9bf087dafc7c9366b3bc90b3608129f8b",
+        "p3work/source_training.py": "149bae9b9caf371b170e061f0975a95f2c1e2de69efe17c5d5ac972cc1d7567e",
+        "p3work/spatial_geometry.py": "2c739b2f0967aad718da3173c6c273a6c64e612a0d5e1b79fdfc6753c9f6e47a",
+        "p3work/splits.py": "7daadaa03701b4edcbedab1f8e03832808fb4374ce16e5714fde58a5e32d34e5",
+        "p3work/training_state.py": "0b813c83462a80593fdab99f487f09bb6aa3058c3307030881293368ec143096",
+        "p3work/window_acceptance.py": "8165e27218c280768fa3a92cd600827a7d9035025dad4500d008b5d8ac68b8f3",
+        "tools/run_controlled_pilot.py": "95058f93b9ccaaa3143116b227eabef4fe046f924225c2ed274c1a80d09535a3",
+        "tools/train_meta.py": "3deff3d65efd27a6216f5c59ceb425bfcaf036ddcd1d34affffd03749c14cc09"
+      },
+      "cublas_workspace_config": ":4096:8",
+      "cuda": "12.1",
+      "cudnn": 90100,
+      "deterministic_algorithms": true,
+      "device_compute_capability": [
+        8,
+        0
+      ],
+      "device_name": "NVIDIA A100-SXM4-40GB",
+      "device_total_memory_bytes": 42298834944,
+      "device_uuid": "4e686f4f-128c-7aa2-57eb-54a42ae43d58",
+      "driver_versions": [
+        "535.104.12"
+      ],
+      "float32_matmul_precision": "highest",
+      "python": "3.12.3",
+      "tf32": false,
+      "torch": "2.5.1+cu121"
+    }
+  },
+  "observed_failures": [
+    {
+      "action": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+      "elapsed_seconds": 3383.511,
+      "error": "Unsupported name in exact A100 allowlist",
+      "current_checkpoint_cursor": 350
+    },
+    {
+      "action": "meta-54beab9b2df65963498b2b965aa08226f4ae2ec45ebed4762d26d3c658859976",
+      "elapsed_seconds": 3949.251,
+      "error": "Same unsupported actual SXM4-40GB model"
+    }
+  ],
+  "actual_hardware": "NVIDIA A100-SXM4-40GB",
+  "root_cause": "The split adapter allowed only SXM4-80GB or PCIe-40GB exact names; actual SXM4-40GB was omitted.",
+  "no_proof_of_other_new_algorithm_failure": true
+}

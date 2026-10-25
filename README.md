@@ -6,6 +6,8 @@
 
 [论文报告优先上传：不等待完整备份](operations/paper_results_upload/README_ZH.md) · [后续所有轮次双通道上传约定](docs/RESULT_UPLOAD_POLICY_ZH.md)
 
+[第一轮拆分错误修复：实际SXM4-40GB，沿用350断点](operations/round1_repair_20261025/README_ZH.md)
+
 ## 各轮最新回传
 
 <!-- PAPER3_LIVE_STATUS_START -->
@@ -58,7 +60,7 @@
 
 ## 当前资源口径
 
-`hpc_gpu`为A100 PCIe 40GB资源组，`hpc_gpu1`为A100 SXM4 80GB资源组；节点`gpu1`与分区`hpc_gpu1`不同。第一轮为hpc_gpu三个独立单卡作业，总36CPU/128G；第四轮为hpc_gpu单作业内三卡，总36CPU/128G；第五、六轮为hpc_gpu1各三个独立单卡作业，每作业12CPU/64G；第八轮为hpc_gpu三个独立单卡作业，每作业16CPU/64G。实际可同时运行数量以学校配额与队列为准。
+`hpc_gpu`为A100 40GB资源组（第一轮实际回执为SXM4-40GB，以作业观测为准），`hpc_gpu1`为A100 SXM4 80GB资源组；节点`gpu1`与分区`hpc_gpu1`不同。第一轮为hpc_gpu三个独立单卡作业，总36CPU/128G；第四轮为hpc_gpu单作业内三卡，总36CPU/128G；第五、六轮为hpc_gpu1各三个独立单卡作业，每作业12CPU/64G；第八轮为hpc_gpu三个独立单卡作业，每作业16CPU/64G。实际可同时运行数量以学校配额与队列为准。
 
 结果先保存在学校共享目录`/public/home/zhuziyuan/projects/paper3/runs/`。完成项与断点继续复用；各轮监控和上传网络故障独立于训练。**摘要已回传不等于完整预测或checkpoint已备份到GitHub**；完整归档以各轮上传器发布的LATEST.json及引用manifest为准。
 
