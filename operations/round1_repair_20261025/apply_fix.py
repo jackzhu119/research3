@@ -152,69 +152,154 @@ def refresh_current(runtime,node_helper, *, python=sys.executable,runner=subproc
     return results
 
 
-def checkpoint_restart(runtime, *, runner=subprocess.run, python=sys.executable):
-    """Use the existing controller to replace only this round's running workers."""
-    runtime=Path(runtime).resolve()
-    launch=read(runtime/'launch.json',{}) or {}
-    state=read(runtime/'scheduler-state.json',{}) or {}
-    marker=state.get('marker','')
-    if not re.fullmatch(r'paper3r1p-[0-9a-f]{16}',str(marker)):
-        raise ValueError('Existing first-round scheduler marker missing')
-    # The resident controller must own its lock before any worker is asked to
-    # checkpoint and exit. Start that same controller if it is no longer alive.
-    with (runtime/'controller.lock').open('a') as lock:
-        try:
-            fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        except BlockingIOError:
-            controller_ready=True
-        else:
-            fcntl.flock(lock,fcntl.LOCK_UN)
-            package=package_from(launch.get('package'))
-            if package is None or not (package/'START.py').is_file():
-                raise ValueError('Existing controller package not found; allocations retained')
-            with (runtime/'controller.log').open('ab',buffering=0) as log:
-                child=subprocess.Popen([python,'-I','-S','-B','-u',str(package/'START.py'),
-                    '--controller','--root',str(runtime.parents[1])],stdin=subprocess.DEVNULL,
-                    stdout=log,stderr=log,start_new_session=True,close_fds=True)
-            emit('R1_EXISTING_CONTROLLER_STARTED',pid=child.pid)
-            controller_ready=False
-            for _ in range(25):
-                time.sleep(.2)
-                try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-                except BlockingIOError:
-                    controller_ready=True;break
-                else:fcntl.flock(lock,fcntl.LOCK_UN)
-    if not controller_ready:
-        emit('R1_RESTART_DEFERRED',reason='controller_starting_allocations_retained')
-        return []
+def _controller_process(pid,proc_root=Path('/proc')):
+    folder=Path(proc_root)/str(pid)
     try:
-        response=runner(['squeue','--noheader','--user',getpass.getuser(),
-            '--format=%i|%k|%T|%j'],capture_output=True,text=True,timeout=20)
+        if folder.stat().st_uid!=os.getuid():return None
+        tail=(folder/'stat').read_text().rsplit(')',1)[1].split()
+        if tail[0] in ('Z','X','x'):return None
+        argv=[p.decode(errors='replace') for p in (folder/'cmdline').read_bytes().split(b'\0') if p]
+        return dict(pid=int(pid),uid=folder.stat().st_uid,start_ticks=int(tail[19]),argv=argv)
+    except (OSError,ValueError,IndexError):return None
+
+
+def _controller_matches(row,root,packages):
+    argv=row.get('argv',[])
+    if row.get('uid')!=os.getuid() or '--controller' not in argv or option(argv,'--root')!=str(Path(root).resolve()):return False
+    allowed={str(Path(p).resolve()/'START.py') for p in packages}
+    return any(token in allowed for token in argv)
+
+
+def controller_processes(root,packages,proc_root=Path('/proc')):
+    rows=[]
+    try:folders=list(Path(proc_root).iterdir())
+    except OSError:return rows
+    for folder in folders:
+        if folder.name.isdigit():
+            row=_controller_process(int(folder.name),proc_root)
+            if row and _controller_matches(row,root,packages):rows.append(row)
+    return rows
+
+
+def lock_held(path):
+    with Path(path).open('a') as lock:
+        try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError:return True
+        else:fcntl.flock(lock,fcntl.LOCK_UN);return False
+
+
+def standalone_launch(runtime, *, base=None):
+    runtime=Path(runtime).resolve();launch=read(runtime/'launch.json',{}) or {}
+    source=package_from(launch.get('package')) or package_from(option(launch.get('worker_command',[]),'--package'))
+    if source is None or not (source/'START.py').is_file():raise ValueError('R1_controller_source_package_required')
+    contents={p.name:p.read_bytes() for p in sorted(source.glob('*.py')) if p.is_file() and not p.is_symlink()}
+    needed={'START.py','worker.py','kernel_bridge.py','audited_runtime.py','hardware_comparison.py','action_startup.py','scheduler.py'}
+    if not needed<=set(contents):raise ValueError('standalone_R1_modules_incomplete')
+    identity=hashlib.sha256(json.dumps({n:hashlib.sha256(c).hexdigest() for n,c in contents.items()},sort_keys=True).encode()).hexdigest()
+    destination=Path(base or (Path(__file__).resolve().parent/'active-round1'))/identity[:20]
+    destination.mkdir(parents=True,exist_ok=True)
+    for name,data in contents.items():
+        target=destination/name
+        if not target.is_file() or target.read_bytes()!=data:
+            atomic_file(target,data,stat.S_IMODE((source/name).stat().st_mode))
+    packages=set(discover_packages(runtime));packages.add(source)
+    prefixes=sorted((str(p) for p in packages),key=len,reverse=True)
+    def remap(value):
+        for before in prefixes:
+            if value==before or value.startswith(before+os.sep):return str(destination)+value[len(before):]
+        return value
+    adjusted=dict(launch);adjusted['package']=str(destination)
+    adjusted['worker_command']=[remap(value) for value in launch.get('worker_command',[])]
+    if option(adjusted['worker_command'],'--package')!=str(destination):raise ValueError('standalone_worker_package_not_bound')
+    old=(runtime/'launch.json').read_bytes();new=(json.dumps(adjusted,ensure_ascii=False,indent=2,sort_keys=True)+'\n').encode()
+    if old!=new:
+        backup=runtime/'repair-backups/durable-switch-v1'/('launch.'+hashlib.sha256(old).hexdigest()+'.json')
+        if not backup.exists():atomic_file(backup,old,0o600)
+        atomic_file(runtime/'launch.json',new,stat.S_IMODE((runtime/'launch.json').stat().st_mode))
+    emit('R1_STANDALONE_PACKAGE_READY',package=str(destination),old_packages=[str(p) for p in sorted(packages)],scientific_outputs_changed=0)
+    return destination,packages,adjusted
+
+
+def ensure_standalone_controller(runtime,package,old_packages, *, python=sys.executable,
+        scanner=controller_processes,snapshot=_controller_process,kill=os.kill,held=lock_held,
+        spawner=subprocess.Popen,sleep=time.sleep):
+    runtime=Path(runtime).resolve();root=runtime.parents[1];all_packages=set(old_packages)|{Path(package)}
+    rows=scanner(root,all_packages);old=[row for row in rows if str(Path(package)/'START.py') not in row['argv']]
+    if held(runtime/'controller.lock') and not rows:
+        emit('DURABLE_SWITCH_PENDING',reason='controller_lock_is_not_owned_by_a_verified_local_process',allocations_retained=True)
+        return False
+    for row in old:
+        current=snapshot(row['pid'])
+        if not current or current!=row or not _controller_matches(current,root,old_packages):
+            emit('DURABLE_SWITCH_PENDING',reason='controller_identity_changed',allocations_retained=True);return False
+        kill(row['pid'],__import__('signal').SIGTERM)
+        emit('R1_OLD_CONTROLLER_RETIRED',pid=row['pid'],signal='SIGTERM',training_workers_signalled=False)
+    for _ in range(50):
+        if not held(runtime/'controller.lock'):break
+        current=scanner(root,all_packages)
+        if current and all(str(Path(package)/'START.py') in row['argv'] for row in current):
+            emit('R1_STANDALONE_CONTROLLER_REUSED',package=str(package));return True
+        sleep(.2)
+    else:
+        emit('DURABLE_SWITCH_PENDING',reason='previous_controller_lock_not_released',allocations_retained=True);return False
+    with (runtime/'controller.log').open('ab',buffering=0) as log:
+        child=spawner([python,'-I','-S','-B','-u',str(Path(package)/'START.py'),'--controller','--root',str(root)],
+            stdin=subprocess.DEVNULL,stdout=log,stderr=log,start_new_session=True,close_fds=True)
+    for _ in range(50):
+        if child.poll() is not None:break
+        if held(runtime/'controller.lock'):
+            observed=snapshot(child.pid)
+            if observed and _controller_matches(observed,root,{Path(package)}):
+                emit('R1_STANDALONE_CONTROLLER_STARTED',pid=child.pid,package=str(package));return True
+        sleep(.2)
+    emit('DURABLE_SWITCH_PENDING',reason='standalone_controller_start_not_confirmed',allocations_retained=True)
+    return False
+
+
+def replace_old_jobs(runtime,package,old_packages, *, runner=subprocess.run):
+    runtime=Path(runtime).resolve();state=read(runtime/'scheduler-state.json',{}) or {};marker=state.get('marker','')
+    if not re.fullmatch(r'paper3r1p-[0-9a-f]{16}',str(marker)):raise ValueError('Existing first-round scheduler marker missing')
+    old_ids={}
+    for slot in state.get('slots',{}).values():
+        for attempt in slot.get('attempts',[]):
+            job=str(attempt.get('job_id',''));command=attempt.get('command',[])
+            selected=option(command,'--package') if isinstance(command,list) else None
+            if job.isdigit() and selected and Path(selected).resolve()!=Path(package).resolve() and Path(selected).resolve() in {Path(p).resolve() for p in old_packages}:
+                old_ids[job]=attempt
+    try:response=runner(['squeue','--noheader','--user',getpass.getuser(),'--format=%i|%k|%T|%j'],capture_output=True,text=True,timeout=20)
     except (OSError,subprocess.TimeoutExpired) as error:
-        emit('R1_RESTART_DEFERRED',reason=type(error).__name__,allocations_retained=True)
-        return []
+        emit('DURABLE_SWITCH_PENDING',reason=type(error).__name__,allocations_retained=True);return []
     if response.returncode:
-        emit('R1_RESTART_DEFERRED',reason='queue_read_failed_allocations_retained')
-        return []
+        emit('DURABLE_SWITCH_PENDING',reason='queue_read_failed',allocations_retained=True);return []
     requested=[]
     for line in response.stdout.splitlines():
-        row=[s.strip() for s in line.split('|')]
-        if (len(row)<4 or not row[0].isdigit() or row[1]!=marker or row[2]!='RUNNING'
-                or not re.fullmatch(re.escape(marker)+r'-s[012]-a[1-9][0-9]*',row[3])):
-            continue
-        # USR1 is the batch script's checkpoint-and-exit request. It is not a
-        # force cancellation; the existing controller observes exit and submits
-        # the next attempt with the same scientific state and corrected files.
-        try:
-            result=runner(['scancel','--signal=USR1','--batch',row[0]],
-                capture_output=True,text=True,timeout=20)
+        row=[p.strip() for p in line.split('|')]
+        if (len(row)<4 or row[0] not in old_ids or row[1]!=marker or
+                not re.fullmatch(re.escape(marker)+r'-s[012]-a[1-9][0-9]*',row[3]) or old_ids[row[0]].get('name')!=row[3]):continue
+        if row[2]=='PENDING':command=['scancel',row[0]]
+        elif row[2]=='RUNNING':command=['scancel','--signal=USR1','--batch',row[0]]
+        else:continue
+        try:result=runner(command,capture_output=True,text=True,timeout=20)
         except (OSError,subprocess.TimeoutExpired) as error:
-            emit('R1_RESTART_DEFERRED',job_id=row[0],reason=type(error).__name__,allocations_retained=True)
-            continue
-        emit('R1_CHECKPOINT_REQUEUE_REQUESTED',job_id=row[0],returncode=result.returncode,
-            signal='USR1',pending_jobs_preserved=True,force_kill=False)
+            emit('R1_OLD_WORKER_SWITCH_WAIT',job_id=row[0],reason=type(error).__name__);continue
+        emit('R1_OLD_WORKER_SWITCH_REQUESTED',job_id=row[0],old_state=row[2],returncode=result.returncode,
+            action='cancel_old_pending' if row[2]=='PENDING' else 'checkpoint_and_exit_old_running',new_package=str(package),force_kill=False)
         if result.returncode==0:requested.append(row[0])
     return requested
+
+
+def checkpoint_restart(runtime, *, runner=subprocess.run, python=sys.executable, standalone_base=None):
+    """Move R1 off the old combined install, then use its scheduler to replace old attempts."""
+    runtime=Path(runtime).resolve();state=read(runtime/'scheduler-state.json',{}) or {}
+    if not re.fullmatch(r'paper3r1p-[0-9a-f]{16}',str(state.get('marker',''))):raise ValueError('Existing first-round scheduler marker missing')
+    package,old_packages,launch=standalone_launch(runtime,base=standalone_base)
+    if not ensure_standalone_controller(runtime,package,old_packages,python=python):
+        atomic_file(runtime/'durable-switch-status.json',json.dumps(dict(status='DURABLE_SWITCH_PENDING',package=str(package),old_jobs_preserved=True)).encode(),0o600)
+        return []
+    requested=replace_old_jobs(runtime,package,old_packages,runner=runner)
+    atomic_file(runtime/'durable-switch-status.json',json.dumps(dict(status='DURABLE_CONTROLLER_READY',package=str(package),replacement_requests=requested,scientific_files_changed=False)).encode(),0o600)
+    return requested
+
 
 
 def main():
@@ -232,7 +317,8 @@ def main():
         checkpoint_restart(runtime)
     elif args.refresh_current:
         refresh_current(runtime,Path(__file__).with_name('node_refresh.py'))
-    emit('R1_FIX_READY_FOR_EXISTING_SUPERVISORS',replacement_submission_by_existing_controller=bool(args.restart_workers),checkpoint_files_preserved=True)
+    emit('R1_FIX_APPLIED',switch=read(runtime/'durable-switch-status.json',{}) if args.restart_workers else None,
+         checkpoint_files_preserved=True,gpu_training_resumed_claimed=False)
     return 0
 
 

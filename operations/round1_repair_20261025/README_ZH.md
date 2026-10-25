@@ -18,16 +18,17 @@
 
 新入口先定位launch和已提交命令真正使用的运行包，备份原文件，再原子修复四个封装文件。既有科学输出、完成回执与350更新断点保留。
 
-用户已授权重新排队。使用 --apply --restart-workers 时，只向本轮当前运行作业发USR1断点退出请求；原控制器随后按既有流程提交修复后的尝试。两个已排队作业继续保留位置，启动时读取修复文件。不会取消或重提第4/5/6/8轮或其他论文任务。
+用户已授权重新排队。使用 --apply --restart-workers 时，会把修复后的第一轮封装复制到独立运行包，避免旧共享启动器覆盖修复。确认新控制器接管后，本轮运行作业收到USR1保存退出，旧排队作业被替换，由原三槽调度状态继续提交修复后的尝试。只处理第一轮，不取消或重提第4/5/6/8轮或其他论文任务。
 
-如控制器未运行，启动既有第一轮控制器再请求断点退出；不调用原始全量test/pilot/部署流程。当前没有直接在学校执行修复，现场以日志和更新计数为准。
+如控制器未运行，启动既有第一轮控制器再请求断点退出；不调用原始全量test/pilot/部署流程。当前没有直接在学校执行修复，现场以日志和更新计数为准。若无法确认原控制器身份，输出DURABLE_SWITCH_PENDING并保留作业，不伪称切换成功。
 
 以后使用本次修复入口。旧固定版本START-PAPER3-PARALLEL下载命令会按旧包校验恢复原文件，不应再作为第一轮修复入口。
 
 ## 判断是否生效
 
 - R1_WRAPPER_FIX_APPLIED：目标运行包已修复，checkpoint_files_changed=0。
-- R1_CHECKPOINT_REQUEUE_REQUESTED：已请求本轮运行作业保存退出；后续作业号可能变化，排队不等于报错。
+- R1_STANDALONE_CONTROLLER_STARTED/REUSED：修复后的独立控制器已接管。
+- R1_OLD_WORKER_SWITCH_REQUESTED：已请求本轮旧作业保存退出或替换旧排队；后续作业号可能变化，排队不等于报错。
 - R1_STARTUP_GPU_PROBE_FINISHED：应记录A100_SXM4_40GB与真实设备属性。
 - R1_INPUT_VERIFY_STARTED/FINISHED/CACHE_HIT：展示真实核验阶段。
 - 原任务progress出现RESUMED/RUNNING且outer_updates_completed超过350，才能确认旧断点开始推进。心跳不代表模型更新。
