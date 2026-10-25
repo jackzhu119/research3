@@ -36,3 +36,9 @@
 学校文件先落盘，完成项与匹配断点继续复用。运行监控推送进度，自动摘要推送表格/报告；只有本轮`LATEST.json`及其manifest/Release分片上传器回执确认后，才标完整归档发布。主计划完成不自动包含“可选外测”或扩展训练。
 
 统计以参与者为单位，区分预先登记对比、敏感性、机制探针和多轮探索。数学性质与软件测试不直接证明未来识别性能改善。
+
+## 2026-10-25：完整总报告定向补传
+
+第七轮273/273已完成；论文通道已上传完整14张CSV。旧快速上传器因64MiB限制跳过了 reports/report.json，现已发布[不限文件总大小的单文件补传工具](../../operations/round7_report_supplement_20261025/README_ZH.md)及[单行执行指令](../../operations/round7_report_supplement_20261025/RUN-R7-REPORT-ONE-LINE.sh)。只读这一份报告、按约1MiB分片保留全部原始字节与SHA；不重打包任务目录，不修改训练、已有CSV或慢速全归档。
+
+当前状态是工具已发布、真实下载及隔离安装已验证，等待学校执行后的 REPORT_JSON_LATEST.json 回执，不能据此声称总报告已经上传。未来Codex读取该指针、manifest及restore_report.py即可按回执commit恢复完整JSON。原14张CSV仍可先分析；完整逐试次与模型归档另记账。
