@@ -1,0 +1,109 @@
+{
+  "schema_version": "paper3-parallel-migrations-software-validation-v1",
+  "checked_utc": "2026-10-25T03:15:54Z",
+  "rounds": [
+    1,
+    5,
+    6
+  ],
+  "r1_unit_integration_tests_passed": 93,
+  "r56_unit_integration_tests_passed": 56,
+  "native_CPU_checkpoint_resume_proof": {
+    "schema_version": "paper3-r1-parallel-kernel-bridge-proof-v1",
+    "checked_utc": "2026-10-25T02:56:36Z",
+    "target_partition": "hpc_gpu",
+    "target_gpu": "A100-PCIE-40GB",
+    "target_workers": 3,
+    "production_source": "existing school p3work plus existing payload hooks, not copied/replaced",
+    "targeted_tests_passed": 23,
+    "native_cpu_resume_proof": {
+      "scope": "synthetic software fixture, not experiment results",
+      "interrupt_after_consuming_step_31_rng": true,
+      "checkpoint_cursor": 30,
+      "completed_cursor": 100,
+      "dispatched_attempts_preserved": 101,
+      "resumed_parameter_equals_uninterrupted_parameter_bitwise_on_CPU": true
+    },
+    "school_GPU_execution_verified": false,
+    "cross_GPU_bitwise_equivalence_claimed": false,
+    "scientific_outputs_reused_in_place": true,
+    "all_original_extension_arms_preserved": true,
+    "phase_barriers_keep_artifact_inventory_budget_stable": true,
+    "primary_timing_affinity_slot": 0,
+    "old_80GB_primary_measurements_are_not_pooled_with_40GB": true,
+    "catalog_lineage_hook_added": false,
+    "files": {
+      "kernel_bridge.py": "929fc69cb5485b83f4a0900b38f49e4b11ab20b3278b0e980cb8b9f5e56fd7bf",
+      "hardware_comparison.py": "816a935b302bc0f464d1748706e17939dc8db11f681f6e26df20261d08565417",
+      "audited_runtime.py": "8a637c1df0ef9869da7bdfbe94590a120b599dcf9e48dca5d6fdcde82ce82550",
+      "test_kernel_bridge.py": "c85ad0dfd41757f2ce243f0f81f523944ae4d96bfbdf2e8a51f3b0f3f119332b",
+      "test_hardware_comparison.py": "55a87c802a6ef231d089eef0485582a0ad4130699f11295f64f7949e774cc81f",
+      "test_audited_runtime.py": "25cecd9c7944dc272b94f124a07492ee9a44b03f28c92649cd363b36e8e26b53"
+    }
+  },
+  "isolated_stdlib_install_prepare_proof": {
+    "status": "PASS",
+    "rounds": [
+      {
+        "round": 1,
+        "prepare_only": true,
+        "returncode": 0,
+        "slurm_changes": false
+      },
+      {
+        "round": 5,
+        "prepare_only": true,
+        "returncode": 0,
+        "slurm_changes": false
+      },
+      {
+        "round": 6,
+        "prepare_only": true,
+        "returncode": 0,
+        "slurm_changes": false
+      }
+    ],
+    "source_bytes_and_mtime_unchanged": true,
+    "install_retry_and_damaged_package_repair_verified": true,
+    "actual_school_gpu_execution": false
+  },
+  "package": {
+    "payload_sha256": "b17392b705ed53a2992a0bdf68d698405f787fc9c4cc9d7ec18b9226e7996177",
+    "files": {
+      "round1/START.py": "863d89fd641d998905eaaa0cc0483f52024a6307e07a82ea33f30fbd49bd0638",
+      "round1/worker.py": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836",
+      "round1/kernel_bridge.py": "929fc69cb5485b83f4a0900b38f49e4b11ab20b3278b0e980cb8b9f5e56fd7bf",
+      "round1/audited_runtime.py": "8a637c1df0ef9869da7bdfbe94590a120b599dcf9e48dca5d6fdcde82ce82550",
+      "round1/hardware_comparison.py": "816a935b302bc0f464d1748706e17939dc8db11f681f6e26df20261d08565417",
+      "round1/scheduler.py": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3",
+      "round1/handoff.py": "73267ef1d0fe983b2dd720334dcd353a58b83b3ce15133dc89c415bf196404c2",
+      "round1/retire_legacy.py": "ad944f07eb1fdc5a5eeea9000bf0dfa66a198d499e87b6d369287960d2880ce3",
+      "round1/monitor.py": "4644cbc3157e4fa1388c8de5c910e4ac4677a9ed68f58ef86f892f333474454b",
+      "round1/auto_summary.py": "aac37015d460541221224d83fa1ca676748233713fd9c48c89fb81581fe63415",
+      "round1/summary_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3",
+      "round56/START.py": "5e735878fb1a0bbada23cf340362a7bd9b94b5c7f7cef1701a4cc8346802fc03",
+      "round56/coordinator.py": "2cf7be0451ffc8cef9c2b530c28840cd15f702dde947721459be27065c8bc8b7",
+      "round56/three_jobs.py": "b1620be3b102398c4ec2ebe2e99aa0d84ba06ef8ebf74bbc56fabc54a601247f",
+      "round56/generic_scheduler.py": "f4dff12087db07793a8956c92642e5c9a4619699b45b736bb068f52ccf656bb8",
+      "round56/migrate.py": "72a29448125adbfc4bb707fe82b7ad60d0025e4472bfe981adfd46d976d89580",
+      "round56/backend_entry.py": "c57f9b06a8ea12be577e5ada4f994c898ab5d6df9a468f0506822dc3816494f5",
+      "round56/monitor.py": "c67925d67037e740246716df1fd98394ef0a3ad017ef36db2327395f5f20cb48",
+      "round56/auto_summary.py": "aac37015d460541221224d83fa1ca676748233713fd9c48c89fb81581fe63415",
+      "round56/summary_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3"
+    },
+    "bootstrap_sha256": "1d62ede4b4df04f5652a1d27114102c995bc00069ac92c8bf4ac31b930f762c4",
+    "bootstrap_bytes": 113851,
+    "rounds": [
+      1,
+      5,
+      6
+    ]
+  },
+  "actual_school_GPU_tested": false,
+  "actual_school_jobs_submitted": 0,
+  "actual_school_jobs_cancelled": 0,
+  "scientific_source_files_overwritten": false,
+  "old_results_checkpoints_reused_in_place": true,
+  "new_three_held_jobs_confirmed_before_old_handoff": true,
+  "remote_code_published": false
+}
