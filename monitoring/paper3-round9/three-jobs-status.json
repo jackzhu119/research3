@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 33,
+  "complete_tasks": 35,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 26.8,
+    "progress_age_seconds": 25.8,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T23:09:52Z"
+    "updated_utc": "2026-10-25T23:12:53Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 33,
+      "complete": 35,
       "total": 234
     },
     "feature_reference": {
@@ -43,17 +43,16 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 47365,
+      "pid": 52204,
       "status": "RUNNING",
-      "task_key": "core-holdout-head_sgd100-seed20261020-6b3de0ea14",
+      "task_key": "feature-reference-ea-seed20261018",
       "worker_progress": {
-        "budget": 8,
         "outer_update": 0,
-        "session": 93,
-        "sessions_total": 105,
-        "stage": "holdout",
-        "status": "EVALUATING",
-        "updated_utc": "2026-10-25T23:09:06Z"
+        "session": 395,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_features",
+        "status": "FAILED",
+        "updated_utc": "2026-10-25T23:06:15Z"
       }
     },
     "1": {
@@ -128,7 +127,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "28:10",
+        "elapsed": "31:11",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -138,7 +137,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T23:10:18Z",
+    "observed_utc": "2026-10-25T23:13:19Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,14 +163,14 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792969818.8129838,
+  "sampled_unix": 1792969998.8141294,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 7,
+      "attempt": 8,
       "family": "feature_reference",
       "index": 0,
       "job_id": "773686",
@@ -180,7 +179,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 7,
+      "attempt": 8,
       "family": "feature_reference",
       "index": 1,
       "job_id": "773686",
@@ -189,7 +188,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 7,
+      "attempt": 8,
       "family": "feature_reference",
       "index": 2,
       "job_id": "773686",
@@ -198,13 +197,27 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 7,
+      "attempt": 8,
       "family": "feature_reference",
       "index": 3,
       "job_id": "773686",
       "key": "feature-reference-ea-seed20261018",
+      "observations": [
+        {
+          "age_seconds": 7.8,
+          "path": "runs/followup_20261025_r9/feature-reference-ea-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "session": 395,
+            "sessions_total": 396,
+            "stage": "meta_train_prefix_features",
+            "status": "FAILED",
+            "updated_utc": "2026-10-25T23:13:11Z"
+          }
+        }
+      ],
       "slot": 0,
-      "status": "RETRYING"
+      "status": "RUNNING"
     },
     {
       "attempt": 7,
@@ -527,32 +540,17 @@
       "index": 39,
       "job_id": "773686",
       "key": "core-holdout-head_sgd100-seed20261020-6b3de0ea14",
-      "observations": [
-        {
-          "age_seconds": 12.8,
-          "path": "runs/followup_20261025_r9/core-holdout-head_sgd100-seed20261020-6b3de0ea14/progress.json",
-          "values": {
-            "budget": 16,
-            "outer_update": 0,
-            "session": 30,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-25T23:10:06Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 40,
-      "job_id": null,
+      "job_id": "773686",
       "key": "core-pan2023-head_sgd100-seed20261020-9c403a672d",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -14131,5 +14129,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T23:10:18Z"
+  "updated_utc": "2026-10-25T23:13:18Z"
 }
