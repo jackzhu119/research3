@@ -1,3 +1,5 @@
+> 2026-10-25 修复：学校排队作业的 `NumNodes=1-1` 已按单节点正确解析。已经提交772070–772078的用户，请先使用 [原作业接管修复指令](../NODE_RANGE_FIX_ZH.md)，保留原九个作业，不重新提交。
+
 # 三个轮次的启动指令
 
 在 login1 按顺序执行三条。第一条会下载校验共用启动器，然后启动第一轮迁移；第五、六轮使用同一份已校验启动器。也提供各轮独立的 `RUN-ROUND1.sh`、`RUN-ROUND5.sh`、`RUN-ROUND6.sh`（包含自己的下载重试）。
@@ -11,8 +13,8 @@ P=/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python
 D="$HOME/paper3-parallel-downloads"
 mkdir -p "$D"
 F="$D/START-PAPER3-PARALLEL.py"
-H=823ffba7c11bac6675192a578b195ac20e388ba68e395b9b8ceb081f1be33a05
-R=bf35b06816cc24b114d9b959ee4733788419beb1
+H=1090856b7a22a21250d04f1c09c788a20e9112a35a90f2cd92e218c62a2c5413
+R=6315d2fa96b0b541009a7492b92fcd9841f91b2a
 Q=operations/parallel_20261025/online/START-PAPER3-PARALLEL.py
 A="${P%/bin/python}/lib/python3.12/site-packages/botocore/cacert.pem"
 C=(); if [ -f "$A" ]; then C=(--cacert "$A"); fi
