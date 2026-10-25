@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-06",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 197,
+  "complete_tasks": 198,
   "coordinator": {
-    "phase": "TASK_DAG",
-    "progress_age_seconds": 16.1,
+    "phase": "COMPLETE",
+    "progress_age_seconds": 165.1,
     "progress_path": "runs/followup_20261024_r6/runtime/three_jobs/progress.json",
-    "status": "RUNNING",
-    "updated_utc": "2026-10-25T17:18:16Z"
+    "status": "COMPLETE",
+    "updated_utc": "2026-10-25T17:18:47Z"
   },
   "experiment": "paper3-round6",
   "families": {
@@ -24,7 +24,7 @@
       "total": 12
     },
     "sensitivity": {
-      "complete": 47,
+      "complete": 48,
       "total": 48
     },
     "transfer": {
@@ -35,18 +35,15 @@
   "gpu_slots": {
     "0": {
       "job_id": "772073",
-      "status": "WAITING_DEPENDENCIES"
+      "status": "COMPLETE"
     },
     "1": {
       "job_id": "772074",
-      "pid": 72531,
-      "status": "RUNNING",
-      "task_key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020",
-      "worker_progress": {}
+      "status": "COMPLETE"
     },
     "2": {
       "job_id": "772075",
-      "status": "WAITING_DEPENDENCIES"
+      "status": "COMPLETE"
     }
   },
   "interpretation": "This is the new three-job stream. The original status.json and its old monitor are retained separately.",
@@ -60,8 +57,8 @@
       "partition": "hpc_gpu1",
       "queue_reason": "gpu4",
       "slot": 0,
-      "slurm_state": "RUNNING",
-      "status": "ACKNOWLEDGED"
+      "slurm_state": "COMPLETED",
+      "status": "FINISHED"
     },
     {
       "attempt": 1,
@@ -72,8 +69,8 @@
       "partition": "hpc_gpu1",
       "queue_reason": "gpu4",
       "slot": 1,
-      "slurm_state": "RUNNING",
-      "status": "ACKNOWLEDGED"
+      "slurm_state": "COMPLETED",
+      "status": "FINISHED"
     },
     {
       "attempt": 1,
@@ -84,16 +81,16 @@
       "partition": "hpc_gpu1",
       "queue_reason": "gpu4",
       "slot": 2,
-      "slurm_state": "RUNNING",
-      "status": "ACKNOWLEDGED"
+      "slurm_state": "COMPLETED",
+      "status": "FINISHED"
     }
   ],
   "live_queue": {
     "jobs": [],
-    "observed_utc": "2026-10-25T17:18:32Z",
+    "observed_utc": "2026-10-25T17:21:32Z",
     "status": "OBSERVED"
   },
-  "phase": "TASK_DAG",
+  "phase": "COMPLETE",
   "previous_single_allocation_status_path": "monitoring/paper3-round6/status.json",
   "progress_branch": "paper3-r6-progress",
   "progress_path": "monitoring/paper3-round6/three-jobs-status.json",
@@ -116,10 +113,10 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 6,
-  "sampled_unix": 1792948712.0972195,
+  "sampled_unix": 1792948892.0983448,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
-  "status": "RUNNING",
+  "status": "COMPLETE",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
@@ -1901,26 +1898,11 @@
       "index": 197,
       "job_id": "772074",
       "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020",
-      "observations": [
-        {
-          "age_seconds": 15.1,
-          "path": "runs/followup_20261024_r6/sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T17:18:17Z"
-          }
-        }
-      ],
       "slot": 1,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     }
   ],
   "total_tasks": 198,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T17:18:32Z"
+  "updated_utc": "2026-10-25T17:21:32Z"
 }
