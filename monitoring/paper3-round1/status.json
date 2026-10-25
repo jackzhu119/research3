@@ -12,10 +12,10 @@
   },
   "coordinator": {
     "phase": "META_SCREENING",
-    "progress_age_seconds": 15.4,
+    "progress_age_seconds": 27.4,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-25T04:15:28Z"
+    "updated_utc": "2026-10-25T04:18:16Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -53,7 +53,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 368.4,
+    "progress_age_seconds": 548.4,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -62,23 +62,23 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772076",
-      "live_reason_or_node": "(Resources)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu1",
+      "live_state": "RUNNING",
       "memory": "43G",
       "partition": "hpc_gpu",
-      "queue_reason": "(Resources)",
+      "queue_reason": "gpu1",
       "slot": 0,
-      "slurm_state": "PENDING"
+      "slurm_state": "RUNNING"
     },
     {
       "attempt": 1,
       "cpus": 12,
       "job_id": "772077",
-      "live_reason_or_node": "(Priority)",
+      "live_reason_or_node": "(AssocGrpGRES)",
       "live_state": "PENDING",
       "memory": "43G",
       "partition": "hpc_gpu",
-      "queue_reason": "(Priority)",
+      "queue_reason": "(AssocGrpGRES)",
       "slot": 1,
       "slurm_state": "PENDING"
     },
@@ -86,11 +86,11 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772078",
-      "live_reason_or_node": "(Priority)",
+      "live_reason_or_node": "(AssocGrpGRES)",
       "live_state": "PENDING",
       "memory": "42G",
       "partition": "hpc_gpu",
-      "queue_reason": "(Priority)",
+      "queue_reason": "(AssocGrpGRES)",
       "slot": 2,
       "slurm_state": "PENDING"
     }
@@ -99,36 +99,36 @@
     "jobs": [
       {
         "elapsed": "0:00",
-        "job_id": "772078",
-        "marker": "paper3r1p-84c2da292f724ce9",
-        "name": "paper3r1p-84c2da292f724ce9-s2-a1",
-        "node": "",
-        "partition": "hpc_gpu",
-        "reason_or_node": "(Priority)",
-        "state": "PENDING"
-      },
-      {
-        "elapsed": "0:00",
         "job_id": "772077",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a1",
         "node": "",
         "partition": "hpc_gpu",
-        "reason_or_node": "(Priority)",
+        "reason_or_node": "(AssocGrpGRES)",
         "state": "PENDING"
       },
       {
         "elapsed": "0:00",
+        "job_id": "772078",
+        "marker": "paper3r1p-84c2da292f724ce9",
+        "name": "paper3r1p-84c2da292f724ce9-s2-a1",
+        "node": "",
+        "partition": "hpc_gpu",
+        "reason_or_node": "(AssocGrpGRES)",
+        "state": "PENDING"
+      },
+      {
+        "elapsed": "1:39",
         "job_id": "772076",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a1",
-        "node": "",
+        "node": "gpu1",
         "partition": "hpc_gpu",
-        "reason_or_node": "(Resources)",
-        "state": "PENDING"
+        "reason_or_node": "gpu1",
+        "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T04:15:43Z",
+    "observed_utc": "2026-10-25T04:18:43Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -141,11 +141,13 @@
           "radius": 0.35,
           "seed": 20261018
         },
+        "job_id": "772076",
         "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
         "kind": "meta_engineering",
         "method": "P+PCT",
         "observations": [],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "slot": 0,
+        "status": "RUNNING"
       },
       {
         "configuration": {
@@ -160,7 +162,7 @@
         "method": "P",
         "observations": [
           {
-            "age_seconds": 368.4,
+            "age_seconds": 548.4,
             "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
             "values": {
               "confirmed_outer_updates_observed": 350,
@@ -379,16 +381,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1792901743.356111,
+  "sampled_unix": 1792901923.358981,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 248232.4,
+    "age_seconds": 248412.4,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 248576.4,
+    "age_seconds": 248756.4,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -929,11 +931,13 @@
         "radius": 0.35,
         "seed": 20261018
       },
+      "job_id": "772076",
       "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
       "kind": "meta_engineering",
       "method": "P+PCT",
       "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "configuration": {
@@ -948,7 +952,7 @@
       "method": "P",
       "observations": [
         {
-          "age_seconds": 368.4,
+          "age_seconds": 548.4,
           "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
           "values": {
             "confirmed_outer_updates_observed": 350,
@@ -1131,5 +1135,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-25T04:15:43Z"
+  "updated_utc": "2026-10-25T04:18:43Z"
 }
