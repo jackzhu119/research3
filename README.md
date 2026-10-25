@@ -1,31 +1,29 @@
-# 论文3第五轮：相同校准预算下的旋转—相对增益耦合
+# 论文3 · 第5轮状态与源码
 
-状态：第五轮独立方案与程序已准备，尚未向学校提交作业；没有第五轮准确率或显著提升结果。本轮紧扣冻结EEGNet、目标会话前20个已获取试次、少量空间校准参数的论文主线。
+本分支承载第5轮的异步 GitHub 回传，并保留本轮实验源码与设计。旋转与相对增益的几何组合、有序/对称 split、图精化和共同参数机制探针。
 
-将同一个低维生成元拆成反对称部分K与对称无迹部分S，比较 `exp(K+S)`、`exp(K)exp(S)`、`exp(S)exp(K)` 及候选对称组合 `exp(K/2)exp(S)exp(K/2)`。所有模型仍使用同一rank-4参数θ与同一分类头，不将旋转和增益各增设一套参数。候选结构同时保留旋转/伸展分解与参数取反时的逆一致性；旧联合指数也具有逆一致性，不能把它写成旧算法不可逆。
+## 先看当前状态
 
-主问题是：**在相同采集前缀、相同参数预算和匹配优化预算下，耦合方式是否改变跨会话校准收益？** 三种分解在共享θ时具有相同白化增益谱、旋转极因子及扰动酉不变范数，适合检验相对方向耦合；经非正交参考重着色后，原CAR坐标的欧氏幅度不一定相同。理论性质和保证边界见 [DESIGN_ZH.md](experiments/followup_20261024_r5/DESIGN_ZH.md)。
+- [第5轮最新回传](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json)：`monitoring/paper3-round5/three-jobs-status.json`。
+- [本轮设计与实现](https://github.com/jackzhu119/research3/tree/paper3-r5-progress/experiments/followup_20261024_r5)。
+- [第5轮分类结果](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3/round-05)。
 
-| 内容 | 任务数 |
-|---|---:|
-| 4种变换各3种子的字典训练 | 12 |
-| 4种训练字典×4种评价变换×3种子 | 48 |
-| 共同字典上的两档半径敏感性 | 24 |
-| 共同切线参数机制探针，含BCH2 | 15 |
-| 仅头校准与EA参考 | 6 |
-| **核心合计** | **105** |
-| 可选Weibo外部评价 | 另21 |
+[旧单作业状态](monitoring/paper3-round5/status.json)保留历史语境；当前三作业交接和排队以本页主状态入口为准。
 
-105不是105次完整训练；只有12项训练低维空间字典，冻结源EEGNet及数据继续复用。核心48项各评价B4/8/12/16/20，始终使用同一个B20之后的未来查询。另在12项共同字典核心任务中运行72个耦合漂移条件：两种非交换顺序和同谱可交换对照，各两档强度；相同变换同时作用支持与查询，标签和付费前缀身份不变。精确矩阵在 [EXPERIMENT_MATRIX.json](experiments/followup_20261024_r5/EXPERIMENT_MATRIX.json)。
+运行、排队、实际模型更新、报告生成和完整文件上传分别记录。请查看状态文件内的源更新时间；心跳或 `RUNNING` 字样本身不能证明模型更新次数正在增长。旧快照不覆盖更新后的学校本地回执。
 
-主要方法先用共同身份切线做10次Newton初始化，再进行5步各自真实非线性变换上的支持目标精化与回溯。只换预测变换、沿用共同θ的实验单独标记为机制探针，不混入部署方法主比较。8项主要比较预先固定，并按参与者配对、三种子内聚合后统一Holm；既有内部留出被前轮使用过，仍属于探索性复验。详见 [STATISTICS.md](experiments/followup_20261024_r5/STATISTICS.md) 与 [LITERATURE.md](experiments/followup_20261024_r5/LITERATURE.md)。
+## 学校资源与结果保存
 
-运行于用户指定的 **`hpc_gpu1`、一个节点、一个Slurm作业、三张GPU并行**。CPU整作业36核，内部各槽12核；主机内存按整作业共享总池精确申请164G。资源参数为 `--nodes=1 --ntasks=1 --cpus-per-task=36 --mem=164G --gres=gpu:3`。第五轮CLI使用 `--memory-total 164G`；它不乘三，不按每槽整数舍入。
+最新部署：`hpc_gpu1`，A100 SXM4 80GB；三个独立单卡作业，各12CPU / 64G主机内存，总36CPU / 192G。
 
-新源码安装在 `~/paper3-round5/<包hash>/`，默认结果在原工程 `runs/followup_20261024_r5`。前四轮源码、作业和结果独立保留。本轮不重跑全量test/pilot或全树数据扫描，没有累计12小时上限。训练每10步保存轮换断点，评价逐会话保存；一个任务失败，其他独立任务继续；调度资源不足时等待一个三卡分配。
+学校共享项目：`/public/home/zhuziyuan/projects/paper3`。模型断点、逐会话预测和本轮输出先保存在学校共享目录。进度回传及分析摘要不等于全部模型或逐试次文件已完成异地归档；完整归档以 `paper3-results` 对应轮次的 `LATEST.json` 及其引用 manifest/分片确认。
 
-GitHub每180秒尝试同步至 `paper3-r5-progress:monitoring/paper3-round5/status.json`，外部评价使用单独 `weibo-status.json`。网络同步失败不停止训练，完整checkpoint、预测和CSV仍保存在学校本地。启动、日志、续跑和资源解释见 [RUNBOOK_ZH.md](experiments/followup_20261024_r5/RUNBOOK_ZH.md)，固定线上地址与SHA在 [online/ONLINE_LAUNCH.json](experiments/followup_20261024_r5/online/ONLINE_LAUNCH.json)。
+源码、启动说明和固定提交下载地址供部署与恢复查阅。已有作业的实际运行状态通过上述回传查看，不凭本分支首页重新提交。
 
-软件验证见 [VALIDATION.json](experiments/followup_20261024_r5/VALIDATION.json)：匹配Python3.12.3、PyTorch2.5.1+cu121、NumPy2.2.6的本地CPU环境已完成测试；学校A100三卡实跑仍需作业确认。代数恒等式和软件测试不是识别提升证据，也不证明全局最优。若对称结构无收益，半径、交换子、条件数和实际输入变化等诊断仍可提供可解释的负结果。
+## 仓库导航
 
-前四轮历史部署保持在[第四轮固定版本](https://github.com/jackzhu119/research3/tree/37aa10812dbb803fb46380aa3b8b61e0a203899a)。本分支只记录第五轮。
+[仓库主页](https://github.com/jackzhu119/research3/tree/research/paper3-protocol-v2-w0) · [八轮实验总索引](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/experiments/README_ZH.md) · [最新进展](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/LIVE_STATUS_ZH.md) · [后续安排](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/ROADMAP_ZH.md) · [全部分支分类](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/BRANCHES_ZH.md)
+
+## 历史记录
+
+本次整理前的根 README 按原 Git blob 保存在 [旧首页](docs/records/README_BEFORE_ORGANIZE_20261025.md)。旧说明保留原发布日期，当前状态通过本页上方入口读取。
