@@ -147,7 +147,7 @@ def controller_loop(context,*,runner=None,clock=None,sleeper=None,stop=None,once
                 # Temporary scheduler/filesystem failures preserve old ownership
                 # and submission receipts. The independent monitor is unaffected.
                 emit_callback('THREE_JOBS_CONTROLLER_RETRY',round=context['round'],
-                              error_type=type(error).__name__)
+                              error_type=type(error).__name__,reason=str(error)[:1000])
             if once:return 0
             sleeper(float(launch.get('poll_seconds',30)))
         state=read(runtime/'scheduler-state.json',{}) or {}

@@ -2,6 +2,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import re
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -9,13 +10,19 @@ import fcntl
 
 from migrate import HeldQueueMigration,MigrationOwnershipError,MigrationTransient
 
+# Exact login1 Slurm 20.11 scontrol outputs supplied on 2026-10-25.
+SCHOOL_SCONTROL = {
+    5: "JobId=772070 JobName=paper3r5p-2a492b1bc14432d0-s0-a1 UserId=zhuziyuan(2461) GroupId=zhuziyuan(11017) MCS_label=N/A Priority=0 Nice=0 Account=zhuziyuan QOS=user_zhuziyuan JobState=PENDING Reason=JobHeldUser Dependency=(null) Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0 RunTime=00:00:00 TimeLimit=5-03:00:00 TimeMin=N/A SubmitTime=2026-10-25T11:46:20 EligibleTime=Unknown AccrueTime=Unknown StartTime=Unknown EndTime=Unknown Deadline=N/A SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-25T11:46:20 Partition=hpc_gpu1 AllocNode:Sid=login1:814290 ReqNodeList=(null) ExcNodeList=gpu3 NodeList=(null) NumNodes=1-1 NumCPUs=12 NumTasks=1 CPUs/Task=12 ReqB:S:C:T=0:0:*:* TRES=cpu=12,mem=64G,node=1,billing=12,gres/gpu=1 Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=* MinCPUsNode=12 MinMemoryNode=64G MinTmpDiskNode=0 Features=(null) DelayBoot=00:00:00 OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null) Command=/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5/runtime/three_jobs/single-gpu-worker.sbatch /public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python -I -S -B -u /public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round56/three_jobs.py worker --plan /public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5/plan.json --runtime /public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5/runtime/three_jobs --round 5 --slot 0 --package /public/home/zhuziyuan/paper3-round5-hpcgpu/02955e93c9180dadeb6e --python /public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python WorkDir=/tmp Comment=paper3r5p-2a492b1bc14432d0  StdErr=/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5/runtime/three_jobs/logs/slot-0-772070.err StdIn=/dev/null StdOut=/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r5/runtime/three_jobs/logs/slot-0-772070.out Power= TresPerNode=gpu:1 NtasksPerTRES:0",
+    6: "JobId=772073 JobName=paper3r6p-1223a296dd91e758-s0-a1 UserId=zhuziyuan(2461) GroupId=zhuziyuan(11017) MCS_label=N/A Priority=0 Nice=0 Account=zhuziyuan QOS=user_zhuziyuan JobState=PENDING Reason=JobHeldUser Dependency=(null) Requeue=0 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0 RunTime=00:00:00 TimeLimit=5-03:00:00 TimeMin=N/A SubmitTime=2026-10-25T11:46:22 EligibleTime=Unknown AccrueTime=Unknown StartTime=Unknown EndTime=Unknown Deadline=N/A SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-25T11:46:22 Partition=hpc_gpu1 AllocNode:Sid=login1:814369 ReqNodeList=(null) ExcNodeList=gpu3 NodeList=(null) NumNodes=1-1 NumCPUs=12 NumTasks=1 CPUs/Task=12 ReqB:S:C:T=0:0:*:* TRES=cpu=12,mem=64G,node=1,billing=12,gres/gpu=1 Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=* MinCPUsNode=12 MinMemoryNode=64G MinTmpDiskNode=0 Features=(null) DelayBoot=00:00:00 OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null) Command=/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6/runtime/three_jobs/single-gpu-worker.sbatch /public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python -I -S -B -u /public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round56/three_jobs.py worker --plan /public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6/plan.json --runtime /public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6/runtime/three_jobs --round 6 --slot 0 --package /public/home/zhuziyuan/paper3-round6-hpcgpu/45fb15d5c45bf0af0372 --python /public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python WorkDir=/tmp Comment=paper3r6p-1223a296dd91e758  StdErr=/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6/runtime/three_jobs/logs/slot-0-772073.err StdIn=/dev/null StdOut=/public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6/runtime/three_jobs/logs/slot-0-772073.out Power= TresPerNode=gpu:1 NtasksPerTRES:0",
+}
+
 
 class Scheduler:
     def __init__(self,round_number,old_marker,new_marker):
         self.round=round_number;self.old_marker=old_marker;self.new_marker=new_marker
         self.old_job={5:'772012',6:'772013'}[round_number]
         self.old_state='PENDING';self.old_terminal=False;self.race=False
-        self.bad_memory=False;self.queue_failure=False;self.calls=[]
+        self.bad_memory=False;self.queue_failure=False;self.calls=[];self.nodes='1';self.cpus='12'
         self.new={str(900001+s):dict(slot=s,held=True,state='PENDING') for s in range(3)}
     def __call__(self,command,**kwargs):
         self.calls.append(command)
@@ -38,7 +45,7 @@ class Scheduler:
             reason='JobHeldUser' if row['held'] else 'AssocGrpGRES';priority=0 if row['held'] else 100
             text=(f"JobId={job} JobName={self.new_marker}-s{row['slot']}-a1 UserId=u(1000) "
                   f"JobState={row['state']} Reason={reason} Priority={priority} Comment={self.new_marker} "
-                  f"Partition=hpc_gpu1 NumCPUs=12 NumNodes=1 TRES=cpu=12,mem={memory},node=1,gres/gpu=1")
+                  f"Partition=hpc_gpu1 NumCPUs={self.cpus} NumNodes={self.nodes} TRES=cpu=12,mem={memory},node=1,gres/gpu=1")
             return SimpleNamespace(returncode=0,stdout=text,stderr='')
         if command[0]=='scancel':
             assert command[-1]==self.old_job
@@ -92,6 +99,56 @@ class MigrationTests(unittest.TestCase):
         self.assertEqual(sum(c[:2]==['scontrol','release'] for c in calls),3)
         self.assertEqual(self.path.read_bytes(),self.original_plan)
         self.assertEqual(self.ckpt.read_bytes(),b'PRESERVE_CHECKPOINT')
+    def test_slurm_20_11_fixed_one_node_range_completes_handoff(self):
+        self.scheduler.nodes='1-1'
+        self.assertEqual(self.migration.step(self.summary)['status'],'WAITING_OLD_ALLOCATION_TERMINAL')
+        self.assertEqual(self.migration.step(self.summary)['status'],'READY')
+    def test_exact_school_r5_and_r6_held_job_fixtures(self):
+        for round_number,text in SCHOOL_SCONTROL.items():
+            with self.subTest(round=round_number):
+                first=int(re.search(r'JobId=(\d+)',text)[1])
+                marker=re.search(r'(?:^|\s)Comment=([^\s]+)',text)[1]
+                account=re.search(r'UserId=([^\s(]+)',text)[1]
+                output=self.base/('school-round'+str(round_number));output.mkdir()
+                plan=dict(self.plan,output=str(output))
+                path=output/'plan.json';path.write_text(json.dumps(plan))
+                rows=[dict(slot=s,job_id=str(first+s),user=account,marker=marker,
+                    state='PENDING',name=marker+'-s'+str(s)+'-a1',
+                    partition='hpc_gpu1',reason='(JobHeldUser)') for s in range(3)]
+                def query(command,**kwargs):
+                    self.assertEqual(command[:4],['scontrol','--oneliner','show','job'])
+                    slot=int(command[-1])-first
+                    value=text.replace(f'JobId={first}',f'JobId={first+slot}')
+                    value=value.replace('-s0-a1',f'-s{slot}-a1')
+                    return SimpleNamespace(returncode=0,stdout=value,stderr='')
+                migration=HeldQueueMigration(path,output/'runtime/three_jobs',round_number,
+                    dict(self.launch,account=account),runner=query,account=account)
+                summary={'marker':marker,'jobs':[{'slot':r['slot'],'job_id':r['job_id']} for r in rows]}
+                verified=migration._new_jobs(summary,rows)
+                self.assertEqual(len(verified),3)
+                self.assertTrue(all(row['nodes']==1 and row['gpus']==1 for row in verified))
+                self.assertFalse((output/'runtime/STOP').exists())
+    def test_other_node_counts_or_ranges_are_rejected_before_old_mutation(self):
+        events=[]
+        self.migration.emit=lambda event,**fields:events.append((event,fields))
+        for nodes in ('1-2','2','0','0-1','01','1-01','2-2'):
+            with self.subTest(nodes=nodes):
+                self.scheduler.nodes=nodes
+                with self.assertRaises(MigrationOwnershipError) as caught:
+                    self.migration.step(self.summary)
+                self.assertIn('"numnodes": "'+nodes+'"',str(caught.exception))
+                self.assertIn('"numcpus": "12"',str(caught.exception))
+                self.assertEqual(events[-1][0],'REPLACEMENT_VERIFICATION_MISMATCH')
+                self.assertEqual(events[-1][1]['observed']['numnodes'],nodes)
+        self.assertFalse((self.output/'runtime/STOP').exists())
+        self.assertFalse(any(c[0]=='scancel' for c in self.scheduler.calls))
+    def test_fixed_node_range_does_not_bypass_cpu_or_memory_mismatch(self):
+        self.scheduler.nodes='1-1';self.scheduler.cpus='24'
+        with self.assertRaises(MigrationOwnershipError):self.migration.step(self.summary)
+        self.scheduler.cpus='12';self.scheduler.bad_memory=True
+        with self.assertRaises(MigrationOwnershipError):self.migration.step(self.summary)
+        self.assertFalse((self.output/'runtime/STOP').exists())
+        self.assertFalse(any(c[0]=='scancel' for c in self.scheduler.calls))
     def test_submit_rejection_or_missing_ack_does_not_touch_old(self):
         bad=copy.deepcopy(self.summary);bad['jobs'][2]['job_id']=None
         result=self.migration.step(bad)

@@ -145,6 +145,17 @@ class HeldQueueMigration:
             raise MigrationTransient('replacement_job_details_not_available')
         return {key.lower():value for key,value in re.findall(r'([A-Za-z][A-Za-z0-9_]*)=([^\s]*)',result.stdout)}
 
+    def _resource_error(self,code,job,slot,details):
+        observed={key:details.get(key) for key in (
+            'partition','numcpus','numnodes','reqtres','tres','minmemorynode',
+            'minmemorycpu','trespernode','gres')}
+        expected={'partition':self.partition,'cpus':self.cpus,'nodes':1,
+                  'memory':self.memories[slot],'gpus':1}
+        self._emit('REPLACEMENT_VERIFICATION_MISMATCH',reason=code,job_id=str(job),
+                   observed=observed,expected=expected)
+        raise MigrationOwnershipError(code+'; observed='+json.dumps(observed,sort_keys=True)+
+                                      '; expected='+json.dumps(expected,sort_keys=True))
+
     def _new_jobs(self,summary,queue,*,require_three=True):
         marker=summary.get('marker')
         if not isinstance(marker,str) or not marker.startswith('paper3r%dp-'%self.round) or marker==self.old_marker:
@@ -195,21 +206,23 @@ class HeldQueueMigration:
                     key,item=value.split('=',1);tres[key]=item
             cpus=details.get('numcpus',tres.get('cpu'))
             nodes=details.get('numnodes',tres.get('node'))
-            if cpus!=str(self.cpus) or nodes!='1':
-                raise MigrationOwnershipError('replacement_cpu_or_node_request_mismatch')
+            # Slurm 20.11 renders a held fixed-one-node request as NumNodes=1-1.
+            # Accept only that exact range or the usual scalar form.
+            if cpus!=str(self.cpus) or nodes not in ('1','1-1'):
+                self._resource_error('replacement_cpu_or_node_request_mismatch',job,slot,details)
             expected_memory=_migration_memory_mib(self.memories[slot])
             actual_memory=_migration_memory_mib(tres.get('mem',details.get('minmemorynode','')))
             if actual_memory is None and details.get('minmemorycpu'):
                 per_cpu=_migration_memory_mib(details['minmemorycpu'])
                 actual_memory=None if per_cpu is None else per_cpu*self.cpus
             if actual_memory!=expected_memory:
-                raise MigrationOwnershipError('replacement_memory_request_mismatch')
+                self._resource_error('replacement_memory_request_mismatch',job,slot,details)
             gpu=tres.get('gres/gpu')
             if gpu is None:
                 text=details.get('trespernode',details.get('gres',''))
                 gpu='1' if re.search(r'(?:^|[:,])gpu(?::[^,]*)?:1(?:,|$)',text) else None
             if gpu!='1':
-                raise MigrationOwnershipError('replacement_must_request_one_gpu')
+                self._resource_error('replacement_must_request_one_gpu',job,slot,details)
             confirmed.append({**current,'slot':slot,'cpus':self.cpus,'memory':self.memories[slot],
                               'gpus':1,'nodes':1,'held':True})
         if require_three and (len(confirmed)!=3 or len({r['job_id'] for r in confirmed})!=3):

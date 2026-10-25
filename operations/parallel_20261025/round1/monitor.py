@@ -130,8 +130,8 @@ def query_queue(job_ids=(), runner=subprocess.run):
             if len(columns) != 8:
                 continue
             job, marker, state, name, partition, elapsed, reason, node = columns
-            if (job not in ids and not marker.startswith(('paper3r1-', 'paper3-r1-'))
-                    and not name.startswith(('paper3r1-', 'paper3-r1-'))):
+            if (job not in ids and not marker.startswith(('paper3r1p-', 'paper3r1-', 'paper3-r1-'))
+                    and not name.startswith(('paper3r1p-', 'paper3r1-', 'paper3-r1-'))):
                 continue
             rows.append(dict(job_id=job, state=state, name=name, partition=partition,
                              elapsed=elapsed, reason_or_node=reason, node=node, marker=marker))

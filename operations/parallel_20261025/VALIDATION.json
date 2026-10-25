@@ -1,76 +1,59 @@
 {
-  "schema_version": "paper3-parallel-migrations-software-validation-v1",
-  "checked_utc": "2026-10-25T03:15:54Z",
-  "rounds": [
-    1,
-    5,
-    6
+  "status": "PASS",
+  "local_r1_tests": 109,
+  "local_r56_tests": 60,
+  "local_repair_takeover_tests": 12,
+  "total_local_tests_passed": 181,
+  "actual_school_fixture_NumNodes": "1-1",
+  "actual_school_fixture_jobs": [
+    "772076",
+    "772070",
+    "772073"
   ],
-  "r1_unit_integration_tests_passed": 104,
-  "r56_unit_integration_tests_passed": 56,
-  "native_CPU_checkpoint_resume_proof": {
-    "schema_version": "paper3-r1-parallel-kernel-bridge-proof-v1",
-    "checked_utc": "2026-10-25T02:56:36Z",
-    "target_partition": "hpc_gpu",
-    "target_gpu": "A100-PCIE-40GB",
-    "target_workers": 3,
-    "production_source": "existing school p3work plus existing payload hooks, not copied/replaced",
-    "targeted_tests_passed": 23,
-    "native_cpu_resume_proof": {
-      "scope": "synthetic software fixture, not experiment results",
-      "interrupt_after_consuming_step_31_rng": true,
-      "checkpoint_cursor": 30,
-      "completed_cursor": 100,
-      "dispatched_attempts_preserved": 101,
-      "resumed_parameter_equals_uninterrupted_parameter_bitwise_on_CPU": true
-    },
-    "school_GPU_execution_verified": false,
-    "cross_GPU_bitwise_equivalence_claimed": false,
-    "scientific_outputs_reused_in_place": true,
-    "all_original_extension_arms_preserved": true,
-    "phase_barriers_keep_artifact_inventory_budget_stable": true,
-    "primary_timing_affinity_slot": 0,
-    "old_80GB_primary_measurements_are_not_pooled_with_40GB": true,
-    "catalog_lineage_hook_added": false,
+  "held_jobs_to_adopt": {
+    "1": [
+      "772076",
+      "772077",
+      "772078"
+    ],
+    "5": [
+      "772070",
+      "772071",
+      "772072"
+    ],
+    "6": [
+      "772073",
+      "772074",
+      "772075"
+    ]
+  },
+  "preserve_original_immutable_package": true,
+  "preserve_original_checkpoint_and_success_receipts": true,
+  "no_full_pytest_or_pilot_at_school": true,
+  "no_cumulative_12_hour_limit": true,
+  "installer_all_21_file_hashes_verified": true,
+  "manager": {
+    "status": "PASS",
+    "targeted_tests_passed": 12,
+    "actual_school_actions": false,
+    "scope": "login controller and monitor replacement only after existing three held workers verified",
+    "real_isolated_dummy_process_and_lock_takeover": true,
+    "existing_scheduler_state_and_launch_bytes_mtime_preserved": true,
+    "readonly_slurm_commands_only_in_manager": true,
+    "non_single_node_ranges_rejected": true,
+    "independent_repair_lock": true,
+    "old_immutable_package_modified": false,
     "files": {
-      "kernel_bridge.py": "929fc69cb5485b83f4a0900b38f49e4b11ab20b3278b0e980cb8b9f5e56fd7bf",
-      "hardware_comparison.py": "816a935b302bc0f464d1748706e17939dc8db11f681f6e26df20261d08565417",
-      "audited_runtime.py": "8a637c1df0ef9869da7bdfbe94590a120b599dcf9e48dca5d6fdcde82ce82550",
-      "test_kernel_bridge.py": "c85ad0dfd41757f2ce243f0f81f523944ae4d96bfbdf2e8a51f3b0f3f119332b",
-      "test_hardware_comparison.py": "55a87c802a6ef231d089eef0485582a0ad4130699f11295f64f7949e774cc81f",
-      "test_audited_runtime.py": "25cecd9c7944dc272b94f124a07492ee9a44b03f28c92649cd363b36e8e26b53"
+      "repair_manager.py": "d499e0530e8b5ba7729ead49be8d09cbb77ad5898b8e7ca47d5c06acca2bb29a",
+      "test_repair_manager.py": "02eed3a6dfa6b9d45ef24c135b12ab6c0c249bb405a8d085669521803fbf30a5"
     }
   },
-  "isolated_stdlib_install_prepare_proof": {
-    "status": "PASS",
-    "rounds": [
-      {
-        "round": 1,
-        "prepare_only": true,
-        "returncode": 0,
-        "slurm_changes": false
-      },
-      {
-        "round": 5,
-        "prepare_only": true,
-        "returncode": 0,
-        "slurm_changes": false
-      },
-      {
-        "round": 6,
-        "prepare_only": true,
-        "returncode": 0,
-        "slurm_changes": false
-      }
-    ],
-    "source_bytes_and_mtime_unchanged": true,
-    "install_retry_and_damaged_package_repair_verified": true,
-    "actual_school_gpu_execution": false
-  },
+  "school_repair_executed_by_tools": false,
+  "actual_school_GPU_execution_claimed": false,
   "package": {
-    "payload_sha256": "fa00be482b1440d3fae7fff1e837ea990cbc69af67f9dd94612ff0ecc2ad759d",
+    "payload_sha256": "348897176d04a4a9e9c543377eccc5185cdc07b3c5f0f545da41c7ade1f6691b",
     "files": {
-      "round1/START.py": "31eead679bca46a826b91c9833b9f1e45f031bfcf95a81a64b1ed8db0a39165b",
+      "round1/START.py": "a03cb53e89f19f6a48dc6159e61e322042bba8bf709c4a97a3e6db8bfe7b2987",
       "round1/worker.py": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836",
       "round1/kernel_bridge.py": "929fc69cb5485b83f4a0900b38f49e4b11ab20b3278b0e980cb8b9f5e56fd7bf",
       "round1/audited_runtime.py": "8a637c1df0ef9869da7bdfbe94590a120b599dcf9e48dca5d6fdcde82ce82550",
@@ -78,102 +61,26 @@
       "round1/scheduler.py": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3",
       "round1/handoff.py": "9172cfbe0c775a1867e32553cee207d47009cd3bb1904ce27037a1fdfc8c8663",
       "round1/retire_legacy.py": "ad944f07eb1fdc5a5eeea9000bf0dfa66a198d499e87b6d369287960d2880ce3",
-      "round1/monitor.py": "4644cbc3157e4fa1388c8de5c910e4ac4677a9ed68f58ef86f892f333474454b",
+      "round1/monitor.py": "8b69be67c776fad10976f3e871e978e9a1510c1e77db4636277da96af366e2ea",
       "round1/auto_summary.py": "aac37015d460541221224d83fa1ca676748233713fd9c48c89fb81581fe63415",
       "round1/summary_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3",
       "round56/START.py": "5e735878fb1a0bbada23cf340362a7bd9b94b5c7f7cef1701a4cc8346802fc03",
-      "round56/coordinator.py": "2cf7be0451ffc8cef9c2b530c28840cd15f702dde947721459be27065c8bc8b7",
+      "round56/coordinator.py": "990e11bb88dd123b69b8845dc7c8d5b7f12cffc32aba34165bb231787ed4e63d",
       "round56/three_jobs.py": "b1620be3b102398c4ec2ebe2e99aa0d84ba06ef8ebf74bbc56fabc54a601247f",
       "round56/generic_scheduler.py": "f4dff12087db07793a8956c92642e5c9a4619699b45b736bb068f52ccf656bb8",
-      "round56/migrate.py": "72a29448125adbfc4bb707fe82b7ad60d0025e4472bfe981adfd46d976d89580",
+      "round56/migrate.py": "43d835ad981f3706c54ef83798764d03070daf756427dc755f6048c0f9e696b2",
       "round56/backend_entry.py": "c57f9b06a8ea12be577e5ada4f994c898ab5d6df9a468f0506822dc3816494f5",
       "round56/monitor.py": "c67925d67037e740246716df1fd98394ef0a3ad017ef36db2327395f5f20cb48",
       "round56/auto_summary.py": "aac37015d460541221224d83fa1ca676748233713fd9c48c89fb81581fe63415",
-      "round56/summary_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3"
+      "round56/summary_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3",
+      "repair_manager.py": "d499e0530e8b5ba7729ead49be8d09cbb77ad5898b8e7ca47d5c06acca2bb29a"
     },
-    "bootstrap_sha256": "823ffba7c11bac6675192a578b195ac20e388ba68e395b9b8ceb081f1be33a05",
-    "bootstrap_bytes": 115388,
+    "bootstrap_sha256": "1090856b7a22a21250d04f1c09c788a20e9112a35a90f2cd92e218c62a2c5413",
+    "bootstrap_bytes": 121176,
     "rounds": [
       1,
       5,
       6
     ]
-  },
-  "actual_school_GPU_tested": false,
-  "actual_school_jobs_submitted": 0,
-  "actual_school_jobs_cancelled": 0,
-  "scientific_source_files_overwritten": false,
-  "old_results_checkpoints_reused_in_place": true,
-  "new_three_held_jobs_confirmed_before_old_handoff": true,
-  "remote_code_published": true,
-  "checkpoint_saved_legacy_backup_drain_verified": true,
-  "checkpoint_drain_requires_three_queued_jobs_and_native_saved_cursor": true,
-  "remote_raw_and_api_download_verified": true,
-  "actual_shell_download_install_prepare_verified": true,
-  "source_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
-  "remote_delivery": {
-    "download": {
-      "status": "PASS",
-      "source_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
-      "routes": [
-        {
-          "route": "RAW",
-          "bytes": 115388,
-          "sha256": "823ffba7c11bac6675192a578b195ac20e388ba68e395b9b8ceb081f1be33a05"
-        },
-        {
-          "route": "API",
-          "bytes": 115388,
-          "sha256": "823ffba7c11bac6675192a578b195ac20e388ba68e395b9b8ceb081f1be33a05"
-        }
-      ],
-      "published_install_rounds": [
-        1,
-        5,
-        6
-      ],
-      "school_jobs_started_or_stopped": 0
-    },
-    "shell": {
-      "status": "PASS",
-      "source_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
-      "rounds": [
-        {
-          "round": 1,
-          "status": "PASS",
-          "command_substitutions": [
-            "host interpreter",
-            "temporary download directory",
-            "fixture root",
-            "prepare instead of execute"
-          ],
-          "school_actions": false
-        },
-        {
-          "round": 5,
-          "status": "PASS",
-          "command_substitutions": [
-            "host interpreter",
-            "temporary download directory",
-            "fixture root",
-            "prepare instead of execute"
-          ],
-          "school_actions": false
-        },
-        {
-          "round": 6,
-          "status": "PASS",
-          "command_substitutions": [
-            "host interpreter",
-            "temporary download directory",
-            "fixture root",
-            "prepare instead of execute"
-          ],
-          "school_actions": false
-        }
-      ],
-      "source_bytes_and_mtime_unchanged": true,
-      "actual_school_GPU_execution": false
-    }
   }
 }

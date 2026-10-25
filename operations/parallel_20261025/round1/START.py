@@ -139,15 +139,24 @@ def confirm_three_held(snapshot, *, run=command):
         if mem is None:
             match = re.search(r'(?:^|,)mem=([^,]+)',tres)
             mem = match.group(1) if match else ''
-        if fields.get('Partition')!='hpc_gpu' or fields.get('NumNodes')!='1' or cpus!='12':
-            raise ValueError('Replacement job partition/node/CPU differs from requested resources')
+        observed_resources = {'job_id':str(job['job_id']), 'Partition':fields.get('Partition'),
+            'NumNodes':fields.get('NumNodes'), 'NumCPUs':cpus, 'memory':mem,
+            'MinMemoryNode':fields.get('MinMemoryNode'), 'TRES':tres, 'TresPerNode':gpu}
+        expected_resources = {'partition':'hpc_gpu', 'nodes':1, 'cpus':12,
+                              'memory':job['memory'], 'gpus':1}
+        resource_context = '; observed='+json.dumps(observed_resources,sort_keys=True)+\
+                           '; expected='+json.dumps(expected_resources,sort_keys=True)
+        # Slurm 20.11 displays a pending fixed one-node request as its exact
+        # minimum-maximum range. A larger or open range is not a one-node job.
+        if fields.get('Partition')!='hpc_gpu' or fields.get('NumNodes') not in ('1','1-1') or cpus!='12':
+            raise ValueError('Replacement job partition/node/CPU differs from requested resources'+resource_context)
         if (fields.get('Reason') not in ('JobHeldUser','JobHeldAdmin')
                 and not (fields.get('Reason') is None and fields.get('Priority')=='0')):
             return {'ready':False,'reason':'replacement_hold_not_confirmed'}
         if memory_mib(mem)!=memory_mib(job['memory']):
-            raise ValueError('Replacement job memory differs from requested resources')
+            raise ValueError('Replacement job memory differs from requested resources'+resource_context)
         if not (re.search(r'gpu(?::[^,=]+)*:1(?:,|$)',gpu) or re.search(r'gres/gpu=1(?:,|$)',tres)):
-            raise ValueError('Replacement job must request exactly one GPU')
+            raise ValueError('Replacement job must request exactly one GPU'+resource_context)
         verified.append({'slot':job['slot'],'job_id':str(job['job_id']),'memory':job['memory'],
                          'cpus':12,'gpus':1,'partition':'hpc_gpu'})
     return {'ready':True,'jobs':verified,'marker':snapshot['marker']}

@@ -90,6 +90,22 @@ class MonitorTests(unittest.TestCase):
         snapshot=M.collect(self.root,runner=runner)
         self.assertEqual(snapshot['live_queue']['status'],'UNAVAILABLE')
         self.assertEqual(snapshot['coordinator']['status'],'RUNNING')
+    def test_actual_parallel_marker_is_observed_before_first_progress_write(self):
+        (self.op/'progress.json').unlink()
+        rows = ('772076|paper3r1p-84c2da292f724ce9|PENDING|paper3r1p-84c2da292f724ce9-s0-a1|hpc_gpu|0:00|(AssocGrpGRES)|\n'
+                '772077|(null)|PENDING|paper3r1p-84c2da292f724ce9-s1-a1|hpc_gpu|0:00|(Resources)|\n'
+                '772078|paper3r1-legacy|RUNNING|old-known-prefix|hpc_gpu|1:00|gpu2|gpu2\n'
+                '772079|(null)|PENDING|paper3-r1-legacy|hpc_gpu|0:00|(Resources)|\n'
+                '772080|paper3r5p-other|RUNNING|paper3r5p-other-s0-a1|hpc_gpu1|1:00|gpu4|gpu4\n')
+        def runner(*args, **kwargs):
+            return subprocess.CompletedProcess(args[0], 0, stdout=rows)
+        snapshot = M.collect(self.root, runner=runner)
+        self.assertEqual(snapshot['jobs'], [])
+        self.assertEqual(snapshot['live_queue']['status'], 'OBSERVED')
+        self.assertEqual([row['job_id'] for row in snapshot['live_queue']['jobs']],
+                         ['772076', '772077', '772078', '772079'])
+        self.assertEqual(snapshot['live_queue']['jobs'][0]['state'], 'PENDING')
+        self.assertEqual(snapshot['live_queue']['jobs'][0]['reason_or_node'], '(AssocGrpGRES)')
     def test_bounded_json_and_missing_progress_do_not_scan_predictions(self):
         p=self.root/'small.json';p.write_bytes(b'x'*20)
         self.assertEqual(M.read_json(p,limit=10)[1],'JSON_TOO_LARGE')
