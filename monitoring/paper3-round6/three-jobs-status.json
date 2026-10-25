@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-06",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 135,
+  "complete_tasks": 144,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 25.1,
+    "progress_age_seconds": 23.1,
     "progress_path": "runs/followup_20261024_r6/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T17:03:07Z"
+    "updated_utc": "2026-10-25T17:06:09Z"
   },
   "experiment": "paper3-round6",
   "families": {
@@ -16,11 +16,11 @@
       "total": 6
     },
     "core": {
-      "complete": 57,
+      "complete": 60,
       "total": 60
     },
     "reference": {
-      "complete": 0,
+      "complete": 6,
       "total": 12
     },
     "sensitivity": {
@@ -35,47 +35,47 @@
   "gpu_slots": {
     "0": {
       "job_id": "772073",
-      "pid": 52138,
+      "pid": 55578,
       "status": "RUNNING",
-      "task_key": "core-joint-uq_diagonal-main-seed20261018",
+      "task_key": "reference-reference-geometry_refined-main-seed20261018",
       "worker_progress": {
         "budget": 4,
         "outer_update": 0,
-        "session": 33,
+        "session": 91,
         "sessions_total": 105,
         "stage": "holdout",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-25T17:02:10Z"
+        "updated_utc": "2026-10-25T17:05:34Z"
       }
     },
     "1": {
       "job_id": "772074",
-      "pid": 52348,
+      "pid": 55880,
       "status": "RUNNING",
-      "task_key": "core-joint-uq_diagonal-main-seed20261020",
+      "task_key": "reference-reference-geometry_refined-main-seed20261020",
       "worker_progress": {
-        "budget": 4,
+        "budget": 20,
         "outer_update": 0,
-        "session": 27,
+        "session": 91,
         "sessions_total": 105,
         "stage": "holdout",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-25T17:02:21Z"
+        "updated_utc": "2026-10-25T17:05:17Z"
       }
     },
     "2": {
       "job_id": "772075",
-      "pid": 52149,
+      "pid": 55583,
       "status": "RUNNING",
-      "task_key": "core-joint-uq_diagonal-main-seed20261019",
+      "task_key": "reference-reference-geometry_refined-main-seed20261019",
       "worker_progress": {
         "budget": 4,
         "outer_update": 0,
-        "session": 27,
+        "session": 92,
         "sessions_total": 105,
         "stage": "holdout",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-25T17:02:14Z"
+        "updated_utc": "2026-10-25T17:05:36Z"
       }
     }
   },
@@ -124,7 +124,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1:50:01",
+        "elapsed": "1:53:01",
         "job_id": "772075",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s2-a1",
@@ -134,7 +134,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1:50:25",
+        "elapsed": "1:53:25",
         "job_id": "772073",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s0-a1",
@@ -144,7 +144,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1:50:25",
+        "elapsed": "1:53:25",
         "job_id": "772074",
         "marker": "paper3r6p-1223a296dd91e758",
         "name": "paper3r6p-1223a296dd91e758-s1-a1",
@@ -154,7 +154,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T17:03:32Z",
+    "observed_utc": "2026-10-25T17:06:32Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -180,7 +180,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 6,
-  "sampled_unix": 1792947812.0917015,
+  "sampled_unix": 1792947992.0927846,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1407,18 +1407,99 @@
       "index": 135,
       "job_id": "772073",
       "key": "core-joint-uq_diagonal-main-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 136,
+      "job_id": "772075",
+      "key": "core-joint-uq_diagonal-main-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 137,
+      "job_id": "772074",
+      "key": "core-joint-uq_diagonal-main-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 138,
+      "job_id": "772073",
+      "key": "reference-head_newton-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 139,
+      "job_id": "772075",
+      "key": "reference-head_newton-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 140,
+      "job_id": "772074",
+      "key": "reference-head_newton-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 141,
+      "job_id": "772073",
+      "key": "reference-support_EA-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 142,
+      "job_id": "772075",
+      "key": "reference-support_EA-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 143,
+      "job_id": "772074",
+      "key": "reference-support_EA-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "reference",
+      "index": 144,
+      "job_id": "772073",
+      "key": "reference-reference-geometry_refined-main-seed20261018",
       "observations": [
         {
-          "age_seconds": 12.1,
-          "path": "runs/followup_20261024_r6/core-joint-uq_diagonal-main-seed20261018/progress.json",
+          "age_seconds": 28.1,
+          "path": "runs/followup_20261024_r6/reference-reference-geometry_refined-main-seed20261018/progress.json",
           "values": {
-            "budget": 16,
+            "budget": 8,
             "outer_update": 0,
-            "session": 105,
+            "session": 87,
             "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T17:03:20Z"
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-25T17:06:04Z"
           }
         }
       ],
@@ -1427,22 +1508,22 @@
     },
     {
       "attempt": 1,
-      "family": "core",
-      "index": 136,
+      "family": "reference",
+      "index": 145,
       "job_id": "772075",
-      "key": "core-joint-uq_diagonal-main-seed20261019",
+      "key": "reference-reference-geometry_refined-main-seed20261019",
       "observations": [
         {
-          "age_seconds": 18.1,
-          "path": "runs/followup_20261024_r6/core-joint-uq_diagonal-main-seed20261019/progress.json",
+          "age_seconds": 26.1,
+          "path": "runs/followup_20261024_r6/reference-reference-geometry_refined-main-seed20261019/progress.json",
           "values": {
-            "budget": 16,
+            "budget": 8,
             "outer_update": 0,
-            "session": 33,
+            "session": 88,
             "sessions_total": 105,
             "stage": "holdout",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-25T17:03:14Z"
+            "updated_utc": "2026-10-25T17:06:06Z"
           }
         }
       ],
@@ -1451,125 +1532,27 @@
     },
     {
       "attempt": 1,
-      "family": "core",
-      "index": 137,
+      "family": "reference",
+      "index": 146,
       "job_id": "772074",
-      "key": "core-joint-uq_diagonal-main-seed20261020",
+      "key": "reference-reference-geometry_refined-main-seed20261020",
       "observations": [
         {
-          "age_seconds": 11.1,
-          "path": "runs/followup_20261024_r6/core-joint-uq_diagonal-main-seed20261020/progress.json",
+          "age_seconds": 15.1,
+          "path": "runs/followup_20261024_r6/reference-reference-geometry_refined-main-seed20261020/progress.json",
           "values": {
-            "budget": 16,
+            "budget": 8,
             "outer_update": 0,
-            "session": 29,
+            "session": 87,
             "sessions_total": 105,
             "stage": "holdout",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-25T17:03:21Z"
+            "updated_utc": "2026-10-25T17:06:17Z"
           }
         }
       ],
       "slot": 1,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 138,
-      "job_id": null,
-      "key": "reference-head_newton-seed20261018",
-      "observations": [
-        {
-          "age_seconds": 6.1,
-          "path": "runs/followup_20261024_r6/reference-head_newton-seed20261018/progress.json",
-          "values": {
-            "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T17:03:26Z"
-          }
-        }
-      ],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 139,
-      "job_id": null,
-      "key": "reference-head_newton-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 140,
-      "job_id": null,
-      "key": "reference-head_newton-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 141,
-      "job_id": null,
-      "key": "reference-support_EA-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 142,
-      "job_id": null,
-      "key": "reference-support_EA-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 143,
-      "job_id": null,
-      "key": "reference-support_EA-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 144,
-      "job_id": null,
-      "key": "reference-reference-geometry_refined-main-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 145,
-      "job_id": null,
-      "key": "reference-reference-geometry_refined-main-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "reference",
-      "index": 146,
-      "job_id": null,
-      "key": "reference-reference-geometry_refined-main-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
     },
     {
       "attempt": 0,
@@ -1769,6 +1752,7 @@
       "index": 168,
       "job_id": null,
       "key": "sensitivity-quadrature-gh5-gh5-seed20261018",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1778,6 +1762,7 @@
       "index": 169,
       "job_id": null,
       "key": "sensitivity-quadrature-gh5-gh5-seed20261019",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1787,6 +1772,7 @@
       "index": 170,
       "job_id": null,
       "key": "sensitivity-quadrature-gh5-gh5-seed20261020",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1796,6 +1782,7 @@
       "index": 171,
       "job_id": null,
       "key": "sensitivity-quadrature-gh17-gh17-seed20261018",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1805,6 +1792,7 @@
       "index": 172,
       "job_id": null,
       "key": "sensitivity-quadrature-gh17-gh17-seed20261019",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -1814,6 +1802,7 @@
       "index": 173,
       "job_id": null,
       "key": "sensitivity-quadrature-gh17-gh17-seed20261020",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -2036,5 +2025,5 @@
   ],
   "total_tasks": 198,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T17:03:32Z"
+  "updated_utc": "2026-10-25T17:06:32Z"
 }
