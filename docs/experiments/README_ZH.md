@@ -1,4 +1,19 @@
-# 论文3七轮实验分类总档案
+# 论文3八轮实验分类总档案
+
+<!-- PAPER3_ROUND8_20261025 -->
+## 第八轮：已发布，等待用户提交
+
+第八轮基于第二、三、七轮已回传摘要，研究部分协方差输运、Bures/源度量几何和保持协方差的类别方向校正。固定计划 **2835项任务，其中24项元训练**；Stieger内部、Pan与Weibo分开分析，探索性重复验证，不预先声称提升。
+
+- 资源：`hpc_gpu` A100 PCIe40GB，三个独立单卡作业，各16CPU/64G；合计48CPU/192G。
+- [设计与公式](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/DESIGN_ZH.md) · [前轮依据](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/EVIDENCE_ZH.md) · [文献](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/LITERATURE.md) · [单行启动](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/LAUNCH_ZH.md)
+- 无计算节点下载、全量test/pilot或累计12小时限制；保存双代训练断点与逐会话结果，独立GitHub回传。
+- 进度分支`paper3-r8-progress`；摘要归档`paper3-results:results/paper3/round-08`。完整预测和模型仍在学校本地。
+- 已通过学校核心软件版本的本地CPU验证，覆盖118项独立测试；线上raw/API完整包下载与安装核对通过。学校GPU现场尚未提交验证。
+
+此前轮次的历史资源/计数记录保留，实际队列请看各轮最新观测。
+<!-- /PAPER3_ROUND8_20261025 -->
+
 
 <!-- PAPER3_PARALLEL_TARGETS_20261025 -->
 ## 2026-10-25：第一、五、六轮的最新并行迁移目标
@@ -132,7 +147,7 @@ R4/R5/R6迁移后的每轮各占一个三卡提交作业，三轮不会合并为
 
 独立操作分支为`paper3-hpc-gpu-migrations-20261024`，目录`operations/hpc_gpu_migrations_20261024/round4`、`round5`、`round6`。源码提交`79eabe6c456aa443e18c35c53b6c39a33d27a639`、小bootstrap提交`1d3e4860fc8a138e7be2717dae75ed55a0657e47`已发布；三轮各自raw206续传/API200完整下载、缓存禁网复用及bootstrap实际安装/prepare均通过。未取消学校旧排队，也未提交新作业。迁移只改变资源/提交封装，保留各轮算法、种子、矩阵、完成项、checkpoint和逐会话结果。
 
-本地迁移全套测试R4/R5/R6分别198/266/347项通过。三包均在禁socket/DNS/子进程场景实际安装并prepare，旧计划字节及result/checkpoint/session的字节与mtime保留；R6另读28会话×5预算140个Pan视图。它们是本地交付证据，不是学校GPU/学校网络实测或运行成果。固定执行入口见[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/LAUNCH_ZH.md)。启动说明固定提交`c7c903fb126e3e60a7e69556bea9f7ac8ce7e489`，三个RUN-ROUND脚本均已实际下载并完成shell安装/prepare；学校取消/提交仍为0。
+本地迁移全套测试R4/R5/R6分别198/266/347项通过。三包均在禁socket/DNS/子进程场景实际安装并prepare，旧计划字节及result/checkpoint/session的字节与mtime保留；R6另读28会话×5预算140个Pan视图。它们是本地交付证据，不是学校GPU/学校网络实测或运行成果。固定执行入口见[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/LAUNCH_ZH.md)。启动说明固定提交`c7c903fb126e3e60a7e69556bea9f7ac8ce7e489`，三个RUN-ROUND脚本均已实际下载并完成shell安装/prepare；学校取消/提交仍为0。
 
 第四、五轮继续使用已有项目缓存，不临时获取新原始数据；第六轮约23.4MB Pan缓存随包，计算节点不下载原MAT或安装环境。三轮分别回传`paper3-r4-progress:monitoring/paper3-round4/status.json`、`paper3-r5-progress:monitoring/paper3-round5/status.json`、`paper3-r6-progress:monitoring/paper3-round6/status.json`，不与操作分支合并进度。
 

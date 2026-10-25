@@ -1,4 +1,19 @@
-# 论文3 · 学校HPC七轮实验记录
+# 论文3 · 学校HPC八轮实验记录
+
+<!-- PAPER3_ROUND8_20261025 -->
+## 第八轮：已发布，等待用户提交
+
+第八轮基于第二、三、七轮已回传摘要，研究部分协方差输运、Bures/源度量几何和保持协方差的类别方向校正。固定计划 **2835项任务，其中24项元训练**；Stieger内部、Pan与Weibo分开分析，探索性重复验证，不预先声称提升。
+
+- 资源：`hpc_gpu` A100 PCIe40GB，三个独立单卡作业，各16CPU/64G；合计48CPU/192G。
+- [设计与公式](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/DESIGN_ZH.md) · [前轮依据](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/EVIDENCE_ZH.md) · [文献](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/LITERATURE.md) · [单行启动](https://github.com/jackzhu119/research3/blob/paper3-round8-20261025/experiments/followup_20261025_r8/LAUNCH_ZH.md)
+- 无计算节点下载、全量test/pilot或累计12小时限制；保存双代训练断点与逐会话结果，独立GitHub回传。
+- 进度分支`paper3-r8-progress`；摘要归档`paper3-results:results/paper3/round-08`。完整预测和模型仍在学校本地。
+- 已通过学校核心软件版本的本地CPU验证，覆盖118项独立测试；线上raw/API完整包下载与安装核对通过。学校GPU现场尚未提交验证。
+
+此前轮次的历史资源/计数记录保留，实际队列请看各轮最新观测。
+<!-- /PAPER3_ROUND8_20261025 -->
+
 
 <!-- PAPER3_PARALLEL_TARGETS_20261025 -->
 ## 2026-10-25：第一、五、六轮的最新并行迁移目标
@@ -48,7 +63,7 @@
 | 第六轮 | 曲率引导空间预测平均、同中心/同边际机制、新Pan外部验证 | **198**：6字典＋60内部核心＋48敏感性＋12参考＋72Pan；Weibo另36 | **迁移目标hpc_gpu，1节点1作业3GPU，总36CPU/128G**；原hpc_gpu1为36CPU/164G | [第六轮](docs/experiments/ROUND6_ZH.md) |
 | 第七轮 | 有限窗时空Lie、头容量可辨识性、源相对风险与成分消融 | **273**：15字典＋72内部核心＋72敏感性＋21参考＋93重复Pan；Weibo另60 | **hpc_gpu，A100-PCIe-40GB，1节点1作业3GPU，总36CPU/128G共享** | [第七轮](docs/experiments/ROUND7_ZH.md) |
 
-第四、五、六轮已追加统一资源迁移计划：`hpc_gpu`、A100-PCIe-40GB、单节点单作业3GPU、总36CPU和128G共享主机内存。三包已真实发布，raw206续传/API完整下载、小bootstrap及禁网安装/prepare验证通过；**尚未取消或提交学校作业**。原配置和旧状态为历史快照；用户执行对应`MIGRATE --submit`后才处理本轮同标记旧排队，保留结果及GitHub分轮回传。见[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/LAUNCH_ZH.md)。
+第四、五、六轮已追加统一资源迁移计划：`hpc_gpu`、A100-PCIe-40GB、单节点单作业3GPU、总36CPU和128G共享主机内存。三包已真实发布，raw206续传/API完整下载、小bootstrap及禁网安装/prepare验证通过；**尚未取消或提交学校作业**。原配置和旧状态为历史快照；用户执行对应`MIGRATE --submit`后才处理本轮同标记旧排队，保留结果及GitHub分轮回传。见[三轮迁移启动说明](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/LAUNCH_ZH.md)。
 
 各轮任务成本不同；174/204/105不是从头重训EEGNet的次数。候选算法尚需完整配对实验检验，不能由数学性质或软件测试宣称显著提升。
 
@@ -63,7 +78,7 @@
 | 第三轮 | 10月24日18:55:27 | **6/174 COMPLETE**，控制器RUNNING、PARTIAL | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) |
 | 第四轮 | 10月24日19:22:43 | **771366已提交**，PENDING / AssocGrpGRES，0/204 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) |
 | 第五轮 | 10月24日19:21:41 | **771408已有提交记录**，AWAITING_ACCOUNTING，0/105 | [自动进度](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/status.json) |
-| 第六轮 | 10月24日20:36交付核验 | 设计、数据和线上包就绪；**未提交学校作业**，无效果结果 | [固定启动指令](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/experiments/followup_20261024_r6/online/LAUNCH_ZH.md) |
+| 第六轮 | 10月24日20:36交付核验 | 设计、数据和线上包就绪；**未提交学校作业**，无效果结果 | [固定启动指令](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/experiments/followup_20261024_r6/LAUNCH_ZH.md) |
 | 第七轮 | 10月24日21:48交付核验 | **526项本地CPU软件测试、raw续传/API下载、bootstrap及禁网273项prepare/140视图逐位读取通过**；未提交学校作业，无效果结果 | [设计与交付状态](docs/experiments/ROUND7_ZH.md) |
 
 “已提交”不等于GPU已开始优化；实际outer/session计数增长才说明计算推进。第四、五轮交付时旧页面的“尚未提交”早于这些后续回传，应按时间解释。
