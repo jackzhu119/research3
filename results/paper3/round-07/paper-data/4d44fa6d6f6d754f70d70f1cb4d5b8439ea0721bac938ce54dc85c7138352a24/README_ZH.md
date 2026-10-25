@@ -1,0 +1,27 @@
+# 第7轮 · 论文报告数据
+
+已有报告与CSV按原始字节上传，没有重新训练或重新计算统计。
+
+[文件与校验清单](manifest.json)
+
+| 原文件 | 字节数 |
+|---|---:|
+| plan.json [part 1](files/plan.json) | 397102 |
+| reports/budget_comparisons.csv [part 1](files/reports/budget_comparisons.csv) | 1527652 |
+| reports/budget_curves.csv [part 1](files/reports/budget_curves.csv) | 753238 |
+| reports/cv_selection_frequency.csv [part 1](files/reports/cv_selection_frequency.csv) | 0 |
+| reports/diagnostics.csv [part 1](views/reports/diagnostics.csv/part-00000.csv) [part 2](views/reports/diagnostics.csv/part-00001.csv) [part 3](views/reports/diagnostics.csv/part-00002.csv) [part 4](views/reports/diagnostics.csv/part-00003.csv) [part 5](views/reports/diagnostics.csv/part-00004.csv) [part 6](views/reports/diagnostics.csv/part-00005.csv) [part 7](views/reports/diagnostics.csv/part-00006.csv) [part 8](views/reports/diagnostics.csv/part-00007.csv) [part 9](views/reports/diagnostics.csv/part-00008.csv) [part 10](views/reports/diagnostics.csv/part-00009.csv) [part 11](views/reports/diagnostics.csv/part-00010.csv) [part 12](views/reports/diagnostics.csv/part-00011.csv) [part 13](views/reports/diagnostics.csv/part-00012.csv) [part 14](views/reports/diagnostics.csv/part-00013.csv) [part 15](views/reports/diagnostics.csv/part-00014.csv) [part 16](views/reports/diagnostics.csv/part-00015.csv) [part 17](views/reports/diagnostics.csv/part-00016.csv) [part 18](views/reports/diagnostics.csv/part-00017.csv) [part 19](views/reports/diagnostics.csv/part-00018.csv) [part 20](views/reports/diagnostics.csv/part-00019.csv) [part 21](views/reports/diagnostics.csv/part-00020.csv) [part 22](views/reports/diagnostics.csv/part-00021.csv) [part 23](views/reports/diagnostics.csv/part-00022.csv) [part 24](views/reports/diagnostics.csv/part-00023.csv) [part 25](views/reports/diagnostics.csv/part-00024.csv) [part 26](views/reports/diagnostics.csv/part-00025.csv) [part 27](views/reports/diagnostics.csv/part-00026.csv) [part 28](views/reports/diagnostics.csv/part-00027.csv) [part 29](views/reports/diagnostics.csv/part-00028.csv) [part 30](views/reports/diagnostics.csv/part-00029.csv) [part 31](views/reports/diagnostics.csv/part-00030.csv) [part 32](views/reports/diagnostics.csv/part-00031.csv) [part 33](views/reports/diagnostics.csv/part-00032.csv) [part 34](views/reports/diagnostics.csv/part-00033.csv) [part 35](views/reports/diagnostics.csv/part-00034.csv) [part 36](views/reports/diagnostics.csv/part-00035.csv) [part 37](views/reports/diagnostics.csv/part-00036.csv) [part 38](views/reports/diagnostics.csv/part-00037.csv) [part 39](views/reports/diagnostics.csv/part-00038.csv) [part 40](views/reports/diagnostics.csv/part-00039.csv) [part 41](views/reports/diagnostics.csv/part-00040.csv) [part 42](views/reports/diagnostics.csv/part-00041.csv) [part 43](views/reports/diagnostics.csv/part-00042.csv) [part 44](views/reports/diagnostics.csv/part-00043.csv) [part 45](views/reports/diagnostics.csv/part-00044.csv) [part 46](views/reports/diagnostics.csv/part-00045.csv) [part 47](views/reports/diagnostics.csv/part-00046.csv) [part 48](views/reports/diagnostics.csv/part-00047.csv) [part 49](views/reports/diagnostics.csv/part-00048.csv) [part 50](views/reports/diagnostics.csv/part-00049.csv) [part 51](views/reports/diagnostics.csv/part-00050.csv) [part 52](views/reports/diagnostics.csv/part-00051.csv) [part 53](views/reports/diagnostics.csv/part-00052.csv) [part 54](views/reports/diagnostics.csv/part-00053.csv) [part 55](views/reports/diagnostics.csv/part-00054.csv) [part 56](views/reports/diagnostics.csv/part-00055.csv) [part 57](views/reports/diagnostics.csv/part-00056.csv) [part 58](views/reports/diagnostics.csv/part-00057.csv) [part 59](views/reports/diagnostics.csv/part-00058.csv) [part 60](views/reports/diagnostics.csv/part-00059.csv) [part 61](views/reports/diagnostics.csv/part-00060.csv) [part 62](views/reports/diagnostics.csv/part-00061.csv) [part 63](views/reports/diagnostics.csv/part-00062.csv) | 32495438 |
+| reports/evaluation_summaries.csv [part 1](views/reports/evaluation_summaries.csv/part-00000.csv) [part 2](views/reports/evaluation_summaries.csv/part-00001.csv) [part 3](views/reports/evaluation_summaries.csv/part-00002.csv) [part 4](views/reports/evaluation_summaries.csv/part-00003.csv) [part 5](views/reports/evaluation_summaries.csv/part-00004.csv) | 2487709 |
+| reports/primary_comparisons.csv [part 1](files/reports/primary_comparisons.csv) | 109051 |
+| reports/primary_multimetric_comparisons.csv [part 1](files/reports/primary_multimetric_comparisons.csv) | 11712 |
+| reports/sensitivities.csv [part 1](files/reports/sensitivities.csv) | 152089 |
+| reports/sensitivity_comparisons.csv [part 1](files/reports/sensitivity_comparisons.csv) | 190993 |
+| reports/stress.csv [part 1](files/reports/stress.csv) | 244128 |
+| reports/stress_comparisons.csv [part 1](files/reports/stress_comparisons.csv) | 455437 |
+| reports/timings.csv [part 1](files/reports/timings.csv) | 1491756 |
+| reports/transfer.csv [part 1](files/reports/transfer.csv) | 1253082 |
+| reports/transfer_comparisons.csv [part 1](views/reports/transfer_comparisons.csv/part-00000.csv) [part 2](views/reports/transfer_comparisons.csv/part-00001.csv) [part 3](views/reports/transfer_comparisons.csv/part-00002.csv) [part 4](views/reports/transfer_comparisons.csv/part-00003.csv) [part 5](views/reports/transfer_comparisons.csv/part-00004.csv) | 2249325 |
+
+缺失、读取变化、超限和报告状态见manifest。报告可能早于任务回执；文件已上传不表示所有任务或所有统计已完成。
+
+本入口不含逐试次预测、模型断点或完整验证轨迹。CSV可以用于已有统计的检查与写作；重新设计参与者级配对统计可能仍需另导出相应会话指标。
