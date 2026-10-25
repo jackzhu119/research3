@@ -1,17 +1,17 @@
 # 八轮最新回传状态
 
-最近汇集：**10-25 13:45:04 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。
+最近汇集：**10-25 13:50:46 北京时间**。源文件各有独立时间；刷新页面不会刷新学校本地日志。
 
 | 轮次 | 最近确认状态 | 任务完成 | 队列观测 | 来源时间（北京） | 完整结果包 |
 |---|---|---|---|---|---|
-| [第1轮](https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json) | 阶段记录：元学习参数筛选；当前动作仍展示旧中断断点 | 分阶段，不合并百分比 | 1运行 / 2排队 | 10-25 13:36:43 | 未见完整上传完成回执 |
+| [第1轮](https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json) | 阶段记录：元学习参数筛选；当前动作仍展示旧中断断点 | 分阶段，不合并百分比 | 1运行 / 2排队 | 10-25 13:42:43 | 未见完整上传完成回执 |
 | [第2轮](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) | 任务完成；快照滞后 | 66/66 | 本源未查询队列 | 10-25 10:16:55 | 未见完整上传完成回执 |
 | [第3轮](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) | 任务完成；快照滞后 | 174/174 | 本源未查询队列 | 10-25 08:09:10 | 未见完整上传完成回执 |
 | [第4轮](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) | 最近回传状态；未确认当前调度；快照滞后 | 48/204 | 本源未查询队列 | 10-25 11:09:51 | 未见完整上传完成回执 |
-| [第5轮](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json) | 作业排队 | 0/105 | 0运行 / 3排队 | 10-25 13:37:50 | 未见完整上传完成回执 |
-| [第6轮](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json) | 作业排队 | 0/198 | 0运行 / 3排队 | 10-25 13:37:50 | 未见完整上传完成回执 |
+| [第5轮](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json) | 作业排队 | 0/105 | 0运行 / 3排队 | 10-25 13:43:50 | 未见完整上传完成回执 |
+| [第6轮](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json) | 作业排队 | 0/198 | 0运行 / 3排队 | 10-25 13:43:50 | 未见完整上传完成回执 |
 | [第7轮](https://github.com/jackzhu119/research3/blob/paper3-r7-progress/monitoring/paper3-round7/status.json) | 任务完成；快照滞后 | 273/273 | 本源未查询队列 | 10-25 03:25:04 | 未见完整上传完成回执 |
-| [第8轮](https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json) | 作业排队 | 0/2835 | 0运行 / 3排队 | 10-25 13:35:39 | 未见完整上传完成回执 |
+| [第8轮](https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json) | 作业排队 | 0/2835 | 0运行 / 3排队 | 10-25 13:44:39 | 未见完整上传完成回执 |
 
 任务完成、报告完成、Slurm作业运行和完整文件上传分别记录。控制器的 RUNNING 不代表 GPU 已开始优化。任务数量不能换算成剩余时间。
 
