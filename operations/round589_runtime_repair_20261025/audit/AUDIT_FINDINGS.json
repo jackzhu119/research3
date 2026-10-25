@@ -1,0 +1,83 @@
+{
+  "date_utc": "2026-10-25",
+  "scope": "Round5 and Round8 remaining tasks, plus the same indexed-assignment defect copied to Round9",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "cuda_available": false
+  },
+  "confirmed_additional_defects": [
+    {
+      "round": 5,
+      "defect": "Actual plan top-level support_EA reference is overridden by nested head_newton config during worker dispatch",
+      "actual_plan_affected_tasks": 3,
+      "original_dispatch": "head_newton",
+      "required_dispatch": "support_EA",
+      "numerical_config_retained": "head_newton",
+      "regression_test": "test_r5_reference_dispatch.py",
+      "checks": [
+        "original misdispatch reproduced from real make_plan",
+        "all105 declared task dispatches checked",
+        "real CompactEEGNet EA references all3 seeds and B20/B4 stay label-free, bypass optimizer"
+      ]
+    },
+    {
+      "round": 9,
+      "defect": "Round9 copied balanced_loss has the same CUDA index_put dtype mismatch as Round8",
+      "regression_test": "test_r9_index_dtype.py",
+      "checks": [
+        "old double-loss mismatch reproduced under strict CUDA indexing contract on CPU",
+        "new formula preserves values/gradients under all4 float/default-dtype combinations",
+        "actual source feature reference, selection, GP, frozen, head10, head100, EA at B20/B4 complete"
+      ]
+    }
+  ],
+  "suite_results": {
+    "round8": {
+      "passed": 118,
+      "seconds": 9.79,
+      "command": "/tmp/paper3-r8-compat/bin/python -m pytest -q tests",
+      "directory": "/workspace/paper3-round8"
+    },
+    "round5": {
+      "passed": 265,
+      "deselected": 1,
+      "seconds": 39.01,
+      "directory": "/workspace/paper3-round5-hpcgpu",
+      "deselected_reason": "Historical migration asserts patched worker bytes equal unpatched original; the assertion does not apply after this authorized bug repair",
+      "optional_preparation_scipy": "Host SciPy1.17 made available only to local test interpreter; no school package installation"
+    },
+    "new_round5_reference_dispatch": {
+      "passed": 5,
+      "seconds": 1.52
+    },
+    "new_round9_index_dtype": {
+      "passed": 6,
+      "seconds": 1.99
+    },
+    "actual_hook_original_source_end_to_end": {
+      "passed": 2,
+      "seconds": 3.87,
+      "test": "test_actual_runtime_hook.py",
+      "round5_complete_synthetic_tasks": 3,
+      "round9_complete_synthetic_tasks": 7,
+      "native_source_bytes_preserved": true,
+      "direct_balanced_loss_monkeypatch": false
+    }
+  },
+  "limits": [
+    "No school scheduler submission or cancellation",
+    "CPU execution and strict dtype contract do not claim school CUDA runtime was executed",
+    "Original scientific plan bytes, task keys, receipts and checkpoints must be preserved",
+    "Source-hashing native START rebuilds need existing-plan reuse to avoid mismatching recipe"
+  ],
+  "other_reviewed_areas": [
+    "Source model checkpoint weights-only load and frozen CompactEEGNet path",
+    "RNG checkpoint previous-generation recovery",
+    "Support-only data materialization and fixed B20 future query",
+    "R5 rotation/gain charts and R8 Bures/fiber gradients",
+    "R8 real Pan/Weibo cached evaluation fixtures",
+    "Independent single-GPU mapping and task lease ownership"
+  ]
+}
