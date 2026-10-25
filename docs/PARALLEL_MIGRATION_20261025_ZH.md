@@ -1,3 +1,5 @@
+> 2026-10-25更新：用户已提交九份held替代作业。学校`NumNodes=1-1`触发旧解析器误判，修复已发布，尚待执行。[原九个作业接管修复指令](SLURM_NODE_RANGE_FIX_20261025_ZH.md)。
+
 # 2026-10-25：第一、五、六轮三作业续跑交接
 
 本页记录最新授权目标及交接实现，区别于2026-10-24的单作业三卡迁移。**本次学校作业切换尚未由本页执行或验证**；新作业ID、排队/运行状态和真实outer/session计数，应以用户执行启动命令后的回执为准。
@@ -35,7 +37,7 @@
 
 代码分支：`paper3-parallel-migrations-20261025`；目录：`operations/parallel_20261025/`。
 
-[三个可直接复制的正式启动指令](https://github.com/jackzhu119/research3/blob/cddda890c4a91c74f4d46d62c86b4a3470dada31/operations/parallel_20261025/online/LAUNCH_ZH.md)；固定科学续跑源码版本为`bf35b06816cc24b114d9b959ee4733788419beb1`。160项本地针对性测试及实际发布文件的下载/安装/prepare检查通过；学校GPU交接等待用户执行。
+[三个可直接复制的正式启动指令](https://github.com/jackzhu119/research3/blob/60dc5c81e01098e11ff18b4cb2bd0ac0b924569c/operations/parallel_20261025/online/LAUNCH_ZH.md)；固定科学续跑源码版本为`6315d2fa96b0b541009a7492b92fcd9841f91b2a`。181项本地针对性测试与接管测试及实际发布文件的下载/安装/prepare检查通过；学校GPU交接等待用户执行。
 
 [标准库在线启动器](https://github.com/jackzhu119/research3/blob/paper3-parallel-migrations-20261025/operations/parallel_20261025/online/START-PAPER3-PARALLEL.py) 的三个入口分别为：
 
@@ -65,6 +67,6 @@ python -I -S -B -u START-PAPER3-PARALLEL.py --round 6 --execute
 - 第五、六轮旧资源：`hpc_gpu`、PCIe 40GB、单节点单作业三GPU、36CPU/128G；旧job`772012`/`772013`。
 - 更早第五、六轮`hpc_gpu1`、36CPU/164G单作业三卡记录同样保留历史，不能与本次192G三独立作业配置混为一谈。
 - 80GB与40GB硬件差异通过单独迁移审计记录，原identity/参数/RNG计数不重置，不把80GB历史计时伪装成40GB新基准，也不宣称跨硬件逐位恢复已经现场验证。
-- 本记录当前的学校新作业提交数、旧作业取消数均为0；用户执行对应发布命令后才产生新作业及交接回执。
+- 初次发布时学校新作业提交数、旧作业取消数均为0；随后用户已提交九份held作业。当前应以本页上方新修复记录和真实交接回执为准，未声称修复已在学校执行。
 
 [返回实验总档案](experiments/README_ZH.md) · [按轮结果归档](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3)

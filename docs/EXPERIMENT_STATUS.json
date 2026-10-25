@@ -1144,7 +1144,7 @@
     ],
     "records": {
       "1": {
-        "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+        "status": "USER_SUBMITTED_HELD_WAITING_NODE_RANGE_REPAIR",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1154,7 +1154,7 @@
           "1",
           "--execute"
         ],
-        "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+        "publication_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
         "publication_verified": true,
         "target_resources": {
           "partition": "hpc_gpu",
@@ -1181,7 +1181,7 @@
         "checkpoint_identity_reset": false,
         "scientific_plan_or_algorithm_changed": false,
         "school_switch_executed": false,
-        "school_new_jobs_submitted": 0,
+        "school_new_jobs_submitted": 3,
         "school_old_jobs_cancelled": 0,
         "full_pytest_pilot_or_deployment_rescan_on_startup": false,
         "cumulative_12_hour_limit": false,
@@ -1203,10 +1203,17 @@
         ],
         "boundary_snapshot": "runs/training_campaign_parallel_v1/migration-progress-snapshot.json",
         "actual_raw_and_api_download_verified": true,
-        "school_actions_executed": false
+        "school_actions_executed": false,
+        "observed_job_ids": [
+          "772076",
+          "772077",
+          "772078"
+        ],
+        "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
+        "repair_executed_on_school": false
       },
       "5": {
-        "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+        "status": "USER_SUBMITTED_HELD_WAITING_NODE_RANGE_REPAIR",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1216,7 +1223,7 @@
           "5",
           "--execute"
         ],
-        "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+        "publication_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
         "publication_verified": true,
         "target_resources": {
           "partition": "hpc_gpu1",
@@ -1256,17 +1263,24 @@
         "checkpoint_identity_reset": false,
         "scientific_plan_or_algorithm_changed": false,
         "school_switch_executed": false,
-        "school_new_jobs_submitted": 0,
+        "school_new_jobs_submitted": 3,
         "school_old_jobs_cancelled": 0,
         "full_pytest_pilot_or_deployment_rescan_on_startup": false,
         "cumulative_12_hour_limit": false,
         "old_stop_tombstone_retained": true,
         "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
         "actual_raw_and_api_download_verified": true,
-        "school_actions_executed": false
+        "school_actions_executed": false,
+        "observed_job_ids": [
+          "772070",
+          "772071",
+          "772072"
+        ],
+        "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
+        "repair_executed_on_school": false
       },
       "6": {
-        "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+        "status": "USER_SUBMITTED_HELD_WAITING_NODE_RANGE_REPAIR",
         "recorded_utc": "2026-10-25T03:10:52+00:00",
         "source_branch": "paper3-parallel-migrations-20261025",
         "source_directory": "operations/parallel_20261025",
@@ -1276,7 +1290,7 @@
           "6",
           "--execute"
         ],
-        "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+        "publication_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
         "publication_verified": true,
         "target_resources": {
           "partition": "hpc_gpu1",
@@ -1316,14 +1330,21 @@
         "checkpoint_identity_reset": false,
         "scientific_plan_or_algorithm_changed": false,
         "school_switch_executed": false,
-        "school_new_jobs_submitted": 0,
+        "school_new_jobs_submitted": 3,
         "school_old_jobs_cancelled": 0,
         "full_pytest_pilot_or_deployment_rescan_on_startup": false,
         "cumulative_12_hour_limit": false,
         "old_stop_tombstone_retained": true,
         "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
         "actual_raw_and_api_download_verified": true,
-        "school_actions_executed": false
+        "school_actions_executed": false,
+        "observed_job_ids": [
+          "772073",
+          "772074",
+          "772075"
+        ],
+        "school_new_jobs_observed_utc": "2026-10-25T03:55:37Z",
+        "repair_executed_on_school": false
       }
     },
     "all_current_school_actions_executed": false,
@@ -1331,20 +1352,68 @@
     "source_directory": "operations/parallel_20261025",
     "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
     "round4_and_completed_rounds_2_3_7_not_migrated": true,
-    "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+    "publication_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
     "publication_verified": true,
     "actual_raw_and_api_download_verified": true,
     "school_actions_executed": false,
     "software_validation": {
-      "round1_tests": 104,
-      "round56_tests": 56,
-      "fresh_install_prepare": [
-        1,
-        5,
-        6
-      ],
+      "round1_tests": 109,
+      "round56_tests": 60,
+      "repair_takeover_tests": 12,
       "school_GPU_execution": false
     },
-    "checkpoint_saved_old_backup_can_be_cancelled": true
+    "checkpoint_saved_old_backup_can_be_cancelled": true,
+    "repair_publication_commit": "60dc5c81e01098e11ff18b4cb2bd0ac0b924569c"
+  },
+  "slurm_pending_node_range_fix_20261025": {
+    "recorded_utc": "2026-10-25T04:13:22Z",
+    "status": "REPAIR_PUBLISHED_NOT_YET_EXECUTED_ON_SCHOOL",
+    "cause": "Slurm20.11 NumNodes=1-1 was compared to literal 1 and legitimate held single-node jobs were rejected",
+    "accepted_node_forms": [
+      "1",
+      "1-1"
+    ],
+    "source_commit": "6315d2fa96b0b541009a7492b92fcd9841f91b2a",
+    "delivery_commit": "60dc5c81e01098e11ff18b4cb2bd0ac0b924569c",
+    "local_tests_passed": 181,
+    "remote_raw_and_api_download_verified": true,
+    "original_jobs_to_adopt": {
+      "1": [
+        "772076",
+        "772077",
+        "772078"
+      ],
+      "5": [
+        "772070",
+        "772071",
+        "772072"
+      ],
+      "6": [
+        "772073",
+        "772074",
+        "772075"
+      ]
+    },
+    "new_jobs_resubmitted_by_repair": false,
+    "old_immutable_package_preserved": true,
+    "scientific_outputs_and_checkpoint_reused_in_place": true,
+    "school_repair_executed_by_assistant_tools": false,
+    "round237_uploader_modified": false,
+    "details": "docs/SLURM_NODE_RANGE_FIX_20261025_ZH.md"
+  },
+  "results_upload_237_observation_20261025": {
+    "observed_utc": "2026-10-25T03:55:37Z",
+    "source": "User-uploaded login1 readonly diagnostic",
+    "uploader_pid": 645884,
+    "pid_alive": true,
+    "elapsed_seconds": 7201,
+    "round2_phase": "PACKING",
+    "round2_files_packed": 31573,
+    "round2_total_files": 152481,
+    "round2_archive_bytes": 170427199,
+    "round3_phase": "WAITING_IN_ORIGINAL_UPLOAD_SEQUENCE",
+    "round7_phase": "WAITING_IN_ORIGINAL_UPLOAD_SEQUENCE",
+    "rounds_with_complete_uploaded_receipt": [],
+    "training_modified": false
   }
 }
