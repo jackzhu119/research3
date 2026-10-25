@@ -4,10 +4,10 @@
   "complete_tasks": 0,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 17.2,
+    "progress_age_seconds": 14.2,
     "progress_path": "runs/followup_20261024_r5/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T06:49:27Z"
+    "updated_utc": "2026-10-25T06:52:30Z"
   },
   "experiment": "paper3-round5",
   "families": {
@@ -45,6 +45,8 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772070",
+      "live_reason_or_node": "(AssocGrpGRES)",
+      "live_state": "PENDING",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "(AssocGrpGRES)",
@@ -56,6 +58,8 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772071",
+      "live_reason_or_node": "(AssocGrpGRES)",
+      "live_state": "PENDING",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "(AssocGrpGRES)",
@@ -67,6 +71,8 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772072",
+      "live_reason_or_node": "(AssocGrpGRES)",
+      "live_state": "PENDING",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "(AssocGrpGRES)",
@@ -76,9 +82,40 @@
     }
   ],
   "live_queue": {
-    "error_type": "SQUEUE_RETURNED_NONZERO",
-    "jobs": [],
-    "status": "UNAVAILABLE"
+    "jobs": [
+      {
+        "elapsed": "0:00",
+        "job_id": "772072",
+        "marker": "paper3r5p-2a492b1bc14432d0",
+        "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
+        "node": "",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "(AssocGrpGRES)",
+        "state": "PENDING"
+      },
+      {
+        "elapsed": "0:00",
+        "job_id": "772071",
+        "marker": "paper3r5p-2a492b1bc14432d0",
+        "name": "paper3r5p-2a492b1bc14432d0-s1-a1",
+        "node": "",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "(AssocGrpGRES)",
+        "state": "PENDING"
+      },
+      {
+        "elapsed": "0:00",
+        "job_id": "772070",
+        "marker": "paper3r5p-2a492b1bc14432d0",
+        "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
+        "node": "",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "(AssocGrpGRES)",
+        "state": "PENDING"
+      }
+    ],
+    "observed_utc": "2026-10-25T06:52:44Z",
+    "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
   "previous_single_allocation_status_path": "monitoring/paper3-round5/status.json",
@@ -103,7 +140,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 5,
-  "sampled_unix": 1792910984.19347,
+  "sampled_unix": 1792911164.1951315,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1069,5 +1106,5 @@
   ],
   "total_tasks": 105,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T06:49:44Z"
+  "updated_utc": "2026-10-25T06:52:44Z"
 }
