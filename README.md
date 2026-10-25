@@ -1,51 +1,29 @@
-# 论文3第六轮：曲率引导的受限空间预测平均
+# 论文3 · 第6轮状态与源码
 
-本轮方案、程序和新Pan2023数据均已准备。没有提交学校第六轮作业，没有生成第六轮识别效果。软件验证与线上交付范围见 VALIDATION.json 和 online/ONLINE_LAUNCH.json。
+本分支承载第6轮的异步 GitHub 回传，并保留本轮实验源码与设计。曲率引导预测平均、空间—头不确定性机制与 Pan 外部会话评价。
 
-**主问题：只有20个支持位置时，保留空间校准方向的不确定性，是否比只取一个拟合点更稳？** 继续冻结EEGNet、固定rank4和相同未来查询，不根据前五轮部分结果挑选几何图。
+## 先看当前状态
 
-## 算法与机制
+- [第6轮最新回传](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json)：`monitoring/paper3-round6/three-jobs-status.json`。
+- [本轮设计与实现](https://github.com/jackzhu119/research3/tree/paper3-r6-progress/experiments/followup_20261024_r6)。
+- [第6轮分类结果](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3/round-06)。
 
-共同中心为10步固定身份切线Newton/Schur拟合，预测使用原单指数空间图。曲率分块消去分类头竞争，得到 S=A−CD⁻¹Cᵀ；以 Σθ=τS⁻¹、τ=κρ²/tr(S⁻¹) 固定投影前总迹。主点κ=.25、ρ=.15、空间/头先验.01/.1。
+[旧单作业状态](monitoring/paper3-round6/status.json)保留历史语境；当前三作业交接和排队以本页主状态入口为准。
 
-rank4使用9个正权空间点，投影至原参数球，每点分类头作负相关补偿，并用GH9积分头余项；实际预测经过每点真实空间变换与冻结网络。没有新增目标会话可学习参数。这是受限曲率形状预测平均，不是精确Bayes后验或准确率不降保证。
+运行、排队、实际模型更新、报告生成和完整文件上传分别记录。请查看状态文件内的源更新时间；心跳或 `RUNNING` 字样本身不能证明模型更新次数正在增长。旧快照不覆盖更新后的学校本地回执。
 
-控制包括投影后同中心单点、同迹各向同性、保留完整边际但删除空间/头配对相关性的独立组合，以及仅头/局部线性Gaussian平滑。**对称logit平滑不改变硬标签**，可区分概率校准改善和真实识别改善。投影中心偏移、非线性曲率与有限求积方向依赖分别记录。
+## 学校资源与结果保存
 
-[数学设计与成立条件](DESIGN_ZH.md) · [一手文献及经典归属](LITERATURE.md) · [统计方案](STATISTICS.md)
+最新部署：`hpc_gpu1`，A100 SXM4 80GB；三个独立单卡作业，各12CPU / 64G主机内存，总36CPU / 192G。
 
-## 198项主计划
+学校共享项目：`/public/home/zhuziyuan/projects/paper3`。模型断点、逐会话预测和本轮输出先保存在学校共享目录。进度回传及分析摘要不等于全部模型或逐试次文件已完成异地归档；完整归档以 `paper3-results` 对应轮次的 `LATEST.json` 及其引用 manifest/分片确认。
 
-| 类别 | 数量 | 内容 |
-|---|---:|---|
-| 字典训练 | 6 | map/joint两种目标×3种子 |
-| 内部核心评价 | 60 | 两字典×10预测器×3种子，五档预算 |
-| 内部敏感性 | 48 | 迹预算、GH阶、中心权、轴旋转、半径 |
-| 内部参考 | 12 | 仅头Newton、支持EA、第五轮真实图精化、第四轮OOF堆叠 |
-| 新Pan外部评价 | 72 | 两字典×10预测器×3种子及12参考 |
-| **主包总计** | **198** | **只有6项训练字典，源EEGNet复用** |
-| 可选Weibo | 另36 | 独立手动阶段，不阻塞主包 |
+源码、启动说明和固定提交下载地址供部署与恢复查阅。已有作业的实际运行状态通过上述回传查看，不凭本分支首页重新提交。
 
-字典依赖满足后优先新Pan评价。精确矩阵见 [EXPERIMENT_MATRIX.json](EXPERIMENT_MATRIX.json)。主要证据为新Pan B20：预定8项方法比较，NLL和BA共16项统一Holm；参与者为单位，会话与三种子在人内聚合。概率改善不能冒充BA显著提升，内部既有队列仍为探索性复验。
+## 仓库导航
 
-## 新数据已下载校验并随包携带
+[仓库主页](https://github.com/jackzhu119/research3/tree/research/paper3-protocol-v2-w0) · [八轮实验总索引](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/experiments/README_ZH.md) · [最新进展](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/LIVE_STATUS_ZH.md) · [后续安排](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/ROADMAP_ZH.md) · [全部分支分类](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/docs/BRANCHES_ZH.md)
 
-Pan2023的28个原MAT已全部下载、逐文件SHA验证，总736,301,987bytes。实际14人、每人两会话、3360条二类左右手MI；B20支持560位置、固定查询2800条。原数据CC0许可与来源已核对。
+## 历史记录
 
-全部3360条在Python3.12.3/NumPy2.2.6/SciPy1.15.3环境重做，与缓存float32逐位一致；独立解包后禁止联网，28会话和五个预算均已读取比对。原D1/D2是真实会话身份，但缺少物理时间戳/区段边界，因此准确称“原会话MAT发布trial前缀”，不称前瞻真实采集前缀。
-
-**单文件安装器内含约23.4MB预处理缓存，计算节点不再下载原MAT、不访问原数据网站，也不安装SciPy/h5py。** 小bootstrap保留持久分片，断点续传、raw/API双地址与持续重试；完整缓存下次直接离线执行。线上实际下载、断网安装和准备证据见 online/。
-
-[数据说明](PAN2023_DATA_NOTES.md) · [28文件原清单](PAN2023_DOWNLOAD_MANIFEST.json) · [全部会话核验](compatibility/pan2023_all28.json) · [精确环境复验](compatibility/pan2023_exact_environment.json)
-
-## 学校资源与连续运行
-
-**hpc_gpu1，1节点1作业3GPU，总36CPU、共享164G主机内存**，每槽12CPU亲和组。不是每卡164G。Slurm为 `--nodes=1 --ntasks=1 --cpus-per-task=36 --mem=164G --gres=gpu:3`；入口为 `--partition hpc_gpu1 --gpus 3 --cpus 12 --memory-total 164G --submit`。
-
-新包安装在 ~/paper3-round6/<包hash>/，输出为 /public/home/zhuziyuan/projects/paper3/runs/followup_20261024_r6。前五轮源码、作业和结果独立保留。
-
-无累计12小时限制，学校启动不重跑全量test/pilot/全数据树扫描。双代训练checkpoint、逐会话评价保存、完成项复用；单任务失败不取消全部独立任务。单次Slurm到期前保存，由控制器对账续交；明确主动取消保持停止。
-
-GitHub每180秒尝试同步 paper3-r6-progress:monitoring/paper3-round6/status.json，网络失败不停止训练。完整checkpoint、逐会话概率及真实log概率、CSV先保存在学校本地。支持拟合、支持诊断、查询预测耗时分别记录，不隐藏多点预测的成本。
-
-[运行、日志、续跑手册](RUNBOOK_ZH.md)。本地CPU软件和模拟三槽验证不能替代学校A100三卡现场实测；是否形成创新结论由完整预定实验回答。
+本次整理前的根 README 按原 Git blob 保存在 [旧首页](docs/records/README_BEFORE_ORGANIZE_20261025.md)。旧说明保留原发布日期，当前状态通过本页上方入口读取。
