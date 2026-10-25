@@ -1,0 +1,39 @@
+name: Refresh experiment overview
+
+on:
+  schedule:
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paper3-repository-overview
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/paper3-protocol-v2-w0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Refresh committed observations
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python tools/refresh_experiment_overview.py
+      - name: Commit changed navigation only
+        run: |
+          git add README.md docs/LIVE_STATUS.json docs/LIVE_STATUS_ZH.md
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git commit -m "Refresh eight-round experiment observations"
+          git push origin HEAD:research/paper3-protocol-v2-w0

@@ -1,0 +1,555 @@
+{
+  "schema_version": "paper3-live-overview-v1",
+  "repository": "jackzhu119/research3",
+  "refreshed_utc": "2026-10-25T05:45:04+00:00",
+  "scope": "Committed remote observations, not a direct school scheduler query",
+  "rounds": [
+    {
+      "round": 1,
+      "status": "阶段记录：元学习参数筛选；当前动作仍展示旧中断断点",
+      "complete_tasks": null,
+      "total_tasks": null,
+      "snapshot_complete_tasks": null,
+      "snapshot_total_tasks": null,
+      "updated_utc": "2026-10-25T05:36:43Z",
+      "queue": {
+        "observed": true,
+        "running": 1,
+        "pending": 2,
+        "jobs": [
+          {
+            "job_id": "772078",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu"
+          },
+          {
+            "job_id": "772077",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu"
+          },
+          {
+            "job_id": "772076",
+            "state": "RUNNING",
+            "reason": "gpu1",
+            "partition": "hpc_gpu"
+          }
+        ],
+        "observed_utc": "2026-10-25T05:36:43Z"
+      },
+      "report_status": null,
+      "controller_status": null,
+      "completion_evidence": null,
+      "counts_conflict": false,
+      "completed_by_kind": {
+        "classical": 1,
+        "meta_engineering": 5,
+        "meta_screening": 33,
+        "meta_selection": 3,
+        "pilot": 1,
+        "reference": 3,
+        "source": 1
+      },
+      "phase": "META_SCREENING",
+      "active_actions": [
+        {
+          "configuration": {
+            "dimension": 8,
+            "method": "P",
+            "phase": "screening",
+            "radius": 0.05,
+            "seed": 20261018
+          },
+          "job_id": "772076",
+          "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+          "kind": "meta_screening",
+          "method": "P",
+          "observations": [
+            {
+              "age_seconds": 5228.4,
+              "path": "runs/meta/b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd/progress.json",
+              "values": {
+                "confirmed_outer_updates_observed": 350,
+                "inner_updates_actual": 14000,
+                "outer_attempts_dispatched": 350,
+                "outer_updates_completed": 350,
+                "replayed_observed_outer_updates": 0,
+                "status": "INTERRUPTED_NOT_COMPLETE",
+                "validation_checkpoints": 6
+              }
+            }
+          ],
+          "slot": 0,
+          "status": "RUNNING"
+        }
+      ],
+      "source_branch": "paper3-r1-progress",
+      "source_path": "monitoring/paper3-round1/status.json",
+      "source_commit": "640d69d55e90260ee921fd8bb9af5d3b31657697",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json",
+      "snapshot_stale": false,
+      "last_manual_resume_observation": {
+        "observed_at": "2026-10-25T13:28:46+08:00",
+        "job_id": "772076",
+        "kernel_started_at": "2026-10-25T12:56:42+08:00",
+        "action_key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+        "status": "INTERRUPTED_NOT_COMPLETE",
+        "outer_updates_completed": 350,
+        "progress_age_seconds": 4756,
+        "latest_checkpoint": "outer-0350.pt",
+        "meaning": "old interruption checkpoint still visible; no RESUMED or later optimizer update observed for current child; not proof that Slurm job failed"
+      },
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-01/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": true,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-01/AUTO_SUMMARY_LATEST.json",
+        "receipt": {
+          "content_hash": "fb64d602e000bd878661cb22a6f720e9b701891161f841e95a6c73f7a6fd639a",
+          "full_raw_results_uploaded": false,
+          "manifest": "results/paper3/round-01/automatic-summary/fb64d602e000bd878661cb22a6f720e9b701891161f841e95a6c73f7a6fd639a/manifest.json",
+          "raw_predictions_or_checkpoints_included": false,
+          "report_recomputed": false,
+          "round": 1,
+          "schema_version": "paper3-automatic-summary-pointer-v1",
+          "scope": "Existing result summary only. This is not the full-output LATEST.json archive.",
+          "source_summary_files": 48,
+          "status": "AUTOMATIC_EXISTING_RESULT_SUMMARY_UPLOADED",
+          "summary": "results/paper3/round-01/automatic-summary/fb64d602e000bd878661cb22a6f720e9b701891161f841e95a6c73f7a6fd639a/SUMMARY.json",
+          "summary_directory": "results/paper3/round-01/automatic-summary/fb64d602e000bd878661cb22a6f720e9b701891161f841e95a6c73f7a6fd639a"
+        }
+      },
+      "old_interruption_observations": [
+        {
+          "action_key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
+          "age_seconds": 5228.4,
+          "snapshot_observed_utc": "2026-10-25T05:36:43Z",
+          "values": {
+            "confirmed_outer_updates_observed": 350,
+            "inner_updates_actual": 14000,
+            "outer_attempts_dispatched": 350,
+            "outer_updates_completed": 350,
+            "replayed_observed_outer_updates": 0,
+            "status": "INTERRUPTED_NOT_COMPLETE",
+            "validation_checkpoints": 6
+          }
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "status": "任务完成",
+      "complete_tasks": 66,
+      "total_tasks": 66,
+      "snapshot_complete_tasks": 66,
+      "snapshot_total_tasks": 66,
+      "updated_utc": "2026-10-25T02:16:55Z",
+      "queue": {
+        "observed": false,
+        "running": null,
+        "pending": null,
+        "jobs": []
+      },
+      "report_status": "COMPLETE",
+      "controller_status": null,
+      "completion_evidence": {
+        "completed": true,
+        "complete_tasks": 66,
+        "total_tasks": 66,
+        "observed_at": "2026-10-25",
+        "evidence": "User-provided school read-only completion diagnostic; completed result.json counts, not a live scheduler query",
+        "scope": "declared primary plan only; optional external extensions not implied complete"
+      },
+      "counts_conflict": false,
+      "source_branch": "paper3-v2-progress",
+      "source_path": "monitoring/paper3-followup-v2/status.json",
+      "source_commit": "4706017ef85ff2fcf702e55da9258fd101fdbbf0",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json",
+      "snapshot_stale": true,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-02/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-02/AUTO_SUMMARY_LATEST.json"
+      }
+    },
+    {
+      "round": 3,
+      "status": "任务完成",
+      "complete_tasks": 174,
+      "total_tasks": 174,
+      "snapshot_complete_tasks": 174,
+      "snapshot_total_tasks": 174,
+      "updated_utc": "2026-10-25T00:09:10Z",
+      "queue": {
+        "observed": false,
+        "running": null,
+        "pending": null,
+        "jobs": []
+      },
+      "report_status": "COMPLETE",
+      "controller_status": "FINISHED",
+      "completion_evidence": {
+        "completed": true,
+        "complete_tasks": 174,
+        "total_tasks": 174,
+        "observed_at": "2026-10-25",
+        "evidence": "User-provided school read-only completion diagnostic; completed result.json counts, not a live scheduler query",
+        "scope": "declared primary plan only; optional external extensions not implied complete"
+      },
+      "counts_conflict": false,
+      "source_branch": "paper3-r3-progress",
+      "source_path": "monitoring/paper3-round3/status.json",
+      "source_commit": "b56484bff67fd593b70e972a9e4c62d9d44d98aa",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json",
+      "snapshot_stale": true,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-03/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-03/AUTO_SUMMARY_LATEST.json"
+      }
+    },
+    {
+      "round": 4,
+      "status": "最近回传状态；未确认当前调度",
+      "complete_tasks": 48,
+      "total_tasks": 204,
+      "snapshot_complete_tasks": 48,
+      "snapshot_total_tasks": 204,
+      "updated_utc": "2026-10-25T03:09:51Z",
+      "queue": {
+        "observed": false,
+        "running": null,
+        "pending": null,
+        "jobs": []
+      },
+      "report_status": "PARTIAL",
+      "controller_status": "ALLOCATION_RUNNING",
+      "completion_evidence": null,
+      "counts_conflict": false,
+      "source_branch": "paper3-r4-progress",
+      "source_path": "monitoring/paper3-round4/status.json",
+      "source_commit": "7bcf9580e6f83b5e037837b722519987f1f2e409",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json",
+      "snapshot_stale": true,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-04/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-04/AUTO_SUMMARY_LATEST.json"
+      }
+    },
+    {
+      "round": 5,
+      "status": "作业排队",
+      "complete_tasks": 0,
+      "total_tasks": 105,
+      "snapshot_complete_tasks": 0,
+      "snapshot_total_tasks": 105,
+      "updated_utc": "2026-10-25T05:37:50Z",
+      "queue": {
+        "observed": true,
+        "running": 0,
+        "pending": 3,
+        "jobs": [
+          {
+            "job_id": "772072",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu1"
+          },
+          {
+            "job_id": "772071",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu1"
+          },
+          {
+            "job_id": "772070",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu1"
+          }
+        ],
+        "observed_utc": "2026-10-25T05:37:50Z"
+      },
+      "report_status": null,
+      "controller_status": "RUNNING",
+      "completion_evidence": null,
+      "counts_conflict": false,
+      "source_branch": "paper3-r5-progress",
+      "source_path": "monitoring/paper3-round5/three-jobs-status.json",
+      "source_commit": "023980806c1022621e5a4c874942065623251f95",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json",
+      "snapshot_stale": false,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-05/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": true,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-05/AUTO_SUMMARY_LATEST.json",
+        "receipt": {
+          "content_hash": "6700e1f0a6635fd7c0172ff9c415a36e00fd134f4901a447c5cba6b6f29bc411",
+          "full_raw_results_uploaded": false,
+          "manifest": "results/paper3/round-05/automatic-summary/6700e1f0a6635fd7c0172ff9c415a36e00fd134f4901a447c5cba6b6f29bc411/manifest.json",
+          "raw_predictions_or_checkpoints_included": false,
+          "report_recomputed": false,
+          "round": 5,
+          "schema_version": "paper3-automatic-summary-pointer-v1",
+          "scope": "Existing result summary only. This is not the full-output LATEST.json archive.",
+          "source_summary_files": 15,
+          "status": "AUTOMATIC_EXISTING_RESULT_SUMMARY_UPLOADED",
+          "summary": "results/paper3/round-05/automatic-summary/6700e1f0a6635fd7c0172ff9c415a36e00fd134f4901a447c5cba6b6f29bc411/SUMMARY.json",
+          "summary_directory": "results/paper3/round-05/automatic-summary/6700e1f0a6635fd7c0172ff9c415a36e00fd134f4901a447c5cba6b6f29bc411"
+        }
+      }
+    },
+    {
+      "round": 6,
+      "status": "作业排队",
+      "complete_tasks": 0,
+      "total_tasks": 198,
+      "snapshot_complete_tasks": 0,
+      "snapshot_total_tasks": 198,
+      "updated_utc": "2026-10-25T05:37:50Z",
+      "queue": {
+        "observed": true,
+        "running": 0,
+        "pending": 3,
+        "jobs": [
+          {
+            "job_id": "772075",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu1"
+          },
+          {
+            "job_id": "772074",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu1"
+          },
+          {
+            "job_id": "772073",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu1"
+          }
+        ],
+        "observed_utc": "2026-10-25T05:37:50Z"
+      },
+      "report_status": null,
+      "controller_status": "RUNNING",
+      "completion_evidence": null,
+      "counts_conflict": false,
+      "source_branch": "paper3-r6-progress",
+      "source_path": "monitoring/paper3-round6/three-jobs-status.json",
+      "source_commit": "b4402df8aa00647b4c0b767b328f580fd882c1a4",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json",
+      "snapshot_stale": false,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-06/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": true,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-06/AUTO_SUMMARY_LATEST.json",
+        "receipt": {
+          "content_hash": "0dc4a4437315524734b9fdeedecc9dc1159a2d62b2aa774d1725b64c3e28936b",
+          "full_raw_results_uploaded": false,
+          "manifest": "results/paper3/round-06/automatic-summary/0dc4a4437315524734b9fdeedecc9dc1159a2d62b2aa774d1725b64c3e28936b/manifest.json",
+          "raw_predictions_or_checkpoints_included": false,
+          "report_recomputed": false,
+          "round": 6,
+          "schema_version": "paper3-automatic-summary-pointer-v1",
+          "scope": "Existing result summary only. This is not the full-output LATEST.json archive.",
+          "source_summary_files": 16,
+          "status": "AUTOMATIC_EXISTING_RESULT_SUMMARY_UPLOADED",
+          "summary": "results/paper3/round-06/automatic-summary/0dc4a4437315524734b9fdeedecc9dc1159a2d62b2aa774d1725b64c3e28936b/SUMMARY.json",
+          "summary_directory": "results/paper3/round-06/automatic-summary/0dc4a4437315524734b9fdeedecc9dc1159a2d62b2aa774d1725b64c3e28936b"
+        }
+      }
+    },
+    {
+      "round": 7,
+      "status": "任务完成",
+      "complete_tasks": 273,
+      "total_tasks": 273,
+      "snapshot_complete_tasks": 20,
+      "snapshot_total_tasks": 273,
+      "updated_utc": "2026-10-24T19:25:04Z",
+      "queue": {
+        "observed": false,
+        "running": null,
+        "pending": null,
+        "jobs": []
+      },
+      "report_status": "COMPLETE",
+      "controller_status": "ALLOCATION_RUNNING",
+      "completion_evidence": {
+        "completed": true,
+        "complete_tasks": 273,
+        "total_tasks": 273,
+        "observed_at": "2026-10-25",
+        "evidence": "User-provided school read-only completion diagnostic; completed result.json counts, not a live scheduler query",
+        "scope": "declared primary plan only; optional external extensions not implied complete"
+      },
+      "counts_conflict": true,
+      "source_branch": "paper3-r7-progress",
+      "source_path": "monitoring/paper3-round7/status.json",
+      "source_commit": "f6804b9a72ff118b732643e6b8e05b9f0f6c3cc6",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r7-progress/monitoring/paper3-round7/status.json",
+      "snapshot_stale": true,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-07/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-07/AUTO_SUMMARY_LATEST.json"
+      }
+    },
+    {
+      "round": 8,
+      "status": "作业排队",
+      "complete_tasks": 0,
+      "total_tasks": 2835,
+      "snapshot_complete_tasks": 0,
+      "snapshot_total_tasks": 2835,
+      "updated_utc": "2026-10-25T05:35:39Z",
+      "queue": {
+        "observed": true,
+        "running": 0,
+        "pending": 3,
+        "jobs": [
+          {
+            "job_id": "772121",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu"
+          },
+          {
+            "job_id": "772122",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu"
+          },
+          {
+            "job_id": "772123",
+            "state": "PENDING",
+            "reason": "(AssocGrpGRES)",
+            "partition": "hpc_gpu"
+          }
+        ],
+        "observed_utc": "2026-10-25T05:35:39Z"
+      },
+      "report_status": null,
+      "controller_status": "RUNNING",
+      "completion_evidence": null,
+      "counts_conflict": false,
+      "source_branch": "paper3-r8-progress",
+      "source_path": "monitoring/paper3-round8/three-jobs-status.json",
+      "source_commit": "5bae701f923d15551570164d9ab30436c119577f",
+      "source_url": "https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json",
+      "snapshot_stale": false,
+      "full_archive": {
+        "published": false,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-08/LATEST.json"
+      },
+      "automatic_summary": {
+        "published": true,
+        "source_commit": "919be7973d312d940f82bc58a28266cf5ac51742",
+        "receipt_path": "results/paper3/round-08/AUTO_SUMMARY_LATEST.json",
+        "receipt": {
+          "content_hash": "ff740d98ae7d50e0a559335a566400951a5b6e5358bf3048c6cdedc5fc00797f",
+          "full_raw_results_uploaded": false,
+          "manifest": "results/paper3/round-08/automatic-summary/ff740d98ae7d50e0a559335a566400951a5b6e5358bf3048c6cdedc5fc00797f/manifest.json",
+          "raw_predictions_or_checkpoints_included": false,
+          "report_recomputed": false,
+          "round": 8,
+          "schema_version": "paper3-automatic-summary-pointer-v1",
+          "scope": "Existing result summary only. This is not the full-output LATEST.json archive.",
+          "source_summary_files": 1,
+          "status": "AUTOMATIC_EXISTING_RESULT_SUMMARY_UPLOADED",
+          "summary": "results/paper3/round-08/automatic-summary/ff740d98ae7d50e0a559335a566400951a5b6e5358bf3048c6cdedc5fc00797f/SUMMARY.json",
+          "summary_directory": "results/paper3/round-08/automatic-summary/ff740d98ae7d50e0a559335a566400951a5b6e5358bf3048c6cdedc5fc00797f"
+        }
+      }
+    }
+  ],
+  "last_school_upload_observation": {
+    "observed_at": "2026-10-25T13:28:46+08:00",
+    "round": 2,
+    "event": "PACK_PROGRESS",
+    "files": 57227,
+    "total_files": 152481,
+    "source_bytes": 1594428302,
+    "archive_bytes": 310071381,
+    "process_pid": 645884,
+    "process_present": true,
+    "rounds_pending_in_order": [
+      2,
+      3,
+      7
+    ],
+    "scope": "local packing before network upload; latest known manual snapshot, not live",
+    "source": "user_pasted_school_readonly_diagnostic"
+  },
+  "last_manual_queue_observation": {
+    "observed_at": "2026-10-25T13:28:46+08:00",
+    "running": [
+      "772076",
+      "772011"
+    ],
+    "pending": {
+      "round1": [
+        "772077",
+        "772078"
+      ],
+      "round5": [
+        "772070",
+        "772071",
+        "772072"
+      ],
+      "round6": [
+        "772073",
+        "772074",
+        "772075"
+      ],
+      "round8": [
+        "772121",
+        "772122",
+        "772123"
+      ]
+    },
+    "pending_reason": "AssocGrpGRES",
+    "scope": "user-supplied school squeue output; partition GPU group cap, not a Python error"
+  },
+  "freshness_policy": "Progress sources older than 15 minutes are marked stale; completed-task evidence remains valid."
+}

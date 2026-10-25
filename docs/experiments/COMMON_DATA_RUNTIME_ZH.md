@@ -1,4 +1,6 @@
-# 七轮共用的数据、环境与连续运行约定
+# 八轮共用的数据、环境与连续运行约定
+
+当前配置统一见[八轮资源表](README_ZH.md#当前有效资源与结果入口)，运行状态见[最新回传汇总](../LIVE_STATUS_ZH.md)。本页其余内容保留历史设计/故障语境；第五、六轮当前为hpc_gpu1各三个独立单卡作业，第八轮为hpc_gpu三个独立单卡作业。旧迁移目标不是当前调度事实。
 
 [返回总索引](README_ZH.md)。本页汇总既有实现与部署经验，不增加训练前检查或新的启动条件。
 
@@ -92,3 +94,4 @@ Pan复用R6已经准备的同一14人28会话缓存，不新增首次盲队列�
 三轮各自迁移到hpc_gpu单节点单作业3GPU、总36CPU、128G共享主机内存；每轮独立排队、运行、保存和GitHub回传。独立操作分支为`paper3-hpc-gpu-migrations-20261024`，目录`operations/hpc_gpu_migrations_20261024/roundN`（N=4/5/6）；它不取代各轮研究源码分支和进度路径。
 
 迁移包已实际发布并通过各自raw206续传、API完整下载、正确缓存禁网复用及小bootstrap实际安装/prepare。本地迁移全套测试R4/R5/R6分别198/266/347项通过；禁网恢复场景验证旧计划字节及result/checkpoint/session字节和mtime保持，R6另核验140个Pan会话预算视图。用户执行对应`MIGRATE --submit`后只处理该轮同标记旧排队；不把已运行作业当排队直接取消，不影响其他轮或其他用户。当前学校取消和提交均为0，没有迁移后的GPU执行成果，学校网络也未现场实测；[启动与proof交付页](https://github.com/jackzhu119/research3/blob/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/LAUNCH_ZH.md)记录固定入口（提交`c7c903fb126e3e60a7e69556bea9f7ac8ce7e489`）；RUN-ROUND4/5/6.sh均已实际下载并完成shell安装/prepare，未执行学校提交。保持原科学配方和结果身份，匹配完成项及断点继续复用，不要求重跑全量test/pilot。R4/R5使用已有缓存，R6 Pan缓存随包，计算节点不取原数据或安装环境。
+
