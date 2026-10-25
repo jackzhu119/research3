@@ -1,3 +1,7 @@
+[第一轮SXM4-40GB拆分修复与独立续训入口](https://github.com/jackzhu119/research3/blob/research/paper3-protocol-v2-w0/operations/round1_repair_20261025/LAUNCH_ZH.md)
+
+本次仅更新第一轮；第六轮迁移已取消。第5/6轮的旧运行配置不变。
+
 # 论文3 · 第1、5、6轮三作业并行运行方案
 
 本分支保存2026年10月25日的资源交接封装。每轮三个独立单卡 Slurm 作业，复用原有完成项、断点与输出目录；本分支用于运行工具和交付记录，实时进度由各轮独立分支承载。

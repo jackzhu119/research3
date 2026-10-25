@@ -27,32 +27,57 @@ def _encoded(value):
 def _sha(value):return hashlib.sha256(_encoded(value)).hexdigest()
 
 
+def _hardware_error(message,profile):
+    """A failed classification must expose the observed device, not a bare gate."""
+    observation={key:profile.get(key) for key in ('device_name','device_uuid',
+        'device_compute_capability','compute_capability','device_total_memory_bytes','device_total_memory')}
+    raise ValueError(message+'; observed_gpu='+json.dumps(observation,ensure_ascii=False,sort_keys=True,default=str))
+
+
 def hardware_type(profile):
+    """Identify an actual full A100 without depending on one driver spelling.
+
+    CUDA/NVML have used names such as ``NVIDIA A100-PCIE-40GB``,
+    ``Tesla A100-SXM4-40GB`` and ``NVIDIA A100 80GB PCIe``.  The
+    physical allocation is identified jointly from the A100 name, architecture,
+    memory and physical UUID.  The original runtime object remains untouched.
+    """
     if not isinstance(profile,dict):raise ValueError('Complete runtime object required')
     name=profile.get('device_name')
-    if not isinstance(name,str):raise ValueError('Observed GPU model required')
-    normalized=name.upper()
-    kind={'NVIDIA A100-SXM4-80GB':'A100_SXM4_80GB','A100-SXM4-80GB':'A100_SXM4_80GB',
-          'NVIDIA A100-PCIE-40GB':'A100_PCIE_40GB','A100-PCIE-40GB':'A100_PCIE_40GB'}.get(normalized)
-    if kind is None:raise ValueError('Only the explicitly authorized full A100 80GB/40GB hardware is transferable')
+    if not isinstance(name,str) or not name.strip():_hardware_error('Observed GPU model required',profile)
+    normalized=name.upper().strip()
+    if not re.search(r'(?<![A-Z0-9])A100(?![A-Z0-9])',normalized):
+        _hardware_error('Expected a full A100 40GB or 80GB allocation',profile)
+    if (re.search(r'\bMIG\b',normalized) or str(profile.get('device_uuid','')).upper().startswith('MIG-')
+            or profile.get('is_multi_instance_gpu') is True):
+        _hardware_error('A MIG slice is not the requested full A100 allocation',profile)
     capability=profile.get('device_compute_capability',profile.get('compute_capability'))
-    if capability!=[8,0]:raise ValueError('A100 compute capability 8.0 required')
+    if not isinstance(capability,(list,tuple)) or tuple(capability)!=(8,0):
+        _hardware_error('A100 compute capability 8.0 required',profile)
     memory=profile.get('device_total_memory_bytes',profile.get('device_total_memory'))
-    if type(memory) is not int:raise ValueError('Observed GPU memory required')
-    nominal=80 if kind=='A100_SXM4_80GB' else 40
-    if not (nominal-5)*1024**3 < memory < (nominal+5)*1024**3:
-        raise ValueError('Observed A100 memory is inconsistent with the model')
-    if not re.fullmatch(r'(?:GPU-)?[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}',str(profile.get('device_uuid',''))):
-        raise ValueError('Actual physical GPU UUID required')
+    if type(memory) is not int:_hardware_error('Observed GPU memory in bytes required',profile)
+    nominal=next((size for size in (40,80) if (size-5)*1024**3 < memory < (size+5)*1024**3),None)
+    if nominal is None:_hardware_error('Observed memory is not a full A100 40GB/80GB allocation',profile)
+    named_sizes={int(size) for size in re.findall(r'(?<![0-9])(40|80)\s*G(?:B)?\b',normalized)}
+    if named_sizes and named_sizes!={nominal}:
+        _hardware_error('A100 model memory label differs from observed allocation',profile)
+    compact=re.sub(r'[^A-Z0-9]','',normalized)
+    form='SXM4' if 'SXM4' in compact else ('SXM' if 'SXM' in compact else ('PCIE' if 'PCIE' in compact else 'FULL'))
+    kind='A100_%s_%dGB'%(form,nominal)
+    if not re.fullmatch(r'(?:GPU-)?[a-fA-F0-9]{8}(?:-[a-fA-F0-9]{4}){3}-[a-fA-F0-9]{12}',str(profile.get('device_uuid','')),re.IGNORECASE):
+        _hardware_error('Actual physical GPU UUID required',profile)
     if not all(isinstance(profile.get(k),str) and profile[k] for k in ('python','torch')):
-        raise ValueError('Complete Python and Torch runtime required')
+        _hardware_error('Complete Python and Torch runtime required',profile)
     if not any(isinstance(profile.get(k),str) and profile[k] for k in ('cuda','cuda_runtime')):
-        raise ValueError('Complete native CUDA runtime required')
+        _hardware_error('Complete native CUDA runtime required',profile)
     return kind
 
 
 def validate_typed_transfer(before,actual):
-    before_type,actual_type=hardware_type(before),hardware_type(actual)
+    try:before_type=hardware_type(before)
+    except ValueError as error:raise ValueError('Historical runtime: '+str(error)) from None
+    try:actual_type=hardware_type(actual)
+    except ValueError as error:raise ValueError('Actual runtime: '+str(error)) from None
     if set(before)!=set(actual):raise ValueError('Runtime fields differ beyond authorized hardware')
     def software_value(key,value):
         if key=='driver_versions' and isinstance(value,list) and value and all(isinstance(v,str) and v for v in value):
@@ -115,8 +140,47 @@ def install(root,*,transfer_module=None):
     module._paper3_authorized_a100_root=root
 
 
-def inspect_primary_measurements(root,target='A100_PCIE_40GB'):
-    """Metadata only: never silently merge old 80GB timing with new 40GB timing."""
+def _latest_engineering_hardware(root):
+    """Read only the five registered engineering receipt paths, never data trees."""
+    observations=[]
+    warnings=[]
+    for method in ('B8','B10','B11','P','P+PCT'):
+        job={'method':method,'dimension':4 if method in {'B10','B11'} else 8,
+             'radius':.35,'seed':20261018,'phase':'engineering'}
+        path=Path(root)/'runs/meta'/_sha(job)/'receipt.json'
+        try:
+            value=json.loads(path.read_text())
+            if value.get('status')!='META_ENGINEERING_COMPLETE' or value.get('job')!=job:continue
+            runtime=value.get('runtime_profile')
+            kind=hardware_type(runtime)
+            observations.append({'path':str(path.relative_to(root)),
+                'hardware_type':kind,'device_name':runtime['device_name'],
+                'mtime_ns':path.stat().st_mtime_ns})
+        except FileNotFoundError:continue
+        except (OSError,ValueError,TypeError,AttributeError) as error:
+            warnings.append({'path':str(path.relative_to(root)),'error_type':type(error).__name__})
+    latest=max(observations,key=lambda row:(row['mtime_ns'],row['path'])) if observations else None
+    return latest,warnings
+
+
+def inspect_primary_measurements(root,target=None):
+    """Metadata only; infer the target from completed actual GPU engineering.
+
+    The resource-group label is not device evidence. SXM4 40GB, PCIe 40GB and
+    80GB measurements remain distinct. No observed target means pending, not a
+    fictional PCIe allocation or a reason to stop training.
+    """
+    target_source='explicit' if target is not None else None
+    target_warnings=[]
+    if target is None:
+        observed,target_warnings=_latest_engineering_hardware(root)
+        if observed is not None:
+            target=observed['hardware_type']
+            target_source=observed
+        else:
+            return {'target_hardware':None,'target_hardware_source':None,'target_pending':True,
+                'target_observation_warnings':target_warnings,'incompatible_measurements':[],
+                'measurement_hardware_matches':None,'historical_80GB_timings_normalized_as_40GB':False}
     base=Path(root)/'runs/training_campaign_v1'
     incompatible=[]
     for relative in ('profiles','development'):
@@ -139,7 +203,8 @@ def inspect_primary_measurements(root,target='A100_PCIE_40GB'):
                     'observed_hardware':hardware_type(runtime),'required_measurement_hardware':target,
                     'source_file_retained':True,'source_or_meta_retraining_required':False,
                     'target_calibration_remeasurement_required':True})
-    return {'target_hardware':target,'incompatible_measurements':incompatible,
+    return {'target_hardware':target,'target_hardware_source':target_source,'target_pending':False,
+            'target_observation_warnings':target_warnings,'incompatible_measurements':incompatible,
             'measurement_hardware_matches':not incompatible,
             'historical_80GB_timings_normalized_as_40GB':False}
 

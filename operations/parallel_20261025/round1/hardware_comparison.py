@@ -23,7 +23,7 @@ AUDIT='runs/training_campaign_parallel_v1/runtime_transfer_comparison.json'
 PINNED={'p3work/development_evaluation.py':'dc5de7376b5b774dd7d846cdce2cf6d1ba4f5f51df228130c275e13ec6724618',
         'p3work/internal_validation.py':'a847fc9d3d6ac0aa42d47992ce4e22335794854332ca5ad449e6f1e9c537af3b'}
 _CONTROL_OBSERVATIONS=ContextVar('paper3_control_native_verified_observations',default=None)
-_OBSERVED_CACHE=set()
+_OBSERVED_CACHE={}
 
 
 def _canonical(value):
@@ -33,7 +33,7 @@ def _canonical(value):
 def _digest(value):return hashlib.sha256(_canonical(value)).hexdigest()
 
 
-def _profile(value):
+def _raw_profile(value):
     if not isinstance(value,dict):raise ValueError('Complete native runtime profile required')
     if not all(isinstance(value.get(k),str) and value[k] for k in ('python','torch','device_name')):
         raise ValueError('Complete native Python/Torch/GPU profile required')
@@ -54,6 +54,33 @@ def _profile(value):
     return result
 
 
+def _profile(value):
+    result = _raw_profile(value)
+    # Only official naming aliases are administrative. Memory, form factor,
+    # software and numerical settings remain separate comparison evidence.
+    from audited_runtime import hardware_type
+    result['device_name'] = hardware_type(value)
+    return result
+
+
+def _existing_comparison_identity(value, normalized):
+    previous = value.get('hardware_class_profile')
+    if previous != normalized:
+        # Old journals store the uncanonicalized model string. Bind that class
+        # to a full original observation instead of fabricating a device UUID.
+        matched = any(
+            _raw_profile(row.get('runtime_profile')) == previous
+            and _profile(row.get('runtime_profile')) == normalized
+            for row in value.get('observations', {}).values()
+        )
+        if not matched:
+            raise ValueError('Observed runtime does not match this comparison hardware class')
+    original = _digest({'schema_version': SCHEMA, 'runtime_profile_without_device_uuid': previous})
+    if value.get('hardware_class_identity_sha256') != original:
+        raise ValueError('Existing comparison identity does not match its recorded profile')
+    return original
+
+
 def equivalent_runtime(root,before,actual,context):
     if _profile(before)!=_profile(actual):
         raise ValueError('GPU model, software, driver or numerical policy changed; not UUID-only migration')
@@ -72,13 +99,16 @@ def observe(root,runtime,reference):
     key=_digest(observation)
     cached=(str(root),identity,key)
     if cached in _OBSERVED_CACHE:
-        return identity
+        return _OBSERVED_CACHE[cached]
     with path.with_suffix('.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
         if path.exists():
             value=json.loads(path.read_text())
-            if value.get('schema_version')!=SCHEMA or value.get('hardware_class_profile')!=normalized:
-                raise ValueError('Observed runtime does not match this comparison hardware class')
+            if value.get('schema_version') != SCHEMA:
+                raise ValueError('Observed runtime comparison journal schema changed')
+            # Retain the previously published comparison ID and class bytes.
+            # This keeps already frozen selection evidence valid across aliases.
+            identity = _existing_comparison_identity(value, normalized)
         else:
             value={'schema_version':SCHEMA,'authorization':'2026-10-25 continue original first-round work in three GPU jobs with checkpoint reuse',
                 'scope':'Equivalent-hardware comparison; physical UUID and repeated node-driver inventory count may differ, exact driver versions and actual measurements remain recorded',
@@ -95,7 +125,7 @@ def observe(root,runtime,reference):
                 os.replace(temp,path)
             finally:
                 Path(temp).unlink(missing_ok=True)
-    _OBSERVED_CACHE.add(cached)
+    _OBSERVED_CACHE[cached] = identity
     return identity
 
 

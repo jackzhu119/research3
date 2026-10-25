@@ -281,8 +281,7 @@ def _maximum(root, action, allocation_seconds):
     return math.ceil(floor)+int(allocation_seconds)+600
 
 
-def perform_action(root, action, payload_manifest, *, allocation_seconds=529200, direct_package=None,
-                   stop_requested=None, on_ready=None):
+def perform_action(root, action, payload_manifest, *, allocation_seconds=529200, direct_package=None, stop_requested=None, on_ready=None):
     """Execute exactly one native action; never call the global campaign loop.
 
     Caller owns operational per-action deduplication/claim and Slurm lifecycle.
@@ -291,36 +290,32 @@ def perform_action(root, action, payload_manifest, *, allocation_seconds=529200,
     UUID-only equivalent-runtime overlay, never hidden in observed properties.
     """
     root = Path(root).resolve()
-    if action_complete(root,action):
-        return {'status':'REUSED_COMPLETE','receipt':{'path':action['expected_receipt']},'new_fit':False}
-    campaign = activate_runtime(root,payload_manifest,direct_package=direct_package,
-                                allocation_seconds=allocation_seconds)
-    if on_ready is not None:
-        on_ready()
-    if action['kind'].startswith('extension_'):
-        from p3work import source_extension_downstream as downstream
-        from campaign_recovery import install_downstream
-        install_downstream(downstream,root)
-        arm = action['arm']
-        if action['kind']=='extension_initialize':
-            release = _read(root/'hpc/data_release.json')
-            index = _read(root/release['bootstrap_index']['path'])
-            receipt = downstream.initialize_catalog(root,arm,OUTPUT+'/pre_internal_freeze.json',
-                index['extension_manifests'][arm],execute=True)
-            return {'status':'COMPLETE','receipt':receipt,'new_fit':False}
-        result = downstream.auto_development(root,'runs/source_extension_downstream/'+arm+'/launch.json',
-            execute=True,user_started_gpu=True,stop_requested=stop_requested,stop_grace_seconds=120)
-        return {'status':'COMPLETE' if action_complete(root,action) else 'PAUSED',
-                'receipt': {'path':action['expected_receipt']} if action_complete(root,action) else None,
-                'native_result':result}
-    native = {k:v for k,v in action.items() if k not in
-              {'serial','affinity_slot','configuration_receipt_path'}}
-    if action.get('configuration_receipt_path'):
-        native['configuration_receipt'] = campaign.descriptor(root,root/action['configuration_receipt_path'])
-    campaign.validate_registered_action(native)
-    receipt = campaign.Production(root,_maximum(root,action,allocation_seconds)).perform(native)
-    return {'status':'COMPLETE' if receipt and action_complete(root,action) else 'PAUSED',
-            'receipt':receipt,'new_fit':action['kind'] not in {'meta_selection','development_selection','strongest_control','freeze'}}
+    if action_complete(root, action):
+        return {'status': 'REUSED_COMPLETE', 'receipt': {'path': action['expected_receipt']}, 'new_fit': False}
+    campaign = activate_runtime(root, payload_manifest, direct_package=direct_package, allocation_seconds=allocation_seconds)
+    'PAPER3_ACTION_STARTUP_CONTEXT_V1'
+    import action_startup
+    with action_startup.active(root, action):
+        if on_ready is not None:
+            on_ready()
+        if action['kind'].startswith('extension_'):
+            from p3work import source_extension_downstream as downstream
+            from campaign_recovery import install_downstream
+            install_downstream(downstream, root)
+            arm = action['arm']
+            if action['kind'] == 'extension_initialize':
+                release = _read(root / 'hpc/data_release.json')
+                index = _read(root / release['bootstrap_index']['path'])
+                receipt = downstream.initialize_catalog(root, arm, OUTPUT + '/pre_internal_freeze.json', index['extension_manifests'][arm], execute=True)
+                return {'status': 'COMPLETE', 'receipt': receipt, 'new_fit': False}
+            result = downstream.auto_development(root, 'runs/source_extension_downstream/' + arm + '/launch.json', execute=True, user_started_gpu=True, stop_requested=stop_requested, stop_grace_seconds=120)
+            return {'status': 'COMPLETE' if action_complete(root, action) else 'PAUSED', 'receipt': {'path': action['expected_receipt']} if action_complete(root, action) else None, 'native_result': result}
+        native = {k: v for k, v in action.items() if k not in {'serial', 'affinity_slot', 'configuration_receipt_path'}}
+        if action.get('configuration_receipt_path'):
+            native['configuration_receipt'] = campaign.descriptor(root, root / action['configuration_receipt_path'])
+        campaign.validate_registered_action(native)
+        receipt = campaign.Production(root, _maximum(root, action, allocation_seconds)).perform(native)
+        return {'status': 'COMPLETE' if receipt and action_complete(root, action) else 'PAUSED', 'receipt': receipt, 'new_fit': action['kind'] not in {'meta_selection', 'development_selection', 'strongest_control', 'freeze'}}
 
 
 # Explicit aliases for the controller/worker integration.
