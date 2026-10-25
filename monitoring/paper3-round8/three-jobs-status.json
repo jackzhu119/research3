@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 31,
+  "complete_tasks": 32,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 12.8,
+    "progress_age_seconds": 11.8,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T10:34:45Z"
+    "updated_utc": "2026-10-25T10:37:46Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -16,7 +16,7 @@
       "total": 3
     },
     "core": {
-      "complete": 28,
+      "complete": 29,
       "total": 207
     },
     "fiber_sensitivity": {
@@ -43,17 +43,14 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 2952,
+      "pid": 6218,
       "status": "RUNNING",
-      "task_key": "core-holdout-head_sgd100-seed20261018-18263294d9",
+      "task_key": "core-pan2023-head_sgd100-seed20261018-a27027a32d",
       "worker_progress": {
-        "budget": 4,
         "outer_update": 0,
-        "session": 22,
-        "sessions_total": 105,
-        "stage": "holdout",
-        "status": "EVALUATING",
-        "updated_utc": "2026-10-25T10:34:07Z"
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-25T10:37:16Z"
       }
     },
     "1": {
@@ -128,7 +125,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "2:56:29",
+        "elapsed": "2:59:29",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -138,7 +135,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T10:34:58Z",
+    "observed_utc": "2026-10-25T10:37:58Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,7 +161,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792924497.812463,
+  "sampled_unix": 1792924677.8136468,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -446,32 +443,32 @@
       "index": 30,
       "job_id": "772121",
       "key": "core-holdout-head_sgd100-seed20261018-18263294d9",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 33,
+      "family": "core",
+      "index": 31,
+      "job_id": "772121",
+      "key": "core-pan2023-head_sgd100-seed20261018-a27027a32d",
       "observations": [
         {
-          "age_seconds": 20.8,
-          "path": "runs/followup_20261025_r8/core-holdout-head_sgd100-seed20261018-18263294d9/progress.json",
+          "age_seconds": 10.8,
+          "path": "runs/followup_20261025_r8/core-pan2023-head_sgd100-seed20261018-a27027a32d/progress.json",
           "values": {
-            "budget": 8,
+            "budget": 20,
             "outer_update": 0,
-            "session": 0,
-            "sessions_total": 105,
-            "stage": "holdout",
+            "session": 17,
+            "sessions_total": 28,
+            "stage": "pan2023_published_order",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-25T10:34:37Z"
+            "updated_utc": "2026-10-25T10:37:47Z"
           }
         }
       ],
       "slot": 0,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 32,
-      "family": "core",
-      "index": 31,
-      "job_id": "772121",
-      "key": "core-pan2023-head_sgd100-seed20261018-a27027a32d",
-      "slot": 0,
-      "status": "RETRYING"
     },
     {
       "attempt": 32,
@@ -25714,5 +25711,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T10:34:57Z"
+  "updated_utc": "2026-10-25T10:37:58Z"
 }
