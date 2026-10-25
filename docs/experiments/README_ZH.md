@@ -1,5 +1,24 @@
 # 论文3七轮实验分类总档案
 
+<!-- PAPER3_RESULTS_ENTRY_20261025 -->
+## 2026-10-25：已完成结果与分类归档入口
+
+**[进入按轮次分类的结果总归档](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/README_ZH.md)**。
+
+用户在2026-10-25贴回的学校本地只读诊断已确认：**第二轮66/66、第三轮174/174、第七轮273/273任务全部完成**。这项本地证据更新了完成状态；下方2026-10-24的计数、迁移准备与未提交说明继续作为带时间的历史记录保留，不应当作当前调度状态。
+
+| 轮次 | 分类结果分区 | 完整上传确认入口 |
+|---|---|---|
+| 第二轮 | [第二轮结果](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3/round-02) | [LATEST.json](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-02/LATEST.json) |
+| 第三轮 | [第三轮结果](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3/round-03) | [LATEST.json](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-03/LATEST.json) |
+| 第七轮 | [第七轮结果](https://github.com/jackzhu119/research3/tree/paper3-results/results/paper3/round-07) | [LATEST.json](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-07/LATEST.json) |
+
+`previous/<source_commit>/`保留此前已经回传的监控快照及来源校验；`final/<snapshot_id>/`保存学校完成后上传的结果。**本地完成不等于GitHub完整上传：以各轮上传器校验后发布的`LATEST.json`及其引用清单为准；入口尚不存在时，表示完整上传尚未确认。** 旧监控的任务计数与耗时汇总可能不同步，不能用延迟快照覆盖本地完成证据。
+
+本次分类不更改算法配方、学校资源配置或运行作业；原自动进度分支和历史提交保留。
+<!-- /PAPER3_RESULTS_ENTRY_20261025 -->
+
+
 归档日期：2026-10-24（北京时间）。所有轮次均使用学校Slurm服务器，不再使用RunPod。本目录只整理文档和观测证据，不启动、取消或修改学校作业。
 
 **共同主线：冻结EEGNet，使用新会话前20个已获取位置，在很少的空间校准参数下改善跨会话识别。** 已补入第七轮有限窗时空扩展与机制拆解。下面按研究问题、已实现算法、实验规模、资源与回传位置逐轮区分；已发布方案、软件测试、学校提交、实际完成与科学效果是不同状态。
