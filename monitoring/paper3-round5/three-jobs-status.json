@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-05",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 68,
+  "complete_tasks": 80,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 31.2,
+    "progress_age_seconds": 23.2,
     "progress_path": "runs/followup_20261024_r5/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T15:06:19Z"
+    "updated_utc": "2026-10-25T15:09:27Z"
   },
   "experiment": "paper3-round5",
   "families": {
@@ -24,40 +24,40 @@
       "total": 6
     },
     "sensitivity": {
-      "complete": 8,
+      "complete": 20,
       "total": 39
     }
   },
   "gpu_slots": {
     "0": {
       "job_id": "772070",
-      "pid": 8800,
+      "pid": 12613,
       "status": "RUNNING",
-      "task_key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261019",
+      "task_key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261019",
       "worker_progress": {}
     },
     "1": {
       "job_id": "772071",
-      "pid": 8172,
+      "pid": 11942,
       "status": "RUNNING",
-      "task_key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261018",
+      "task_key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261018",
       "worker_progress": {
         "outer_update": 0,
         "stage": "loading",
         "status": "STARTING",
-        "updated_utc": "2026-10-25T15:05:47Z"
+        "updated_utc": "2026-10-25T15:08:55Z"
       }
     },
     "2": {
       "job_id": "772072",
-      "pid": 7952,
+      "pid": 11564,
       "status": "RUNNING",
-      "task_key": "sensitivity-radius-right_rotation-0.05-radius0.05-seed20261020",
+      "task_key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261020",
       "worker_progress": {
         "outer_update": 0,
         "stage": "loading",
         "status": "STARTING",
-        "updated_utc": "2026-10-25T15:05:35Z"
+        "updated_utc": "2026-10-25T15:08:37Z"
       }
     }
   },
@@ -106,7 +106,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "7:58:46",
+        "elapsed": "8:01:46",
         "job_id": "772071",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s1-a1",
@@ -116,7 +116,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "7:58:46",
+        "elapsed": "8:01:46",
         "job_id": "772072",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
@@ -126,7 +126,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "7:59:22",
+        "elapsed": "8:02:22",
         "job_id": "772070",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
@@ -136,7 +136,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T15:06:50Z",
+    "observed_utc": "2026-10-25T15:09:50Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -162,7 +162,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 5,
-  "sampled_unix": 1792940810.1679842,
+  "sampled_unix": 1792940990.1691613,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -786,10 +786,118 @@
       "index": 68,
       "job_id": "772072",
       "key": "sensitivity-radius-right_rotation-0.05-radius0.05-seed20261020",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 69,
+      "job_id": "772071",
+      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261018",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 70,
+      "job_id": "772070",
+      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 71,
+      "job_id": "772072",
+      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261020",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 72,
+      "job_id": "772071",
+      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261018",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 73,
+      "job_id": "772070",
+      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 74,
+      "job_id": "772072",
+      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261020",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 75,
+      "job_id": "772071",
+      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261018",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 76,
+      "job_id": "772070",
+      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 77,
+      "job_id": "772072",
+      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261020",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 78,
+      "job_id": "772071",
+      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261018",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 79,
+      "job_id": "772070",
+      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 80,
+      "job_id": "772072",
+      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261020",
       "observations": [
         {
-          "age_seconds": 34.2,
-          "path": "runs/followup_20261024_r5/sensitivity-radius-right_rotation-0.05-radius0.05-seed20261020/progress.json",
+          "age_seconds": 26.2,
+          "path": "runs/followup_20261024_r5/sensitivity-radius-right_rotation-0.35-radius0.35-seed20261020/progress.json",
           "values": {
             "budget": 20,
             "outer_update": 0,
@@ -797,7 +905,7 @@
             "sessions_total": 105,
             "stage": "done",
             "status": "COMPLETE",
-            "updated_utc": "2026-10-25T15:06:16Z"
+            "updated_utc": "2026-10-25T15:09:24Z"
           }
         }
       ],
@@ -807,13 +915,13 @@
     {
       "attempt": 1,
       "family": "sensitivity",
-      "index": 69,
+      "index": 81,
       "job_id": "772071",
-      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261018",
+      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261018",
       "observations": [
         {
-          "age_seconds": 21.2,
-          "path": "runs/followup_20261024_r5/sensitivity-radius-symmetric-0.05-radius0.05-seed20261018/progress.json",
+          "age_seconds": 13.2,
+          "path": "runs/followup_20261024_r5/sensitivity-radius-symmetric-0.35-radius0.35-seed20261018/progress.json",
           "values": {
             "budget": 20,
             "outer_update": 0,
@@ -821,7 +929,7 @@
             "sessions_total": 105,
             "stage": "done",
             "status": "COMPLETE",
-            "updated_utc": "2026-10-25T15:06:29Z"
+            "updated_utc": "2026-10-25T15:09:37Z"
           }
         }
       ],
@@ -831,134 +939,23 @@
     {
       "attempt": 1,
       "family": "sensitivity",
-      "index": 70,
+      "index": 82,
       "job_id": "772070",
-      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261019",
+      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261019",
       "observations": [
         {
-          "age_seconds": 2.2,
-          "path": "runs/followup_20261024_r5/sensitivity-radius-symmetric-0.05-radius0.05-seed20261019/progress.json",
+          "age_seconds": 24.2,
+          "path": "runs/followup_20261024_r5/sensitivity-radius-symmetric-0.35-radius0.35-seed20261019/progress.json",
           "values": {
-            "budget": 20,
             "outer_update": 0,
-            "session": 74,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-25T15:06:48Z"
+            "stage": "loading",
+            "status": "STARTING",
+            "updated_utc": "2026-10-25T15:09:26Z"
           }
         }
       ],
       "slot": 0,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 71,
-      "job_id": null,
-      "key": "sensitivity-radius-symmetric-0.05-radius0.05-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 72,
-      "job_id": null,
-      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 73,
-      "job_id": null,
-      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 74,
-      "job_id": null,
-      "key": "sensitivity-radius-single-0.35-radius0.35-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 75,
-      "job_id": null,
-      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 76,
-      "job_id": null,
-      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 77,
-      "job_id": null,
-      "key": "sensitivity-radius-left_rotation-0.35-radius0.35-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 78,
-      "job_id": null,
-      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 79,
-      "job_id": null,
-      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 80,
-      "job_id": null,
-      "key": "sensitivity-radius-right_rotation-0.35-radius0.35-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 81,
-      "job_id": null,
-      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 82,
-      "job_id": null,
-      "key": "sensitivity-radius-symmetric-0.35-radius0.35-seed20261019",
-      "slot": null,
-      "status": "NEW"
     },
     {
       "attempt": 0,
@@ -1115,7 +1112,7 @@
       "key": "reference-head_newton-seed20261018",
       "observations": [
         {
-          "age_seconds": 16842.2,
+          "age_seconds": 17022.2,
           "path": "runs/followup_20261024_r5/reference-head_newton-seed20261018/progress.json",
           "values": {
             "outer_update": 0,
@@ -1136,7 +1133,7 @@
       "key": "reference-head_newton-seed20261019",
       "observations": [
         {
-          "age_seconds": 16842.2,
+          "age_seconds": 17022.2,
           "path": "runs/followup_20261024_r5/reference-head_newton-seed20261019/progress.json",
           "values": {
             "outer_update": 0,
@@ -1157,7 +1154,7 @@
       "key": "reference-head_newton-seed20261020",
       "observations": [
         {
-          "age_seconds": 16840.2,
+          "age_seconds": 17020.2,
           "path": "runs/followup_20261024_r5/reference-head_newton-seed20261020/progress.json",
           "values": {
             "outer_update": 0,
@@ -1178,7 +1175,7 @@
       "key": "reference-support_EA-seed20261018",
       "observations": [
         {
-          "age_seconds": 16837.2,
+          "age_seconds": 17017.2,
           "path": "runs/followup_20261024_r5/reference-support_EA-seed20261018/progress.json",
           "values": {
             "outer_update": 0,
@@ -1199,7 +1196,7 @@
       "key": "reference-support_EA-seed20261019",
       "observations": [
         {
-          "age_seconds": 16837.2,
+          "age_seconds": 17017.2,
           "path": "runs/followup_20261024_r5/reference-support_EA-seed20261019/progress.json",
           "values": {
             "outer_update": 0,
@@ -1220,7 +1217,7 @@
       "key": "reference-support_EA-seed20261020",
       "observations": [
         {
-          "age_seconds": 16835.2,
+          "age_seconds": 17015.2,
           "path": "runs/followup_20261024_r5/reference-support_EA-seed20261020/progress.json",
           "values": {
             "outer_update": 0,
@@ -1236,5 +1233,5 @@
   ],
   "total_tasks": 105,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T15:06:50Z"
+  "updated_utc": "2026-10-25T15:09:50Z"
 }
