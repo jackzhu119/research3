@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 1421,
+  "complete_tasks": 1438,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 10.8,
+    "progress_age_seconds": 15.8,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T18:09:58Z"
+    "updated_utc": "2026-10-25T18:12:53Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -28,7 +28,7 @@
       "total": 27
     },
     "sensitivity": {
-      "complete": 368,
+      "complete": 385,
       "total": 1566
     },
     "stress": {
@@ -43,23 +43,23 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 42708,
+      "pid": 44580,
       "status": "RUNNING",
-      "task_key": "sensitivity-pan2023-grid_recolor_a0p75_e0p05_class_balanced-seed20261018-0cee800464",
+      "task_key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_class_balanced-seed20261018-6901b5640f",
       "worker_progress": {}
     },
     "1": {
       "job_id": "772122",
-      "pid": 11101,
+      "pid": 14647,
       "status": "RUNNING",
-      "task_key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_pooled-seed20261018-3803fa6156",
+      "task_key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_class_balanced-seed20261020-513f71eb2b",
       "worker_progress": {}
     },
     "2": {
       "job_id": "772123",
-      "pid": 11141,
+      "pid": 14861,
       "status": "RUNNING",
-      "task_key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_pooled-seed20261018-b73a719d6c",
+      "task_key": "sensitivity-weibo2014-grid_recolor_a0p75_e0p15_class_balanced-seed20261020-a931855547",
       "worker_progress": {}
     }
   },
@@ -108,7 +108,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "51:37",
+        "elapsed": "54:37",
         "job_id": "772122",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s1-a1",
@@ -118,7 +118,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "51:37",
+        "elapsed": "54:37",
         "job_id": "772123",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s2-a1",
@@ -128,7 +128,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "10:31:40",
+        "elapsed": "10:34:40",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -138,7 +138,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T18:10:10Z",
+    "observed_utc": "2026-10-25T18:13:09Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,7 +164,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792951808.7944653,
+  "sampled_unix": 1792951988.7967749,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -12902,9 +12902,8 @@
       "index": 1414,
       "job_id": "772121",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p05_class_balanced-seed20261018-0cee800464",
-      "observations": [],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -12970,157 +12969,172 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1422,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_pooled-seed20261018-3803fa6156",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1423,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_pooled-seed20261018-b73a719d6c",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1424,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-weibo2014-grid_recolor_a0p75_e0p15_pooled-seed20261018-1cd1dcd04a",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1425,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_pooled-seed20261019-aa1c4f42f8",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1426,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_pooled-seed20261019-5ad18767df",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1427,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-weibo2014-grid_recolor_a0p75_e0p15_pooled-seed20261019-3016ad4de6",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1428,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_pooled-seed20261020-5023e3de70",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1429,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_pooled-seed20261020-ecba1678a1",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1430,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-weibo2014-grid_recolor_a0p75_e0p15_pooled-seed20261020-40455011e4",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1431,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_class_balanced-seed20261018-18f450335d",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1432,
-      "job_id": null,
+      "job_id": "772121",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_class_balanced-seed20261018-6901b5640f",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 13.8,
+          "path": "runs/followup_20261025_r8/sensitivity-pan2023-grid_recolor_a0p75_e0p15_class_balanced-seed20261018-6901b5640f/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 28,
+            "sessions_total": 28,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-25T18:12:55Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1433,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-weibo2014-grid_recolor_a0p75_e0p15_class_balanced-seed20261018-a78d1614b5",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1434,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_class_balanced-seed20261019-32edf95024",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1435,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_class_balanced-seed20261019-2f3eb05c5c",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1436,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-weibo2014-grid_recolor_a0p75_e0p15_class_balanced-seed20261019-f222f28e3e",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1437,
-      "job_id": null,
+      "job_id": "772122",
       "key": "sensitivity-holdout-grid_recolor_a0p75_e0p15_class_balanced-seed20261020-513f71eb2b",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 1438,
-      "job_id": null,
+      "job_id": "772123",
       "key": "sensitivity-pan2023-grid_recolor_a0p75_e0p15_class_balanced-seed20261020-92e146ef79",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -25700,5 +25714,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T18:10:09Z"
+  "updated_utc": "2026-10-25T18:13:09Z"
 }
