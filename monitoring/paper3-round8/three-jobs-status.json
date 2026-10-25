@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-08",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 303,
+  "complete_tasks": 305,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 21.6,
+    "progress_age_seconds": 6.6,
     "progress_path": "runs/followup_20261025_r8/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T15:16:06Z"
+    "updated_utc": "2026-10-25T15:19:21Z"
   },
   "experiment": "paper3-round8",
   "families": {
@@ -32,7 +32,7 @@
       "total": 1566
     },
     "stress": {
-      "complete": 69,
+      "complete": 71,
       "total": 792
     },
     "train": {
@@ -43,14 +43,14 @@
   "gpu_slots": {
     "0": {
       "job_id": "772121",
-      "pid": 48509,
+      "pid": 51408,
       "status": "RUNNING",
-      "task_key": "stress-holdout-source_frozen-seed20261020-f0c18eb2dc",
+      "task_key": "stress-holdout-source_frozen-seed20261020-8719740805",
       "worker_progress": {
         "outer_update": 0,
         "stage": "loading",
         "status": "STARTING",
-        "updated_utc": "2026-10-25T15:15:37Z"
+        "updated_utc": "2026-10-25T15:18:51Z"
       }
     },
     "1": {
@@ -125,7 +125,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "7:37:58",
+        "elapsed": "7:40:58",
         "job_id": "772121",
         "marker": "paper3r8p-e62a58e140a157e6",
         "name": "paper3r8p-e62a58e140a157e6-s0-a1",
@@ -135,7 +135,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T15:16:27Z",
+    "observed_utc": "2026-10-25T15:19:27Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -161,7 +161,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 8,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r8",
-  "sampled_unix": 1792941387.5581274,
+  "sampled_unix": 1792941567.5591815,
   "schema_version": "paper3-round8-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -2895,31 +2895,46 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 303,
-      "job_id": null,
+      "job_id": "772121",
       "key": "stress-holdout-source_frozen-seed20261020-a9cc4017f5",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 304,
-      "job_id": null,
+      "job_id": "772121",
       "key": "stress-holdout-source_frozen-seed20261020-57d35a08f0",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 305,
-      "job_id": null,
+      "job_id": "772121",
       "key": "stress-holdout-source_frozen-seed20261020-8719740805",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 5.6,
+          "path": "runs/followup_20261025_r8/stress-holdout-source_frozen-seed20261020-8719740805/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 5,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-25T15:19:22Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -23800,7 +23815,6 @@
       "index": 2625,
       "job_id": null,
       "key": "fiber_sensitivity-holdout-fiber_grid_b0p025_pooled_aligned-seed20261020-77f2b9fcba",
-      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -25697,5 +25711,5 @@
   ],
   "total_tasks": 2835,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T15:16:27Z"
+  "updated_utc": "2026-10-25T15:19:27Z"
 }
