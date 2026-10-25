@@ -1,5 +1,18 @@
 # 第一轮：原论文3主线与完整基线比较
 
+<!-- PAPER3_PARALLEL_TARGET_20261025 -->
+## 2026-10-25最新资源目标（现场尚未执行）
+
+本次最新目标为 `hpc_gpu` 的A100 PCIe 40GB：三个独立单卡作业，各12CPU，内存43G/43G/42G，合计36CPU/128G。原`770043`仍在`hpc_gpu1`的SXM4 80GB上运行；本记录不声称已经完成现场切换。
+
+三卡优先并行未完成MetaJob；已完成源模型、经典模型、筛选结果和既有checkpoint沿用原目录，不复制重训。开发校准/计时工作固定slot0；两条原五源扩展`BASE4_PLUS_YANG`、`BASE4_PLUS_DREYER`继续保留，后期分配slot1/2并行。主线完成与全部原工作完成分别回传，不能用一个总百分比代替。
+
+新增第一轮独立回传：`paper3-r1-progress:monitoring/paper3-round1/status.json`。按轮汇总输出进入`paper3-results`，不冒称完整预测/模型已自动备份。
+
+[三作业交接、在线入口与回传配置](../PARALLEL_MIGRATION_20261025_ZH.md)。本段之后的旧资源和进度记录保留历史。
+<!-- /PAPER3_PARALLEL_TARGET_20261025 -->
+
+
 [返回五轮总览](README_ZH.md) · [第二轮](ROUND2_ZH.md)
 
 本页归档原论文3主线，不把最早的24项扩展方案误标为第一轮。

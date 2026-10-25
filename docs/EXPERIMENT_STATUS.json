@@ -1,13 +1,13 @@
 {
   "schema_version": "paper3-experiment-overview-v5",
-  "updated_at": "2026-10-24T23:11:47+08:00",
+  "updated_at": "2026-10-25T11:10:52+08:00",
   "timezone": "Asia/Shanghai",
-  "status_type": "manual_seven_round_configuration_and_asynchronous_evidence_snapshot_not_live_scheduler",
+  "status_type": "manual_latest_resource_targets_plus_historical_evidence_not_live_scheduler",
   "compute_platform": "school_slurm_hpc",
   "runpod_in_use": false,
   "index": "docs/experiments/README_ZH.md",
   "evidence_snapshot": "docs/experiments/STATUS_SNAPSHOT_20261024.json",
-  "scope": "Documentation/manual overview and requested R4/R5/R6 resource migration records only. Historical source snapshots are retained; no school code changes, cancellations, submissions, scientific recipe changes or automatic status overwrite.",
+  "scope": "Documentation of seven rounds and requested 2026-10-25 R1/R5/R6 three-independent-job migration; historical evidence retained; this documentation performs no school operation.",
   "round1": {
     "experiment": "original_campaign_v1",
     "status": "RUNNING_AT_LAST_USER_QUEUE_EVIDENCE",
@@ -38,7 +38,92 @@
       "runs/training_campaign_v1"
     ],
     "details": "docs/experiments/ROUND1_ZH.md",
-    "evidence_scope": "Historical user training and queue evidence, not rechecked live"
+    "evidence_scope": "Historical user training and queue evidence, not rechecked live",
+    "current_resource_target": {
+      "partition": "hpc_gpu",
+      "gpu_model_requested_by_group": "A100-PCIe-40GB",
+      "slurm_jobs": 3,
+      "nodes_per_job": 1,
+      "gpus_per_job": 1,
+      "gpus_total": 3,
+      "cpus_per_job": 12,
+      "cpus_total": 36,
+      "memory_per_job": [
+        "43G",
+        "43G",
+        "42G"
+      ],
+      "memory_total": "128G",
+      "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation"
+    },
+    "resource_target_status": "REQUESTED_NOT_YET_OBSERVED_AT_SCHOOL",
+    "parallel_migration_20261025": {
+      "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+      "recorded_utc": "2026-10-25T03:10:52+00:00",
+      "source_branch": "paper3-parallel-migrations-20261025",
+      "source_directory": "operations/parallel_20261025",
+      "online_entry": "operations/parallel_20261025/online/START-PAPER3-PARALLEL.py",
+      "cli_arguments": [
+        "--round",
+        "1",
+        "--execute"
+      ],
+      "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+      "publication_verified": true,
+      "target_resources": {
+        "partition": "hpc_gpu",
+        "gpu_model_requested_by_group": "A100-PCIe-40GB",
+        "slurm_jobs": 3,
+        "nodes_per_job": 1,
+        "gpus_per_job": 1,
+        "gpus_total": 3,
+        "cpus_per_job": 12,
+        "cpus_total": 36,
+        "memory_per_job": [
+          "43G",
+          "43G",
+          "42G"
+        ],
+        "memory_total": "128G",
+        "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation"
+      },
+      "prior_current_target_preserved": null,
+      "old_job_id": "770043",
+      "old_partition": "hpc_gpu1",
+      "replacement_jobs_confirmed_held_before_old_handoff": true,
+      "completed_outputs_reused_in_place": true,
+      "checkpoint_identity_reset": false,
+      "scientific_plan_or_algorithm_changed": false,
+      "school_switch_executed": false,
+      "school_new_jobs_submitted": 0,
+      "school_old_jobs_cancelled": 0,
+      "full_pytest_pilot_or_deployment_rescan_on_startup": false,
+      "cumulative_12_hour_limit": false,
+      "old_stop_tombstone_retained": false,
+      "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+      "original_extension_arms_retained": [
+        "BASE4_PLUS_YANG",
+        "BASE4_PLUS_DREYER"
+      ],
+      "meta_fits_parallel_slots": [
+        0,
+        1,
+        2
+      ],
+      "development_measurement_slot": 0,
+      "extension_arm_slots": [
+        1,
+        2
+      ],
+      "boundary_snapshot": "runs/training_campaign_parallel_v1/migration-progress-snapshot.json",
+      "actual_raw_and_api_download_verified": true,
+      "school_actions_executed": false
+    },
+    "historical_resource_fields_scope": "retained prior actual/source snapshot; latest requested target is current_resource_target",
+    "new_progress_branch": "paper3-r1-progress",
+    "new_progress_path": "monitoring/paper3-round1/status.json",
+    "automatic_summary_target": "paper3-results:results/paper3/round-01",
+    "automatic_summary_is_full_output_backup": false
   },
   "round2": {
     "experiment": "followup_20261023_v2",
@@ -467,15 +552,24 @@
     "memory_per_job": "164G",
     "memory_semantics": "shared_job_total_not_per_gpu",
     "current_resource_target": {
-      "partition": "hpc_gpu",
-      "gpu_model_requested_by_group": "A100-PCIe-40GB",
-      "nodes": 1,
-      "slurm_jobs": 1,
-      "gpus": 3,
-      "cpus_per_slot": 12,
+      "partition": "hpc_gpu1",
+      "gpu_model_requested_by_group": "A100-SXM4-80GB",
+      "slurm_jobs": 3,
+      "nodes_per_job": 1,
+      "gpus_per_job": 1,
+      "gpus_total": 3,
+      "cpus_per_job": 12,
       "cpus_total": 36,
-      "memory_total": "128G",
-      "memory_scope": "shared_job_total_not_per_GPU"
+      "memory_per_job": [
+        "64G",
+        "64G",
+        "64G"
+      ],
+      "memory_total": "192G",
+      "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation",
+      "exclude_nodes": [
+        "gpu3"
+      ]
     },
     "requested_resources_scope": "historical_source_status_snapshot_configuration_retained_see_current_resource_target",
     "resource_migration": {
@@ -559,7 +653,73 @@
       "launch_script_raw_url": "https://raw.githubusercontent.com/jackzhu119/research3/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/RUN-ROUND5.sh",
       "actual_shell_download_and_prepare_verified": true,
       "scientific_recipe_identity_preserved_in_offline_prepare": true
-    }
+    },
+    "resource_target_status": "REQUESTED_NOT_YET_OBSERVED_AT_SCHOOL",
+    "parallel_migration_20261025": {
+      "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+      "recorded_utc": "2026-10-25T03:10:52+00:00",
+      "source_branch": "paper3-parallel-migrations-20261025",
+      "source_directory": "operations/parallel_20261025",
+      "online_entry": "operations/parallel_20261025/online/START-PAPER3-PARALLEL.py",
+      "cli_arguments": [
+        "--round",
+        "5",
+        "--execute"
+      ],
+      "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+      "publication_verified": true,
+      "target_resources": {
+        "partition": "hpc_gpu1",
+        "gpu_model_requested_by_group": "A100-SXM4-80GB",
+        "slurm_jobs": 3,
+        "nodes_per_job": 1,
+        "gpus_per_job": 1,
+        "gpus_total": 3,
+        "cpus_per_job": 12,
+        "cpus_total": 36,
+        "memory_per_job": [
+          "64G",
+          "64G",
+          "64G"
+        ],
+        "memory_total": "192G",
+        "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation",
+        "exclude_nodes": [
+          "gpu3"
+        ]
+      },
+      "prior_current_target_preserved": {
+        "partition": "hpc_gpu",
+        "gpu_model_requested_by_group": "A100-PCIe-40GB",
+        "nodes": 1,
+        "slurm_jobs": 1,
+        "gpus": 3,
+        "cpus_per_slot": 12,
+        "cpus_total": 36,
+        "memory_total": "128G",
+        "memory_scope": "shared_job_total_not_per_GPU"
+      },
+      "old_job_id": "772012",
+      "old_partition": "hpc_gpu",
+      "replacement_jobs_confirmed_held_before_old_handoff": true,
+      "completed_outputs_reused_in_place": true,
+      "checkpoint_identity_reset": false,
+      "scientific_plan_or_algorithm_changed": false,
+      "school_switch_executed": false,
+      "school_new_jobs_submitted": 0,
+      "school_old_jobs_cancelled": 0,
+      "full_pytest_pilot_or_deployment_rescan_on_startup": false,
+      "cumulative_12_hour_limit": false,
+      "old_stop_tombstone_retained": true,
+      "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+      "actual_raw_and_api_download_verified": true,
+      "school_actions_executed": false
+    },
+    "historical_resource_fields_scope": "retained prior actual/source snapshot; latest requested target is current_resource_target",
+    "new_progress_branch": "paper3-r5-progress",
+    "new_progress_path": "monitoring/paper3-round5/three-jobs-status.json",
+    "automatic_summary_target": "paper3-results:results/paper3/round-05",
+    "automatic_summary_is_full_output_backup": false
   },
   "scientific_improvement_claimed": false,
   "completed_tasks_are_not_gpu_time_percentage": true,
@@ -614,15 +774,24 @@
     ],
     "auto_github": "paper3-r6-progress:monitoring/paper3-round6/status.json",
     "current_resource_target": {
-      "partition": "hpc_gpu",
-      "gpu_model_requested_by_group": "A100-PCIe-40GB",
-      "nodes": 1,
-      "slurm_jobs": 1,
-      "gpus": 3,
-      "cpus_per_slot": 12,
+      "partition": "hpc_gpu1",
+      "gpu_model_requested_by_group": "A100-SXM4-80GB",
+      "slurm_jobs": 3,
+      "nodes_per_job": 1,
+      "gpus_per_job": 1,
+      "gpus_total": 3,
+      "cpus_per_job": 12,
       "cpus_total": 36,
-      "memory_total": "128G",
-      "memory_scope": "shared_job_total_not_per_GPU"
+      "memory_per_job": [
+        "64G",
+        "64G",
+        "64G"
+      ],
+      "memory_total": "192G",
+      "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation",
+      "exclude_nodes": [
+        "gpu3"
+      ]
     },
     "resource_request_scope": "historical_original_publication_configuration_retained_see_current_resource_target",
     "resource_migration": {
@@ -706,7 +875,73 @@
       "launch_script_raw_url": "https://raw.githubusercontent.com/jackzhu119/research3/c7c903fb126e3e60a7e69556bea9f7ac8ce7e489/operations/hpc_gpu_migrations_20261024/online/RUN-ROUND6.sh",
       "actual_shell_download_and_prepare_verified": true,
       "scientific_recipe_identity_preserved_in_offline_prepare": true
-    }
+    },
+    "resource_target_status": "REQUESTED_NOT_YET_OBSERVED_AT_SCHOOL",
+    "parallel_migration_20261025": {
+      "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+      "recorded_utc": "2026-10-25T03:10:52+00:00",
+      "source_branch": "paper3-parallel-migrations-20261025",
+      "source_directory": "operations/parallel_20261025",
+      "online_entry": "operations/parallel_20261025/online/START-PAPER3-PARALLEL.py",
+      "cli_arguments": [
+        "--round",
+        "6",
+        "--execute"
+      ],
+      "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+      "publication_verified": true,
+      "target_resources": {
+        "partition": "hpc_gpu1",
+        "gpu_model_requested_by_group": "A100-SXM4-80GB",
+        "slurm_jobs": 3,
+        "nodes_per_job": 1,
+        "gpus_per_job": 1,
+        "gpus_total": 3,
+        "cpus_per_job": 12,
+        "cpus_total": 36,
+        "memory_per_job": [
+          "64G",
+          "64G",
+          "64G"
+        ],
+        "memory_total": "192G",
+        "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation",
+        "exclude_nodes": [
+          "gpu3"
+        ]
+      },
+      "prior_current_target_preserved": {
+        "partition": "hpc_gpu",
+        "gpu_model_requested_by_group": "A100-PCIe-40GB",
+        "nodes": 1,
+        "slurm_jobs": 1,
+        "gpus": 3,
+        "cpus_per_slot": 12,
+        "cpus_total": 36,
+        "memory_total": "128G",
+        "memory_scope": "shared_job_total_not_per_GPU"
+      },
+      "old_job_id": "772013",
+      "old_partition": "hpc_gpu",
+      "replacement_jobs_confirmed_held_before_old_handoff": true,
+      "completed_outputs_reused_in_place": true,
+      "checkpoint_identity_reset": false,
+      "scientific_plan_or_algorithm_changed": false,
+      "school_switch_executed": false,
+      "school_new_jobs_submitted": 0,
+      "school_old_jobs_cancelled": 0,
+      "full_pytest_pilot_or_deployment_rescan_on_startup": false,
+      "cumulative_12_hour_limit": false,
+      "old_stop_tombstone_retained": true,
+      "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+      "actual_raw_and_api_download_verified": true,
+      "school_actions_executed": false
+    },
+    "historical_resource_fields_scope": "retained prior actual/source snapshot; latest requested target is current_resource_target",
+    "new_progress_branch": "paper3-r6-progress",
+    "new_progress_path": "monitoring/paper3-round6/three-jobs-status.json",
+    "automatic_summary_target": "paper3-results:results/paper3/round-06",
+    "automatic_summary_is_full_output_backup": false
   },
   "round7": {
     "details": "docs/experiments/ROUND7_ZH.md",
@@ -898,5 +1133,218 @@
       5,
       6
     ]
+  },
+  "previous_overview_updated_at": "2026-10-24T23:11:47+08:00",
+  "parallel_migration_20261025": {
+    "recorded_utc": "2026-10-25T03:10:52+00:00",
+    "rounds": [
+      1,
+      5,
+      6
+    ],
+    "records": {
+      "1": {
+        "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+        "recorded_utc": "2026-10-25T03:10:52+00:00",
+        "source_branch": "paper3-parallel-migrations-20261025",
+        "source_directory": "operations/parallel_20261025",
+        "online_entry": "operations/parallel_20261025/online/START-PAPER3-PARALLEL.py",
+        "cli_arguments": [
+          "--round",
+          "1",
+          "--execute"
+        ],
+        "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+        "publication_verified": true,
+        "target_resources": {
+          "partition": "hpc_gpu",
+          "gpu_model_requested_by_group": "A100-PCIe-40GB",
+          "slurm_jobs": 3,
+          "nodes_per_job": 1,
+          "gpus_per_job": 1,
+          "gpus_total": 3,
+          "cpus_per_job": 12,
+          "cpus_total": 36,
+          "memory_per_job": [
+            "43G",
+            "43G",
+            "42G"
+          ],
+          "memory_total": "128G",
+          "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation"
+        },
+        "prior_current_target_preserved": null,
+        "old_job_id": "770043",
+        "old_partition": "hpc_gpu1",
+        "replacement_jobs_confirmed_held_before_old_handoff": true,
+        "completed_outputs_reused_in_place": true,
+        "checkpoint_identity_reset": false,
+        "scientific_plan_or_algorithm_changed": false,
+        "school_switch_executed": false,
+        "school_new_jobs_submitted": 0,
+        "school_old_jobs_cancelled": 0,
+        "full_pytest_pilot_or_deployment_rescan_on_startup": false,
+        "cumulative_12_hour_limit": false,
+        "old_stop_tombstone_retained": false,
+        "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+        "original_extension_arms_retained": [
+          "BASE4_PLUS_YANG",
+          "BASE4_PLUS_DREYER"
+        ],
+        "meta_fits_parallel_slots": [
+          0,
+          1,
+          2
+        ],
+        "development_measurement_slot": 0,
+        "extension_arm_slots": [
+          1,
+          2
+        ],
+        "boundary_snapshot": "runs/training_campaign_parallel_v1/migration-progress-snapshot.json",
+        "actual_raw_and_api_download_verified": true,
+        "school_actions_executed": false
+      },
+      "5": {
+        "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+        "recorded_utc": "2026-10-25T03:10:52+00:00",
+        "source_branch": "paper3-parallel-migrations-20261025",
+        "source_directory": "operations/parallel_20261025",
+        "online_entry": "operations/parallel_20261025/online/START-PAPER3-PARALLEL.py",
+        "cli_arguments": [
+          "--round",
+          "5",
+          "--execute"
+        ],
+        "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+        "publication_verified": true,
+        "target_resources": {
+          "partition": "hpc_gpu1",
+          "gpu_model_requested_by_group": "A100-SXM4-80GB",
+          "slurm_jobs": 3,
+          "nodes_per_job": 1,
+          "gpus_per_job": 1,
+          "gpus_total": 3,
+          "cpus_per_job": 12,
+          "cpus_total": 36,
+          "memory_per_job": [
+            "64G",
+            "64G",
+            "64G"
+          ],
+          "memory_total": "192G",
+          "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation",
+          "exclude_nodes": [
+            "gpu3"
+          ]
+        },
+        "prior_current_target_preserved": {
+          "partition": "hpc_gpu",
+          "gpu_model_requested_by_group": "A100-PCIe-40GB",
+          "nodes": 1,
+          "slurm_jobs": 1,
+          "gpus": 3,
+          "cpus_per_slot": 12,
+          "cpus_total": 36,
+          "memory_total": "128G",
+          "memory_scope": "shared_job_total_not_per_GPU"
+        },
+        "old_job_id": "772012",
+        "old_partition": "hpc_gpu",
+        "replacement_jobs_confirmed_held_before_old_handoff": true,
+        "completed_outputs_reused_in_place": true,
+        "checkpoint_identity_reset": false,
+        "scientific_plan_or_algorithm_changed": false,
+        "school_switch_executed": false,
+        "school_new_jobs_submitted": 0,
+        "school_old_jobs_cancelled": 0,
+        "full_pytest_pilot_or_deployment_rescan_on_startup": false,
+        "cumulative_12_hour_limit": false,
+        "old_stop_tombstone_retained": true,
+        "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+        "actual_raw_and_api_download_verified": true,
+        "school_actions_executed": false
+      },
+      "6": {
+        "status": "REQUESTED_TARGET_SOFTWARE_PREPARATION_NOT_SCHOOL_EXECUTED",
+        "recorded_utc": "2026-10-25T03:10:52+00:00",
+        "source_branch": "paper3-parallel-migrations-20261025",
+        "source_directory": "operations/parallel_20261025",
+        "online_entry": "operations/parallel_20261025/online/START-PAPER3-PARALLEL.py",
+        "cli_arguments": [
+          "--round",
+          "6",
+          "--execute"
+        ],
+        "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+        "publication_verified": true,
+        "target_resources": {
+          "partition": "hpc_gpu1",
+          "gpu_model_requested_by_group": "A100-SXM4-80GB",
+          "slurm_jobs": 3,
+          "nodes_per_job": 1,
+          "gpus_per_job": 1,
+          "gpus_total": 3,
+          "cpus_per_job": 12,
+          "cpus_total": 36,
+          "memory_per_job": [
+            "64G",
+            "64G",
+            "64G"
+          ],
+          "memory_total": "192G",
+          "resource_scope": "per-round sum across three independent jobs, not one three-GPU allocation",
+          "exclude_nodes": [
+            "gpu3"
+          ]
+        },
+        "prior_current_target_preserved": {
+          "partition": "hpc_gpu",
+          "gpu_model_requested_by_group": "A100-PCIe-40GB",
+          "nodes": 1,
+          "slurm_jobs": 1,
+          "gpus": 3,
+          "cpus_per_slot": 12,
+          "cpus_total": 36,
+          "memory_total": "128G",
+          "memory_scope": "shared_job_total_not_per_GPU"
+        },
+        "old_job_id": "772013",
+        "old_partition": "hpc_gpu",
+        "replacement_jobs_confirmed_held_before_old_handoff": true,
+        "completed_outputs_reused_in_place": true,
+        "checkpoint_identity_reset": false,
+        "scientific_plan_or_algorithm_changed": false,
+        "school_switch_executed": false,
+        "school_new_jobs_submitted": 0,
+        "school_old_jobs_cancelled": 0,
+        "full_pytest_pilot_or_deployment_rescan_on_startup": false,
+        "cumulative_12_hour_limit": false,
+        "old_stop_tombstone_retained": true,
+        "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+        "actual_raw_and_api_download_verified": true,
+        "school_actions_executed": false
+      }
+    },
+    "all_current_school_actions_executed": false,
+    "source_branch": "paper3-parallel-migrations-20261025",
+    "source_directory": "operations/parallel_20261025",
+    "details": "docs/PARALLEL_MIGRATION_20261025_ZH.md",
+    "round4_and_completed_rounds_2_3_7_not_migrated": true,
+    "publication_commit": "bf35b06816cc24b114d9b959ee4733788419beb1",
+    "publication_verified": true,
+    "actual_raw_and_api_download_verified": true,
+    "school_actions_executed": false,
+    "software_validation": {
+      "round1_tests": 104,
+      "round56_tests": 56,
+      "fresh_install_prepare": [
+        1,
+        5,
+        6
+      ],
+      "school_GPU_execution": false
+    },
+    "checkpoint_saved_old_backup_can_be_cancelled": true
   }
 }
