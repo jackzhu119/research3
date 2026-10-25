@@ -1,0 +1,26 @@
+# 第3轮 · 论文报告数据
+
+已有报告与CSV按原始字节上传，没有重新训练或重新计算统计。
+
+[文件与校验清单](manifest.json)
+
+| 原文件 | 字节数 |
+|---|---:|
+| plan.json [part 1](files/plan.json) | 151818 |
+| reports/budget_comparisons.csv [part 1](files/reports/budget_comparisons.csv) | 1139762 |
+| reports/budget_curves.csv [part 1](files/reports/budget_curves.csv) | 613423 |
+| reports/diagnostics.csv [part 1](files/reports/diagnostics.csv) | 1342903 |
+| reports/evaluation_summaries.csv [part 1](files/reports/evaluation_summaries.csv) | 920792 |
+| reports/primary_comparisons.csv [part 1](files/reports/primary_comparisons.csv) | 65672 |
+| reports/report.json [part 1](views/reports/report.json/part-00000.json) [part 2](views/reports/report.json/part-00001.json) [part 3](views/reports/report.json/part-00002.json) [part 4](views/reports/report.json/part-00003.json) [part 5](views/reports/report.json/part-00004.json) [part 6](views/reports/report.json/part-00005.json) [part 7](views/reports/report.json/part-00006.json) [part 8](views/reports/report.json/part-00007.json) [part 9](views/reports/report.json/part-00008.json) [part 10](views/reports/report.json/part-00009.json) [part 11](views/reports/report.json/part-00010.json) [part 12](views/reports/report.json/part-00011.json) [part 13](views/reports/report.json/part-00012.json) [part 14](views/reports/report.json/part-00013.json) [part 15](views/reports/report.json/part-00014.json) [part 16](views/reports/report.json/part-00015.json) [part 17](views/reports/report.json/part-00016.json) [part 18](views/reports/report.json/part-00017.json) [part 19](views/reports/report.json/part-00018.json) [part 20](views/reports/report.json/part-00019.json) [part 21](views/reports/report.json/part-00020.json) [part 22](views/reports/report.json/part-00021.json) [part 23](views/reports/report.json/part-00022.json) [part 24](views/reports/report.json/part-00023.json) [part 25](views/reports/report.json/part-00024.json) [part 26](views/reports/report.json/part-00025.json) [part 27](views/reports/report.json/part-00026.json) [part 28](views/reports/report.json/part-00027.json) [part 29](views/reports/report.json/part-00028.json) [part 30](views/reports/report.json/part-00029.json) [part 31](views/reports/report.json/part-00030.json) [part 32](views/reports/report.json/part-00031.json) [part 33](views/reports/report.json/part-00032.json) [part 34](views/reports/report.json/part-00033.json) [part 35](views/reports/report.json/part-00034.json) [part 36](views/reports/report.json/part-00035.json) [part 37](views/reports/report.json/part-00036.json) [part 38](views/reports/report.json/part-00037.json) [part 39](views/reports/report.json/part-00038.json) [part 40](views/reports/report.json/part-00039.json) [part 41](views/reports/report.json/part-00040.json) [part 42](views/reports/report.json/part-00041.json) [part 43](views/reports/report.json/part-00042.json) [part 44](views/reports/report.json/part-00043.json) [part 45](views/reports/report.json/part-00044.json) [part 46](views/reports/report.json/part-00045.json) [part 47](views/reports/report.json/part-00046.json) [part 48](views/reports/report.json/part-00047.json) [part 49](views/reports/report.json/part-00048.json) [part 50](views/reports/report.json/part-00049.json) [part 51](views/reports/report.json/part-00050.json) [part 52](views/reports/report.json/part-00051.json) [part 53](views/reports/report.json/part-00052.json) [part 54](views/reports/report.json/part-00053.json) [part 55](views/reports/report.json/part-00054.json) [part 56](views/reports/report.json/part-00055.json) [part 57](views/reports/report.json/part-00056.json) [part 58](views/reports/report.json/part-00057.json) [part 59](views/reports/report.json/part-00058.json) [part 60](views/reports/report.json/part-00059.json) [part 61](views/reports/report.json/part-00060.json) [part 62](views/reports/report.json/part-00061.json) [part 63](views/reports/report.json/part-00062.json) [part 64](views/reports/report.json/part-00063.json) [part 65](views/reports/report.json/part-00064.json) [part 66](views/reports/report.json/part-00065.json) [part 67](views/reports/report.json/part-00066.json) [part 68](views/reports/report.json/part-00067.json) [part 69](views/reports/report.json/part-00068.json) [part 70](views/reports/report.json/part-00069.json) [part 71](views/reports/report.json/part-00070.json) [part 72](views/reports/report.json/part-00071.json) [part 73](views/reports/report.json/part-00072.json) [part 74](views/reports/report.json/part-00073.json) [part 75](views/reports/report.json/part-00074.json) | 19802054 |
+| reports/sensitivities.csv [part 1](files/reports/sensitivities.csv) | 114992 |
+| reports/sensitivity_comparisons.csv [part 1](files/reports/sensitivity_comparisons.csv) | 154489 |
+| reports/stress.csv [part 1](files/reports/stress.csv) | 170509 |
+| reports/stress_comparisons.csv [part 1](files/reports/stress_comparisons.csv) | 735567 |
+| reports/timings.csv [part 1](files/reports/timings.csv) | 100010 |
+| reports/transfer.csv [part 1](files/reports/transfer.csv) | 0 |
+| reports/transfer_comparisons.csv [part 1](files/reports/transfer_comparisons.csv) | 0 |
+
+缺失、读取变化、超限和报告状态见manifest。报告可能早于任务回执；文件已上传不表示所有任务或所有统计已完成。
+
+本入口不含逐试次预测、模型断点或完整验证轨迹。CSV可以用于已有统计的检查与写作；重新设计参与者级配对统计可能仍需另导出相应会话指标。
