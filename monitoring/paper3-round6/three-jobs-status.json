@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-06",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 173,
+  "complete_tasks": 197,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 28.1,
+    "progress_age_seconds": 16.1,
     "progress_path": "runs/followup_20261024_r6/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T17:15:04Z"
+    "updated_utc": "2026-10-25T17:18:16Z"
   },
   "experiment": "paper3-round6",
   "families": {
@@ -24,7 +24,7 @@
       "total": 12
     },
     "sensitivity": {
-      "complete": 23,
+      "complete": 47,
       "total": 48
     },
     "transfer": {
@@ -35,24 +35,18 @@
   "gpu_slots": {
     "0": {
       "job_id": "772073",
-      "pid": 67439,
-      "status": "RUNNING",
-      "task_key": "sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261018",
-      "worker_progress": {}
+      "status": "WAITING_DEPENDENCIES"
     },
     "1": {
       "job_id": "772074",
-      "pid": 67204,
+      "pid": 72531,
       "status": "RUNNING",
-      "task_key": "sensitivity-quadrature-gh17-gh17-seed20261020",
+      "task_key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020",
       "worker_progress": {}
     },
     "2": {
       "job_id": "772075",
-      "pid": 67616,
-      "status": "RUNNING",
-      "task_key": "sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261018",
-      "worker_progress": {}
+      "status": "WAITING_DEPENDENCIES"
     }
   },
   "interpretation": "This is the new three-job stream. The original status.json and its old monitor are retained separately.",
@@ -61,8 +55,7 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772073",
-      "live_reason_or_node": "gpu4",
-      "live_state": "RUNNING",
+      "live_state": "NOT_IN_CURRENT_QUEUE",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "gpu4",
@@ -74,8 +67,7 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772074",
-      "live_reason_or_node": "gpu4",
-      "live_state": "RUNNING",
+      "live_state": "NOT_IN_CURRENT_QUEUE",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "gpu4",
@@ -87,8 +79,7 @@
       "attempt": 1,
       "cpus": 12,
       "job_id": "772075",
-      "live_reason_or_node": "gpu4",
-      "live_state": "RUNNING",
+      "live_state": "NOT_IN_CURRENT_QUEUE",
       "memory": "64G",
       "partition": "hpc_gpu1",
       "queue_reason": "gpu4",
@@ -98,39 +89,8 @@
     }
   ],
   "live_queue": {
-    "jobs": [
-      {
-        "elapsed": "2:02:01",
-        "job_id": "772075",
-        "marker": "paper3r6p-1223a296dd91e758",
-        "name": "paper3r6p-1223a296dd91e758-s2-a1",
-        "node": "gpu4",
-        "partition": "hpc_gpu1",
-        "reason_or_node": "gpu4",
-        "state": "RUNNING"
-      },
-      {
-        "elapsed": "2:02:25",
-        "job_id": "772073",
-        "marker": "paper3r6p-1223a296dd91e758",
-        "name": "paper3r6p-1223a296dd91e758-s0-a1",
-        "node": "gpu4",
-        "partition": "hpc_gpu1",
-        "reason_or_node": "gpu4",
-        "state": "RUNNING"
-      },
-      {
-        "elapsed": "2:02:25",
-        "job_id": "772074",
-        "marker": "paper3r6p-1223a296dd91e758",
-        "name": "paper3r6p-1223a296dd91e758-s1-a1",
-        "node": "gpu4",
-        "partition": "hpc_gpu1",
-        "reason_or_node": "gpu4",
-        "state": "RUNNING"
-      }
-    ],
-    "observed_utc": "2026-10-25T17:15:32Z",
+    "jobs": [],
+    "observed_utc": "2026-10-25T17:18:32Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -156,7 +116,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 6,
-  "sampled_unix": 1792948532.0962737,
+  "sampled_unix": 1792948712.0972195,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1725,23 +1685,8 @@
       "index": 173,
       "job_id": "772074",
       "key": "sensitivity-quadrature-gh17-gh17-seed20261020",
-      "observations": [
-        {
-          "age_seconds": 30.1,
-          "path": "runs/followup_20261024_r6/sensitivity-quadrature-gh17-gh17-seed20261020/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T17:15:02Z"
-          }
-        }
-      ],
       "slot": 1,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -1749,23 +1694,8 @@
       "index": 174,
       "job_id": "772073",
       "key": "sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261018",
-      "observations": [
-        {
-          "age_seconds": 19.1,
-          "path": "runs/followup_20261024_r6/sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261018/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T17:15:13Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -1773,10 +1703,208 @@
       "index": 175,
       "job_id": "772075",
       "key": "sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261018",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 176,
+      "job_id": "772074",
+      "key": "sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261019",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 177,
+      "job_id": "772073",
+      "key": "sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 178,
+      "job_id": "772075",
+      "key": "sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261020",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 179,
+      "job_id": "772074",
+      "key": "sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 180,
+      "job_id": "772073",
+      "key": "sensitivity-quadrature-uq_mean_head-center0-centerweight0-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 181,
+      "job_id": "772075",
+      "key": "sensitivity-quadrature-uq_mean_head-rotated-rotated-stencil-seed20261018",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 182,
+      "job_id": "772074",
+      "key": "sensitivity-quadrature-uq_mean_head-center0-centerweight0-seed20261019",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 183,
+      "job_id": "772073",
+      "key": "sensitivity-quadrature-uq_mean_head-rotated-rotated-stencil-seed20261019",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 184,
+      "job_id": "772075",
+      "key": "sensitivity-quadrature-uq_mean_head-center0-centerweight0-seed20261020",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 185,
+      "job_id": "772074",
+      "key": "sensitivity-quadrature-uq_mean_head-rotated-rotated-stencil-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 186,
+      "job_id": "772073",
+      "key": "sensitivity-radius-uq_joint-0.05-radius0.05-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 187,
+      "job_id": "772075",
+      "key": "sensitivity-radius-uq_joint-0.05-radius0.05-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 188,
+      "job_id": "772074",
+      "key": "sensitivity-radius-uq_joint-0.05-radius0.05-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 189,
+      "job_id": "772073",
+      "key": "sensitivity-radius-uq_mean_head-0.05-radius0.05-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 190,
+      "job_id": "772075",
+      "key": "sensitivity-radius-uq_mean_head-0.05-radius0.05-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 191,
+      "job_id": "772074",
+      "key": "sensitivity-radius-uq_mean_head-0.05-radius0.05-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 192,
+      "job_id": "772073",
+      "key": "sensitivity-radius-uq_joint-0.35-radius0.35-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 193,
+      "job_id": "772075",
+      "key": "sensitivity-radius-uq_joint-0.35-radius0.35-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 194,
+      "job_id": "772074",
+      "key": "sensitivity-radius-uq_joint-0.35-radius0.35-seed20261020",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 195,
+      "job_id": "772073",
+      "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261018",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 196,
+      "job_id": "772075",
+      "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "sensitivity",
+      "index": 197,
+      "job_id": "772074",
+      "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020",
       "observations": [
         {
-          "age_seconds": 7.1,
-          "path": "runs/followup_20261024_r6/sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261018/progress.json",
+          "age_seconds": 15.1,
+          "path": "runs/followup_20261024_r6/sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020/progress.json",
           "values": {
             "budget": 20,
             "outer_update": 0,
@@ -1784,244 +1912,15 @@
             "sessions_total": 105,
             "stage": "done",
             "status": "COMPLETE",
-            "updated_utc": "2026-10-25T17:15:25Z"
+            "updated_utc": "2026-10-25T17:18:17Z"
           }
         }
       ],
-      "slot": 2,
+      "slot": 1,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 176,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261019",
-      "observations": [
-        {
-          "age_seconds": 24.1,
-          "path": "runs/followup_20261024_r6/sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261019/progress.json",
-          "values": {
-            "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T17:15:08Z"
-          }
-        }
-      ],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 177,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261019",
-      "observations": [
-        {
-          "age_seconds": 14.1,
-          "path": "runs/followup_20261024_r6/sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261019/progress.json",
-          "values": {
-            "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T17:15:18Z"
-          }
-        }
-      ],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 178,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_joint-center0-centerweight0-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 179,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_joint-rotated-rotated-stencil-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 180,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_mean_head-center0-centerweight0-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 181,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_mean_head-rotated-rotated-stencil-seed20261018",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 182,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_mean_head-center0-centerweight0-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 183,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_mean_head-rotated-rotated-stencil-seed20261019",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 184,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_mean_head-center0-centerweight0-seed20261020",
-      "observations": [],
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 185,
-      "job_id": null,
-      "key": "sensitivity-quadrature-uq_mean_head-rotated-rotated-stencil-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 186,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_joint-0.05-radius0.05-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 187,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_joint-0.05-radius0.05-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 188,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_joint-0.05-radius0.05-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 189,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_mean_head-0.05-radius0.05-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 190,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_mean_head-0.05-radius0.05-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 191,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_mean_head-0.05-radius0.05-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 192,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_joint-0.35-radius0.35-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 193,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_joint-0.35-radius0.35-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 194,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_joint-0.35-radius0.35-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 195,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 196,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "sensitivity",
-      "index": 197,
-      "job_id": null,
-      "key": "sensitivity-radius-uq_mean_head-0.35-radius0.35-seed20261020",
-      "slot": null,
-      "status": "NEW"
     }
   ],
   "total_tasks": 198,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T17:15:32Z"
+  "updated_utc": "2026-10-25T17:18:32Z"
 }
