@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-05",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 57,
+  "complete_tasks": 58,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 14.2,
+    "progress_age_seconds": 8.2,
     "progress_path": "runs/followup_20261024_r5/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T15:00:36Z"
+    "updated_utc": "2026-10-25T15:03:42Z"
   },
   "experiment": "paper3-round5",
   "families": {
@@ -16,7 +16,7 @@
       "total": 12
     },
     "core": {
-      "complete": 45,
+      "complete": 46,
       "total": 48
     },
     "reference": {
@@ -34,13 +34,21 @@
       "pid": 2714,
       "status": "RUNNING",
       "task_key": "core-symmetric-right_rotation-main-seed20261020",
-      "worker_progress": {}
+      "worker_progress": {
+        "budget": 12,
+        "outer_update": 0,
+        "session": 93,
+        "sessions_total": 105,
+        "stage": "holdout",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-25T15:03:10Z"
+      }
     },
     "1": {
       "job_id": "772071",
-      "pid": 2400,
+      "pid": 5635,
       "status": "RUNNING",
-      "task_key": "core-symmetric-left_rotation-main-seed20261020",
+      "task_key": "sensitivity-radius-single-0.05-radius0.05-seed20261018",
       "worker_progress": {}
     },
     "2": {
@@ -48,7 +56,15 @@
       "pid": 2718,
       "status": "RUNNING",
       "task_key": "core-symmetric-symmetric-main-seed20261020",
-      "worker_progress": {}
+      "worker_progress": {
+        "budget": 12,
+        "outer_update": 0,
+        "session": 85,
+        "sessions_total": 105,
+        "stage": "holdout",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-25T15:03:10Z"
+      }
     }
   },
   "interpretation": "This is the new three-job stream. The original status.json and its old monitor are retained separately.",
@@ -96,7 +112,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "7:52:46",
+        "elapsed": "7:55:46",
         "job_id": "772071",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s1-a1",
@@ -106,7 +122,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "7:52:46",
+        "elapsed": "7:55:46",
         "job_id": "772072",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s2-a1",
@@ -116,7 +132,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "7:53:22",
+        "elapsed": "7:56:22",
         "job_id": "772070",
         "marker": "paper3r5p-2a492b1bc14432d0",
         "name": "paper3r5p-2a492b1bc14432d0-s0-a1",
@@ -126,7 +142,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T15:00:50Z",
+    "observed_utc": "2026-10-25T15:03:50Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -152,7 +168,7 @@
   },
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 5,
-  "sampled_unix": 1792940450.1654391,
+  "sampled_unix": 1792940630.166812,
   "schema_version": "paper3-round56-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -677,23 +693,8 @@
       "index": 57,
       "job_id": "772071",
       "key": "core-symmetric-left_rotation-main-seed20261020",
-      "observations": [
-        {
-          "age_seconds": 2.2,
-          "path": "runs/followup_20261024_r5/core-symmetric-left_rotation-main-seed20261020/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 70,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-25T15:00:48Z"
-          }
-        }
-      ],
       "slot": 1,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -706,10 +707,13 @@
           "age_seconds": 10.2,
           "path": "runs/followup_20261024_r5/core-symmetric-right_rotation-main-seed20261020/progress.json",
           "values": {
+            "budget": 16,
             "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T15:00:37Z"
+            "session": 69,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-25T15:03:40Z"
           }
         }
       ],
@@ -727,10 +731,13 @@
           "age_seconds": 10.2,
           "path": "runs/followup_20261024_r5/core-symmetric-symmetric-main-seed20261020/progress.json",
           "values": {
+            "budget": 16,
             "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T15:00:37Z"
+            "session": 60,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-25T15:03:40Z"
           }
         }
       ],
@@ -738,13 +745,25 @@
       "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "sensitivity",
       "index": 60,
-      "job_id": null,
+      "job_id": "772071",
       "key": "sensitivity-radius-single-0.05-radius0.05-seed20261018",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 14.2,
+          "path": "runs/followup_20261024_r5/sensitivity-radius-single-0.05-radius0.05-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "STARTING",
+            "updated_utc": "2026-10-25T15:03:36Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -1099,7 +1118,7 @@
       "key": "reference-head_newton-seed20261018",
       "observations": [
         {
-          "age_seconds": 16482.2,
+          "age_seconds": 16662.2,
           "path": "runs/followup_20261024_r5/reference-head_newton-seed20261018/progress.json",
           "values": {
             "outer_update": 0,
@@ -1120,7 +1139,7 @@
       "key": "reference-head_newton-seed20261019",
       "observations": [
         {
-          "age_seconds": 16482.2,
+          "age_seconds": 16662.2,
           "path": "runs/followup_20261024_r5/reference-head_newton-seed20261019/progress.json",
           "values": {
             "outer_update": 0,
@@ -1141,7 +1160,7 @@
       "key": "reference-head_newton-seed20261020",
       "observations": [
         {
-          "age_seconds": 16480.2,
+          "age_seconds": 16660.2,
           "path": "runs/followup_20261024_r5/reference-head_newton-seed20261020/progress.json",
           "values": {
             "outer_update": 0,
@@ -1162,7 +1181,7 @@
       "key": "reference-support_EA-seed20261018",
       "observations": [
         {
-          "age_seconds": 16477.2,
+          "age_seconds": 16657.2,
           "path": "runs/followup_20261024_r5/reference-support_EA-seed20261018/progress.json",
           "values": {
             "outer_update": 0,
@@ -1183,7 +1202,7 @@
       "key": "reference-support_EA-seed20261019",
       "observations": [
         {
-          "age_seconds": 16477.2,
+          "age_seconds": 16657.2,
           "path": "runs/followup_20261024_r5/reference-support_EA-seed20261019/progress.json",
           "values": {
             "outer_update": 0,
@@ -1204,7 +1223,7 @@
       "key": "reference-support_EA-seed20261020",
       "observations": [
         {
-          "age_seconds": 16475.2,
+          "age_seconds": 16655.2,
           "path": "runs/followup_20261024_r5/reference-support_EA-seed20261020/progress.json",
           "values": {
             "outer_update": 0,
@@ -1220,5 +1239,5 @@
   ],
   "total_tasks": 105,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T15:00:50Z"
+  "updated_utc": "2026-10-25T15:03:50Z"
 }
