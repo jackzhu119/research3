@@ -1,0 +1,1092 @@
+{
+  "version": "followup-20261023-v2",
+  "variants": [
+    "P",
+    "global",
+    "scalar",
+    "dual",
+    "PCT",
+    "softPCT",
+    "temporal",
+    "dual_temporal",
+    "softPCT_mean",
+    "runmean",
+    "symonly",
+    "skewonly"
+  ],
+  "seeds": [
+    20261018,
+    20261019,
+    20261020
+  ],
+  "rank": 4,
+  "radius": 0.15,
+  "updates": 1000,
+  "inner_steps": 10,
+  "episodes_per_update": 4,
+  "validate_every": 50,
+  "checkpoint_every": 10,
+  "budgets": [
+    20,
+    4,
+    8,
+    12,
+    16
+  ],
+  "comparisons": [
+    [
+      "dual",
+      "P"
+    ],
+    [
+      "dual",
+      "scalar"
+    ],
+    [
+      "dual",
+      "global"
+    ],
+    [
+      "dual",
+      "symonly"
+    ],
+    [
+      "dual",
+      "skewonly"
+    ],
+    [
+      "softPCT",
+      "PCT"
+    ],
+    [
+      "softPCT",
+      "softPCT_mean"
+    ],
+    [
+      "temporal",
+      "P"
+    ],
+    [
+      "temporal",
+      "runmean"
+    ],
+    [
+      "dual_temporal",
+      "dual"
+    ]
+  ],
+  "reference_variants": [
+    "head_only",
+    "support_EA"
+  ],
+  "sensitivity_settings": [
+    [
+      2,
+      0.15
+    ],
+    [
+      8,
+      0.15
+    ],
+    [
+      4,
+      0.05
+    ],
+    [
+      4,
+      0.35
+    ]
+  ],
+  "diagnostics": [
+    "label_noise10",
+    "label_noise20",
+    "gain10",
+    "gain25",
+    "rotation10",
+    "rotation25"
+  ],
+  "diagnostic_variants": [
+    "P",
+    "dual",
+    "PCT",
+    "softPCT",
+    "softPCT_mean"
+  ],
+  "root": "/public/home/zhuziyuan/projects/paper3",
+  "output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261023_v2",
+  "gpus": 1,
+  "cpus": 24,
+  "memory_per_gpu": "128G",
+  "recipe_sha256": "acf792ba092dfd4b6cb4158f96d5d1b62fa595567335ce18c2bbdd31103ab59e",
+  "tasks": [
+    {
+      "key": "P-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "global-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "global",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "scalar-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "scalar",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "PCT-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "PCT",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "softPCT-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "softPCT",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "temporal-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "temporal",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual_temporal-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "dual_temporal",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "softPCT_mean-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "softPCT_mean",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "runmean-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "runmean",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "symonly-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "symonly",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "skewonly-seed20261018",
+      "seed": 20261018,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "skewonly",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "global-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "global",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "scalar-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "scalar",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "PCT-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "PCT",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "softPCT-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "softPCT",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "temporal-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "temporal",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual_temporal-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "dual_temporal",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "softPCT_mean-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "softPCT_mean",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "runmean-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "runmean",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "symonly-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "symonly",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "skewonly-seed20261019",
+      "seed": 20261019,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "skewonly",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "global-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "global",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "scalar-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "scalar",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "PCT-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "PCT",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "softPCT-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "softPCT",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "temporal-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "temporal",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual_temporal-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "dual_temporal",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "softPCT_mean-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "softPCT_mean",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": [
+        "label_noise10",
+        "label_noise20",
+        "gain10",
+        "gain25",
+        "rotation10",
+        "rotation25"
+      ]
+    },
+    {
+      "key": "runmean-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "runmean",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "symonly-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "symonly",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "skewonly-seed20261020",
+      "seed": 20261020,
+      "arm": "core",
+      "setting": "r4-rho0p15",
+      "config": {
+        "variant": "skewonly",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r2-rho0p15-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r2-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 2,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r2-rho0p15-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r2-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 2,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r2-rho0p15-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r2-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 2,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r2-rho0p15-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r2-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 2,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r2-rho0p15-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r2-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 2,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r2-rho0p15-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r2-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 2,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r8-rho0p15-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r8-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 8,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r8-rho0p15-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r8-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 8,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r8-rho0p15-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r8-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 8,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r8-rho0p15-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r8-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 8,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r8-rho0p15-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r8-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 8,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r8-rho0p15-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r8-rho0p15",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 8,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r4-rho0p05-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p05",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.05
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r4-rho0p05-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p05",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.05
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r4-rho0p05-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p05",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.05
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r4-rho0p05-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p05",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.05
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r4-rho0p05-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p05",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.05
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r4-rho0p05-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p05",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.05
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r4-rho0p35-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p35",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.35
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r4-rho0p35-seed20261018",
+      "seed": 20261018,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p35",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.35
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r4-rho0p35-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p35",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.35
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r4-rho0p35-seed20261019",
+      "seed": 20261019,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p35",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.35
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "P-r4-rho0p35-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p35",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "P",
+        "rank": 4,
+        "radius": 0.35
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "dual-r4-rho0p35-seed20261020",
+      "seed": 20261020,
+      "arm": "sensitivity",
+      "setting": "r4-rho0p35",
+      "budgets": [
+        20
+      ],
+      "config": {
+        "variant": "dual",
+        "rank": 4,
+        "radius": 0.35
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "head_only-seed20261018",
+      "seed": 20261018,
+      "arm": "reference",
+      "setting": "no_meta_fit",
+      "config": {
+        "variant": "head_only",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "support_EA-seed20261018",
+      "seed": 20261018,
+      "arm": "reference",
+      "setting": "no_meta_fit",
+      "config": {
+        "variant": "support_EA",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "head_only-seed20261019",
+      "seed": 20261019,
+      "arm": "reference",
+      "setting": "no_meta_fit",
+      "config": {
+        "variant": "head_only",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "support_EA-seed20261019",
+      "seed": 20261019,
+      "arm": "reference",
+      "setting": "no_meta_fit",
+      "config": {
+        "variant": "support_EA",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "head_only-seed20261020",
+      "seed": 20261020,
+      "arm": "reference",
+      "setting": "no_meta_fit",
+      "config": {
+        "variant": "head_only",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    },
+    {
+      "key": "support_EA-seed20261020",
+      "seed": 20261020,
+      "arm": "reference",
+      "setting": "no_meta_fit",
+      "config": {
+        "variant": "support_EA",
+        "rank": 4,
+        "radius": 0.15
+      },
+      "diagnostics": []
+    }
+  ]
+}
