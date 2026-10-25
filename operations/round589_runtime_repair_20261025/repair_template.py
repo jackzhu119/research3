@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the verified R5/R8/R9 startup corrections without replacing plans."""
+"""Apply the verified experiment startup corrections without replacing plans."""
 import argparse
 import base64
 import fcntl
@@ -15,7 +15,8 @@ import zlib
 HOOK_B85 = '__HOOK_B85__'
 HOOK_SHA256 = '__HOOK_SHA256__'
 MARKER = '# PAPER3_R589_RUNTIME_FIX_V1'
-OUTPUTS = {5:'followup_20261024_r5', 8:'followup_20261025_r8', 9:'followup_20261025_r9'}
+OUTPUTS = {4:'followup_20261024_r4',5:'followup_20261024_r5',6:'followup_20261024_r6',
+           8:'followup_20261025_r8',9:'followup_20261025_r9'}
 
 
 def emit(event, **fields):
@@ -54,7 +55,7 @@ def write_json(path, value):
 
 
 def wrappers(home, root):
-    """Read only three declared launches and shallow, known installation roots."""
+    """Read only declared launches and shallow, known installation roots."""
     found={}
     def add(path, round_number=None):
         path=Path(path).expanduser()
@@ -80,6 +81,45 @@ def wrappers(home, root):
     return found
 
 
+def native_entries(home, root):
+    """R4's legacy allocation uses entry.py directly; that file is not recipe-hashed."""
+    found=set()
+    for pattern in ('paper3-round4-hpcgpu/*/paper3r4/entry.py',
+                    'paper3-round4/*/paper3r4/entry.py',
+                    'paper3-round4-hpcgpu/paper3r4/entry.py',
+                    'paper3-round4/paper3r4/entry.py'):
+        found.update(path.resolve() for path in home.glob(pattern) if path.is_file())
+    output=root/'runs'/OUTPUTS[4]
+    for relative in ('runtime/launch.json','runtime/three_jobs/launch.json'):
+        launch=read(output/relative)
+        for key in ('package','scientific_package','source_package'):
+            if isinstance(launch.get(key),str):
+                path=Path(launch[key])/'paper3r4/entry.py'
+                if path.is_file():found.add(path.resolve())
+    path=root/'experiments/followup_20261024_r4/paper3r4/entry.py'
+    if path.is_file():found.add(path.resolve())
+    return found
+
+
+def patched_entry(original, hook_path):
+    text=original.decode('utf-8')
+    if MARKER in text:
+        start=text.index('    '+MARKER)
+        end=text.index('    # END_PAPER3_R589_RUNTIME_FIX_V1',start)
+        end=text.index('\n',end)+1
+        text=text[:start]+text[end:]
+    anchor='    mode, rest = args[0], args[1:]\n'
+    if text.count(anchor)!=1 or 'importlib.import_module("paper3r4."' not in text:
+        raise ValueError('Unrecognized Round4 operational entry')
+    block=('    '+MARKER+'\n'
+           '    if mode == "worker":\n'
+           '        __import__("runpy").run_path('+repr(str(hook_path))+', run_name="_paper3_runtime_fix")["install"]("paper3r4")\n'
+           '    # END_PAPER3_R589_RUNTIME_FIX_V1\n')
+    result=text.replace(anchor,anchor+block).encode()
+    compile(result,'entry.py','exec')
+    return result
+
+
 def patched_backend(original, hook_path):
     text=original.decode('utf-8')
     if MARKER in text:
@@ -91,7 +131,7 @@ def patched_backend(original, hook_path):
     if text.count(anchor)!=1 or 'runpy.run_path(str(entry)' not in text:
         raise ValueError('Unrecognized operational backend; no scientific files were changed')
     block=('    '+MARKER+'\n'
-        '    if entry.parent.name in ("paper3r5", "paper3r8", "paper3r9"):\n'
+        '    if entry.parent.name in ("paper3r5", "paper3r6", "paper3r8", "paper3r9"):\n'
         '        runpy.run_path('+repr(str(hook_path))+', run_name="_paper3_runtime_fix")["install"](entry.parent.name)\n'
         '    # END_PAPER3_R589_RUNTIME_FIX_V1\n')
     result=text.replace(anchor,anchor+block).encode()
@@ -130,7 +170,7 @@ def main(argv=None):
     if args.status:
         for number in OUTPUTS:emit('ROUND_REPAIR_PROGRESS',**inspect_round(root,number))
         return 0
-    emit('R589_REPAIR_STARTED',root=str(root),scope=[5,8,9],
+    emit('R589_REPAIR_STARTED',root=str(root),scope=list(OUTPUTS),
          imports_torch=False,full_data_rescan=False)
     hook=zlib.decompress(base64.b85decode(HOOK_B85))
     if sha(hook)!=HOOK_SHA256:raise ValueError('Embedded repair payload differs')
@@ -142,13 +182,16 @@ def main(argv=None):
         hook_path=folder/'runtime_hook.py'
         if not hook_path.exists() or hook_path.read_bytes()!=hook:atomic(hook_path,hook)
         candidates=wrappers(home,root)
-        if not candidates:
+        direct_entries=native_entries(home,root)
+        if not candidates and not direct_entries:
             raise SystemExit('No installed R5/R8/R9 operational backend found; send this output for the exact existing path.')
         before={n:inspect_round(root,n) for n in OUTPUTS}
         changed=[]
-        for path,numbers in sorted(candidates.items()):
+        targets=[(p,n,patched_backend) for p,n in sorted(candidates.items())]
+        targets.extend((p,{4},patched_entry) for p in sorted(direct_entries))
+        for path,numbers,patcher in targets:
             original=path.read_bytes()
-            fixed=patched_backend(original,hook_path)
+            fixed=patcher(original,hook_path)
             backup=folder/'backups'/(sha(original)+'.py')
             if not backup.exists():atomic(backup,original)
             if original!=fixed:atomic(path,fixed)
@@ -166,8 +209,8 @@ def main(argv=None):
                 'plan_files_changed':0,'checkpoint_files_changed':0,'result_files_changed':0,
                 'jobs_cancelled':0,'jobs_submitted':0,
                 'activation':'Existing child retry and future worker launches read the fixed backend. Preserve existing scheduler jobs.',
-                'corrections':['R5 deterministic cuBLAS environment before Torch',
-                               'R5 support_EA reference dispatch',
+                'corrections':['R5/R6 deterministic cuBLAS environment before Torch',
+                               'R4/R5 support_EA reference dispatch',
                                'R8 balanced evaluation/support loss precision',
                                'R8 future meta-training query precision',
                                'R9 inherited balanced loss precision']}

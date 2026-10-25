@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the verified R5/R8/R9 startup corrections without replacing plans."""
+"""Apply the verified experiment startup corrections without replacing plans."""
 import argparse
 import base64
 import fcntl
@@ -12,10 +12,11 @@ import sys
 import time
 import zlib
 
-HOOK_B85 = 'c-qxiZExE+68`RAL3mL}>N#qAw<+2z{J~A#*4Q>#IO!ILq7Z0_j&+eGElDL6ivIU|hNNEOY_qt-0hbT0MGj|%GtaznI-Q<zDT`aCG?%(6SzJgdVx1PbVz;T@6_sZ3j^|fte#JOb{6-{9#i_`3x=mvS;<OauWOANoHPbu6a=r)2x~TGm9Y1;T<R!Z;<h772-Is;bEL9M)FVhTEB*7dKUwN$i!Y3P%6}KTf<2t<&Ocj-k1>543nz1tDIsVgJU9&VHRdgy8<B%BdM0{NqX|5IBsb=^E*5TxG2f_OysWQPT1?r+v7-V_EWx}#_Be|@9!5OS&nIAA&!44a-Eu>(Vg^YLZ7U5(%ole}1c3kanw)wRGVIkz3`0nDK$GbEavTnBirHZ`yU8v@ls?}sN`F***Se>7-IrHT4k$iC^Umigxo$kfaHvM{Z^URwVBNnB|{U{;>MbQk@8!up7v1nHm*Jk--!tnR*{QTGG;@#r!$IrpkX&$N_$AaGxhf?sw4}x$fz9#9FP}&bB=kH%f>*MJ3{Orx@?Z@@v(rM;-#QBEHl;;`?H$1C^3YE}_*zzjV{?u(wt<%CQF<6_z16OckRLX*+C(|I9fbHaL`RRWsk$9%t1M~r#&)HN}C3z-VE~eI&Lmm42MtL&VtHt}p+3E6i^#1(f!fFl;*@gqbu}Gq<P|DAWt5gHebzu44iu7s+{LY!(33G89iG8VSKZBQRrz$|nVqlf|PiN19PNhAC#hlfoblk4uVtJw2rYJI>C_<jsaBz2w{v=P8V84?!mq-iJ_g)nM*B=$&%HoVG3LK7Dkm8Rjl_K$i_Po>jGco@H`Qb5pVsr^rwf8NZ6uOd7xVhnD_9l!aY!Ja0vMB4$7Bdhhl}QG3FE4W80gaYZgNz>;*C-r0Sw1)>x-NygGUE3wWfp;Ov{yqkWLuLF$Sb5e^r#diK3a^Cm8!jvo?<0sJq68>_lVaj*WwBpE=h09GK0~Cyd_)42qaBLV_M`29)rJ#8*mp3NO5>&+pOT)Ff&Sq?DXU71&9;z6?qb>q*wVKMrtgtz=i9EsV<<dj%_YQCI@=M=9VK!Y06?@A5G3KbMr4g#7!EDc^%px|BqM;b>a8!G{Bxairo5F0`Y!Kxe&c8=)VAR${?5P#p*2jv|PP?cX`p}z6UsU=*Py(mej!Q`Olq2?{je9+Vy-Mx7POQYaEdeQucmZj&vig)=jQ4z!}>J_}ePWsL`0Y&Y%nGMOmV*o8oSpibOz;q^_kz*YFGDaV$!WfRv)7*hF;UNE&nULf8ZhAl%3>SSHJOB`<~ihdd5#N8_Q+x}_I)mtHnYJ!?8>Se<9=^B1#I@>G&x{LjAE6_H4at&jqiijow%BfP==Pz|23Lv=FvGH~MHMu^rsmti7PVt54l3<AW-ALLyte6SRJ2_}Ccv9(oa7h{1Ceh_)$`<_N_$RnjiImC#QKR}t4KUi}0(YO`voi}zSjAtB;<%|_sGGi#K<X0p7q@TR3f5I3&toA`=>i;v-U%D+|C*!~&HsNvT^(=7Y;B3gB4r2(_L#KHq?iJIV8;BWdFk<O?;`vyo=5D0a;D9qoV`pQEj)L5OC_}GpyXkWD$6S0ZO(>$#H?8?2Wg^R1_mT40Bj!6JH_i_Rd9eY%(*_Z4tM6$O<DU#V-WNO((m&8QhZly!8?<ef$ORZB3KYI5E)wA@k!^b#^g@u|lF6`5JzkV>%?)vg2-|hmXpIYcWKhG?tMvBhMXwCCX=!F>BtcR9<6PCAcZ0>9J{&TKop<ZOtwx)1hrSgVB3<+~J<R1N*xC$WuCH;2@vE%S!_ZfTDJT~=5M~<~q)U6l#_c_3ZoH#5ngIixm37QwcuUwG1t886+?DN9j8)gdLdBtHQ=>ZydlpTEv7yn=?-{uD5#kL!QH+>N5K~c_qt#0F{8Cmu%NlA7NJyfwNK5L^zj?S0b!XlQb7K`)*@+NKt(OKN;1x2(=*u%R6@jd;hIMCToq#>-&JhFBwd&B&Q5#=^OK<4Ks>9KUi5vOseAaU4&2l4pQ%ED8(G*ulHin=Ar{FM_#c50AQ3k}U8CpY(1)qL=^?q>?eL7$Ndhy%hbm>YAju#4GyGbQ#Ce2FsQU)WA*6)oq%)IK51*UH}lF;|AEJ#f6KF!BrQteCSfAfIJT$A?ek7t*w4@)C(xrVg$dU;B9&l?IH{yly?M#gsvOBCE|Q7a1~q>ZdnyAh&X_9B2z+H^zCjjZKd#<3s0e1n3HG!}$?Qb*Kv(dIjhB3mJ&#@!t>q6i31(pdXr{W~tsvSmeRcP#PIyFn8Q_b_TH>1sF`(aQo&$gnvz0lvk(8Ma3);!kXmB=iU&O&i5C)*W*%Ed@QRQ0d?s$~-hUILW>Ex4c&NO{aEGJhp@5_EBp1$ivLPh-)(`z-&c@&1A?BrPc>rN&9fam7p-Eg)MbeJ9DcbupJ%-D@<b{L5^BE=ZN-OP!Y6W!9kRfb{GNa{fG=^Of@t19*;lv@c`S6KOF5{->dl@SN8zfd41rX$rxM~76-iA7GPU<Pg}WfX!`6|V7`gN4?^?bAjfXHJKYOgNOY;Ti<t;1JJnHS0N4){!lRvCm8sBFvf5Ky$cqR*qsl&GbnE#UW~Z5(e9cENXz0eRd|%edA*&LLPBVywMu%FF&J<y%;ZV0mtzgjl5zAB=IaD-_UL9^|JIqXTGh=_D1^Uq~98X;4aJSWKRfyUazdJdQ_S|6Byp&3M?j7Vl3{oq**|a&-Y&7MRnFEXl;@VwMv6S9yyQgK_SM(>co|M4|)1M?Hrrn|<1U<My^&QimZ->5<pP#;be)59C|Ku6{7}>fL^Z8y8G&Q%39#-Ctqu0yJ<@&?wY;|$DI*lCb^>Xq0pQ94znUEjU<Udj6L9N2Q{lP=Z<;YWa#^?Ur+#i?^Ov>N99w#W(`@+FP4c)Mv`uxRq6I&Cb@B+pc?fa<~d((xQAI%Ms+9HbBJ|2J^uC+8LT2&8ZI^4sg9m1tkCU8sbENpdfQQuv))$N`H-0N!lT84-{A+`T><~Rhsn>NWU<Vn&GPWCtEweJ#>|G>~A5E*I1V|`KIC;tZC?Mnd'
-HOOK_SHA256 = '12f6bcd3ffd54e1fedab684fd0e8c95e7bf7aa6977ae0b79d8a80f853a0cc130'
+HOOK_B85 = 'c-qxiZExE+68`RAL3mL}>bYur*A#6Q{@|u=Yiye=oOFvrQ3#Ag$GXUpmZXvzMgRLfLsAlDJKGdk9B}#2TI6tMIP=UK$K&xSm$JHLN^_~3nx&PLBGq|SDt4Reb=7E=u6cQtmsgB4#cxE$RGN!Y=c_zrAkJ$Mk49%@v1NKKSjjgaSyoM%v1gBu9=~|}lHFGFT1b{}>Pl*sD~Q?Dc>y|-VUCHfJk`GV(WNM=+nAklo!<zisz#=Qt#C?BSY7ZE|7otSS)P$HIv0v@$V}HFy{@ag)QWDkW%vcw@#ta=!J8^;3c(r$>Z(;4WM#%>#)|w>a=HB#XRuZjVZ>wuOI(UoB?Y^vWV&{@h)3h`c;s%h=4y?z?Wg?@3o*Y;_ZK%jUFW5c+ji?esw&&xm1=*fts0F+f6SNXi?dTUWkJnrA^-IV8tHr^9<B1Pk8Yj@BV)p<7G;<uWS%6Mus~i05#x#_>#Djo%f};zzjtS6za{7IX8$~T4wg>uSgko0!k##mf@fhA#cT03%ddpeVKh2>|2kP7B`0U6Zx(MqE@u}`uOJ}KH(cht)L6LTMI%(KgwDi@H-!$zZgXs17GH_M+8Fk~f)kTkRwO+eN6`puN2l{o|3ityGhZE`kJxm|#;U2wFUfp1wzeGV;O`sd$y~2y?`Nkc^ViAyv-5MSIW%OK9QaK|mK2pzVNqS>8fe}|mhY{|uhu~Cl-ZrQ6t{`k)Os5h@bcEF3P`dPNM+%Z$<wG;X+uFVWm{4@?N)KIveN9bs)~>(VqR|H;Qko>NuDdg{vd14krreays7}MKO2CRr3F_MHXM;4#h*<sMHWQed8hSfV*Um4<0JOi=n|`D6IwbcbR(f~d&7t9O`J;DAb~GrRd0J+OhBA9CKXJBvMNOYG+ItAGJa%Sqj2J6h2WU!Z7tlD5xs9IuLuOAy&9sSSebl4ULn<?N24h5(PE06)NF(d6ssxgDQJegN4yrL7FWn`S$<=d8H^_6E!i?fAZaoh)1p-H82m-tfV)&cio+{g6&2TpnNc!kCm&zWK%9xM$dXVczbZE{QfqkyE?l=vbp>^GYBMP^InW!ox7>l0rW_XgXmWO$nt$;jZt_%2x3T^4|A@6%SD|;O0ruQcWY(Vv#Je%&LUdoy-vDyTAQ#Ko;xzd*U%Y*Hao*>?dpLFI$JWc1)WGfev)-b2IoP-Mb~;TvYlrl;8<F=?_HJA5=tf+vn_OFfGqw!~S4~k+qcL%PK_Aq!x<*wurQNm^nSdNgT}zFg;aA4fRMZ*)DMd}OiRi+SJmuttxD6OUxRqhBOqOv4SU!twKNC#ank<j@mtO2Iy=<2}13R?XYfRYZFJ`Caxg=YKpTnT9D~S{<Aq9+=WI3*bhzIvWWqHC5mCoqPz^{W#-uHqL6NM5(K2UNHNKUCiezqD7mZC4wo~@_TeFOH!GG>Y4FHvS;7--~>GErL8Lo7M@12kIsgC$o-jr#$EX={9ng@U8~oUp3MCJg15%wvQf`$^6^El$zv>JU_>Pk3s&P`3q)6&!fQCTt14o<@!woDKPtVXUFb=)7#ionqQ^12IDlc38U3dAh4pdpA;QaKIU)wX-orPeJZKl*yO2Ep@s4V=2DYCS)-Xm<IlVG7)I3`#=Tk0SldxTjxiE{Mkl?(*~KqR_T*A7ko14cwg~M$nZdS9iJNxZ_wUZA{TX(P*5O~w8})NM6vQT@Zyr+lF6`5y<n1Y%?)vkuv_=m=!^?`WLm>BX!PpQ3$I*t>1$$VDM6wA<DAx=cjL!izYdwh4!!f>N~0awqwhq<$RWO_hq?R$TbnV>^*`<~e$`v_I`mawRw~5}gxN+1Y1Q7ab-TyR4T02dGhl$TdYiHo-V(N#0f>tXcV(L#!`HR2P;uzF+@gz$J&R_-*wE+~dIs)%gm^>mlp^Lb#8i@(XvuOty^xJ(SwoFM3Yj$(c};!%w*c3nE-pA`ZukN#J2zsf^U@#$f=cEXk$GXJCy@DSSa&AY3D~pl++jevHa!}8YU4|A@kV2;IvnjVaigJ~<2nxB%(p{t3U0y+n)bGdjUlMODL9N}aoQ3ElmRi3#?}zKf=@oadOtf)KAkOpJO6!lGIw<c$14S}-Q*Irm1e3tDWe^Z*6*z~%v|e`1*UH}lF;|QEJ)1wAx+V7)@*7OehYxfQj_+}kEa)l4|5}MzJ#>pa(+U^Fc=CP{yluSi;V9SmZ-wlVyi5OkT!}&t#=URvKIk#)TJA8ZelIxGLHT5@(rpy(pVJxq>iZXw#|2(B(_2(t-E_@Bnc3l<*5#L_3ybj%hnB{-Lb@ncY`(*?qJkW($#P>p%)06q+xSv0z!*>GnDVNlE1K7meFH{H0>5ISbxmD$5izALZyRWQs$un!%6ny-||}6m!GYB2(q0Xw~trDryyqjMO>SS0%ofkY-U4-D77KrO4`SlTnP$uT3Au5wKlhkBHJio0K?Q46Xd8#a*pV}1r<U26&*wwX@^mfUYW>X##9qy@7*!UJ~Cjt^@pR~_r03#x!MC{@AZLuM!Vp$usGn=t^nJ*d(z2$LsP0>f%#<`e-N7g4mozy-RVx)LZVBxeas|C*||;<13*7e2#<EgRi;8y$?8t6ATJ^K>{Rv%qgzi;F=I{Kgls;dK|{CO^82!m4_TF1^qN5|G&<CZ^rnb=4Trk5YDI(Ak67l)$f2TX^y+a#+i_u<n+f}g7U)N}a6ECD!`+tGst~m;etS8P_S^v1zNboh79Qk23|tGl*|s^<Y_#Q+nFEXl=dHV-VmZC+_D|5Zuka@~Ps(7fIr0XY=l&2@OU%esLwLG(z4G1Eo$p4)<7ZD^K0kgz0*{~4j~&bRVm{v~f@bZG(fx|u1C_j<U(A;u7N?8zi^WOecrWL(*Z-!T+cOOYfenHix+A-HHrgx1CQl3s`Cn*!um0lBrsBRecE`ou%=kPw2=H%#M-TDd7aX+T?;Xt9I~~|xSmFC2Anv^)_|vujZs0!{9C#`C*}LrN?bKVDbOeZDQqy6WYq2p6xB1cf1z9|y<m8(kVZpVQ=0vCJfuxRmm<&t)amqw)sT=#P4lcp<SM7AWqt<v0ysu@9G$W)ApG+Kw$h&Eq$77ylejZ}~U_tk|G5Whe6If}(W4@^GqyGX)Zl1j'
+HOOK_SHA256 = '42b16aab1338de3d301dcaddf9061d7c0b9b7914b3e5947425f703a83ebcb7cb'
 MARKER = '# PAPER3_R589_RUNTIME_FIX_V1'
-OUTPUTS = {5:'followup_20261024_r5', 8:'followup_20261025_r8', 9:'followup_20261025_r9'}
+OUTPUTS = {4:'followup_20261024_r4',5:'followup_20261024_r5',6:'followup_20261024_r6',
+           8:'followup_20261025_r8',9:'followup_20261025_r9'}
 
 
 def emit(event, **fields):
@@ -54,7 +55,7 @@ def write_json(path, value):
 
 
 def wrappers(home, root):
-    """Read only three declared launches and shallow, known installation roots."""
+    """Read only declared launches and shallow, known installation roots."""
     found={}
     def add(path, round_number=None):
         path=Path(path).expanduser()
@@ -80,6 +81,45 @@ def wrappers(home, root):
     return found
 
 
+def native_entries(home, root):
+    """R4's legacy allocation uses entry.py directly; that file is not recipe-hashed."""
+    found=set()
+    for pattern in ('paper3-round4-hpcgpu/*/paper3r4/entry.py',
+                    'paper3-round4/*/paper3r4/entry.py',
+                    'paper3-round4-hpcgpu/paper3r4/entry.py',
+                    'paper3-round4/paper3r4/entry.py'):
+        found.update(path.resolve() for path in home.glob(pattern) if path.is_file())
+    output=root/'runs'/OUTPUTS[4]
+    for relative in ('runtime/launch.json','runtime/three_jobs/launch.json'):
+        launch=read(output/relative)
+        for key in ('package','scientific_package','source_package'):
+            if isinstance(launch.get(key),str):
+                path=Path(launch[key])/'paper3r4/entry.py'
+                if path.is_file():found.add(path.resolve())
+    path=root/'experiments/followup_20261024_r4/paper3r4/entry.py'
+    if path.is_file():found.add(path.resolve())
+    return found
+
+
+def patched_entry(original, hook_path):
+    text=original.decode('utf-8')
+    if MARKER in text:
+        start=text.index('    '+MARKER)
+        end=text.index('    # END_PAPER3_R589_RUNTIME_FIX_V1',start)
+        end=text.index('\n',end)+1
+        text=text[:start]+text[end:]
+    anchor='    mode, rest = args[0], args[1:]\n'
+    if text.count(anchor)!=1 or 'importlib.import_module("paper3r4."' not in text:
+        raise ValueError('Unrecognized Round4 operational entry')
+    block=('    '+MARKER+'\n'
+           '    if mode == "worker":\n'
+           '        __import__("runpy").run_path('+repr(str(hook_path))+', run_name="_paper3_runtime_fix")["install"]("paper3r4")\n'
+           '    # END_PAPER3_R589_RUNTIME_FIX_V1\n')
+    result=text.replace(anchor,anchor+block).encode()
+    compile(result,'entry.py','exec')
+    return result
+
+
 def patched_backend(original, hook_path):
     text=original.decode('utf-8')
     if MARKER in text:
@@ -91,7 +131,7 @@ def patched_backend(original, hook_path):
     if text.count(anchor)!=1 or 'runpy.run_path(str(entry)' not in text:
         raise ValueError('Unrecognized operational backend; no scientific files were changed')
     block=('    '+MARKER+'\n'
-        '    if entry.parent.name in ("paper3r5", "paper3r8", "paper3r9"):\n'
+        '    if entry.parent.name in ("paper3r5", "paper3r6", "paper3r8", "paper3r9"):\n'
         '        runpy.run_path('+repr(str(hook_path))+', run_name="_paper3_runtime_fix")["install"](entry.parent.name)\n'
         '    # END_PAPER3_R589_RUNTIME_FIX_V1\n')
     result=text.replace(anchor,anchor+block).encode()
@@ -130,7 +170,7 @@ def main(argv=None):
     if args.status:
         for number in OUTPUTS:emit('ROUND_REPAIR_PROGRESS',**inspect_round(root,number))
         return 0
-    emit('R589_REPAIR_STARTED',root=str(root),scope=[5,8,9],
+    emit('R589_REPAIR_STARTED',root=str(root),scope=list(OUTPUTS),
          imports_torch=False,full_data_rescan=False)
     hook=zlib.decompress(base64.b85decode(HOOK_B85))
     if sha(hook)!=HOOK_SHA256:raise ValueError('Embedded repair payload differs')
@@ -142,13 +182,16 @@ def main(argv=None):
         hook_path=folder/'runtime_hook.py'
         if not hook_path.exists() or hook_path.read_bytes()!=hook:atomic(hook_path,hook)
         candidates=wrappers(home,root)
-        if not candidates:
+        direct_entries=native_entries(home,root)
+        if not candidates and not direct_entries:
             raise SystemExit('No installed R5/R8/R9 operational backend found; send this output for the exact existing path.')
         before={n:inspect_round(root,n) for n in OUTPUTS}
         changed=[]
-        for path,numbers in sorted(candidates.items()):
+        targets=[(p,n,patched_backend) for p,n in sorted(candidates.items())]
+        targets.extend((p,{4},patched_entry) for p in sorted(direct_entries))
+        for path,numbers,patcher in targets:
             original=path.read_bytes()
-            fixed=patched_backend(original,hook_path)
+            fixed=patcher(original,hook_path)
             backup=folder/'backups'/(sha(original)+'.py')
             if not backup.exists():atomic(backup,original)
             if original!=fixed:atomic(path,fixed)
@@ -166,8 +209,8 @@ def main(argv=None):
                 'plan_files_changed':0,'checkpoint_files_changed':0,'result_files_changed':0,
                 'jobs_cancelled':0,'jobs_submitted':0,
                 'activation':'Existing child retry and future worker launches read the fixed backend. Preserve existing scheduler jobs.',
-                'corrections':['R5 deterministic cuBLAS environment before Torch',
-                               'R5 support_EA reference dispatch',
+                'corrections':['R5/R6 deterministic cuBLAS environment before Torch',
+                               'R4/R5 support_EA reference dispatch',
                                'R8 balanced evaluation/support loss precision',
                                'R8 future meta-training query precision',
                                'R9 inherited balanced loss precision']}

@@ -46,14 +46,20 @@ def fixture_tree(tmp_path):
     wrappers={}
     package=home/'paper3-parallel-migrations/fixture/round56'
     for number,folder in load_template().OUTPUTS.items():
-        operational=package if number==5 else home/('paper3-round%d'%number)/'fixture/runtime'
-        wrapper=operational/'backend_entry.py';fake_backend(wrapper);wrappers[number]=wrapper
+        operational=package if number in (5,6) else home/('paper3-round%d'%number)/'fixture/runtime'
+        operational.parent.mkdir(parents=True,exist_ok=True)
+        if number!=4:
+            wrapper=operational/'backend_entry.py';fake_backend(wrapper);wrappers[number]=wrapper
         output=root/'runs'/folder
         write_json(output/'plan.json',{'output':str(output),'recipe_sha256':'recipe-'+str(number),'tasks':[{'key':'first'}]})
         write_json(output/'runtime/three_jobs/launch.json',{'worker_command':['python',str(operational/'three_jobs.py'),'worker'],'package':str(operational.parent)})
         write_json(output/'first/result.json',{'status':'COMPLETE','identity':'stable'})
         (output/'first/checkpoint.pt').write_bytes(b'original checkpoint\x00')
         (operational.parent/'native-source.py').write_bytes(b'scientific source remains unchanged\n')
+    native=home/'paper3-round4-hpcgpu/fixture/paper3r4/entry.py'
+    native.parent.mkdir(parents=True,exist_ok=True)
+    native.write_bytes(Path('/workspace/paper3-round4-hpcgpu/paper3r4/entry.py').read_bytes())
+    (native.parent/'worker.py').write_bytes(b'original hashed R4 worker\n')
     return home,root,wrappers
 
 
@@ -62,6 +68,7 @@ def frozen_files(home,root):
     for path in root.glob('runs/*/plan.json'):selected.append(path)
     for path in root.glob('runs/*/first/*'):selected.append(path)
     for path in home.glob('paper3-*/fixture/native-source.py'):selected.append(path)
+    for path in home.glob('paper3-round4-hpcgpu/*/paper3r4/worker.py'):selected.append(path)
     return {str(path):path.read_bytes() for path in selected}
 
 
@@ -94,7 +101,7 @@ def test_apply_is_idempotent_preserves_all_science_and_never_calls_slurm(tmp_pat
     record=json.loads((home/'paper3-runtime-fixes/r589-dtype-cublas-v1/APPLIED.json').read_text())
     assert record['scientific_source_files_changed']==record['checkpoint_files_changed']==record['plan_files_changed']==0
     assert record['jobs_cancelled']==record['jobs_submitted']==0
-    assert len(record['operational_files'])==3
+    assert len(record['operational_files'])==len(set(backends.values()))+1
 
 
 @pytest.mark.parametrize('number',[5,6,8,9])
@@ -109,7 +116,7 @@ number=int(__file__.split('paper3r')[-1].split('/')[0])
 finders=[f for f in sys.meta_path if hasattr(f,'paper3_runtime_correction')]
 if number==6:
     assert not finders
-    assert 'CUBLAS_WORKSPACE_CONFIG' not in os.environ
+    assert os.environ['CUBLAS_WORKSPACE_CONFIG']==':4096:8'
 else:
     assert len(finders)==1
     assert 'paper3r%d.worker'%number in finders[0].targets
@@ -121,6 +128,49 @@ print('FRESH_QUEUED_CHILD_OK')
     answer=subprocess.run([sys.executable,'-I','-S','-B','-u',str(wrapper),str(native),str(plan)],env=env,text=True,capture_output=True,timeout=15)
     assert answer.returncode==0,answer.stdout+answer.stderr
     assert 'FRESH_QUEUED_CHILD_OK' in answer.stdout
+
+
+def test_native_r4_entry_discovery_and_idempotent_patch(tmp_path):
+    home,root,_=fixture_tree(tmp_path);module=load_template()
+    entry=home/'paper3-round4-hpcgpu/fixture/paper3r4/entry.py'
+    assert entry in module.native_entries(home,root)
+    original=entry.read_bytes();plan=root/'runs'/module.OUTPUTS[4]/'plan.json'
+    before_plan=plan.read_bytes();before_worker=(entry.parent/'worker.py').read_bytes()
+    assert module.main(['--home',str(home),'--root',str(root)])==0
+    patched=entry.read_bytes()
+    assert patched!=original
+    assert module.patched_entry(patched,home/'paper3-runtime-fixes/r589-dtype-cublas-v1/runtime_hook.py')==patched
+    assert before_plan==plan.read_bytes()
+    assert before_worker==(entry.parent/'worker.py').read_bytes()
+
+
+@pytest.mark.parametrize('mode',['worker','allocation'])
+def test_actual_r4_native_entry_hook_is_pre_scientific_import(tmp_path,mode):
+    home,root,_=fixture_tree(tmp_path);module=load_template()
+    module.main(['--home',str(home),'--root',str(root)])
+    entry=home/'paper3-round4-hpcgpu/fixture/paper3r4/entry.py'
+    plan=root/'runs'/module.OUTPUTS[4]/'plan.json'
+    runner=r'''
+import importlib,runpy,sys,types
+entry,mode,plan=sys.argv[1:]
+real_import=importlib.import_module
+def intercepted(name,*args,**kwargs):
+    if name=='paper3r4.'+mode:
+        assert 'torch' not in sys.modules
+        finders=[f for f in sys.meta_path if hasattr(f,'paper3_runtime_correction')]
+        if mode=='worker':
+            assert len(finders)==1
+            assert 'paper3r4.worker' in finders[0].targets
+        else:assert not finders
+        return types.SimpleNamespace(main=lambda: print('R4_NATIVE_ENTRY_PASS'))
+    return real_import(name,*args,**kwargs)
+importlib.import_module=intercepted
+sys.argv=[entry,mode,'--plan',plan]
+runpy.run_path(entry,run_name='__main__')
+'''
+    answer=subprocess.run([sys.executable,'-I','-S','-B','-u','-c',runner,str(entry),mode,str(plan)],text=True,capture_output=True,timeout=15)
+    assert answer.returncode==0,answer.stdout+answer.stderr
+    assert 'R4_NATIVE_ENTRY_PASS' in answer.stdout
 
 
 def test_isolated_installer_uses_no_torch_and_no_extra_download(tmp_path):

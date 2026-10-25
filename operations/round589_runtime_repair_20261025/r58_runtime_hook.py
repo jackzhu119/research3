@@ -1,6 +1,6 @@
 """Narrow startup corrections without changing a saved scientific recipe.
 
-Only the named Round 5/8/9 worker import is compiled with the exact corrections
+Only the named Round 4/5/8/9 worker import is compiled with the exact corrections
 below. Native source files, plans, task identities and checkpoints stay intact.
 This module uses only the standard library; install() runs before Torch import.
 """
@@ -12,7 +12,7 @@ import os
 import sys
 
 
-VERSION = 'r5-r8-r9-runtime-fix-v1'
+VERSION = 'paper3-runtime-fix-v1'
 with open(__file__, 'rb') as _hook_file:
     HOOK_SHA256 = hashlib.sha256(_hook_file.read()).hexdigest()
 OLD_R5_CONFIGURATION = '''    variant = values.setdefault("variant", task.get("variant", "tangent_profiled"))
@@ -59,10 +59,10 @@ NEW_TRAIN_WEIGHTS = '''        weights = balanced_class_weights(y, torch.float64
 
 def corrected_source(fullname, source):
     """Apply only exact declared spans; accept a repeated application."""
-    if fullname not in ('paper3r5.worker', 'paper3r8.worker', 'paper3r9.worker'):
+    if fullname not in ('paper3r4.worker', 'paper3r5.worker', 'paper3r8.worker', 'paper3r9.worker'):
         return source, []
     pairs = ([('support_EA_reference_dispatch', OLD_R5_CONFIGURATION, NEW_R5_CONFIGURATION)]
-             if fullname == 'paper3r5.worker' else
+             if fullname in ('paper3r4.worker', 'paper3r5.worker') else
              [('balanced_loss', OLD_BALANCED_LOSS, NEW_BALANCED_LOSS)])
     if fullname == 'paper3r8.worker':
         pairs.append(('train_step_class_weights', OLD_TRAIN_WEIGHTS, NEW_TRAIN_WEIGHTS))
@@ -134,14 +134,17 @@ class WorkerCorrectionFinder(importlib.abc.MetaPathFinder):
 
 def install(roundmodule):
     """Install before the original round entry imports its scientific worker."""
-    if roundmodule == 'paper3r5':
+    if roundmodule in ('paper3r5', 'paper3r6'):
         previous = os.environ.get('CUBLAS_WORKSPACE_CONFIG')
         if previous not in (':4096:8', ':16:8'):
             os.environ['CUBLAS_WORKSPACE_CONFIG'] = ':4096:8'
-        print(json.dumps({'event': 'R5_DETERMINISTIC_CUBLAS_READY',
+        print(json.dumps({'event': 'R%s_DETERMINISTIC_CUBLAS_READY' % roundmodule.removeprefix('paper3r'),
             'value': os.environ['CUBLAS_WORKSPACE_CONFIG'],
             'torch_already_imported': 'torch' in sys.modules}, sort_keys=True), flush=True)
-    if roundmodule not in ('paper3r5', 'paper3r8', 'paper3r9'):
+        if roundmodule == 'paper3r6':
+            return {'roundmodule': roundmodule, 'version': VERSION,
+                    'corrections': ['CUBLAS_WORKSPACE_CONFIG']}
+    if roundmodule not in ('paper3r4', 'paper3r5', 'paper3r8', 'paper3r9'):
         return {'roundmodule': roundmodule, 'version': VERSION, 'corrections': []}
     finder = next((item for item in sys.meta_path
         if getattr(item, 'paper3_runtime_correction', None) == VERSION), None)

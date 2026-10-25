@@ -14,7 +14,7 @@ import r58_runtime_hook as hook
 
 
 def native_source(round_number):
-    root = ('/workspace/paper3-round5-hpcgpu' if round_number == 5 else
+    root = ('/workspace/paper3-round%d-hpcgpu' % round_number if round_number in (4, 5) else
             '/workspace/paper3-round%d' % round_number)
     path = Path(root) / ('paper3r%d/worker.py' % round_number)
     source = path.read_text()
@@ -28,7 +28,7 @@ def native_source(round_number):
     return source
 
 
-@pytest.mark.parametrize('round_number,changes', [(5, 1), (8, 2), (9, 1)])
+@pytest.mark.parametrize('round_number,changes', [(4, 1), (5, 1), (8, 2), (9, 1)])
 def test_only_exact_known_source_spans_are_changed_and_idempotent(round_number, changes):
     source = native_source(round_number)
     fixed, applied = hook.corrected_source('paper3r%d.worker' % round_number, source)
@@ -37,7 +37,7 @@ def test_only_exact_known_source_spans_are_changed_and_idempotent(round_number, 
     compile(fixed, '<fixed-worker>', 'exec')
     assert hook.corrected_source('paper3r7.worker', source) == (source, [])
     malformed = (source.replace('"tangent_profiled"))', '"other_variant"))')
-                 if round_number == 5 else
+                 if round_number in (4, 5) else
                  source.replace('.5 / mask.sum()', '.6 / mask.sum()'))
     with pytest.raises(RuntimeError, match='Unexpected native'):
         hook.corrected_source('paper3r%d.worker' % round_number,
@@ -50,7 +50,7 @@ import json,os,sys
 import r58_runtime_hook as h
 assert 'torch' not in sys.modules
 os.environ.pop('CUBLAS_WORKSPACE_CONFIG',None)
-h.install('paper3r6')
+h.install('paper3r7')
 assert 'CUBLAS_WORKSPACE_CONFIG' not in os.environ
 h.install('paper3r8')
 assert 'CUBLAS_WORKSPACE_CONFIG' not in os.environ
@@ -60,6 +60,11 @@ assert 'torch' not in sys.modules
 os.environ['CUBLAS_WORKSPACE_CONFIG']=':16:8'
 h.install('paper3r5')
 assert os.environ['CUBLAS_WORKSPACE_CONFIG']==':16:8'
+os.environ.pop('CUBLAS_WORKSPACE_CONFIG')
+h.install('paper3r6')
+assert os.environ['CUBLAS_WORKSPACE_CONFIG']==':4096:8'
+assert 'paper3r6.worker' not in next(f for f in sys.meta_path if getattr(f,'paper3_runtime_correction',None)==h.VERSION).targets
+assert 'torch' not in sys.modules
 print('R5_ENVIRONMENT_PASS')
 '''
     result = subprocess.run([sys.executable, '-c', script], cwd=Path(__file__).parent,
@@ -68,12 +73,12 @@ print('R5_ENVIRONMENT_PASS')
     assert 'R5_ENVIRONMENT_PASS' in result.stdout
 
 
-@pytest.mark.parametrize('round_number', [5, 8, 9])
+@pytest.mark.parametrize('round_number', [4, 5, 8, 9])
 def test_real_native_worker_import_and_dtype_contract_preserve_source(tmp_path, round_number):
-    source_root = Path('/workspace/paper3-round5-hpcgpu' if round_number == 5 else
+    source_root = Path('/workspace/paper3-round%d-hpcgpu' % round_number if round_number in (4, 5) else
                        '/workspace/paper3-round%d' % round_number)
     package = tmp_path / 'native'
-    directories = ('p3work', 'paper3r5') if round_number == 5 else (
+    directories = ('p3work', 'paper3r%d' % round_number) if round_number in (4, 5) else (
         'p3work', 'paper3r7', 'paper3r%d' % round_number)
     for directory in directories:
         target = package / directory
@@ -104,7 +109,7 @@ class Strict(TorchDispatchMode):
    assert args[0].dtype==args[2].dtype,(args[0].dtype,args[2].dtype)
   return func(*args,**(kwargs or {}))
 previous=torch.get_default_dtype()
-for default in (() if round_number=='5' else (torch.float32,torch.float64)):
+for default in (() if round_number in ('4','5') else (torch.float32,torch.float64)):
  torch.set_default_dtype(default)
  for dtype in (torch.float32,torch.float64):
   y=torch.tensor([0,1,1,0,1],dtype=torch.long)
@@ -117,10 +122,16 @@ for default in (() if round_number=='5' else (torch.float32,torch.float64)):
   actual.backward();expected.backward()
   torch.testing.assert_close(logits.grad,expected_logits.grad)
 torch.set_default_dtype(previous)
-if round_number=='5':
- config,variant=w._configuration({'variant':'support_EA','config':{'variant':'head_newton'}})
- assert variant=='support_EA' and config.variant=='head_newton'
- assert os.environ['CUBLAS_WORKSPACE_CONFIG'] in (':4096:8',':16:8')
+if round_number in ('4','5'):
+ native_plan=importlib.import_module(roundmodule+'.plan')
+ plan=native_plan.make_plan(package,pathlib.Path(test_root).parent/'planned-output')
+ ea_tasks=[t for t in plan['tasks'] if t.get('variant')=='support_EA']
+ assert len(ea_tasks)==3
+ for task in ea_tasks:
+  config,variant=w._configuration(task)
+  assert variant=='support_EA' and config.variant=='head_newton'
+ assert native_plan.make_plan(package,pathlib.Path(test_root).parent/'planned-output')['recipe_sha256']==plan['recipe_sha256']
+ if round_number=='5':assert os.environ['CUBLAS_WORKSPACE_CONFIG'] in (':4096:8',':16:8')
 if round_number=='8':
  spec=importlib.util.spec_from_file_location('r8fixture','/workspace/paper3-round8/tests/test_worker.py')
  fixture=importlib.util.module_from_spec(spec);spec.loader.exec_module(fixture)
