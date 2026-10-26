@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 71,
+  "complete_tasks": 74,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 7.1,
+    "progress_age_seconds": 29.1,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T00:31:00Z"
+    "updated_utc": "2026-10-26T00:33:38Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 71,
+      "complete": 72,
       "total": 234
     },
     "feature_reference": {
@@ -36,24 +36,17 @@
       "total": 12
     },
     "stress": {
-      "complete": 0,
+      "complete": 2,
       "total": 432
     }
   },
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 16833,
+      "pid": 19520,
       "status": "RUNNING",
-      "task_key": "feature-reference-ea-seed20261019",
-      "worker_progress": {
-        "outer_update": 0,
-        "session": 395,
-        "sessions_total": 396,
-        "stage": "meta_train_prefix_features",
-        "status": "FAILED",
-        "updated_utc": "2026-10-26T00:25:08Z"
-      }
+      "task_key": "stress-holdout-source_frozen-seed20261018-6233a2eaab",
+      "worker_progress": {}
     },
     "1": {
       "status": "NOT_STARTED"
@@ -127,7 +120,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "1:48:59",
+        "elapsed": "1:51:59",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -137,7 +130,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T00:31:07Z",
+    "observed_utc": "2026-10-26T00:34:07Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -163,7 +156,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792974667.1228871,
+  "sampled_unix": 1792974847.1288538,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -211,23 +204,11 @@
       "index": 4,
       "job_id": "773686",
       "key": "feature-reference-ea-seed20261019",
-      "observations": [
-        {
-          "age_seconds": 8.1,
-          "path": "runs/followup_20261025_r9/feature-reference-ea-seed20261019/progress.json",
-          "values": {
-            "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-26T00:30:59Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "RETRYING"
     },
     {
-      "attempt": 19,
+      "attempt": 20,
       "family": "feature_reference",
       "index": 5,
       "job_id": "773686",
@@ -875,13 +856,13 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 77,
-      "job_id": null,
+      "job_id": "773686",
       "key": "core-weibo2014-EA_T2-seed20261020-6d47ba18e0",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -2450,31 +2431,46 @@
       "status": "NEW"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 252,
-      "job_id": null,
+      "job_id": "773686",
       "key": "stress-holdout-source_frozen-seed20261018-f30eceb9e1",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 253,
-      "job_id": null,
+      "job_id": "773686",
       "key": "stress-holdout-source_frozen-seed20261018-d906b1dde1",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 254,
-      "job_id": null,
+      "job_id": "773686",
       "key": "stress-holdout-source_frozen-seed20261018-6233a2eaab",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 29.1,
+          "path": "runs/followup_20261025_r9/stress-holdout-source_frozen-seed20261018-6233a2eaab/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 105,
+            "sessions_total": 105,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-26T00:33:38Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -14127,5 +14123,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T00:31:07Z"
+  "updated_utc": "2026-10-26T00:34:07Z"
 }
