@@ -13,10 +13,10 @@
   },
   "coordinator": {
     "phase": "DEVELOPMENT_SCREENING",
-    "progress_age_seconds": 18.1,
+    "progress_age_seconds": 2.1,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-26T09:24:29Z"
+    "updated_utc": "2026-10-26T09:27:45Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -54,7 +54,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 105312.1,
+    "progress_age_seconds": 105492.1,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -99,7 +99,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "10:42:39",
+        "elapsed": "10:45:39",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -109,7 +109,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "11:07:15",
+        "elapsed": "11:10:15",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -119,7 +119,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "16:06:15",
+        "elapsed": "16:09:15",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -129,7 +129,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T09:24:47Z",
+    "observed_utc": "2026-10-26T09:27:47Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -149,23 +149,24 @@
         "key": "profile-B4",
         "kind": "calibration_profile",
         "method": "B4",
-        "slot": 0,
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "job_id": "772906",
-        "key": "profile-B5",
-        "kind": "calibration_profile",
-        "method": "B5",
         "observations": [
           {
-            "age_seconds": 300.1,
-            "path": "runs/training_campaign_v1/profiles/B5/progress.json",
+            "age_seconds": 1980.1,
+            "path": "runs/training_campaign_v1/profiles/B4/progress.json",
             "values": {}
           }
         ],
         "slot": 0,
         "status": "RUNNING"
+      },
+      {
+        "error_type": "ExitCode-11",
+        "job_id": "772906",
+        "key": "profile-B5",
+        "kind": "calibration_profile",
+        "method": "B5",
+        "slot": 0,
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "key": "profile-B6",
@@ -1646,16 +1647,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793006687.1147704,
+  "sampled_unix": 1793006867.1164386,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 353176.1,
+    "age_seconds": 353356.1,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 353520.1,
+    "age_seconds": 353700.1,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -2446,23 +2447,24 @@
       "key": "profile-B4",
       "kind": "calibration_profile",
       "method": "B4",
-      "slot": 0,
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "job_id": "772906",
-      "key": "profile-B5",
-      "kind": "calibration_profile",
-      "method": "B5",
       "observations": [
         {
-          "age_seconds": 300.1,
-          "path": "runs/training_campaign_v1/profiles/B5/progress.json",
+          "age_seconds": 1980.1,
+          "path": "runs/training_campaign_v1/profiles/B4/progress.json",
           "values": {}
         }
       ],
       "slot": 0,
       "status": "RUNNING"
+    },
+    {
+      "error_type": "ExitCode-11",
+      "job_id": "772906",
+      "key": "profile-B5",
+      "kind": "calibration_profile",
+      "method": "B5",
+      "slot": 0,
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "key": "profile-B6",
@@ -3907,5 +3909,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-26T09:24:47Z"
+  "updated_utc": "2026-10-26T09:27:47Z"
 }
