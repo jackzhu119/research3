@@ -2,6 +2,16 @@
 
 资源为4个独立作业，各1GPU/16CPU/68G。以下下载使用固定源码提交，SHA锁定入口；默认仅安装，不导入Torch、不申请GPU、不提交Slurm，失败给出错误而不无限等待。
 
+## 一步启动：自动下载、安装、准备并显式提交
+
+入口文件尚未安装时，可直接在 login1 粘贴下面完整一行。它会提交首批15项机制实验的四作业；各1GPU/16CPU/68G。无需先手动执行下面分步流程或CPU/GPU自检。下载或准备失败时不会继续提交；已存在控制器和完成结果按既有身份复用。
+
+```bash
+( set -e; P=/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python; R=/public/home/zhuziyuan/projects/paper3; D="$HOME/paper3-r10-downloads"; F="$D/START-PAPER3-R10.py"; H=37c899dc1f6d52af7e0258166777cdeb8d835561f8396629430e4237189abb22; mkdir -p "$D"; A="${P%/bin/python}/lib/python3.12/site-packages/botocore/cacert.pem"; C=(); [ ! -f "$A" ] || C=(--cacert "$A"); if ! printf '%s  %s\n' "$H" "$F" | sha256sum -c - >/dev/null 2>&1; then for U in https://gh-proxy.com/https://raw.githubusercontent.com/jackzhu119/research3/a2f1d75a3cee62d225d6ab224d972dafebe153cc/experiments/round10_20261026/delivery/START-PAPER3-R10.py https://raw.githubusercontent.com/jackzhu119/research3/a2f1d75a3cee62d225d6ab224d972dafebe153cc/experiments/round10_20261026/delivery/START-PAPER3-R10.py; do if curl -4 "${C[@]}" -fL --connect-timeout 8 --speed-time 12 --speed-limit 128 --max-time 90 "$U" -o "$F.part" && printf '%s  %s\n' "$H" "$F.part" | sha256sum -c -; then mv -f "$F.part" "$F"; break; fi; done; fi; printf '%s  %s\n' "$H" "$F" | sha256sum -c -; "$P" -I -S -B -u "$F"; S=$("$P" -I -S -B -c 'import json,pathlib; print(pathlib.Path(json.loads((pathlib.Path.home()/"paper3-round10/CURRENT.json").read_text())["package"])/"START.py")'); "$P" -I -S -B -u "$S" plan --root "$R" --stage mechanism; "$P" -I -S -B -u "$S" submit --plan "$R/runs/round10_preparation/plan-mechanism.json" --submit )
+```
+
+显示 `DETACHED_CONTROLLER_STARTED` 后控制器在后台运行，可以关闭终端。实际 sbatch 回执和运行/排队状态随后记录；该消息不表示四张卡已分配。
+
 ## 1. 一行安装（login1可执行）
 
 ```bash
