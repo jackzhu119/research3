@@ -1,13 +1,13 @@
 {
   "blocked_tasks": 0,
-  "complete_task_keys_sha256": "4f821b112d674e7c718a3741c9afff16b4bdda7911b85610a4726a4ead1b4133",
-  "complete_tasks": 215,
+  "complete_task_keys_sha256": "a520124b3570c44e52df12f6faac8a9cef9ca403056f18ed4a875b2e1df898d1",
+  "complete_tasks": 218,
   "completion_counts_from_durable_verified_cache": true,
   "family_summary": {
     "evaluate": {
       "active": 1,
       "blocked": 0,
-      "complete": 34,
+      "complete": 35,
       "total": 1881
     },
     "feature_reference": {
@@ -19,7 +19,7 @@
     "operator_train": {
       "active": 2,
       "blocked": 0,
-      "complete": 178,
+      "complete": 180,
       "total": 8385
     },
     "selection": {
@@ -32,16 +32,16 @@
   "monitoring_rehashes_full_payloads": false,
   "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
   "reporter": {
-    "complete_tasks": 215,
+    "complete_tasks": 217,
     "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
-    "status": "PARTIAL_REPORT_GENERATED",
+    "status": "WAITING_FOR_NEW_COMPLETION",
     "total_tasks": 10270,
     "training_controlled": false,
-    "updated_utc": "2026-10-26T16:00:02Z"
+    "updated_utc": "2026-10-26T16:03:12Z"
   },
   "round": 11,
-  "runnable_remaining_tasks": 10055,
-  "sampled_unix": 1793030461.1192288,
+  "runnable_remaining_tasks": 10052,
+  "sampled_unix": 1793030601.2901666,
   "scheduler": {
     "bootstrap_ready": {
       "first_slurm_observation_performed": false,
@@ -121,8 +121,8 @@
   "stage": "campaign",
   "status": "RUNNING_OR_READY",
   "task_phase_counts": {
-    "COMPLETE": 215,
-    "NEW": 10052,
+    "COMPLETE": 218,
+    "NEW": 10049,
     "RUNNING": 3
   },
   "task_rows_included": 19,
@@ -130,51 +130,75 @@
   "tasks": [
     {
       "attempt": 1,
-      "attempt_token": "c642e1b20d25acce66e4b8f15701963b3683e53e7382374a15d24dac4721877a",
+      "attempt_token": "02d37e7e17a3f0947bdfff6d92f2d9b1580835a5779dbc1abb37a1449f48ac8f",
       "current_error": null,
       "historical_failures": 0,
-      "job_id": "775286",
-      "key": "evaluate-meta_validation-operator-s20261019-f4ff0d13041a",
+      "job_id": "775287",
+      "key": "evaluate-meta_validation-operator-s20261020-3673f267373f",
       "kind": "evaluate",
-      "last_numerical_advance_utc": "2026-10-26T16:01:00Z",
+      "last_numerical_advance_utc": "2026-10-26T16:03:21Z",
       "numerical_advance_age_seconds": 0.0,
       "numerical_progress": {
-        "attempt_token": "c642e1b20d25acce66e4b8f15701963b3683e53e7382374a15d24dac4721877a",
-        "budget": 20,
+        "attempt_token": "02d37e7e17a3f0947bdfff6d92f2d9b1580835a5779dbc1abb37a1449f48ac8f",
+        "budget": 8,
         "outer_update": 0,
-        "session": 474,
+        "session": 11,
         "sessions_total": 485,
         "stage": "support_fit",
         "status": "PREDICTING",
         "total_updates": 1,
-        "updated_utc": "2026-10-26T16:00:56Z"
+        "updated_utc": "2026-10-26T16:03:15Z"
       },
       "phase": "RUNNING",
-      "progress_age_seconds": 4.7,
+      "progress_age_seconds": 6.2,
+      "progress_is_current_attempt": true,
+      "slot": 1
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "bc85dd98311e5e4a4afc4c89991962f550e74b56402a4f4a8511b163a4f8412d",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775286",
+      "key": "operator_train-meta_train-operator-s20261018-0463abbdc8e0",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T16:03:21Z",
+      "numerical_advance_age_seconds": 0.0,
+      "numerical_progress": {
+        "attempt_token": "bc85dd98311e5e4a4afc4c89991962f550e74b56402a4f4a8511b163a4f8412d",
+        "budget": 4,
+        "session": 293,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_to_future",
+        "status": "BUILDING_TRAINING_PAIRS",
+        "updated_utc": "2026-10-26T16:03:15Z"
+      },
+      "phase": "RUNNING",
+      "progress_age_seconds": 6.2,
       "progress_is_current_attempt": true,
       "slot": 0
     },
     {
       "attempt": 1,
-      "attempt_token": "3a4e90c9e153b9bb4c2dafad1ec5f3e066d6b92e993b8dcf59a9c7d5b02d62c4",
+      "attempt_token": "ef145afb4239b11a36d27bd68e7b48c4846a765b3a71bf3f2c66b793f4131342",
       "current_error": null,
       "historical_failures": 0,
       "job_id": "775288",
-      "key": "operator_train-meta_train-operator-s20261020-be9ae13907c5",
+      "key": "operator_train-meta_train-operator-s20261018-72c1eecc8157",
       "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T16:01:00Z",
+      "last_numerical_advance_utc": "2026-10-26T16:03:21Z",
       "numerical_advance_age_seconds": 0.0,
       "numerical_progress": {
-        "attempt_token": "3a4e90c9e153b9bb4c2dafad1ec5f3e066d6b92e993b8dcf59a9c7d5b02d62c4",
-        "budget": 16,
-        "session": 287,
+        "attempt_token": "ef145afb4239b11a36d27bd68e7b48c4846a765b3a71bf3f2c66b793f4131342",
+        "budget": 8,
+        "session": 182,
         "sessions_total": 396,
         "stage": "meta_train_prefix_to_future",
         "status": "BUILDING_TRAINING_PAIRS",
-        "updated_utc": "2026-10-26T16:00:56Z"
+        "updated_utc": "2026-10-26T16:03:15Z"
       },
       "phase": "RUNNING",
-      "progress_age_seconds": 4.8,
+      "progress_age_seconds": 6.2,
       "progress_is_current_attempt": true,
       "slot": 2
     },
@@ -186,21 +210,66 @@
       "job_id": "775287",
       "key": "operator_train-meta_train-operator-s20261020-2d726b555bd8",
       "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T16:01:00Z",
-      "numerical_advance_age_seconds": 0.0,
+      "last_numerical_advance_utc": "2026-10-26T16:02:58Z",
+      "numerical_advance_age_seconds": 22.8,
       "numerical_progress": {
         "attempt_token": "46d3e1d27662dc41a41738da03fdab6ee06889dc1f3c3215ab0133863c072c40",
-        "budget": 20,
-        "session": 136,
+        "session": 396,
         "sessions_total": 396,
-        "stage": "meta_train_prefix_to_future",
-        "status": "BUILDING_TRAINING_PAIRS",
-        "updated_utc": "2026-10-26T16:00:56Z"
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T16:03:08Z"
       },
-      "phase": "RUNNING",
-      "progress_age_seconds": 4.9,
-      "progress_is_current_attempt": true,
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
       "slot": 1
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "3a4e90c9e153b9bb4c2dafad1ec5f3e066d6b92e993b8dcf59a9c7d5b02d62c4",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775288",
+      "key": "operator_train-meta_train-operator-s20261020-be9ae13907c5",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T16:01:53Z",
+      "numerical_advance_age_seconds": 87.9,
+      "numerical_progress": {
+        "attempt_token": "3a4e90c9e153b9bb4c2dafad1ec5f3e066d6b92e993b8dcf59a9c7d5b02d62c4",
+        "session": 396,
+        "sessions_total": 396,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T16:01:54Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 2
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "c642e1b20d25acce66e4b8f15701963b3683e53e7382374a15d24dac4721877a",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775286",
+      "key": "evaluate-meta_validation-operator-s20261019-f4ff0d13041a",
+      "kind": "evaluate",
+      "last_numerical_advance_utc": "2026-10-26T16:01:01Z",
+      "numerical_advance_age_seconds": 140.1,
+      "numerical_progress": {
+        "attempt_token": "c642e1b20d25acce66e4b8f15701963b3683e53e7382374a15d24dac4721877a",
+        "session": 485,
+        "sessions_total": 485,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T16:01:06Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 0
     },
     {
       "attempt": 1,
@@ -211,7 +280,7 @@
       "key": "operator_train-meta_train-operator-s20261020-e624cb02308c",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T15:59:46Z",
-      "numerical_advance_age_seconds": 74.6,
+      "numerical_advance_age_seconds": 214.9,
       "numerical_progress": {
         "attempt_token": "a6204eb90b8754807fabc80ba5f5476c511e6c1ed54bd3291927248e97d54fa7",
         "session": 396,
@@ -234,7 +303,7 @@
       "key": "operator_train-meta_train-operator-s20261020-3119196a3bc3",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T15:58:21Z",
-      "numerical_advance_age_seconds": 159.4,
+      "numerical_advance_age_seconds": 299.7,
       "numerical_progress": {
         "attempt_token": "945b473ac47c02ea1194c0936a57265e72c10b9482b5281ea9407d8e0c4ee634",
         "session": 396,
@@ -257,7 +326,7 @@
       "key": "operator_train-meta_train-operator-s20261020-18c8c477d5ad",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T15:56:33Z",
-      "numerical_advance_age_seconds": 267.9,
+      "numerical_advance_age_seconds": 408.2,
       "numerical_progress": {
         "attempt_token": "7945d929e9a66204530f6b5d27c09b05c4556c3394849226ad01242fe2964a17",
         "session": 396,
@@ -280,7 +349,7 @@
       "key": "operator_train-meta_train-operator-s20261019-92beaa8ea034",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T15:55:58Z",
-      "numerical_advance_age_seconds": 302.4,
+      "numerical_advance_age_seconds": 442.7,
       "numerical_progress": {
         "attempt_token": "c712566b626801c7337c9490a3b3f3f12badd460b0c5e435bd4629069b8a04c7",
         "session": 396,
@@ -303,7 +372,7 @@
       "key": "operator_train-meta_train-operator-s20261019-bebdb24af6cd",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T15:55:19Z",
-      "numerical_advance_age_seconds": 341.1,
+      "numerical_advance_age_seconds": 481.4,
       "numerical_progress": {
         "attempt_token": "dbbf5c274fdb8d67d438610344bc4d0d8264e8c136d6bbfe8392f667b4cbfdca",
         "session": 396,
@@ -316,123 +385,6 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": 2
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "135a38790c3f093f31e37b6100364eafe71e89bd0ca33906e788ae2d95345c80",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775287",
-      "key": "evaluate-meta_validation-operator-s20261018-87444e11770f",
-      "kind": "evaluate",
-      "last_numerical_advance_utc": "2026-10-26T15:53:02Z",
-      "numerical_advance_age_seconds": 479.0,
-      "numerical_progress": {
-        "attempt_token": "135a38790c3f093f31e37b6100364eafe71e89bd0ca33906e788ae2d95345c80",
-        "session": 485,
-        "sessions_total": 485,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T15:53:10Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 1
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "2f7ddabc36f022c98ff4092f42229eb443c4fd2c61bc3869de27c34f4aa4a35f",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775286",
-      "key": "operator_train-meta_train-operator-s20261019-4216e04cb457",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T15:52:22Z",
-      "numerical_advance_age_seconds": 518.9,
-      "numerical_progress": {
-        "attempt_token": "2f7ddabc36f022c98ff4092f42229eb443c4fd2c61bc3869de27c34f4aa4a35f",
-        "session": 396,
-        "sessions_total": 396,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T15:52:27Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 0
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "dd7cdf9f448bca6c7cc3a01e4e47b563ed7f2293e8f5b39e2a55474c9de605ae",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775288",
-      "key": "operator_train-meta_train-operator-s20261019-7a97e4ee2d2b",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T15:51:26Z",
-      "numerical_advance_age_seconds": 574.3,
-      "numerical_progress": {
-        "attempt_token": "dd7cdf9f448bca6c7cc3a01e4e47b563ed7f2293e8f5b39e2a55474c9de605ae",
-        "session": 396,
-        "sessions_total": 396,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T15:51:27Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 2
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "evaluate-meta_validation-operator-s20261020-3673f267373f",
-      "kind": "evaluate",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "operator_train-meta_train-operator-s20261018-0463abbdc8e0",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "operator_train-meta_train-operator-s20261018-72c1eecc8157",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
     },
     {
       "attempt": 0,
@@ -513,1030 +465,66 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator-s20261019-0b9d5481f029",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator-s20261019-8d95bb2ed8fc",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator-s20261019-10c6773f203f",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
     }
   ],
   "total_tasks": 10270,
-  "updated_utc": "2026-10-26T16:01:01Z",
+  "updated_utc": "2026-10-26T16:03:21Z",
   "uploads": {
     "full": {
       "channel": "full",
-      "commit": "e57ee10336acd204d65e875a8ccb327ff22b91e9",
-      "complete_tasks": 110,
-      "completed_tasks_from_verified_runtime_cache": true,
-      "full_task_artifacts_verified_once": true,
-      "groups": {
-        "reports": {
-          "commit": "d44d287667788719190f288ffa7aa0fe4b4e056d",
-          "identity": "36702632efc614db28f3ad8bc2d02d063fa44101eab0ff5541549648db527395",
-          "key": "plan-and-reports",
-          "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/de0d03bdd0aa372f5cd2a0802f487633933e2e73f1d5104064f5d52555865b0c/36702632efc614db28f3ad8bc2d02d063fa44101eab0ff5541549648db527395/manifest.json",
-          "parts": 1,
-          "remote_full_GET_SHA256_verified": true,
-          "source_files": 8
-        },
-        "tasks": {
-          "evaluate-meta_validation-operator-s20261018-01e219c08883": {
-            "commit": "734dea9027f5b5f468f8d620865409d95ab90b51",
-            "identity": "1663909db5e1c91b4f5d3ce4ae71c55f9c3c1fde4eaa252969e1b8a8b9c69a40",
-            "key": "evaluate-meta_validation-operator-s20261018-01e219c08883",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/fa67af5ced3e79689c0f3526e2fce65d0668700dc52ab24ea4b52fbb03f679e4/1663909db5e1c91b4f5d3ce4ae71c55f9c3c1fde4eaa252969e1b8a8b9c69a40/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261018-2bb3bc0f1dcd": {
-            "commit": "7522f4ebcdd4d263909f9a8455dd84ffc35f0f4e",
-            "identity": "add8a6b89fac7e5e880a451b7ac2cfad8a83646fdd1a0425f730225931e4c30c",
-            "key": "evaluate-meta_validation-operator-s20261018-2bb3bc0f1dcd",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/1d6821fa0ce46f1925d4df07c41c1d28f77f77c3e30da0b9f891d1ad78ad7b92/add8a6b89fac7e5e880a451b7ac2cfad8a83646fdd1a0425f730225931e4c30c/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261018-37fbe5913056": {
-            "commit": "523b16087ecae0a23e8dd1f98315916da54432cc",
-            "identity": "f9832f7b251e7c8f3e8e3d66c56eff54ac87fc07375120e27fe51aa2e1160320",
-            "key": "evaluate-meta_validation-operator-s20261018-37fbe5913056",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/f83ac7f095c43f7125bfa44a631e56f1cbffc71af6c3c333644f23fc0c0bfaa4/f9832f7b251e7c8f3e8e3d66c56eff54ac87fc07375120e27fe51aa2e1160320/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261018-77e5fefbf29d": {
-            "commit": "2914d89a059fa65ddf9092fa56234759ab98d867",
-            "identity": "b8fb26983112891a163f65fe1d9af0cfbda2390df4b59a1c3f164d410339f472",
-            "key": "evaluate-meta_validation-operator-s20261018-77e5fefbf29d",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/bbeb590fd121340706c86b25d31ee9d8b1e509b819721ab0b1c673a44fed0e18/b8fb26983112891a163f65fe1d9af0cfbda2390df4b59a1c3f164d410339f472/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261018-7cdea76f4696": {
-            "commit": "264fabe8a64c16b6740e17939da3d3445c16130b",
-            "identity": "1137ea41f48e40fb265b3a91532b77161350f3dc6da877a3f58c9384bddc47e5",
-            "key": "evaluate-meta_validation-operator-s20261018-7cdea76f4696",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/097ae808fd9a83ecfdd9ad86d1b39e158375799236bcc07cd5f6e409018b5cd8/1137ea41f48e40fb265b3a91532b77161350f3dc6da877a3f58c9384bddc47e5/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261018-9dd5a531e23e": {
-            "commit": "4a442a9cc2154a247ea4707cf6aaeb62656b2622",
-            "identity": "847c8f585363be43673110922f8c6f1c3adeae139a2399a087bc0b85959c29ef",
-            "key": "evaluate-meta_validation-operator-s20261018-9dd5a531e23e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/41cddc953c152df06f8573935c8f42f5244ff108c0cb877cd96b0249e6a95cf7/847c8f585363be43673110922f8c6f1c3adeae139a2399a087bc0b85959c29ef/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261019-37ad757956b8": {
-            "commit": "6087a9e6bdecb89c6bad3a0fbb9bf1f1de9c1279",
-            "identity": "4866b7a94f8f75b7c61c509e77c04d434cf1cce55f36c49f3ca9eb55be6869b4",
-            "key": "evaluate-meta_validation-operator-s20261019-37ad757956b8",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/394866ca606e434c6c908502fad3fad8f5a8a54aee5709614fac583f8a7798f7/4866b7a94f8f75b7c61c509e77c04d434cf1cce55f36c49f3ca9eb55be6869b4/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261019-6d6d7ce2741f": {
-            "commit": "88bc2459bcd2474fa4514a021ee31ff4b66a5711",
-            "identity": "5b7db081d2ad84a0d31299db901e1407290b2af81c4d57abdcac6641dc41c270",
-            "key": "evaluate-meta_validation-operator-s20261019-6d6d7ce2741f",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/587569e28d6441af2c04ad04d4550b5a9393a649a3f9add647057d2d52e1bc11/5b7db081d2ad84a0d31299db901e1407290b2af81c4d57abdcac6641dc41c270/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261019-8b42215182bd": {
-            "commit": "a3159d25664a3c4373bcfd6554367d4a39d6e074",
-            "identity": "feeb0c79e5ad79e7c67aa124b236489f47613823b242b745987c3c00dc1f5ef1",
-            "key": "evaluate-meta_validation-operator-s20261019-8b42215182bd",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/cd35cf756306e5c26b8448e966a6de2c3ff3b20b53a6fe6f73caeb69910a6547/feeb0c79e5ad79e7c67aa124b236489f47613823b242b745987c3c00dc1f5ef1/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261019-9b77ff820dbf": {
-            "commit": "0d89f8a289da7fc2f0b04165343f96a47759df5a",
-            "identity": "ee823436076bb6417e5f7cc8716ca7b6063d619cb703b104f4a36d04c66b8127",
-            "key": "evaluate-meta_validation-operator-s20261019-9b77ff820dbf",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/2471c58f085f03c123851f0497c9ea46eb88c2f4005ee8dc1fc56383d87c4a56/ee823436076bb6417e5f7cc8716ca7b6063d619cb703b104f4a36d04c66b8127/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261019-ac1cce41d8cd": {
-            "commit": "dd903ca781a42226ef0b9bc0bebd6d891a1ba2a3",
-            "identity": "d601ba3e17fa30e5c51f2714b79cf2f5f7706e4041babac832e38d76e5596003",
-            "key": "evaluate-meta_validation-operator-s20261019-ac1cce41d8cd",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/43fb60c2f57df7ce9305ef18e0e9f9fd61be0eece206b6422319236c5e6a6714/d601ba3e17fa30e5c51f2714b79cf2f5f7706e4041babac832e38d76e5596003/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261019-c1b2fe87c037": {
-            "commit": "807afe26afc6644dc9a342b5c5b0eeceae430528",
-            "identity": "ed7b25fe3113d53153d6d33531f4cfdaedaf128f279227833e6591cbc30c67a0",
-            "key": "evaluate-meta_validation-operator-s20261019-c1b2fe87c037",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/a8e90ee9a58b94f59c064672e389bb7d8a85309e424be357269bb8dddd0eee3f/ed7b25fe3113d53153d6d33531f4cfdaedaf128f279227833e6591cbc30c67a0/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261020-32067bdf8df2": {
-            "commit": "de766f442ef9e5e79c5c262e7467fae7bb0d5940",
-            "identity": "ae843f587a1591f1843d485459200cecb582a71523854de7fb0b1e34e68b1726",
-            "key": "evaluate-meta_validation-operator-s20261020-32067bdf8df2",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/3b6a8540099cb50e02da5514c81899b56cac2cfb84b42efe3752373e3ce7c6d3/ae843f587a1591f1843d485459200cecb582a71523854de7fb0b1e34e68b1726/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261020-49a89676f587": {
-            "commit": "8587d989dab5b0349b6db7b663733548501c1ee0",
-            "identity": "d81a6d633db2844144eeaf906eb7eb47b092f8bbc4533440f35ac83f62f2cdb0",
-            "key": "evaluate-meta_validation-operator-s20261020-49a89676f587",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/dc123201bff92b70461edc4f42e6e420037366c7a00286d9cede1840b29d5ada/d81a6d633db2844144eeaf906eb7eb47b092f8bbc4533440f35ac83f62f2cdb0/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261020-a187cb0ccb85": {
-            "commit": "fba23b445d9a49d7eac3ded9447c6da1fe9c7ed4",
-            "identity": "a71e1b1bf2110ed61623ab4919742aad2e479faf08e0ffcf96bfdf74e39b8a48",
-            "key": "evaluate-meta_validation-operator-s20261020-a187cb0ccb85",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/0482ee2d255dc17e4b645dd6b26d270553eb0e99d193d28bb50f79295e6e9c89/a71e1b1bf2110ed61623ab4919742aad2e479faf08e0ffcf96bfdf74e39b8a48/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261020-d65f5b929ff1": {
-            "commit": "67c0cdaa768f834b4cf5aa3498ce49d89f4d5bda",
-            "identity": "5ecb6f969de02efd6a1eabdd49ecaff1a9745f72497b4c5543f54dfdbec52c6f",
-            "key": "evaluate-meta_validation-operator-s20261020-d65f5b929ff1",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/fa54e7e8719b6d9f316d46510dbbccb2373ba2d51cfbece82da109f052bf44f1/5ecb6f969de02efd6a1eabdd49ecaff1a9745f72497b4c5543f54dfdbec52c6f/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "evaluate-meta_validation-operator-s20261020-d9ad5bf4b489": {
-            "commit": "021e11e61792320b06525ff8321479bc2f93c8ac",
-            "identity": "97bd42b757433d1743ac0b8d89c15954b977aca1055d4d169e042c42625903ed",
-            "key": "evaluate-meta_validation-operator-s20261020-d9ad5bf4b489",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/6f2afe2c6eeb3351d4e6ed85abd063815fcb75d4a5306cd175828baba8af5044/97bd42b757433d1743ac0b8d89c15954b977aca1055d4d169e042c42625903ed/manifest.json",
-            "parts": 2,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 2917
-          },
-          "feature_reference-meta_train-feature_reference-s20261018-2f6aaebe9a67": {
-            "commit": "9e06fe40ac8797ecf4966bd362c339b4b39982d5",
-            "identity": "b5ec968d1d2031ca2a3358b2db48c902a1e7242f31a89e6f3a85b8724b61a137",
-            "key": "feature_reference-meta_train-feature_reference-s20261018-2f6aaebe9a67",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/0e1c257be9ed0c86b7132135fd61f5c3aeb04b8a43227a3a385f86090f8e5360/b5ec968d1d2031ca2a3358b2db48c902a1e7242f31a89e6f3a85b8724b61a137/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 6
-          },
-          "feature_reference-meta_train-feature_reference-s20261019-30885dbdb462": {
-            "commit": "9541785267f0565d31e43f8fb38f5d70ff686006",
-            "identity": "bd02ac6c803f45d77698d75efc875af6da1d4fd64804672693f1392e3d7aff3e",
-            "key": "feature_reference-meta_train-feature_reference-s20261019-30885dbdb462",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/533fd5c7cb6918075e8f5eb2d9646830f8f1122fc12c89c568743a6410dc777a/bd02ac6c803f45d77698d75efc875af6da1d4fd64804672693f1392e3d7aff3e/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 6
-          },
-          "feature_reference-meta_train-feature_reference-s20261020-d731c0834a0e": {
-            "commit": "ee6e4ef693f3df98fd148000154afd000fa53956",
-            "identity": "10d1f3a509c67fbb6579b60625b37a8b61be73a9d2f744a4fa15afb37f0187aa",
-            "key": "feature_reference-meta_train-feature_reference-s20261020-d731c0834a0e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/625e2f9b8aa712bcccdf421412c2ce60912016b71ac1c3f0d553d5ec194a9041/10d1f3a509c67fbb6579b60625b37a8b61be73a9d2f744a4fa15afb37f0187aa/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 6
-          },
-          "operator_train-meta_train-operator-s20261018-022131c20c01": {
-            "commit": "cb7391f17aafcc18c634a5611f26891ddcfa7820",
-            "identity": "b5272334f24b3c8536adb7c6f1410c242a091850eeba58e0d4d96dd0a33a7b0d",
-            "key": "operator_train-meta_train-operator-s20261018-022131c20c01",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/882854942872e474ccdf9c46652cc7db55a1570ad892e2686dec17a59ba18931/b5272334f24b3c8536adb7c6f1410c242a091850eeba58e0d4d96dd0a33a7b0d/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-07f47a26603e": {
-            "commit": "6f968eec58e03c248375fd66567a25e01736246a",
-            "identity": "2dee607b05ec0c02d7e95839e16c9d8c6032b26a9846284d910638f68417799b",
-            "key": "operator_train-meta_train-operator-s20261018-07f47a26603e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/bd5b01af4fbb310b10b6dcac68df48e814bac70a4b9e3598ba9149e170fa20ae/2dee607b05ec0c02d7e95839e16c9d8c6032b26a9846284d910638f68417799b/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-0d5af7a9dd99": {
-            "commit": "5cfc05e63ae1d88f3bc3aa436cd96a1cca9330c0",
-            "identity": "e89e1877b22568a939b59f721bc02398ac6d38b5883de64b4218165589eccd80",
-            "key": "operator_train-meta_train-operator-s20261018-0d5af7a9dd99",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/c079be23e1ab59b4bd0d525b8f0aa58f15606278506508c94851fcafa637a32b/e89e1877b22568a939b59f721bc02398ac6d38b5883de64b4218165589eccd80/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-1222226bea6c": {
-            "commit": "856bca4d2364291353e69180976d5e58a4208243",
-            "identity": "cb6c4c44d1185f66c78f860c42b2244b7db956f393162b64e274130f3d26a8df",
-            "key": "operator_train-meta_train-operator-s20261018-1222226bea6c",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/95420d5fd3b8d51bd84c45f7d3725ea56fcde76892cdb1dc2c2feacb715485d7/cb6c4c44d1185f66c78f860c42b2244b7db956f393162b64e274130f3d26a8df/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-27d2af7cbdcf": {
-            "commit": "e822d1ef9f65d67423d14e9db948c2ee432d3ce9",
-            "identity": "17532cfc9a30c7f541e1834750dbf8a5e28cbc35881e57d33eee6626c5871e41",
-            "key": "operator_train-meta_train-operator-s20261018-27d2af7cbdcf",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/a6fefb42027b40a512f60456bcbd4307f751dd90397604cd13f4216c1c9c229e/17532cfc9a30c7f541e1834750dbf8a5e28cbc35881e57d33eee6626c5871e41/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-2cf256429758": {
-            "commit": "0af5c62f6f5100c4c487dd2d02a90c25b1ee7e23",
-            "identity": "11fe66bf23946babef0c131e9da04b23963cde4244d3fdafc3a368aeb8e7a8c3",
-            "key": "operator_train-meta_train-operator-s20261018-2cf256429758",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/f407e825b0962deb67e4761b4070dd49d8b3f2a5233a92c0bf91aa7aff3913f6/11fe66bf23946babef0c131e9da04b23963cde4244d3fdafc3a368aeb8e7a8c3/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-396bd7ed8643": {
-            "commit": "87b9592237323c9ac6af1b49ffcf53e727a6ec2b",
-            "identity": "40b274fb39a27007357b2f83ad61f344d90e8ec434c5dfbc57c87037ca432656",
-            "key": "operator_train-meta_train-operator-s20261018-396bd7ed8643",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/525e613eb4411a52995fc13c08939a0c5bd89f2bd5e0715cb52a5534f606120d/40b274fb39a27007357b2f83ad61f344d90e8ec434c5dfbc57c87037ca432656/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-505fb12ced3e": {
-            "commit": "7b380824ed21144b350de0ef6b4554f73892c30c",
-            "identity": "3271c1ed43b08b2b83a2507a84e979892ba227eb77145de873748e31fe37573c",
-            "key": "operator_train-meta_train-operator-s20261018-505fb12ced3e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/08085ebb84234b5b8d8bbb9d3ef4e798bf369af280e60bd14a57ab717d839c14/3271c1ed43b08b2b83a2507a84e979892ba227eb77145de873748e31fe37573c/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-6a2f0caf554e": {
-            "commit": "c812c1b0d7f991bcc24fc2d3bbadcaa874f36316",
-            "identity": "4184628e69239c1492570c7b92fb236dca2181287b6f7a0984d0a6d3835db654",
-            "key": "operator_train-meta_train-operator-s20261018-6a2f0caf554e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/5400f56cdc6fb926ef1a1da06111e20ee6bb783bcce338817b913d4b84adc2df/4184628e69239c1492570c7b92fb236dca2181287b6f7a0984d0a6d3835db654/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-6dc730981edb": {
-            "commit": "fae91d9fd60944f7e33d1c38ee9876e6292087d7",
-            "identity": "9be46ae7a4fb9a0943b2ae295c1cba6e4554148073ade15cbd38ef49300ae9bb",
-            "key": "operator_train-meta_train-operator-s20261018-6dc730981edb",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/a5096f5438dc576332b0907ecfbd58c257a00ee153955fe13d434d999e3e0697/9be46ae7a4fb9a0943b2ae295c1cba6e4554148073ade15cbd38ef49300ae9bb/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-70bdf7d0e4da": {
-            "commit": "d8468a162d880d72dd36ccc87c36f1b3dee655d6",
-            "identity": "e7169fc57313a4b5690dde7aecd10fb5f6ca9da30f87c375f418e17d52995a2c",
-            "key": "operator_train-meta_train-operator-s20261018-70bdf7d0e4da",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/b77c1617a8ad498a4fd78503afef79b0f8ed1cb2efc0bac1c2e11fb58214e71c/e7169fc57313a4b5690dde7aecd10fb5f6ca9da30f87c375f418e17d52995a2c/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-760290da131e": {
-            "commit": "1a2c397d24f19c424ca043283c990770086e8c80",
-            "identity": "cb5f654ca6514874c2b09401328a0a70d608d216851635f4965bcd91bb644df0",
-            "key": "operator_train-meta_train-operator-s20261018-760290da131e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/7898cc5e5a32d5a14635d05f915a2a62cec946a2814b9ee7a03f41479877ec1b/cb5f654ca6514874c2b09401328a0a70d608d216851635f4965bcd91bb644df0/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-78abbce1722d": {
-            "commit": "2bb31f08fba21951eb166f15d6c7ccb6418f5492",
-            "identity": "ba98c947076ebea5f5827f9dba2548318d8caf4b1c394dee102756051eb2ca6b",
-            "key": "operator_train-meta_train-operator-s20261018-78abbce1722d",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/78fd19a65628c5ef3e945b0317ec217158b66b8f1cf0c7b997259942d4963544/ba98c947076ebea5f5827f9dba2548318d8caf4b1c394dee102756051eb2ca6b/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-8ce04ec66182": {
-            "commit": "2d2d447b5bb3b58dc3dac4e2e1cf3d98e9a226de",
-            "identity": "16aa02863f7fafafe02905d2868388cf651889cc59382d7b4f98f7f077dab5f8",
-            "key": "operator_train-meta_train-operator-s20261018-8ce04ec66182",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/bd88c80f5039423a611331812563435f69eb790acfc4e61691021b7e588bc2e0/16aa02863f7fafafe02905d2868388cf651889cc59382d7b4f98f7f077dab5f8/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-9193973d7519": {
-            "commit": "7408d0bac8fe0fd28b6a32b0c58ab67645786e3c",
-            "identity": "33dd2a68be94ce4533612994a32e3aec4179985ffb2114777e720cac6615846a",
-            "key": "operator_train-meta_train-operator-s20261018-9193973d7519",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/a540823c3c1f75a1bac88e3d68612cde227d9012aba98b6fedb799e1b182fcec/33dd2a68be94ce4533612994a32e3aec4179985ffb2114777e720cac6615846a/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-95f8da93cb9b": {
-            "commit": "628abd843a6656f8a9b04ff57b5a2cbc6a26ea2d",
-            "identity": "d87a053f41bc6de81a55098acae6364f1fc20ac09bdbbcc3ffd8fab2083aed74",
-            "key": "operator_train-meta_train-operator-s20261018-95f8da93cb9b",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/7b37dee10a568f9c08e7db116b50e3ecdba9cb134574ae0c34a397699c0afe37/d87a053f41bc6de81a55098acae6364f1fc20ac09bdbbcc3ffd8fab2083aed74/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-a55bebce9f24": {
-            "commit": "a7b35271bd9aacd26d9850c3deb31e6fcba782e3",
-            "identity": "974702c8eed13344cf5e007e7b5e760b6fdb58306904c0bd0a158e05c0c07259",
-            "key": "operator_train-meta_train-operator-s20261018-a55bebce9f24",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/13f9766e7b6bbc83f808aab74102cef716bae838cc42dc4dcbe0a4e3059dfdf8/974702c8eed13344cf5e007e7b5e760b6fdb58306904c0bd0a158e05c0c07259/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-a71589638b9a": {
-            "commit": "bcdff77776ecb551481e38426cc0b18d90400070",
-            "identity": "0f4389880177524802aac84c299d878f217836d35cef3e958ceea05a893affc6",
-            "key": "operator_train-meta_train-operator-s20261018-a71589638b9a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/1f2f148be09116cb38283a0c08ee2fa5f338fb516256150cb95db7fc8174c90d/0f4389880177524802aac84c299d878f217836d35cef3e958ceea05a893affc6/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-b134dd7fed7a": {
-            "commit": "2358b17b2b3feaa19f44abbfe03c18e3ed6e8dda",
-            "identity": "7c2bfd7bf2d220631cf19606a98097b9b26a136fbc2015e9e71eba75a4eeddb2",
-            "key": "operator_train-meta_train-operator-s20261018-b134dd7fed7a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/549612ed0a5ec7856413099bfde39a014ed6b2d7cf6dd3e5fe2f06ece56b45e8/7c2bfd7bf2d220631cf19606a98097b9b26a136fbc2015e9e71eba75a4eeddb2/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-b4356a8b5e17": {
-            "commit": "259baa2ff160220cc1400a92c832c42d221fbe4e",
-            "identity": "9ba30344342b89861c0f2d67c4bf18a401b162b4ca920dc63dc4549892f3fa71",
-            "key": "operator_train-meta_train-operator-s20261018-b4356a8b5e17",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/513a026c316f46c4bf40dcf0691d8a5ec6c93df5c446f58d93a1d96991367ea5/9ba30344342b89861c0f2d67c4bf18a401b162b4ca920dc63dc4549892f3fa71/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-b9d3fb67f1e9": {
-            "commit": "4ddc68e6c44a69d4660607bb960768ce4f20d762",
-            "identity": "63ab8b56acb56cb1ead6295dc0183f03c925598778d0e6c35f7f44c2e142c64a",
-            "key": "operator_train-meta_train-operator-s20261018-b9d3fb67f1e9",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/381c41aab0865ef8058a35e827427c95955628941b4a9eb7f3c7adf8b82f2b12/63ab8b56acb56cb1ead6295dc0183f03c925598778d0e6c35f7f44c2e142c64a/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-c0516d653cfc": {
-            "commit": "566e11e036a3ecef292ee896a715dba5f542b8b8",
-            "identity": "ff5670f4f615729f10249ffaa0296f860f079d6b7def296b9f6cff5ff957b29f",
-            "key": "operator_train-meta_train-operator-s20261018-c0516d653cfc",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/bd7c9b9e8fea9161c78efc7c833df7bc5587c65c8fa92901c52547f9e19f4d5c/ff5670f4f615729f10249ffaa0296f860f079d6b7def296b9f6cff5ff957b29f/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-c9a32afd83d3": {
-            "commit": "e2f6a240e491a9d00ef04c39c8669621c1c11b6b",
-            "identity": "d19152a41706e55a7ad782b08a60581d407473a4667b7a16cfc488d21d1e7538",
-            "key": "operator_train-meta_train-operator-s20261018-c9a32afd83d3",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/1050ddf654b72c23373dbd3f2690320304ee28a3fee7fccd8ce455853d341e2b/d19152a41706e55a7ad782b08a60581d407473a4667b7a16cfc488d21d1e7538/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-d7c515e566b4": {
-            "commit": "4fcd7ba5efd764855329874814e6858954cf0423",
-            "identity": "566665ddd9f541c3febc4ee977a576dea1c7a821b9d6001bb47342ae8a7e76e0",
-            "key": "operator_train-meta_train-operator-s20261018-d7c515e566b4",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/012b826ecbce80f1330c56a4af1f1e2c3e69e2150ea26ceb652149502a00e280/566665ddd9f541c3febc4ee977a576dea1c7a821b9d6001bb47342ae8a7e76e0/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-d8f7bad3341e": {
-            "commit": "8860f232bed86e3135a3bdda22d2f7438a450cb9",
-            "identity": "abe39732d9a446cd304caf2e193a662d87e1a513c9214bfe2c1c433071295abe",
-            "key": "operator_train-meta_train-operator-s20261018-d8f7bad3341e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/0ffd950bb72644002e3c0ab08878a6f54db28faedaaf4533a3b95eb299be2b44/abe39732d9a446cd304caf2e193a662d87e1a513c9214bfe2c1c433071295abe/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-de45833fa2e0": {
-            "commit": "c1dcb797798bc55efda9dcd556e265c545e702de",
-            "identity": "9aa11a85ee44fa5a87fab4d714913b7a9ef2edbe35323360b3bafdc9ab77b54e",
-            "key": "operator_train-meta_train-operator-s20261018-de45833fa2e0",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/a7dd913b163735c2fd9648ebde60938a4da565ce9a94da1660e13f4463b5286d/9aa11a85ee44fa5a87fab4d714913b7a9ef2edbe35323360b3bafdc9ab77b54e/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-e055394bdcbc": {
-            "commit": "1d9799f7aa88313a6ea81ef3befc920f342a8b9b",
-            "identity": "e2d500896927bd3d9ed262a652d8361931eddfdfae2a8f2684e32ad8849b9959",
-            "key": "operator_train-meta_train-operator-s20261018-e055394bdcbc",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/0837b8045c72c81596f5ad78ebe55799b1a2eebcad3b89592882847fea7f6708/e2d500896927bd3d9ed262a652d8361931eddfdfae2a8f2684e32ad8849b9959/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-eb3c209dbe4c": {
-            "commit": "50c1156947110327143562fb4e5f28176969dd54",
-            "identity": "82b32973003e862721036fde8581fa812931b34d76735b67fa0f0934e149d031",
-            "key": "operator_train-meta_train-operator-s20261018-eb3c209dbe4c",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/2fb332cc79fb6b3099a8db529b3c245d881178f58c4bd7fc1f91feb84e742e6e/82b32973003e862721036fde8581fa812931b34d76735b67fa0f0934e149d031/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-ec27e91d0bc6": {
-            "commit": "7bba1d1a9a5d51dd6b408f85fca42e03a18c01ba",
-            "identity": "351b90c9e47a663107b1d6ec8b96420671e6815abd4555c4d91319c3b334ec99",
-            "key": "operator_train-meta_train-operator-s20261018-ec27e91d0bc6",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/48ce06fc106d0bc3bf7638f0c42d74c5d58504a7262e2950724ec431d9d72853/351b90c9e47a663107b1d6ec8b96420671e6815abd4555c4d91319c3b334ec99/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261018-f6580e974aa6": {
-            "commit": "bb9818b2e6fc913442073997e7ff937c9358fc60",
-            "identity": "33b4abaecd3077d0b86c3ccebbd583ba092e0827d710f9221056f1aa6b1e66bf",
-            "key": "operator_train-meta_train-operator-s20261018-f6580e974aa6",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/29edd018dd4c058220994621cdbd733de5b810dabf24514d601bf5661d74002a/33b4abaecd3077d0b86c3ccebbd583ba092e0827d710f9221056f1aa6b1e66bf/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-11f0a1b4fee0": {
-            "commit": "44198658ce55d6671e15df72ec006c11d8fea0d3",
-            "identity": "99681eeca4867bd5e82102b6f640d51b833dd24e99ecb9fca071108ee3288b04",
-            "key": "operator_train-meta_train-operator-s20261019-11f0a1b4fee0",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/f08f151a2c33bc25c1abb204e4299552005b45065dc84c0a1aef51b3277154a2/99681eeca4867bd5e82102b6f640d51b833dd24e99ecb9fca071108ee3288b04/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-181e4113789e": {
-            "commit": "915a93e7712e9a2dfa7150b4f70190360b2aea58",
-            "identity": "ec7f951b29babbbed6bf7e68e7a3e35d979d55384ff9236998d06429d8a441bc",
-            "key": "operator_train-meta_train-operator-s20261019-181e4113789e",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/e3c19c740fe0153a3da954a437c06aca36df53ceb59526041e69b95de753f630/ec7f951b29babbbed6bf7e68e7a3e35d979d55384ff9236998d06429d8a441bc/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-1d9d2a44fa24": {
-            "commit": "fa9abcfe7a6b40e08d3f2e1eac00bccf82e533f8",
-            "identity": "3e7dc134b2a90b878effa8b1f93a6f62d632929d6c32af3accd34993227eae32",
-            "key": "operator_train-meta_train-operator-s20261019-1d9d2a44fa24",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/43110696b6ea4e596681a5864ccddff4eee2c945e1f68b0c4abd95ea78ba95e9/3e7dc134b2a90b878effa8b1f93a6f62d632929d6c32af3accd34993227eae32/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-215a51c2861c": {
-            "commit": "b3aa4cde5b565cfcc95027d07e691ec31ed92629",
-            "identity": "a71b6ce4a6197dd2ded6d84e5d71cb94f8e88a4c9c46b7f06dce98a8fc7a56fa",
-            "key": "operator_train-meta_train-operator-s20261019-215a51c2861c",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/50307f80c345237f38e90a0aca9655ddaa592c732b95d3eac868e3dab11ca371/a71b6ce4a6197dd2ded6d84e5d71cb94f8e88a4c9c46b7f06dce98a8fc7a56fa/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-21e537453cee": {
-            "commit": "28fd66e00b47a74fbe42600a22c32d5358cbc53d",
-            "identity": "a165c44729d836e6cf427ab4a45d962f01613c080ee167e9b8ac4a5ec0fb6473",
-            "key": "operator_train-meta_train-operator-s20261019-21e537453cee",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/bbd0758ff65107d0089bf03311a5c18727383a5ad941407f111e39e240464d37/a165c44729d836e6cf427ab4a45d962f01613c080ee167e9b8ac4a5ec0fb6473/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-2ebe65fbb54a": {
-            "commit": "a354d561813c1ff2a33cc8d7a29619461ca49954",
-            "identity": "9a9000093e646038b3027d7924c4ce83110b935b391a1076057692ed0a0e6695",
-            "key": "operator_train-meta_train-operator-s20261019-2ebe65fbb54a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/468f0590cadec79ee700cdc9133ef958f5e10c3230ee76a81ccad97f8d758d01/9a9000093e646038b3027d7924c4ce83110b935b391a1076057692ed0a0e6695/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-2ee854ea652b": {
-            "commit": "0fa95c92a6c06a5a21f7917d748a1e4c1d207f9f",
-            "identity": "8052d993643512d477f354635411a53fc56a42aafbbeaaef4db9880c6fa72572",
-            "key": "operator_train-meta_train-operator-s20261019-2ee854ea652b",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/2a1e078c784fc19058fc3d5ba669854a0cc3dbf4716fd619ebeb7e4aaa187867/8052d993643512d477f354635411a53fc56a42aafbbeaaef4db9880c6fa72572/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-3044f6e2b848": {
-            "commit": "f3b4fac035035428c92881b0c06298150526baac",
-            "identity": "9f0637d2e27d1a1c72a499ace6231f89a5f8e3f132b69361476e88fc4061f38c",
-            "key": "operator_train-meta_train-operator-s20261019-3044f6e2b848",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/03cd923c79e3acdc8d7f9f4ca4a1105b8280fd35cef44b1e3e5df3e0f90c5eed/9f0637d2e27d1a1c72a499ace6231f89a5f8e3f132b69361476e88fc4061f38c/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-44d29ac4104d": {
-            "commit": "6be769eb0b0d1f8f90787cb5f1d670c44a3907ad",
-            "identity": "92f2b68643e49143f60a05e8e82ebf8bf1cea268f45c9e316d087da9f5505da7",
-            "key": "operator_train-meta_train-operator-s20261019-44d29ac4104d",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/fe87338b77ff1fda2214ab98dfb5e1ed14453dbb96db011675ec65b9a1b55ea1/92f2b68643e49143f60a05e8e82ebf8bf1cea268f45c9e316d087da9f5505da7/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-475d400b5319": {
-            "commit": "b0d051165cda7201e803f84dc1e803070615521b",
-            "identity": "4d2ef3bacaaaee240d7c5254badbaa9dcabc5d99fbbc4cd4712739f4efe69d47",
-            "key": "operator_train-meta_train-operator-s20261019-475d400b5319",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/650bea1f5c30f50dedd243b06bd4b548f548327d132b39c90ca749d3ba188408/4d2ef3bacaaaee240d7c5254badbaa9dcabc5d99fbbc4cd4712739f4efe69d47/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-4e2561689b89": {
-            "commit": "ad3d7a269544d4259e246d9909e6ffb7b7b4f325",
-            "identity": "ffa3002a715a95348f033e69865a97aff2e07732fafa6fda6f715237f824c403",
-            "key": "operator_train-meta_train-operator-s20261019-4e2561689b89",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/4b56785719bff623033d609599eeb4eb86d33a98504a0dfa89ca337378eb5207/ffa3002a715a95348f033e69865a97aff2e07732fafa6fda6f715237f824c403/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-4f41d6391025": {
-            "commit": "fe9dc32ed9cc9108b660524687f23afcd122b62f",
-            "identity": "9c5287ba59cbb4ce6773e64d483e91dbee1719ce9b2c66459e3f7c5b7732fcd9",
-            "key": "operator_train-meta_train-operator-s20261019-4f41d6391025",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/abf409ccb91a3141979ac3b4c8e955aab4efe4f4b9a589bb094ec3988b3eee83/9c5287ba59cbb4ce6773e64d483e91dbee1719ce9b2c66459e3f7c5b7732fcd9/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-5c8b045a6d8a": {
-            "commit": "0eaf5aa5d8abf0b057216f54c0d37f6b442e3663",
-            "identity": "172987e7b3583ef5fc618ae5968e3608262ea108d8022ea336a7094b756207df",
-            "key": "operator_train-meta_train-operator-s20261019-5c8b045a6d8a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/d80349d82b9f0fdc678251f4b5c3dcdeacf6031d4b8f0cb4f394fee5f5d2fe3b/172987e7b3583ef5fc618ae5968e3608262ea108d8022ea336a7094b756207df/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-67df4f3fbe2a": {
-            "commit": "1837f0027c869c2718f00df742707aa95a47f7e0",
-            "identity": "8ce2416931eb328bda69708cb59742481cbd769500aea60e4cc8cb1cf61c3167",
-            "key": "operator_train-meta_train-operator-s20261019-67df4f3fbe2a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/b71664fe18fd69937196b920ca94acca3b15d562570d55c164a4bc3613786e21/8ce2416931eb328bda69708cb59742481cbd769500aea60e4cc8cb1cf61c3167/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-87373ac4de19": {
-            "commit": "bfe53d264b6207bb825679630e35067dc461e6a0",
-            "identity": "6f2dea6b97bdc0a00831d1004b993beb1b115cbab8b88b0547d9d5de98ce9b6f",
-            "key": "operator_train-meta_train-operator-s20261019-87373ac4de19",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/672cb1eeb0bfe2f70f1f3dea4392697d02eed340bd9d2c67632125471977ab9a/6f2dea6b97bdc0a00831d1004b993beb1b115cbab8b88b0547d9d5de98ce9b6f/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-8b3d68b67566": {
-            "commit": "098740f7db28f540a04a7859e299fdde5a3b3c0b",
-            "identity": "566523219a03c05bb25be8575815f5b14a572ff2aa68d9cc47e5a62d7faf3501",
-            "key": "operator_train-meta_train-operator-s20261019-8b3d68b67566",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/470e619b2ff936565a5d2f941b658ebee41ffee52db075601abbd841176c33da/566523219a03c05bb25be8575815f5b14a572ff2aa68d9cc47e5a62d7faf3501/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-8cb0a4095585": {
-            "commit": "54d115d8e60bbfc0093d3cac694f471506dcd8ff",
-            "identity": "2975b963b518416f4b42025487a6886bcd2ef9e6bc10092bfea9b53efcf4efaf",
-            "key": "operator_train-meta_train-operator-s20261019-8cb0a4095585",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/185dbf2d38c38f9c3be217c323b5ec145538106425f04671aa660ed8f5986ead/2975b963b518416f4b42025487a6886bcd2ef9e6bc10092bfea9b53efcf4efaf/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-9486f6cb430f": {
-            "commit": "31be9a1f6e4d458211441d9584d75556c1cc9c17",
-            "identity": "bbfd520cbd6d478720479101eea193114d780436541b95a1f366f497217b67b3",
-            "key": "operator_train-meta_train-operator-s20261019-9486f6cb430f",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/87c90da3760f068eb96277d3334ab63922b4ecdf4bcefb1dfe94f1bad5fbc426/bbfd520cbd6d478720479101eea193114d780436541b95a1f366f497217b67b3/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-9df488427a30": {
-            "commit": "fd31e529b155f9732e49578c892598d7c5c8f9b4",
-            "identity": "bbcd93fbef8c894d4635d19fe1d2cfd05b46a995c7248a67a3ea38d75543aff3",
-            "key": "operator_train-meta_train-operator-s20261019-9df488427a30",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/63c740204d5841df1faffff309bcc524386caaf916515c0759fd78c1bb9819a2/bbcd93fbef8c894d4635d19fe1d2cfd05b46a995c7248a67a3ea38d75543aff3/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-a3b660311b10": {
-            "commit": "42b5e373839c11d99a3b91bb2ede17d6764bec75",
-            "identity": "b18cc36f9136bd2845ceca2ece1438ec032d3727d062628cf6b4b19564f27103",
-            "key": "operator_train-meta_train-operator-s20261019-a3b660311b10",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/744d872053d93f9efe275456ac0e504cd9086a536496b0b207a71961e9b570db/b18cc36f9136bd2845ceca2ece1438ec032d3727d062628cf6b4b19564f27103/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-a648b47779a5": {
-            "commit": "c06259732abdfb1ed60afaddff4d467fb1cf446d",
-            "identity": "58b6988d394b0f58daae53bd2a0a61b05b16494020d2795a231911c25902f492",
-            "key": "operator_train-meta_train-operator-s20261019-a648b47779a5",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/e8df63e94b44280fbadd8225a80dbf06f435f0cd8d24c6e8ca59d09d65497b3e/58b6988d394b0f58daae53bd2a0a61b05b16494020d2795a231911c25902f492/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-b605e9fd3674": {
-            "commit": "356801b424bfc962d9829883bf56e8363f036514",
-            "identity": "ddb48aef143a6bb305c94e6e332889f1e90d8c2412f50c556238137473587bb7",
-            "key": "operator_train-meta_train-operator-s20261019-b605e9fd3674",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/db34266c842657c7d0b1688afe5ffc34c758b050dad05c3d72958183b7bca8d1/ddb48aef143a6bb305c94e6e332889f1e90d8c2412f50c556238137473587bb7/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-b6d1bdd2c692": {
-            "commit": "30894a781394bf54bdc4374f414040877c908ebc",
-            "identity": "10df9386b487ca1a6680d7baec4b14036dcc5a876b3e8f218fced923951f60e3",
-            "key": "operator_train-meta_train-operator-s20261019-b6d1bdd2c692",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/e709149e4a75e2b88565708777de4563488f25e236c98e1442cab30a206a6997/10df9386b487ca1a6680d7baec4b14036dcc5a876b3e8f218fced923951f60e3/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-b7f5354907cc": {
-            "commit": "ef0f1e6dd40452df947c7f1b9a0d52644d30159d",
-            "identity": "f1e25d76d9c9fb0710353ff7755e7ae8df3c578c8a0b5e480a07d3c202ef9587",
-            "key": "operator_train-meta_train-operator-s20261019-b7f5354907cc",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/dfdd08aab16e480b80d6b773878fac651ca69e4833368ce809365fbd439a2ed6/f1e25d76d9c9fb0710353ff7755e7ae8df3c578c8a0b5e480a07d3c202ef9587/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-c3af0b0fc266": {
-            "commit": "9339a37d8a636ea2bbb5cb2d4901fc803aaebdca",
-            "identity": "3c4ff780bf0fc02b8094e8516b6f22792530e3b2cb002744a750cda39f204826",
-            "key": "operator_train-meta_train-operator-s20261019-c3af0b0fc266",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/f2d1577254ffeaf3e94d09f2d4659fa1942fd088adbb3af64a8543a2dbd8d35b/3c4ff780bf0fc02b8094e8516b6f22792530e3b2cb002744a750cda39f204826/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-ceed4a6e41b1": {
-            "commit": "683b4a5f871d7926c5ad29cc23c646124b92edb1",
-            "identity": "2b9b6d6befc54bc4f35c275c032db84faba3467bd29dea967705f478184b6952",
-            "key": "operator_train-meta_train-operator-s20261019-ceed4a6e41b1",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/d0d1063c14a94a0cd726af938b7b079a76ac1afef64e979b619a807af39ff963/2b9b6d6befc54bc4f35c275c032db84faba3467bd29dea967705f478184b6952/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-da6f235e5f87": {
-            "commit": "101176dac66b1439b550d3a3f886b507a695bce2",
-            "identity": "014354f4d0a52c8f320191b76f3464f3ead6df1a253a1cc3da28415544ff36e4",
-            "key": "operator_train-meta_train-operator-s20261019-da6f235e5f87",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/137f0ba91a2117f3e539d626dda3d1d85eb7ca75817f1155065d83aae77b11e2/014354f4d0a52c8f320191b76f3464f3ead6df1a253a1cc3da28415544ff36e4/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-db89b3f23434": {
-            "commit": "a8b1d165a9c326f82852d85cdcaf71dacebb9e9c",
-            "identity": "57b4d41e707b54c0ff7018c1489da5af1766bb3ce11117f98f85711ab7d8a465",
-            "key": "operator_train-meta_train-operator-s20261019-db89b3f23434",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/89ecf456fb4f874aeafe2f3cca2fd8bbf9cf360302ea793a3c6898f2b05046ff/57b4d41e707b54c0ff7018c1489da5af1766bb3ce11117f98f85711ab7d8a465/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-f6c642ba7cfa": {
-            "commit": "5819f90909a8d9a630a17e64799e18563c2acd52",
-            "identity": "71cd34f93ec0eaa54058a7c3f7ace84c369c6cbb53797e5d8f921c6ac6dc4a49",
-            "key": "operator_train-meta_train-operator-s20261019-f6c642ba7cfa",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/d3b4d387e7faf2849c76d67014b07427e7c70c1fa8ac7b98879d2b235e79f8ad/71cd34f93ec0eaa54058a7c3f7ace84c369c6cbb53797e5d8f921c6ac6dc4a49/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261019-ff67a9a506bf": {
-            "commit": "bfbc72b9cb697f9b5c06da3ae05e54111b501ef6",
-            "identity": "d587c96f021e059153a76dbb7d4ad29dd16b07f5cf925802d69250c357b32cb6",
-            "key": "operator_train-meta_train-operator-s20261019-ff67a9a506bf",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/1a6fc7ea763e2fa0b836894ee3b849553ba78bd694f14fe1d3e1f180a70750c6/d587c96f021e059153a76dbb7d4ad29dd16b07f5cf925802d69250c357b32cb6/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-0a27f96dca51": {
-            "commit": "0bd9ae2fa0a665aff53586311902a04a043d661a",
-            "identity": "11f73def6f216c008b0203332a2656f55db9d57a90fafee237a41e69a6058514",
-            "key": "operator_train-meta_train-operator-s20261020-0a27f96dca51",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/ee422a8bf0f0e077caa0cb4928a68d2866cc592b557d636cde981c90f1eeb293/11f73def6f216c008b0203332a2656f55db9d57a90fafee237a41e69a6058514/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-12373423c0d0": {
-            "commit": "cd2e4c5dc98da9979bc3474e264072eb2ba4c3cf",
-            "identity": "f1cc2955c7450ad81bb37f0df57a42cf08c5abb628b39363d15f374cc14c71fc",
-            "key": "operator_train-meta_train-operator-s20261020-12373423c0d0",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/e68f713b3ec4dde8e086d2bf8059c77637a30fdb926fd1219056fdee60975be1/f1cc2955c7450ad81bb37f0df57a42cf08c5abb628b39363d15f374cc14c71fc/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-154f92a12935": {
-            "commit": "85da32e656daf30b4ae43a61e969c13f44283738",
-            "identity": "e7fef0e4df3475e8f2778923143adf3d2d04d5f153d60202d5dd3a7d5b42779e",
-            "key": "operator_train-meta_train-operator-s20261020-154f92a12935",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/b2507e03b7ca03a49a373939cb1293f29cc268799209dbdc0fcdb7070e7f2599/e7fef0e4df3475e8f2778923143adf3d2d04d5f153d60202d5dd3a7d5b42779e/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-167c409596ab": {
-            "commit": "a789506ab86dd371e34916d7e1dc849775135cf0",
-            "identity": "b543aa4aae01e5316d55908052533deb8e7f9d0d09d75e34ee876f7aa27b69d9",
-            "key": "operator_train-meta_train-operator-s20261020-167c409596ab",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/2ebd205efa051b15ae798c647a12adf48ed69f61dba1af45b4f2c0c93940971b/b543aa4aae01e5316d55908052533deb8e7f9d0d09d75e34ee876f7aa27b69d9/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-1da2032ac1ea": {
-            "commit": "d05a3f4732ce216ee2b4b62615b4437850502f21",
-            "identity": "a5986d93806c08187674819841fc29f6117b7fcdf4c16b5d4a27dd71880a8846",
-            "key": "operator_train-meta_train-operator-s20261020-1da2032ac1ea",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/91c1ef21b5acbc12631c3d947290c1c7fdac4f1bb7d0d07e09ee34957892e7e1/a5986d93806c08187674819841fc29f6117b7fcdf4c16b5d4a27dd71880a8846/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-22b2c5c2b11d": {
-            "commit": "4c110ea490a822e843d9a75ba2c554b946f27bf0",
-            "identity": "c7b5e2dbd172f400a42429cc7750a862b630d4756d222eee6d334775ca6039a4",
-            "key": "operator_train-meta_train-operator-s20261020-22b2c5c2b11d",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/dace01ca1a9b6d0a7c4f73b896d49470657138f6e36f20df5029bd3a4eadab36/c7b5e2dbd172f400a42429cc7750a862b630d4756d222eee6d334775ca6039a4/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-38d9bc2cc17a": {
-            "commit": "e5a0d33f6800b8a8b6aed95493f98b097da7d033",
-            "identity": "14c4728e69274062886b72d0c6f52c20f63ed8dc8c2511254ce799e259b86dd8",
-            "key": "operator_train-meta_train-operator-s20261020-38d9bc2cc17a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/8729c29e0a7c01bace8a5b7caa2afb2546e76137a53d8d7ca80daf887ee9a605/14c4728e69274062886b72d0c6f52c20f63ed8dc8c2511254ce799e259b86dd8/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-399fa77bf155": {
-            "commit": "0b0bc3c535825dad6a71c45c48a0a0e32868b0f0",
-            "identity": "c75c695e5662a03bbb9b5dedeefc52fb01aeba05793fcc4aab60070e101c5bd6",
-            "key": "operator_train-meta_train-operator-s20261020-399fa77bf155",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/3e8fca6759fd1564455875fe264884eae21425a8a62b57b4190cb485afd33c95/c75c695e5662a03bbb9b5dedeefc52fb01aeba05793fcc4aab60070e101c5bd6/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-3fc2d6ebc3dd": {
-            "commit": "1bd638cd73c6d16a3dfdc0685fe2d695be7494d9",
-            "identity": "3f171034d37125b0adef6491567f1449a687afd3ec11681b7c1fbfb422ea40d2",
-            "key": "operator_train-meta_train-operator-s20261020-3fc2d6ebc3dd",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/fb9f739b559e5a703f3613b7aa96e407516dc07e865d3eff9d2e74737ff0fad6/3f171034d37125b0adef6491567f1449a687afd3ec11681b7c1fbfb422ea40d2/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-40bc5fd43fbb": {
-            "commit": "63a9c164cdaa001b3baafb682569e331c9d88284",
-            "identity": "1118469e91f3a7631e46c982b4dbc9575f6b93ad846b3db0ca14bede32eb112b",
-            "key": "operator_train-meta_train-operator-s20261020-40bc5fd43fbb",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/50e9aefd9d78c8f1282656047a80ea0422a2d9417d5362fbf508fdadcba23ac2/1118469e91f3a7631e46c982b4dbc9575f6b93ad846b3db0ca14bede32eb112b/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-49600436c950": {
-            "commit": "160fc13efeb712c1f42a15ff2463c7d4cde26aba",
-            "identity": "af6f3b99f2e1bb64aff611d207b26eaa9e5fc38dad3cb258fdfdc69b308739f1",
-            "key": "operator_train-meta_train-operator-s20261020-49600436c950",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/eb99112f16886a04a3a49c988e4dd6286ff961d5efa47e2f9d560a57336efb6a/af6f3b99f2e1bb64aff611d207b26eaa9e5fc38dad3cb258fdfdc69b308739f1/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-4c911921c33c": {
-            "commit": "e0ef4658b2f334e9cf6dd5a50a0407111c6f41de",
-            "identity": "51a02fc274af50f4abd7cd34798f2efdcbb41f874c0c386900e665ec71c0404a",
-            "key": "operator_train-meta_train-operator-s20261020-4c911921c33c",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/1bbd9e0bec8a9e6c512846b34e111155822677f274767716f63769765343fd5f/51a02fc274af50f4abd7cd34798f2efdcbb41f874c0c386900e665ec71c0404a/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-4f18c30083ce": {
-            "commit": "ddb7b3c553178b8359267b9c1813b4e4fecdc6c4",
-            "identity": "a43314b2c187834eb961fa6b0c418ed25c262f946ad2021a34e8638a239f4484",
-            "key": "operator_train-meta_train-operator-s20261020-4f18c30083ce",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/28f2b09d58b4929c8152b36efb05008986db3f9df9ae11e28a1c35fe96ee20ae/a43314b2c187834eb961fa6b0c418ed25c262f946ad2021a34e8638a239f4484/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-537e7331c4a9": {
-            "commit": "cde28a1c913c8f2c9adedad73e027d1ea679e135",
-            "identity": "7bc31106e5ff162641c444bfb1aacc66241dfa595020a92a11823baeecd81cd4",
-            "key": "operator_train-meta_train-operator-s20261020-537e7331c4a9",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/006254448a90b215ac53d7d56a9aaa6c564e6946dc08841f00fe22c7a5a57c6d/7bc31106e5ff162641c444bfb1aacc66241dfa595020a92a11823baeecd81cd4/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-5cacd7664cab": {
-            "commit": "ea37330aec09e0b5f2fd7224fb766b687c126929",
-            "identity": "3581ca15e79db5fced840043e95cb4734748165adf83aa40b2ee46b900e55b27",
-            "key": "operator_train-meta_train-operator-s20261020-5cacd7664cab",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/9e45059d2ff4384e3fcb7c7e8f35974c72ccc5d60c7299ad96830676f975cb03/3581ca15e79db5fced840043e95cb4734748165adf83aa40b2ee46b900e55b27/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-5fb3408a2231": {
-            "commit": "aa82425808ec01d4f96ec85ac97473a3f20a70dc",
-            "identity": "fd57c3820feb25421fc29094525f9b8a077cff07c496ffbeb400cb94ab26e855",
-            "key": "operator_train-meta_train-operator-s20261020-5fb3408a2231",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/699755527fda7a20e282059607df107c4979fc7f63da9742a6e6c20b4e02546d/fd57c3820feb25421fc29094525f9b8a077cff07c496ffbeb400cb94ab26e855/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-792be9726cf9": {
-            "commit": "51a3580c6bb9acb1b3a587dd5a9c4bf94a9a346e",
-            "identity": "698f71dcbb6c5eb5a8b76564d1d01b90d1f0ed41e4c58b07f011a7e87bd2c80a",
-            "key": "operator_train-meta_train-operator-s20261020-792be9726cf9",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/0d1932c512fa8e160c38894bc6c369d60e4832477c211d312927e11e2066d7b4/698f71dcbb6c5eb5a8b76564d1d01b90d1f0ed41e4c58b07f011a7e87bd2c80a/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-945b9639e61a": {
-            "commit": "904454dee3a1b66980c5e769be5cda9abaac8a99",
-            "identity": "1ea94a961c934781e194fd0bc1de6231b37cce5274786bdd8bf23c2c11d355bc",
-            "key": "operator_train-meta_train-operator-s20261020-945b9639e61a",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/41fd221c65d1e569e13309bd3a40b73be03e9f37d49985ebb0cfaf62c7bec454/1ea94a961c934781e194fd0bc1de6231b37cce5274786bdd8bf23c2c11d355bc/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-9ea9554ad92d": {
-            "commit": "f00fe356a8d5f10063f95ad579b7336715029e11",
-            "identity": "40fee8784fe875e44b711b79891b2c877f930ee654114e74ad21c813de4cbefd",
-            "key": "operator_train-meta_train-operator-s20261020-9ea9554ad92d",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/6b7250299efd485cfc5ff5a84ba4560904b811c216dcbf8c4f5a651de1f6f681/40fee8784fe875e44b711b79891b2c877f930ee654114e74ad21c813de4cbefd/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-a658598a213b": {
-            "commit": "e3cc5951cab3af92a2c86f12a3577985ad9e39dc",
-            "identity": "e25c1fa45dc9b25348af45c97531cb5caa3ce59766d21c7e7ca4deabbb4fcb29",
-            "key": "operator_train-meta_train-operator-s20261020-a658598a213b",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/8ad60cb5a4bfcd75614f34e74d8ed8026c4cead15d13ae9a19646ea1f398b6ce/e25c1fa45dc9b25348af45c97531cb5caa3ce59766d21c7e7ca4deabbb4fcb29/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-ccedb6d8950c": {
-            "commit": "eb6bbaad19bbb29dc73303f49be744ab16a08ea6",
-            "identity": "a801136d855db5f6e9e6e255c1fe10f8105081206b1d2b6a48d9f4d6344209a2",
-            "key": "operator_train-meta_train-operator-s20261020-ccedb6d8950c",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/cfe2165fb3e42ad67bd69645e9011d41ec26a066f7c4bd44243dea597a410c41/a801136d855db5f6e9e6e255c1fe10f8105081206b1d2b6a48d9f4d6344209a2/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-ce2226c6b9f4": {
-            "commit": "be3a5fe95b8174715408f104cec0026258217d43",
-            "identity": "526119dde16e66ac3caf06c640b3ba2d277edc1b0c95f0ae4c83e586827e708e",
-            "key": "operator_train-meta_train-operator-s20261020-ce2226c6b9f4",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/78c7df5131286474ac0dc247bad8d12427c45a3c08157293e1696336336c451f/526119dde16e66ac3caf06c640b3ba2d277edc1b0c95f0ae4c83e586827e708e/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-da7cebc49d9c": {
-            "commit": "1edc7f0eb3148c9ed749d06fb16719cc49a07695",
-            "identity": "5d1386e9fc7935962e078189105ce3edc86a5133bb5f7a9e07a1cb6a7c5cc3b8",
-            "key": "operator_train-meta_train-operator-s20261020-da7cebc49d9c",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/805241630c6e8a33bddd084c408a87e788b9d1db48d531c38d24b7605d98dfd2/5d1386e9fc7935962e078189105ce3edc86a5133bb5f7a9e07a1cb6a7c5cc3b8/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-e34f82e581c1": {
-            "commit": "f5747c10299f14b170082f6697df7521f801b35e",
-            "identity": "b9129c1f6b29568563f9f8e4f66c1a3086ad2a08cbaa7b9822d4b002a6cc0528",
-            "key": "operator_train-meta_train-operator-s20261020-e34f82e581c1",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/25f5faee92b8e128da06445dc0c09e1c37cecec1f49471c58d7444e57d571ffc/b9129c1f6b29568563f9f8e4f66c1a3086ad2a08cbaa7b9822d4b002a6cc0528/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-e55f887b97ad": {
-            "commit": "0817a6d920234ce8f8057e68f4a3b31cedf4f672",
-            "identity": "69c173115f76391737b0ebd8d0f26b83095ef245f31a2fdea79a6cb399cff1d9",
-            "key": "operator_train-meta_train-operator-s20261020-e55f887b97ad",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/3087741ea12b358d74af256c5a68c8274142ac4336f73e629de2449414a8976e/69c173115f76391737b0ebd8d0f26b83095ef245f31a2fdea79a6cb399cff1d9/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-e64acdc10914": {
-            "commit": "ab22f2be83391de866511c8a0ecbdd5bdf1e54fa",
-            "identity": "436fbf9ae57e20e6219f080d76685bb5db6e5213fd7236b6c8ccf9566383918b",
-            "key": "operator_train-meta_train-operator-s20261020-e64acdc10914",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/f9e714c47d5d7c28a800395ddf3292d2443d0f73865adea40cfe9561e23dfbaf/436fbf9ae57e20e6219f080d76685bb5db6e5213fd7236b6c8ccf9566383918b/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-e82d92503855": {
-            "commit": "327633eb049a722127f51e6634a3dd5a5cdc2539",
-            "identity": "8138580418600973d0d138b00e7556afef249678f2bf54937597898d29e23ee6",
-            "key": "operator_train-meta_train-operator-s20261020-e82d92503855",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/2fe5121c422427ddabd2b5ae2c3818bb6b50d3d52877c13ec0d9e3fdedc9ad0f/8138580418600973d0d138b00e7556afef249678f2bf54937597898d29e23ee6/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-ec60c44f1c76": {
-            "commit": "e5bdfe8a32d752a3c44916e3fb71c782cdcbac25",
-            "identity": "a75462b692063e7ec69b44a316753376b37fbe8ec16bd8bc9b672adb97f6ba07",
-            "key": "operator_train-meta_train-operator-s20261020-ec60c44f1c76",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/47ac497d9bae99e4802d872e772b559c7e65b15f4c86d2a6c2707fbe85e4e9d9/a75462b692063e7ec69b44a316753376b37fbe8ec16bd8bc9b672adb97f6ba07/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-f35f1a526bf1": {
-            "commit": "e895c18d822838fdafe2a6c8aad6ebd67154755a",
-            "identity": "cbf7cea1f1fcb4de89b52fc60ee3a41624254db24a35a18662b3c6fbd017f3d0",
-            "key": "operator_train-meta_train-operator-s20261020-f35f1a526bf1",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/81e1a06bbcf942e10ace51f8d10a44472b2eee43b6349e835c3e6cdd0c52d2ef/cbf7cea1f1fcb4de89b52fc60ee3a41624254db24a35a18662b3c6fbd017f3d0/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          },
-          "operator_train-meta_train-operator-s20261020-f4c5a38933f0": {
-            "commit": "730e0a8df3d8c14d2d0cda4ca3eabf53a2ba3248",
-            "identity": "34aa345e56079c9a3760911ece796ca66c46a07ed2bc8c021b9e26f81ada7f09",
-            "key": "operator_train-meta_train-operator-s20261020-f4c5a38933f0",
-            "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/full/97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b/e366f9cb854cc248a792a0b83edb61d99c9148f4e5bbed0357bcefc773a57a30/34aa345e56079c9a3760911ece796ca66c46a07ed2bc8c021b9e26f81ada7f09/manifest.json",
-            "parts": 1,
-            "remote_full_GET_SHA256_verified": true,
-            "source_files": 7
-          }
-        }
-      },
-      "independent_from_paper_channel": true,
-      "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
-      "remote_full_GET_SHA256_verified": true,
-      "round": 11,
-      "schema_version": "paper3-r11-full-archive-pointer-v1",
-      "stage": "campaign",
-      "status": "PARTIAL",
-      "total_tasks": 10270,
+      "error_type": "RuntimeError",
+      "http_status": null,
+      "status": "RETRYING",
       "training_controlled": false,
-      "updated_utc": "2026-10-26T14:31:45Z"
+      "updated_utc": "2026-10-26T16:02:42Z"
     },
     "paper": {
       "binary_representations": [
