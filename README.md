@@ -10,6 +10,12 @@
 
 [第七轮完整总JSON定向补传](operations/round7_report_supplement_20261025/README_ZH.md) · [第九轮：实测依据、数学与代码](docs/experiments/ROUND9_ZH.md)（已设计，未提交学校任务）
 
+## 第十一轮：前缀—未来得分输运（2026-10-26）
+
+[研究与文献](experiments/round11_20261026/R11_RESEARCH_PROPOSAL_ZH.md) · [数学](experiments/round11_20261026/R11_MATH.md) · [10270任务实验](experiments/round11_20261026/R11_EXPERIMENT_PLAN.md) · [代码与运行](experiments/round11_20261026/R11_IMPLEMENTATION.md) · [完整一行启动](experiments/round11_20261026/delivery/SCHOOL_COMMANDS.md)
+
+R11固定**4个独立单卡作业，各16CPU/64G**。550开发配置、25比较方法，统一DAG自动开发→冻结选型→旧队列探索评价。每allocation持久科学进程，复用source/catalog/特征，按任务隔离失败；报告和双通道按新增完成任务增量发布。数学、native格式与故障恢复已作CPU验证，真实EEG/CUDA尚未运行，未宣称超过EA。本次只发布设计与代码，正式学校提交须显式`--submit`；R1–R10保持原位。
+
 ## 第十轮：新算法、完整证据和四作业交付（2026-10-26）
 
 [研究方案](experiments/round10_20261026/R10_RESEARCH_PROPOSAL_ZH.md) · [数学推导](experiments/round10_20261026/R10_MATH.md) · [实验方案](experiments/round10_20261026/R10_EXPERIMENT_PLAN.md) · [代码与部署](experiments/round10_20261026/R10_IMPLEMENTATION.md) · [一行安装及正式提交](experiments/round10_20261026/delivery/SCHOOL_COMMANDS.md)

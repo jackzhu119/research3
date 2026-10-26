@@ -1,0 +1,1880 @@
+{
+  "schema_version": "paper3-r11-literature-audit-v1",
+  "cutoff_date": "2026-10-26",
+  "generated_utc": "2026-10-26T05:58:02.783275+00:00",
+  "review_count": 20,
+  "papers": [
+    {
+      "id": "maml",
+      "title": "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks",
+      "authors": [
+        "Chelsea Finn",
+        "Pieter Abbeel",
+        "Sergey Levine"
+      ],
+      "year": 2017,
+      "doi": null,
+      "doi_note": "No DOI asserted; official proceedings URL used.",
+      "primary_url": "https://proceedings.mlr.press/v70/finn17a.html",
+      "reading_level": "官方PMLR题录和完整摘要",
+      "relevant_sections": "",
+      "established_mechanism_zh": "在任务分布上学习可经少步梯度更新获得良好泛化的初始化；内外循环以目标任务适配后的表现训练。",
+      "collision_with_R11_zh": "episodic训练、少标签校准和meta_train/meta_validation分工均不是R11原创。",
+      "limits_and_R11_boundary_zh": "它并不提供20个相关EEG采集位置下的未来会话风险保证；不能把R11只冻结编码器与小矩阵更新当成新元学习范式。",
+      "fetch_evidence": [
+        {
+          "key": "maml",
+          "requested_url": "https://proceedings.mlr.press/v70/finn17a.html",
+          "final_url": "https://proceedings.mlr.press/v70/finn17a.html",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:50:28.277166+00:00",
+          "bytes": 14866,
+          "sha256": "5755fd5cd75c1d67f629e808573ff69da9762e0ae2791ff4888fda7d089e8f60",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/maml.html",
+          "title": "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks",
+          "meta": {
+            "citation_publisher": [
+              "PMLR"
+            ],
+            "citation_title": [
+              "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks"
+            ],
+            "citation_language": [
+              "en"
+            ],
+            "citation_abstract_html_url": [
+              "https://proceedings.mlr.press/v70/finn17a.html"
+            ],
+            "citation_pdf_url": [
+              "http://proceedings.mlr.press/v70/finn17a/finn17a.pdf"
+            ],
+            "citation_firstpage": [
+              "1126"
+            ],
+            "citation_lastpage": [
+              "1135"
+            ],
+            "citation_author": [
+              "Chelsea Finn",
+              "Pieter Abbeel",
+              "Sergey Levine"
+            ],
+            "citation_publication_date": [
+              "2017/07/17"
+            ],
+            "citation_inbook_title": [
+              "International Conference on Machine Learning"
+            ],
+            "citation_conference_title": [
+              "International Conference on Machine Learning"
+            ],
+            "citation_issn": [
+              "2640-3498"
+            ],
+            "og:title": [
+              "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks"
+            ],
+            "og:description": [
+              "We propose an algorithm for meta-learning that is model-agnostic, in the sense that it is compatible with any model trained with gradient descent and applicable to a variety of different learning p..."
+            ],
+            "og:type": [
+              "article"
+            ],
+            "og:url": [
+              "https://proceedings.mlr.press/v70/finn17a.html"
+            ],
+            "og:image": [
+              "https://proceedings.mlr.press/v70/assets/images/logo-pmlr.png"
+            ],
+            "og:site_name": [
+              "PMLR"
+            ]
+          },
+          "text_excerpt": "Model-Agnostic Meta-Learning for Fast Adaptation of Deep Networks .hero-text { color: #303030; } (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-92432422-1', 'auto'); ga('send', 'pageview'); MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: \"AMS\" } }, tex2jax: { inlineMath: [ ['$','$'], ['\\\\(', '\\\\)'] ], displayMath: [ ['$$','$$'], ['\\\\[', '\\\\]'] ], process",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "hierarchical_bayes",
+      "title": "Recasting Gradient-Based Meta-Learning as Hierarchical Bayes",
+      "authors": [
+        "Grant, Erin",
+        "Finn, Chelsea",
+        "Levine, Sergey",
+        "Darrell, Trevor",
+        "Griffiths, Thomas"
+      ],
+      "year": 2018,
+      "doi": "10.48550/arXiv.1801.08930",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/1801.08930",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "§2.2–3，式(2)–(3)",
+      "established_mechanism_zh": "将MAML解释为层次模型的经验Bayes近似；§2.2式(2)积分任务参数、估计共享先验，§3把内循环更新与隐含先验连接，并讨论曲率/Laplace近似。",
+      "collision_with_R11_zh": "从meta_train学习先验协方差、目标小样本形成后验或以EB解释适配已经被覆盖。",
+      "limits_and_R11_boundary_zh": "改变为固定源anchor或冻结EEG特征是应用约束；必须标清新学习目标与可识别对象，不能把EB解释重新命名为理论贡献。",
+      "fetch_evidence": [
+        {
+          "key": "hierarchical_bayes",
+          "requested_url": "https://arxiv.org/abs/1801.08930",
+          "final_url": "https://arxiv.org/abs/1801.08930",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:50:28.277636+00:00",
+          "bytes": 42303,
+          "sha256": "43dab72db1073ae795b23eaac1cd21d8c9fbfeb63860bf83aed4022e9287a93f",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/hierarchical_bayes.html",
+          "title": "[1801.08930] Recasting Gradient-Based Meta-Learning as Hierarchical Bayes",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Recasting Gradient-Based Meta-Learning as Hierarchical Bayes"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/1801.08930v1"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "Meta-learning allows an intelligent agent to leverage prior learning episodes as a basis for quickly improving performance on a novel task. Bayesian hierarchical modeling provides a theoretical framework for formalizing meta-learning as inference for a set of parameters that are shared across tasks. Here, we reformulate the model-agnostic meta-learning algorithm (MAML) of Finn et al. (2017) as a method for probabilistic inference in a hierarchical Bayesian model. In contrast to prior methods for meta-learning via hierarchical Bayes, MAML is naturally applicable to complex function approximators through its use of a scalable gradient descent procedure for posterior inference. Furthermore, the identification of MAML as hierarchical Bayes provides a way to understand the algorithm's operation as a meta-learning procedure, as well as an opportunity to make use of computational strategies for efficient inference. We use this opportunity to propose an improvement to the MAML algorithm that makes use of techniques from approximate inference and curvature estimation."
+            ],
+            "citation_title": [
+              "Recasting Gradient-Based Meta-Learning as Hierarchical Bayes"
+            ],
+            "citation_author": [
+              "Grant, Erin",
+              "Finn, Chelsea",
+              "Levine, Sergey",
+              "Darrell, Trevor",
+              "Griffiths, Thomas"
+            ],
+            "citation_date": [
+              "2018/01/26"
+            ],
+            "citation_online_date": [
+              "2018/01/26"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/1801.08930"
+            ],
+            "citation_arxiv_id": [
+              "1801.08930"
+            ],
+            "citation_abstract": [
+              "Meta-learning allows an intelligent agent to leverage prior learning episodes as a basis for quickly improving performance on a novel task. Bayesian hierarchical modeling provides a theoretical framework for formalizing meta-learning as inference for a set of parameters that are shared across tasks. Here, we reformulate the model-agnostic meta-learning algorithm (MAML) of Finn et al. (2017) as a method for probabilistic inference in a hierarchical Bayesian model. In contrast to prior methods for meta-learning via hierarchical Bayes, MAML is naturally applicable to complex function approximators through its use of a scalable gradient descent procedure for posterior inference. Furthermore, the identification of MAML as hierarchical Bayes provides a way to understand the algorithm's operation as a meta-learning procedure, as well as an opportunity to make use of computational strategies for efficient inference. We use this opportunity to propose an improvement to the MAML algorithm that makes use of techniques from approximate inference and curvature estimation."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [1801.08930] Recasting Gradient-Based Meta-Learning as Hierarchical Bayes Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Machine Learning arXiv:1801.08930 (cs) [Submitted on 26 Jan 2018] Title: Recasting Gradient-Based Meta-Learning as Hierarchical Bayes Authors: Erin Grant , Chelsea Finn , Sergey Levine , Trevor Darrell , Thomas Griffiths View a PDF of the paper titled Recasting Gradient-Based Meta-Learning as Hierarchical Bayes, by Erin Grant and 4 other authors View PDF Abstract: Meta-learning allows an intelligent agent ",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "hierarchical_bayes_pdf",
+          "requested_url": "https://arxiv.org/pdf/1801.08930",
+          "final_url": "https://arxiv.org/pdf/1801.08930",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:31.289099+00:00",
+          "bytes": 487813,
+          "sha256": "0148a875f243347e9cdbc18d24874c75e9af92175a7c525fb9db6dbd09e3abf1",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/hierarchical_bayes_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.4 %�쏢 5 0 obj < > stream x��]Ys �uN�\u0011��>%@�w4�L/�KD��� ���lW \u0002WS\u0004%\u0010�D���sN��{N�\u0005�(?�Te�\u00073=���;��a3Ob3����W' ?��goN�i� < ;��D�?o�?��6���\u0011!6rޜ?=��l����\u001b������Ӌ��|��W��b��W�;����������l����� �\u0016����'\u000f�O��A�K\u001b�M��VO\u000e>h����. ����x��ï67�o��|�Ǎ8�� ����� �����?� ��&(Z�҂��7�d�A�p ��$��4���gw�Q9ԛz�~50\u0002l�����i\u0006N�֮�\u0015��UF�( �\u0017X lV��E���1(z�ل��Jd\u0001��\u0010a��,DN_\u0016J๺�L&��O�Xx� ��W�Tg>\u0015wc6�޼�rYo>ǃ\u0001����ϧ�\u0001\u0001�\u0010�\u0002߅-�3H\u0014��>�\u0010����������8�\u0003y�0�\\&PϚ0\u0006!�����\u001a��7�2o�\" g=��/x� P�\u0004/X�!�\u0012�k�4O劓7dT\\5�d'\\��(�Ȫ����� \\�B7��\u0014�9 \u000f'� -\u0002 ��D��\u000e��O �\u0011�������x\u0018�� �|�i���o��[`7@\u0017E\u000e�] < .\u0000\u0003\b� D���ky�|���M}��\u0012� ��Z�\u001b _��\u0000��ȫ*��u眡C�;YZ�� �4�(�� �\u000e�\u001a4�?G�t�\u0010�$Gv���շ��7�B(τMT���KV��",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "deep_kernel",
+      "title": "Deep Kernel Learning",
+      "authors": [
+        "Andrew Gordon Wilson",
+        "Zhiting Hu",
+        "Ruslan Salakhutdinov",
+        "Eric P. Xing"
+      ],
+      "year": 2016,
+      "doi": null,
+      "doi_note": "No DOI asserted; official proceedings URL used.",
+      "primary_url": "https://proceedings.mlr.press/v51/wilson16.html",
+      "reading_level": "官方PMLR题录和完整摘要",
+      "relevant_sections": "",
+      "established_mechanism_zh": "结合深度特征映射与核方法，以边际似然学习核及表示。",
+      "collision_with_R11_zh": "φ(x)^T M φ(x′)、学习SPD几何或将冻结表示放入核均属于已有核学习语言。",
+      "limits_and_R11_boundary_zh": "R11若只学习M后替换R9核，最合理定位是learned-kernel基线；必须区分标签score协方差和边缘feature协方差。",
+      "fetch_evidence": [
+        {
+          "key": "deep_kernel",
+          "requested_url": "https://proceedings.mlr.press/v51/wilson16.html",
+          "final_url": "https://proceedings.mlr.press/v51/wilson16.html",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:50:28.282014+00:00",
+          "bytes": 16903,
+          "sha256": "6fdba4efd98b1414690008b50fcfe152d5e17231ea0fea8308f4f87b47be1fdf",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/deep_kernel.html",
+          "title": "Deep Kernel Learning",
+          "meta": {
+            "citation_publisher": [
+              "PMLR"
+            ],
+            "citation_title": [
+              "Deep Kernel Learning"
+            ],
+            "citation_language": [
+              "en"
+            ],
+            "citation_abstract_html_url": [
+              "https://proceedings.mlr.press/v51/wilson16.html"
+            ],
+            "citation_pdf_url": [
+              "http://proceedings.mlr.press/v51/wilson16.pdf"
+            ],
+            "citation_firstpage": [
+              "370"
+            ],
+            "citation_lastpage": [
+              "378"
+            ],
+            "citation_author": [
+              "Andrew Gordon Wilson",
+              "Zhiting Hu",
+              "Ruslan Salakhutdinov",
+              "Eric P. Xing"
+            ],
+            "citation_publication_date": [
+              "2016/05/02"
+            ],
+            "citation_inbook_title": [
+              "Artificial Intelligence and Statistics"
+            ],
+            "citation_conference_title": [
+              "Artificial Intelligence and Statistics"
+            ],
+            "citation_conference_sequence_num": [
+              "19"
+            ],
+            "citation_issn": [
+              "1938-7228"
+            ],
+            "og:title": [
+              "Deep Kernel Learning"
+            ],
+            "og:description": [
+              "We introduce scalable deep kernels, which combine the structural properties of deep learning architectures with the non-parametric flexibility of kernel methods.  Specifically, we transform the inp..."
+            ],
+            "og:type": [
+              "article"
+            ],
+            "og:url": [
+              "https://proceedings.mlr.press/v51/wilson16.html"
+            ],
+            "og:image": [
+              "https://proceedings.mlr.press/v51/assets/images/logo-pmlr.png"
+            ],
+            "og:site_name": [
+              "PMLR"
+            ]
+          },
+          "text_excerpt": "Deep Kernel Learning .hero-text { color: #303030; } (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-92432422-1', 'auto'); ga('send', 'pageview'); MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: \"AMS\" } }, tex2jax: { inlineMath: [ ['$','$'], ['\\\\(', '\\\\)'] ], displayMath: [ ['$$','$$'], ['\\\\[', '\\\\]'] ], processEscapes: true, } }); Proceedings of Machine L",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "dkt",
+      "title": "Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels",
+      "authors": [
+        "Patacchiola, Massimiliano",
+        "Turner, Jack",
+        "Crowley, Elliot J.",
+        "O'Boyle, Michael",
+        "Storkey, Amos"
+      ],
+      "year": 2020,
+      "doi": "10.48550/arXiv.1910.05199",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/1910.05199",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "Algorithm1；§3，式(3)–(8)",
+      "established_mechanism_zh": "共享跨任务深核超参数，积分任务内GP并优化各任务边际似然；Algorithm1训练用meta_train任务S∪Q标签，测试仅对S条件化。分类§3.2采用±1 label regression，再对预测均值作sigmoid，并非精确Bernoulli GP分类。",
+      "collision_with_R11_zh": "跨任务学习可迁移核、Bayesian inner loop、small-support矩阵推断、query侧不重新拟合都已有直接先例。",
+      "limits_and_R11_boundary_zh": "R11若以Bernoulli score/任务前缀噪声作不同观测模型，须明确这一差异；不得把Gaussian label regression与R9的logistic GP声称逐项同一。",
+      "fetch_evidence": [
+        {
+          "key": "dkt",
+          "requested_url": "https://arxiv.org/abs/1910.05199",
+          "final_url": "https://arxiv.org/abs/1910.05199",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:50:28.278143+00:00",
+          "bytes": 44316,
+          "sha256": "0c52d7a738d472a582d11c9a70aae8a04f990902076e8d1eebe7c62773960b59",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/dkt.html",
+          "title": "[1910.05199] Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/1910.05199v4"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "Recently, different machine learning methods have been introduced to tackle the challenging few-shot learning scenario that is, learning from a small labeled dataset related to a specific task. Common approaches have taken the form of meta-learning: learning to learn on the new problem given the old. Following the recognition that meta-learning is implementing learning in a multi-level model, we present a Bayesian treatment for the meta-learning inner loop through the use of deep kernels. As a result we can learn a kernel that transfers to new tasks; we call this Deep Kernel Transfer (DKT). This approach has many advantages: is straightforward to implement as a single optimizer, provides uncertainty quantification, and does not require estimation of task-specific parameters. We empirically demonstrate that DKT outperforms several state-of-the-art algorithms in few-shot classification, and is the state of the art for cross-domain adaptation and regression. We conclude that complex meta-learning routines can be replaced by a simpler Bayesian model without loss of accuracy."
+            ],
+            "citation_title": [
+              "Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels"
+            ],
+            "citation_author": [
+              "Patacchiola, Massimiliano",
+              "Turner, Jack",
+              "Crowley, Elliot J.",
+              "O'Boyle, Michael",
+              "Storkey, Amos"
+            ],
+            "citation_date": [
+              "2019/10/11"
+            ],
+            "citation_online_date": [
+              "2020/10/13"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/1910.05199"
+            ],
+            "citation_arxiv_id": [
+              "1910.05199"
+            ],
+            "citation_abstract": [
+              "Recently, different machine learning methods have been introduced to tackle the challenging few-shot learning scenario that is, learning from a small labeled dataset related to a specific task. Common approaches have taken the form of meta-learning: learning to learn on the new problem given the old. Following the recognition that meta-learning is implementing learning in a multi-level model, we present a Bayesian treatment for the meta-learning inner loop through the use of deep kernels. As a result we can learn a kernel that transfers to new tasks; we call this Deep Kernel Transfer (DKT). This approach has many advantages: is straightforward to implement as a single optimizer, provides uncertainty quantification, and does not require estimation of task-specific parameters. We empirically demonstrate that DKT outperforms several state-of-the-art algorithms in few-shot classification, and is the state of the art for cross-domain adaptation and regression. We conclude that complex meta-learning routines can be replaced by a simpler Bayesian model without loss of accuracy."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [1910.05199] Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Machine Learning arXiv:1910.05199 (cs) [Submitted on 11 Oct 2019 ( v1 ), last revised 13 Oct 2020 (this version, v4)] Title: Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels Authors: Massimiliano Patacchiola , Jack Turner , Elliot J. Crowley , Michael O'Boyle , Amos Storkey View a PDF of the paper titled Bayesian Meta-Learning for the Few-Shot Setting via Deep Kernels, by Massimiliano P",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "dkt_pdf",
+          "requested_url": "https://arxiv.org/pdf/1910.05199",
+          "final_url": "https://arxiv.org/pdf/1910.05199",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:30.879780+00:00",
+          "bytes": 1032264,
+          "sha256": "2eb3ca8cc7573d156dfea70519b11edfc68427f5a55a47e7e0e1a943614fa1ba",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/dkt_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.5 %� 127 0 obj < < /Filter /FlateDecode /Length 4504 >> stream x��[K��Hr���Б\u0002Jl拏\u0019������.��\u0002\u0016��=��,)�%RCR]S�� �\u0011I1)��\u001b����d>\"�x���n����!�� ?|����*�r�� �W\"�2 }�J�DV� ���*V���ߓ��{;��v;�7�d�������^�_���\u001a����Ѷ#u>w=��-�����v�\u001356ka���`��F�,yܻ��8^�;�G��;u��Rs}����?P���5��? � \u000e\u0012�S��\u0016���R!K:� 亮�~/�P8!������y \u001b�}k\u000f�~�uߺvGo/n�� }�\u000e8�Β\u0007�t�{���03b�,O�1���-���i�?���/��6&�2 < �o�%3ُ|� A��7)�T�U���\u000f_ �� S�L:��\"5J��R��&��u]� ҧ��\b�[K�|�Mp����\u0000j�,�~p];PK�L�`��@[���\u000e)�M�\u0005h�-~�\u0003x� �Y�[^\bGaKs���\u0017�hS�~ v\u000fv �\u0016 \u00100 @z < �=���\u0011�U^��T���\u0010�y�Ի5\u0010ֵ��a/ �\u0016��v�w ���\u0017�\u00015�\u000e#���w�A�x�m�?��g\u001a`۵��/��Z�(����t[K�9^��\u0000)B4�1�p���a�,����t'�n\u0006��\u0006i�Erpp��N��ӪP�GF���R�+�G��3�߄�",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "adkl",
+      "title": "Adaptive Deep Kernel Learning",
+      "authors": [
+        "Tossou, Prudencio",
+        "Dura, Basile",
+        "Laviolette, Francois",
+        "Marchand, Mario",
+        "Lacoste, Alexandre"
+      ],
+      "year": 2019,
+      "doi": "10.48550/arXiv.1905.12131",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/1905.12131",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "方法和任务核编码部分",
+      "established_mechanism_zh": "用任务编码器产生任务适配的核族，并与可微kernel ridge/GP类推断结合；不是所有任务共用一个固定核。",
+      "collision_with_R11_zh": "若R11根据20标签support生成协方差、核参数或任务条件几何，与ADKL直接接近。",
+      "limits_and_R11_boundary_zh": "配对prefix的统计识别设计可能是额外结构，但support-conditioned kernel本身不足以支撑原创。此处以2019预印本/2020版本引用，不虚构期刊发表信息。",
+      "fetch_evidence": [
+        {
+          "key": "adkl",
+          "requested_url": "https://arxiv.org/abs/1905.12131",
+          "final_url": "https://arxiv.org/abs/1905.12131",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:54:57.526670+00:00",
+          "bytes": 42762,
+          "sha256": "47ebee3b9844ace2381631cbfa30d285a949430d1a15ed984250269e5d774c18",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/adkl.html",
+          "title": "[1905.12131] Adaptive Deep Kernel Learning",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Adaptive Deep Kernel Learning"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/1905.12131v2"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "Deep kernel learning provides an elegant and principled framework for combining the structural properties of deep learning algorithms with the flexibility of kernel methods. By means of a deep neural network, we learn a parametrized kernel operator that can be combined with a differentiable kernel algorithm during inference. While previous work within this framework has focused on learning a single kernel for large datasets, we learn a kernel family for a variety of few-shot regression tasks. Compared to single deep kernel learning, our algorithm enables the identification of the appropriate kernel for each task during inference. As such, it is well adapted for complex task distributions in a few-shot learning setting, which we demonstrate by comparing against existing state-of-the-art algorithms using real-world, few-shot regression tasks related to the field of drug discovery."
+            ],
+            "citation_title": [
+              "Adaptive Deep Kernel Learning"
+            ],
+            "citation_author": [
+              "Tossou, Prudencio",
+              "Dura, Basile",
+              "Laviolette, Francois",
+              "Marchand, Mario",
+              "Lacoste, Alexandre"
+            ],
+            "citation_date": [
+              "2019/05/28"
+            ],
+            "citation_online_date": [
+              "2020/12/11"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/1905.12131"
+            ],
+            "citation_arxiv_id": [
+              "1905.12131"
+            ],
+            "citation_abstract": [
+              "Deep kernel learning provides an elegant and principled framework for combining the structural properties of deep learning algorithms with the flexibility of kernel methods. By means of a deep neural network, we learn a parametrized kernel operator that can be combined with a differentiable kernel algorithm during inference. While previous work within this framework has focused on learning a single kernel for large datasets, we learn a kernel family for a variety of few-shot regression tasks. Compared to single deep kernel learning, our algorithm enables the identification of the appropriate kernel for each task during inference. As such, it is well adapted for complex task distributions in a few-shot learning setting, which we demonstrate by comparing against existing state-of-the-art algorithms using real-world, few-shot regression tasks related to the field of drug discovery."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [1905.12131] Adaptive Deep Kernel Learning Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Machine Learning arXiv:1905.12131 (cs) [Submitted on 28 May 2019 ( v1 ), last revised 11 Dec 2020 (this version, v2)] Title: Adaptive Deep Kernel Learning Authors: Prudencio Tossou , Basile Dura , Francois Laviolette , Mario Marchand , Alexandre Lacoste View a PDF of the paper titled Adaptive Deep Kernel Learning, by Prudencio Tossou and 4 other authors View PDF HTML (experimental) Abstract: Deep kernel learning provides an elegant and ",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "adkl_pdf",
+          "requested_url": "https://arxiv.org/pdf/1905.12131",
+          "final_url": "https://arxiv.org/pdf/1905.12131",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:54:57.526999+00:00",
+          "bytes": 1222073,
+          "sha256": "2b3a447fa28932e762d7d8f47046d51ae641db0a6e12b42ea4fd6246a043a98d",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/adkl_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.5 %� 111 0 obj < < /Filter /FlateDecode /Length 5291 >> stream xڵ\\[��Ʊ~��P�(dİ/l�6��\u0013gm�Ɖ�^ \u0001�\u00058#f%R&)�'��TuU��\u0014% ✗\u0011/}���W��IVϫd��g ��χ���.׫\".�4�\u000fO�$.rx���J$�*\u0013I��l���):�]��H�F� < �P� ��~Ө���D/t3����\u0001�M���It �EW ˚{\u000e���ܶM>��3�(� =?V0�+]�M��3�#I�z#�m]5�ZD�z���>�s\u0011�Կ�� �� �)\u000f� �\u0002|Mܙ���̉�S�=�ݱl��+M�)�}��{�8u��:Z����\u001a �ڞo���n� � ��� ��y �=��D�������\u0004��}��Dg��̧5�q���oy��}�����y��6:z�7/��SW��\u001af\u00037��_��UՉZ|Z�$���:ЛCUv� ��#I���� ~\u00045��\b\u0007mO�\u0016�uCK-��mē�ӡ���O\u00148��8W�\u0018u\u0014�\u0015�I\u000e�v-�;^�4:��kgJ����\u0016������\u001bO(�\u0010�mW\u000f�coe&��%z\u00034�� �G�X��{�h�fs*qI-��\u0019����\"�~� �C=��� �2����\u0014.�J�`��~$\u0000o^j\u0014 ����\u0014��;o�sWr{���\u001bꊻ�qiC񪩦�M5���mg�R尌�z˓���Ctp��L\u0011* < ���>?)�\u0005���hO@}�\u0007�e℮",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "alpaca_correct",
+      "title": "Meta-Learning Priors for Efficient Online Bayesian Regression",
+      "authors": [
+        "Harrison, James",
+        "Sharma, Apoorva",
+        "Pavone, Marco"
+      ],
+      "year": 2018,
+      "doi": "10.48550/arXiv.1807.08912",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/1807.08912",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "§3–4，式(5)–(9)，Algorithm1",
+      "established_mechanism_zh": "ALPaCA联合学习固定online特征、matrix-normal权重先验均值与precision；式(5)–(8)给BLR后验；§4.1–4.2以held-out conditional predictive NLL训练，并明确固定feature时就是empirical Bayes。",
+      "collision_with_R11_zh": "先验协方差＋冻结编码器＋小样本解析后验＋跨任务预测目标，是与R11最直接的先例之一。",
+      "limits_and_R11_boundary_zh": "ALPaCA原文主要为Gaussian回归且noise covariance作为给定量；R11若学习score观测noise需给独立识别证据，不能仅说“我们同时学noise”就证明原创/可靠。",
+      "fetch_evidence": [
+        {
+          "key": "alpaca_correct",
+          "requested_url": "https://arxiv.org/abs/1807.08912",
+          "final_url": "https://arxiv.org/abs/1807.08912",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:19.943151+00:00",
+          "bytes": 44507,
+          "sha256": "ca8d08135cc6f1f59a0fcaa43f09f6dbef6f9094b81ffaa159c68e246d67cf92",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/alpaca_correct.html",
+          "title": "[1807.08912] Meta-Learning Priors for Efficient Online Bayesian Regression",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Meta-Learning Priors for Efficient Online Bayesian Regression"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/1807.08912v2"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "Gaussian Process (GP) regression has seen widespread use in robotics due to its generality, simplicity of use, and the utility of Bayesian predictions. The predominant implementation of GP regression is a nonparameteric kernel-based approach, as it enables fitting of arbitrary nonlinear functions. However, this approach suffers from two main drawbacks: (1) it is computationally inefficient, as computation scales poorly with the number of samples; and (2) it can be data inefficient, as encoding prior knowledge that can aid the model through the choice of kernel and associated hyperparameters is often challenging and unintuitive. In this work, we propose ALPaCA, an algorithm for efficient Bayesian regression which addresses these issues. ALPaCA uses a dataset of sample functions to learn a domain-specific, finite-dimensional feature encoding, as well as a prior over the associated weights, such that Bayesian linear regression in this feature space yields accurate online predictions of the posterior predictive density. These features are neural networks, which are trained via a meta-learning (or \"learning-to-learn\") approach. ALPaCA extracts all prior information directly from the dataset, rather than restricting prior information to the choice of kernel hyperparameters. Furthermore, by operating in the weight space, it substantially reduces sample complexity. We investigate the performance of ALPaCA on two simple regression problems, two simulated robotic systems, and on a lane-change driving task performed by humans. We find our approach outperforms kernel-based GP regression, as well as state of the art meta-learning approaches, thereby providing a promising plug-in tool for many regression tasks in robotics where scalability and data-efficiency are important."
+            ],
+            "citation_title": [
+              "Meta-Learning Priors for Efficient Online Bayesian Regression"
+            ],
+            "citation_author": [
+              "Harrison, James",
+              "Sharma, Apoorva",
+              "Pavone, Marco"
+            ],
+            "citation_date": [
+              "2018/07/24"
+            ],
+            "citation_online_date": [
+              "2018/10/31"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/1807.08912"
+            ],
+            "citation_arxiv_id": [
+              "1807.08912"
+            ],
+            "citation_abstract": [
+              "Gaussian Process (GP) regression has seen widespread use in robotics due to its generality, simplicity of use, and the utility of Bayesian predictions. The predominant implementation of GP regression is a nonparameteric kernel-based approach, as it enables fitting of arbitrary nonlinear functions. However, this approach suffers from two main drawbacks: (1) it is computationally inefficient, as computation scales poorly with the number of samples; and (2) it can be data inefficient, as encoding prior knowledge that can aid the model through the choice of kernel and associated hyperparameters is often challenging and unintuitive. In this work, we propose ALPaCA, an algorithm for efficient Bayesian regression which addresses these issues. ALPaCA uses a dataset of sample functions to learn a domain-specific, finite-dimensional feature encoding, as well as a prior over the associated weights, such that Bayesian linear regression in this feature space yields accurate online predictions of the posterior predictive density. These features are neural networks, which are trained via a meta-learning (or \"learning-to-learn\") approach. ALPaCA extracts all prior information directly from the dataset, rather than restricting prior information to the choice of kernel hyperparameters. Furthermore, by operating in the weight space, it substantially reduces sample complexity. We investigate the performance of ALPaCA on two simple regression problems, two simulated robotic systems, and on a lane-change driving task performed by humans. We find our approach outperforms kernel-based GP regression, as well as state of the art meta-learning approaches, thereby providing a promising plug-in tool for many regression tasks in robotics where scalability and data-efficiency are important."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [1807.08912] Meta-Learning Priors for Efficient Online Bayesian Regression Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Robotics arXiv:1807.08912 (cs) [Submitted on 24 Jul 2018 ( v1 ), last revised 31 Oct 2018 (this version, v2)] Title: Meta-Learning Priors for Efficient Online Bayesian Regression Authors: James Harrison , Apoorva Sharma , Marco Pavone View a PDF of the paper titled Meta-Learning Priors for Efficient Online Bayesian Regression, by James Harrison and 2 other authors View PDF HTML (experimental) Abstract: Ga",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "alpaca_pdf",
+          "requested_url": "https://arxiv.org/pdf/1807.08912",
+          "final_url": "https://arxiv.org/pdf/1807.08912",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:30.880352+00:00",
+          "bytes": 2424250,
+          "sha256": "0c738152f15b4e7d6a6030d80ff679f4e0a98ba1371faa25dd5d9bcb1645b80d",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/alpaca_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.5 %� 89 0 obj < < /Filter /FlateDecode /Length 3293 >> stream x�}ZKs��\u0011��W�r��D\u0018/\u0012@n�&�&eg������a\u0004���@���%�Ow= @c�\"t�� < ��T�9n�ͻW�~�|~��m��DaP�E������M\u0016\u0016A�\u0012Vm�l�9�k{{�����g����vh\u001b঩\u0000|2�yz�q�\\�2� C_��W@cou\u001a>��� 荭�}\u0000� ;��g��vO \u000e-��5]�X���a�t�Ξ��hKX��-�j\u0006G�����t�]�\u0004���� /� �\u0012�Ͷcӏ|�|k�o���y\u0019[�����-��q����� ��l:3��\u000fX��]+���ס�\u0001#|Z� < ���%]s�ǫ@���{9��u� ]�+=��$۞ #�\u0019���Z@�\u0011h{ ���\u0001� L� ں��w {��D�W@�kY�t�Z\u0017UY0h0��cgj��k12�Й�h��ޖ\u0019�5��\u000f�r�� ��!�s���#��� ��}�o�=�ᑟ:�V=(�|&��tB�': �TGV?���4����n�Ոx�Ґ�.I�\\�W�\u0003p��N��fG[��[0��k�qK:i�\u001a/�8�9l\u0012=`(F�u�4�{?�\u0013������\u000eأ���jODw�z\u0017��x� < )CGK\u0013Ig+�\u000f]{�;��\u0018�+���Z ��|\u0004��1��y,o�\"œ���m�/\u0011��k\u0006 �1,�\"\u0016�Ǧd�\u0002�\u000f* x׺Ɛ ����",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "r2d2",
+      "title": "Meta-learning with differentiable closed-form solvers",
+      "authors": [
+        "Bertinetto, Luca",
+        "Henriques, João F.",
+        "Torr, Philip H. S.",
+        "Vedaldi, Andrea"
+      ],
+      "year": 2018,
+      "doi": "10.48550/arXiv.1805.08136",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/1805.08136",
+      "reading_level": "作者arXiv题录和完整摘要",
+      "relevant_sections": "",
+      "established_mechanism_zh": "用ridge regression及logistic regression求解器作为few-shot适配模块，误差反传过求解器，并以Woodbury利用少样本降低矩阵成本。",
+      "collision_with_R11_zh": "冻结特征、小头ridge/logistic求解以及n≤20的dual解法不能算新算法。",
+      "limits_and_R11_boundary_zh": "R11应保留等特征、等20trial预算的ridge/logistic baseline；只比昂贵全参数fine-tune不能隔离新operator的贡献。",
+      "fetch_evidence": [
+        {
+          "key": "r2d2",
+          "requested_url": "https://arxiv.org/abs/1805.08136",
+          "final_url": "https://arxiv.org/abs/1805.08136",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:50:28.517821+00:00",
+          "bytes": 43774,
+          "sha256": "6be727572b3624b631fe06cf41b08e1e3f60f962504a433582513252eaad7ffd",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/r2d2.html",
+          "title": "[1805.08136] Meta-learning with differentiable closed-form solvers",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Meta-learning with differentiable closed-form solvers"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/1805.08136v3"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "Adapting deep networks to new concepts from a few examples is challenging, due to the high computational requirements of standard fine-tuning procedures. Most work on few-shot learning has thus focused on simple learning techniques for adaptation, such as nearest neighbours or gradient descent. Nonetheless, the machine learning literature contains a wealth of methods that learn non-deep models very efficiently. In this paper, we propose to use these fast convergent methods as the main adaptation mechanism for few-shot learning. The main idea is to teach a deep network to use standard machine learning tools, such as ridge regression, as part of its own internal model, enabling it to quickly adapt to novel data. This requires back-propagating errors through the solver steps. While normally the cost of the matrix operations involved in such a process would be significant, by using the Woodbury identity we can make the small number of examples work to our advantage. We propose both closed-form and iterative solvers, based on ridge regression and logistic regression components. Our methods constitute a simple and novel approach to the problem of few-shot learning and achieve performance competitive with or superior to the state of the art on three benchmarks."
+            ],
+            "citation_title": [
+              "Meta-learning with differentiable closed-form solvers"
+            ],
+            "citation_author": [
+              "Bertinetto, Luca",
+              "Henriques, João F.",
+              "Torr, Philip H. S.",
+              "Vedaldi, Andrea"
+            ],
+            "citation_date": [
+              "2018/05/21"
+            ],
+            "citation_online_date": [
+              "2019/07/24"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/1805.08136"
+            ],
+            "citation_arxiv_id": [
+              "1805.08136"
+            ],
+            "citation_abstract": [
+              "Adapting deep networks to new concepts from a few examples is challenging, due to the high computational requirements of standard fine-tuning procedures. Most work on few-shot learning has thus focused on simple learning techniques for adaptation, such as nearest neighbours or gradient descent. Nonetheless, the machine learning literature contains a wealth of methods that learn non-deep models very efficiently. In this paper, we propose to use these fast convergent methods as the main adaptation mechanism for few-shot learning. The main idea is to teach a deep network to use standard machine learning tools, such as ridge regression, as part of its own internal model, enabling it to quickly adapt to novel data. This requires back-propagating errors through the solver steps. While normally the cost of the matrix operations involved in such a process would be significant, by using the Woodbury identity we can make the small number of examples work to our advantage. We propose both closed-form and iterative solvers, based on ridge regression and logistic regression components. Our methods constitute a simple and novel approach to the problem of few-shot learning and achieve performance competitive with or superior to the state of the art on three benchmarks."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [1805.08136] Meta-learning with differentiable closed-form solvers Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Computer Vision and Pattern Recognition arXiv:1805.08136 (cs) [Submitted on 21 May 2018 ( v1 ), last revised 24 Jul 2019 (this version, v3)] Title: Meta-learning with differentiable closed-form solvers Authors: Luca Bertinetto , João F. Henriques , Philip H.S. Torr , Andrea Vedaldi View a PDF of the paper titled Meta-learning with differentiable closed-form solvers, by Luca Bertinetto and 3 other authors View PDF",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "metaoptnet",
+      "title": "Meta-Learning With Differentiable Convex Optimization",
+      "authors": [
+        "Lee, Kwonjoon",
+        "Maji, Subhransu",
+        "Ravichandran, Avinash",
+        "Soatto, Stefano"
+      ],
+      "year": 2019,
+      "doi": null,
+      "doi_note": "No DOI asserted; official proceedings URL used.",
+      "primary_url": "https://openaccess.thecvf.com/content_CVPR_2019/html/Lee_Meta-Learning_With_Differentiable_Convex_Optimization_CVPR_2019_paper.html",
+      "reading_level": "官方CVF题录和完整摘要",
+      "relevant_sections": "",
+      "established_mechanism_zh": "将可微凸优化分类器纳入元学习，以任务内凸分类问题和外层表示学习结合。",
+      "collision_with_R11_zh": "“内层凸、外层学几何/特征、少样本快速适配”已有成熟先例。",
+      "limits_and_R11_boundary_zh": "R11的PSD约束或凸logistic inner loop仅是工具；需报告operator的数据对象、学习准则及跨session验证的实质变化。",
+      "fetch_evidence": [
+        {
+          "key": "metaoptnet",
+          "requested_url": "https://openaccess.thecvf.com/content_CVPR_2019/html/Lee_Meta-Learning_With_Differentiable_Convex_Optimization_CVPR_2019_paper.html",
+          "final_url": "https://openaccess.thecvf.com/content_CVPR_2019/html/Lee_Meta-Learning_With_Differentiable_Convex_Optimization_CVPR_2019_paper.html",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:50:28.540257+00:00",
+          "bytes": 4754,
+          "sha256": "224df0cc8d81c7f9517fd71c2663fc27780fcaeae93d8da3876becf1f7b099d4",
+          "content_type": "text/html; charset=UTF-8",
+          "cache_path": "/tmp/r11-lit-primary/metaoptnet.html",
+          "title": "CVPR 2019 Open Access Repository",
+          "meta": {
+            "citation_title": [
+              "Meta-Learning With Differentiable Convex Optimization"
+            ],
+            "citation_author": [
+              "Lee, Kwonjoon",
+              "Maji, Subhransu",
+              "Ravichandran, Avinash",
+              "Soatto, Stefano"
+            ],
+            "citation_publication_date": [
+              "2019"
+            ],
+            "citation_conference_title": [
+              "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition"
+            ],
+            "citation_firstpage": [
+              "10657"
+            ],
+            "citation_lastpage": [
+              "10665"
+            ],
+            "citation_pdf_url": [
+              "http://openaccess.thecvf.com/content_CVPR_2019/papers/Lee_Meta-Learning_With_Differentiable_Convex_Optimization_CVPR_2019_paper.pdf"
+            ]
+          },
+          "text_excerpt": "CVPR 2019 Open Access Repository CVPR 2019 open access These CVPR 2019 papers are the Open Access versions, provided by the Computer Vision Foundation. Except for the watermark, they are identical to the accepted versions; the final published version of the proceedings is available on IEEE Xplore. This material is presented to ensure timely dissemination of scholarly and technical work. Copyright and all rights therein are retained by authors or by other copyright holders. All persons copying this information are expected to adhere to the terms and constraints invoked by each author's copyright. Meta-Learning With Differentiable Convex Optimi",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "metacurvature_correct",
+      "title": "Meta-Curvature",
+      "authors": [
+        "Park, Eunbyung",
+        "Oliva, Junier B."
+      ],
+      "year": 2019,
+      "doi": "10.48550/arXiv.1902.03356",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/1902.03356",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "§2.3–3，式(2)–(3)",
+      "established_mechanism_zh": "学习跨任务梯度变换以提高适配泛化；§3式(3)用张量mode-product建模参数依赖，学习的curvature并非仅是当前support Hessian或Fisher。",
+      "collision_with_R11_zh": "“学一个适配几何让20标签gradient更可靠”是直接碰撞，不应把learned preconditioner称新原则。",
+      "limits_and_R11_boundary_zh": "R11需要证明其operator是在配对观测模型下学习稳定label-score、而不是常规meta-curvature的另一种参数化。",
+      "fetch_evidence": [
+        {
+          "key": "metacurvature_correct",
+          "requested_url": "https://arxiv.org/abs/1902.03356",
+          "final_url": "https://arxiv.org/abs/1902.03356",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:19.944912+00:00",
+          "bytes": 41817,
+          "sha256": "32fa4344eaa4d94489875620c8421d6410a0d7b073d7999b8ddfa3d3ae9b84cd",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/metacurvature_correct.html",
+          "title": "[1902.03356] Meta-Curvature",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Meta-Curvature"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/1902.03356v3"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "We propose meta-curvature (MC), a framework to learn curvature information for better generalization and fast model adaptation. MC expands on the model-agnostic meta-learner (MAML) by learning to transform the gradients in the inner optimization such that the transformed gradients achieve better generalization performance to a new task. For training large scale neural networks, we decompose the curvature matrix into smaller matrices in a novel scheme where we capture the dependencies of the model's parameters with a series of tensor products. We demonstrate the effects of our proposed method on several few-shot learning tasks and datasets. Without any task specific techniques and architectures, the proposed method achieves substantial improvement upon previous MAML variants and outperforms the recent state-of-the-art methods. Furthermore, we observe faster convergence rates of the meta-training process. Finally, we present an analysis that explains better generalization performance with the meta-trained curvature."
+            ],
+            "citation_title": [
+              "Meta-Curvature"
+            ],
+            "citation_author": [
+              "Park, Eunbyung",
+              "Oliva, Junier B."
+            ],
+            "citation_date": [
+              "2019/02/09"
+            ],
+            "citation_online_date": [
+              "2020/01/09"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/1902.03356"
+            ],
+            "citation_arxiv_id": [
+              "1902.03356"
+            ],
+            "citation_abstract": [
+              "We propose meta-curvature (MC), a framework to learn curvature information for better generalization and fast model adaptation. MC expands on the model-agnostic meta-learner (MAML) by learning to transform the gradients in the inner optimization such that the transformed gradients achieve better generalization performance to a new task. For training large scale neural networks, we decompose the curvature matrix into smaller matrices in a novel scheme where we capture the dependencies of the model's parameters with a series of tensor products. We demonstrate the effects of our proposed method on several few-shot learning tasks and datasets. Without any task specific techniques and architectures, the proposed method achieves substantial improvement upon previous MAML variants and outperforms the recent state-of-the-art methods. Furthermore, we observe faster convergence rates of the meta-training process. Finally, we present an analysis that explains better generalization performance with the meta-trained curvature."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [1902.03356] Meta-Curvature Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Machine Learning arXiv:1902.03356 (cs) [Submitted on 9 Feb 2019 ( v1 ), last revised 9 Jan 2020 (this version, v3)] Title: Meta-Curvature Authors: Eunbyung Park , Junier B. Oliva View a PDF of the paper titled Meta-Curvature, by Eunbyung Park and 1 other authors View PDF HTML (experimental) Abstract: We propose meta-curvature (MC), a framework to learn curvature information for better generalization and fast model adaptation. MC expands on the model-a",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "metacurvature_pdf",
+          "requested_url": "https://arxiv.org/pdf/1902.03356",
+          "final_url": "https://arxiv.org/pdf/1902.03356",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:30.882816+00:00",
+          "bytes": 3657495,
+          "sha256": "c3427b78fc6d6ba2d01b6014acd89a81020950df35ddc88316db206dfc8d27c8",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/metacurvature_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.5 %� 164 0 obj < < /Filter /FlateDecode /Length 5228 >> stream x��\\ݓ�6��_���Ԏ\u0018�t*\u000f�^R�T�w{�KU�\u000f �3�X\"�$\u0015ǹ���\u001a�\u0006\u0005P\u0018i��y��r�DA �h�ǯ\u001b���͋/�5zU��z��~U�U�V\u0005�c+V�+Ê�\u0010f�f��)���Ysų� �\u0013��߰\"�w����\u0006?\u000fC��\u0006�L=6�z谩Ɩ�q�冫���\u0003u��\u0007������� ��\u0019�]�[=�� ������z��,���f�?���0����n޾�ޭ�\u0007k�U�3^�\u001a�GZþ�굣�� l���z��p /[���Ի���oK�੟��27���tSYfXF�\b�58����Q\u0004�r�u `C�M��č���L|���\u000f�i�{\\O��\u0019 A+�\u0017���qe�sV����BYfc����9 ��t�\u0007#6����>P��k7�ݎ~tBc�w;j��w�]baP\u000emۣ���S��vh�[��\u001a oT���C����O`�G�b*\\�1�`�0 �Ɠm��\u0019\u0012_��;b\u001b�-|!X�Y���:M���\u001b�2�uZl��5T���&�6 ���k�4�\u0007/�e$�Z�`��kԔ��'��*;�V�a��\u0016{t��E {��汝����:��qħ�c�q;M����l\u001a�֫�ζ�T;a��W� ���~��k�Z��k� �&�pAJ�\u0012�!� < \u0018� �����Ev��%@������\u0002�m��� \u0012",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "kml_revisit",
+      "title": "Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning",
+      "authors": [
+        "Abdollahzadeh, Milad",
+        "Malekzadeh, Touba",
+        "Cheung, Ngai-Man"
+      ],
+      "year": 2021,
+      "doi": "10.48550/arXiv.2110.14202",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/2110.14202",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "§4–5.2，式(6)–(9)",
+      "established_mechanism_zh": "KML在该文指Kernel ModuLation：task embedding生成卷积权重残差调制；§5.2式(6)为W⊙(J+M)，式(8)用向量外积降参数；同时以任务间loss ratio分析正负transference。",
+      "collision_with_R11_zh": "support条件化调制、低秩hypernetwork、以跨任务迁移解释适配都已有先例。",
+      "limits_and_R11_boundary_zh": "这里kernel是卷积滤波器，不是GP covariance kernel；不能误写为同一种核方法，也不能声称R11首次分析negative transfer。",
+      "fetch_evidence": [
+        {
+          "key": "kml_revisit",
+          "requested_url": "https://arxiv.org/abs/2110.14202",
+          "final_url": "https://arxiv.org/abs/2110.14202",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:19.946031+00:00",
+          "bytes": 44658,
+          "sha256": "14d7655fe2020eeb52867fbb00539631454ec9f0eec20a37f56e235e7a63fdfc",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/kml_revisit.html",
+          "title": "[2110.14202] Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/2110.14202v1"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "Multimodal meta-learning is a recent problem that extends conventional few-shot meta-learning by generalizing its setup to diverse multimodal task distributions. This setup makes a step towards mimicking how humans make use of a diverse set of prior skills to learn new skills. Previous work has achieved encouraging performance. In particular, in spite of the diversity of the multimodal tasks, previous work claims that a single meta-learner trained on a multimodal distribution can sometimes outperform multiple specialized meta-learners trained on individual unimodal distributions. The improvement is attributed to knowledge transfer between different modes of task distributions. However, there is no deep investigation to verify and understand the knowledge transfer between multimodal tasks. Our work makes two contributions to multimodal meta-learning. First, we propose a method to quantify knowledge transfer between tasks of different modes at a micro-level. Our quantitative, task-level analysis is inspired by the recent transference idea from multi-task learning. Second, inspired by hard parameter sharing in multi-task learning and a new interpretation of related work, we propose a new multimodal meta-learner that outperforms existing work by considerable margins. While the major focus is on multimodal meta-learning, our work also attempts to shed light on task interaction in conventional meta-learning. The code for this project is available at https://miladabd.github.io/KML."
+            ],
+            "citation_title": [
+              "Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning"
+            ],
+            "citation_author": [
+              "Abdollahzadeh, Milad",
+              "Malekzadeh, Touba",
+              "Cheung, Ngai-Man"
+            ],
+            "citation_date": [
+              "2021/10/27"
+            ],
+            "citation_online_date": [
+              "2021/10/27"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/2110.14202"
+            ],
+            "citation_arxiv_id": [
+              "2110.14202"
+            ],
+            "citation_abstract": [
+              "Multimodal meta-learning is a recent problem that extends conventional few-shot meta-learning by generalizing its setup to diverse multimodal task distributions. This setup makes a step towards mimicking how humans make use of a diverse set of prior skills to learn new skills. Previous work has achieved encouraging performance. In particular, in spite of the diversity of the multimodal tasks, previous work claims that a single meta-learner trained on a multimodal distribution can sometimes outperform multiple specialized meta-learners trained on individual unimodal distributions. The improvement is attributed to knowledge transfer between different modes of task distributions. However, there is no deep investigation to verify and understand the knowledge transfer between multimodal tasks. Our work makes two contributions to multimodal meta-learning. First, we propose a method to quantify knowledge transfer between tasks of different modes at a micro-level. Our quantitative, task-level analysis is inspired by the recent transference idea from multi-task learning. Second, inspired by hard parameter sharing in multi-task learning and a new interpretation of related work, we propose a new multimodal meta-learner that outperforms existing work by considerable margins. While the major focus is on multimodal meta-learning, our work also attempts to shed light on task interaction in conventional meta-learning. The code for this project is available at https://miladabd.github.io/KML."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [2110.14202] Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Machine Learning arXiv:2110.14202 (cs) [Submitted on 27 Oct 2021] Title: Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning Authors: Milad Abdollahzadeh , Touba Malekzadeh , Ngai-Man Cheung View a PDF of the paper titled Revisit Multimodal Meta-Learning through the Lens of Multi-Task Learning, by Milad Abdollahzadeh and 2 other authors View PDF HTML (experimental) Abstract",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "kml_pdf",
+          "requested_url": "https://arxiv.org/pdf/2110.14202",
+          "final_url": "https://arxiv.org/pdf/2110.14202",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:30.884185+00:00",
+          "bytes": 3948720,
+          "sha256": "42caf4f6afee24f6c6d0817613a1ce8fde3e9326fb171b3c5b10b2480b6f08c1",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/kml_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.5 %� 181 0 obj < < /Filter /FlateDecode /Length 4988 >> stream xڍ[[��8n~?�rU[\u0011�����J&���:����Jf�Am�m�ؖG��9��\u0003\u0010�DJ��y�DA\u0010\b��\u0001���ۦ���������~pvS啕v�|܈�mJQ�*7χͯ�_�۝4E��{�x� ��=m_��\u0003�v��yQX�\\l�FX�+�fn\u0017���\u0000\u0013��Cs�߭0�����:v��~=4�0��C{}��o�n+u�~n\u000eo��������t�^���~ ��Vd�a�\u0013Y Wg~Ҍ�����\u0015��۝*\\�˩=78\u0007�Z\u0006�a���r! �^n}����:k��2\"�5���/�u�����\u0017\u0017��4B�t��L�c=|#�C;�}��\u0015Uv ��J��@t}s��1|����$(K��̋J����\\�,��)��\u00130,A���g���\"\u00035��C�� �Ź\\���rݪ*�5 ��mk�:L�fcG����=~�{XV�����O���6�j��c�]��� ��\b� �_G\u001a\u0005\u00057L��\\�ߊB��e���\u0013�u8��Y��W�\u0013�\u0004��Vbc�2W����u2\u0003� �|� \u0006t�re���\u001b���\u0014�\"#\u0005\u0002o�0\u001aۅ��M�H� �L���\u000eH�Ҳ��O�䝿\u0004&z���lm� �\u00102�dvmX�x�����-*n� �� � �\b���pk���^��/�� \u001a�� )$T��\u0010�Q`�U%S�� �ĚR6k",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "reliable_prior",
+      "title": "Meta-Learning Reliable Priors in the Function Space",
+      "authors": [
+        "Rothfuss, Jonas",
+        "Heyn, Dominique",
+        "Chen, Jinfan",
+        "Krause, Andreas"
+      ],
+      "year": 2021,
+      "doi": "10.48550/arXiv.2106.03195",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/2106.03195",
+      "reading_level": "作者arXiv原文PDF已读",
+      "relevant_sections": "§2–4，式(1)–(3)",
+      "established_mechanism_zh": "F-PACOH将先验、hyper-prior与hyper-posterior当随机过程；用有限measurement-set上的functional KL近似正则，改善meta-data稀少处的过度自信。",
+      "collision_with_R11_zh": "“学习可靠先验”“函数空间保守不确定性”“防止meta-prior过度自信”都已有实质先例。",
+      "limits_and_R11_boundary_zh": "其PAC/过程KL条件不自动传到R11；R11的单个EB协方差估计忽略hyperparameter uncertainty，不能由后验variance直接宣称目标会话可靠。",
+      "fetch_evidence": [
+        {
+          "key": "reliable_prior",
+          "requested_url": "https://arxiv.org/abs/2106.03195",
+          "final_url": "https://arxiv.org/abs/2106.03195",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:19.948672+00:00",
+          "bytes": 43165,
+          "sha256": "736fa4c1a73d17ece34e1bd814b54b568a878336fc13b7222680d0184fae610a",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/reliable_prior.html",
+          "title": "[2106.03195] Meta-Learning Reliable Priors in the Function Space",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Meta-Learning Reliable Priors in the Function Space"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/2106.03195v2"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "When data are scarce meta-learning can improve a learner's accuracy by harnessing previous experience from related learning tasks. However, existing methods have unreliable uncertainty estimates which are often overconfident. Addressing these shortcomings, we introduce a novel meta-learning framework, called F-PACOH, that treats meta-learned priors as stochastic processes and performs meta-level regularization directly in the function space. This allows us to directly steer the probabilistic predictions of the meta-learner towards high epistemic uncertainty in regions of insufficient meta-training data and, thus, obtain well-calibrated uncertainty estimates. Finally, we showcase how our approach can be integrated with sequential decision making, where reliable uncertainty quantification is imperative. In our benchmark study on meta-learning for Bayesian Optimization (BO), F-PACOH significantly outperforms all other meta-learners and standard baselines."
+            ],
+            "citation_title": [
+              "Meta-Learning Reliable Priors in the Function Space"
+            ],
+            "citation_author": [
+              "Rothfuss, Jonas",
+              "Heyn, Dominique",
+              "Chen, Jinfan",
+              "Krause, Andreas"
+            ],
+            "citation_date": [
+              "2021/06/06"
+            ],
+            "citation_online_date": [
+              "2022/01/11"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/2106.03195"
+            ],
+            "citation_arxiv_id": [
+              "2106.03195"
+            ],
+            "citation_abstract": [
+              "When data are scarce meta-learning can improve a learner's accuracy by harnessing previous experience from related learning tasks. However, existing methods have unreliable uncertainty estimates which are often overconfident. Addressing these shortcomings, we introduce a novel meta-learning framework, called F-PACOH, that treats meta-learned priors as stochastic processes and performs meta-level regularization directly in the function space. This allows us to directly steer the probabilistic predictions of the meta-learner towards high epistemic uncertainty in regions of insufficient meta-training data and, thus, obtain well-calibrated uncertainty estimates. Finally, we showcase how our approach can be integrated with sequential decision making, where reliable uncertainty quantification is imperative. In our benchmark study on meta-learning for Bayesian Optimization (BO), F-PACOH significantly outperforms all other meta-learners and standard baselines."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [2106.03195] Meta-Learning Reliable Priors in the Function Space Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Computer Science > Machine Learning arXiv:2106.03195 (cs) [Submitted on 6 Jun 2021 ( v1 ), last revised 11 Jan 2022 (this version, v2)] Title: Meta-Learning Reliable Priors in the Function Space Authors: Jonas Rothfuss , Dominique Heyn , Jinfan Chen , Andreas Krause View a PDF of the paper titled Meta-Learning Reliable Priors in the Function Space, by Jonas Rothfuss and 3 other authors View PDF HTML (experimental) Abstract: When data",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "reliable_prior_pdf",
+          "requested_url": "https://arxiv.org/pdf/2106.03195",
+          "final_url": "https://arxiv.org/pdf/2106.03195",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:30.884984+00:00",
+          "bytes": 1089486,
+          "sha256": "039a6351d7e2cb97a1545abf28f1171b1da4a79b9a425fb91409e1a9fc32051e",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/reliable_prior_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.5 %� 191 0 obj < < /Filter /FlateDecode /Length 6617 >> stream x�� < ]�㶑��+&o��G|���^�9vlǛ���Ur���#Q#z)Q&%�N �_7\u001a \u0001 �f6�{\u0012\u0005��\u0006���@v�p��|�\"���߽��?��M���뛻�M��\u0005��n� ��T��&gY����n{�crw[�]p������[x��e���U&�MM��a8ڶnm�����,�zw����^5�C��\u0006jhv\u0004h[ �E[W���=��6Γ�v�U}� \u0012m��\u000f+��yõ��~�w�rC nY\u0002� >`���ݟ��\u00177�,S� �{_#��c[��?kDR� r� Zd\u0006�h�~@h��*��\\�T�\u0010���oE���C�H��\u0002�\u0018��а>��\u0002Q󰯖� � ��i�f\u0003�� �X�ۂ%5����Yrl�\u0015�5#�x404|[��?n��\u000f�ϫ�zh�]��%��k��,͸��E�rV���\u0002>�*y ���\u0000��ɏ���H\u0015�`�\u000f\u0019?������[��~�\u0018\u0012��q0����~6�*y��=NxaHE��+ұ&���O��a �H��! mu@�>����(SY��C\u000f�}��t�{��ڽ0�\u0016�a�쐺�a�_� < �u$�_wf�a�I\u0002�P��&a�9�������CG��\u001a�tg�XV�֑��:B{5P���-7�ph��\u000e���0���𪯖0C\u0010�\u00155�?R��`!l+\u0000^$\u000fͮj���u*",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "amortising_2026",
+      "title": "Amortising Inference and Meta-Learning Priors in Neural Networks",
+      "authors": [
+        "Rochussen, Tommy",
+        "Fortuin, Vincent"
+      ],
+      "year": 2026,
+      "doi": "10.48550/arXiv.2602.08782",
+      "doi_note": "arXiv repository DOI, not an asserted journal DOI",
+      "primary_url": "https://arxiv.org/abs/2602.08782",
+      "reading_level": "2026作者arXiv原文PDF已读",
+      "relevant_sections": "§2–3，layerwise posterior与BNNP构造",
+      "established_mechanism_zh": "通过逐dataset amortised variational inference学习BNN权重先验，将模型构造成以BNN权重为latent的neural process；讨论极少任务下学习先验以及within-task minibatching。PDF自标ICLR2026，本记录主引arXiv。",
+      "collision_with_R11_zh": "截至本轮日期，跨dataset学习Bayesian prior与amortised task inference仍有最新直接先例；泛称“元学习先验”已远不足新颖性。",
+      "limits_and_R11_boundary_zh": "本文不是EEG配对score观测识别模型；R11可比较其思想，但不能凭简单EB更便宜就获得新原理。",
+      "fetch_evidence": [
+        {
+          "key": "amortising_2026",
+          "requested_url": "https://arxiv.org/abs/2602.08782",
+          "final_url": "https://arxiv.org/abs/2602.08782",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:20.321275+00:00",
+          "bytes": 41510,
+          "sha256": "75016737111c790bcc3d297c94b29271e01414afb08424b0250db9f159f8d77b",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/amortising_2026.html",
+          "title": "[2602.08782] Amortising Inference and Meta-Learning Priors in Neural Networks",
+          "meta": {
+            "og:type": [
+              "website"
+            ],
+            "og:site_name": [
+              "arXiv.org"
+            ],
+            "og:title": [
+              "Amortising Inference and Meta-Learning Priors in Neural Networks"
+            ],
+            "og:url": [
+              "https://arxiv.org/abs/2602.08782v1"
+            ],
+            "og:image": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:secure_url": [
+              "/static/browse/0.3.4/images/arxiv-logo-fb.png"
+            ],
+            "og:image:width": [
+              "1200"
+            ],
+            "og:image:height": [
+              "700"
+            ],
+            "og:image:alt": [
+              "arXiv logo"
+            ],
+            "og:description": [
+              "One of the core facets of Bayesianism is in the updating of prior beliefs in light of new evidence$\\text{ -- }$so how can we maintain a Bayesian approach if we have no prior beliefs in the first place? This is one of the central challenges in the field of Bayesian deep learning, where it is not clear how to represent beliefs about a prediction task by prior distributions over model parameters. Bridging the fields of Bayesian deep learning and probabilistic meta-learning, we introduce a way to $\\textit{learn}$ a weights prior from a collection of datasets by introducing a way to perform per-dataset amortised variational inference. The model we develop can be viewed as a neural process whose latent variable is the set of weights of a BNN and whose decoder is the neural network parameterised by a sample of the latent variable itself. This unique model allows us to study the behaviour of Bayesian neural networks under well-specified priors, use Bayesian neural networks as flexible generative models, and perform desirable but previously elusive feats in neural processes such as within-task minibatching or meta-learning under extreme data-starvation."
+            ],
+            "citation_title": [
+              "Amortising Inference and Meta-Learning Priors in Neural Networks"
+            ],
+            "citation_author": [
+              "Rochussen, Tommy",
+              "Fortuin, Vincent"
+            ],
+            "citation_date": [
+              "2026/02/09"
+            ],
+            "citation_online_date": [
+              "2026/02/09"
+            ],
+            "citation_pdf_url": [
+              "https://arxiv.org/pdf/2602.08782"
+            ],
+            "citation_arxiv_id": [
+              "2602.08782"
+            ],
+            "citation_abstract": [
+              "One of the core facets of Bayesianism is in the updating of prior beliefs in light of new evidence$\\text{ -- }$so how can we maintain a Bayesian approach if we have no prior beliefs in the first place? This is one of the central challenges in the field of Bayesian deep learning, where it is not clear how to represent beliefs about a prediction task by prior distributions over model parameters. Bridging the fields of Bayesian deep learning and probabilistic meta-learning, we introduce a way to $\\textit{learn}$ a weights prior from a collection of datasets by introducing a way to perform per-dataset amortised variational inference. The model we develop can be viewed as a neural process whose latent variable is the set of weights of a BNN and whose decoder is the neural network parameterised by a sample of the latent variable itself. This unique model allows us to study the behaviour of Bayesian neural networks under well-specified priors, use Bayesian neural networks as flexible generative models, and perform desirable but previously elusive feats in neural processes such as within-task minibatching or meta-learning under extreme data-starvation."
+            ]
+          },
+          "text_excerpt": "document.documentElement.classList.add('js'); [2602.08782] Amortising Inference and Meta-Learning Priors in Neural Networks Skip to main content Search Submit Donate Log in Search arXiv Press Enter to search · Advanced search Statistics > Machine Learning arXiv:2602.08782 (stat) [Submitted on 9 Feb 2026] Title: Amortising Inference and Meta-Learning Priors in Neural Networks Authors: Tommy Rochussen , Vincent Fortuin View a PDF of the paper titled Amortising Inference and Meta-Learning Priors in Neural Networks, by Tommy Rochussen and Vincent Fortuin View PDF HTML (experimental) Abstract: One of the core facets of Bayesianism is in the updati",
+          "citation_status": "verified_primary_source"
+        },
+        {
+          "key": "amortising_2026_pdf",
+          "requested_url": "https://arxiv.org/pdf/2602.08782",
+          "final_url": "https://arxiv.org/pdf/2602.08782",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:52:31.367800+00:00",
+          "bytes": 3171474,
+          "sha256": "ad8f0b0f1c7005e406cbf526f30a22ea4598472404da88337f094f60b420b745",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-lit-primary/amortising_2026_pdf.pdf",
+          "title": "",
+          "meta": {},
+          "text_excerpt": "%PDF-1.7 %���� 1 0 obj < < /Metadata 3 0 R /Names 4 0 R /OpenAction 5 0 R /Outlines 6 0 R /PageMode /UseOutlines /Pages 7 0 R /Type /Catalog >> endobj 2 0 obj < < /Author (Tommy Rochussen; Vincent Fortuin) /Creator (arXiv GenPDF \\(tex2pdf:57610bf\\)) /DOI (https://doi.org/10.48550/arXiv.2602.08782) /License (http://creativecommons.org/licenses/by/4.0/) /PTEX.Fullbanner (This is pdfTeX, Version 3.141592653-2.6-1.40.28 \\(TeX Live 2025\\) kpathsea version 6.4.1) /Producer (pikepdf 8.15.1) /Title (Amortising Inference and Meta-Learning Priors in Neural Networks) /Trapped /False /arXivID (https://arxiv.org/abs/2602.08782v1) >> endobj 3 0 obj < < /Su",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "label_noise_identifiability",
+      "title": "Classification with Asymmetric Label Noise: Consistency and Maximal Denoising",
+      "authors": [
+        "Clayton Scott",
+        "Gilles Blanchard",
+        "Gregory Handy"
+      ],
+      "year": 2013,
+      "doi": null,
+      "doi_note": "No DOI asserted; official proceedings URL used.",
+      "primary_url": "https://proceedings.mlr.press/v30/Scott13.html",
+      "reading_level": "官方PMLR题录和完整摘要",
+      "relevant_sections": "",
+      "established_mechanism_zh": "给出非对称label contamination下可识别、可一致估计的假设及maximal-denoising策略；没有把标签噪声率可从任意小样本无条件推断当成事实。",
+      "collision_with_R11_zh": "用20个标签推断每trial“标签可靠性”与真实潜在分类误差，不是自动可识别；需额外结构。",
+      "limits_and_R11_boundary_zh": "EEG cue标签通常是实验任务指令；信号低SNR、被试不执行任务、source分类错与标签误标必须区分。R11的score稳定性不能被命名为已识别的label correctness。",
+      "fetch_evidence": [
+        {
+          "key": "label_noise_identifiability",
+          "requested_url": "https://proceedings.mlr.press/v30/Scott13.html",
+          "final_url": "https://proceedings.mlr.press/v30/Scott13.html",
+          "status": 200,
+          "fetched_utc": "2026-10-26T05:53:06.931969+00:00",
+          "bytes": 18204,
+          "sha256": "819d91c33b0d65520414459802f6e7359f7590b587ff9b3eef94559963ec7e66",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-lit-primary/label_noise_identifiability.html",
+          "title": "Classification with Asymmetric Label Noise: Consistency and Maximal Denoising",
+          "meta": {
+            "citation_publisher": [
+              "PMLR"
+            ],
+            "citation_title": [
+              "Classification with Asymmetric Label Noise: Consistency and Maximal Denoising"
+            ],
+            "citation_language": [
+              "en"
+            ],
+            "citation_abstract_html_url": [
+              "https://proceedings.mlr.press/v30/Scott13.html"
+            ],
+            "citation_pdf_url": [
+              "http://proceedings.mlr.press/v30/Scott13.pdf"
+            ],
+            "citation_firstpage": [
+              "489"
+            ],
+            "citation_lastpage": [
+              "511"
+            ],
+            "citation_author": [
+              "Clayton Scott",
+              "Gilles Blanchard",
+              "Gregory Handy"
+            ],
+            "citation_publication_date": [
+              "2013/06/13"
+            ],
+            "citation_inbook_title": [
+              "Conference on Learning Theory"
+            ],
+            "citation_conference_title": [
+              "Conference on Learning Theory"
+            ],
+            "citation_conference_sequence_num": [
+              "26"
+            ],
+            "citation_issn": [
+              "1938-7228"
+            ],
+            "og:title": [
+              "Classification with Asymmetric Label Noise: Consistency and Maximal Denoising"
+            ],
+            "og:description": [
+              "In many real-world classification problems, the labels of training examples are randomly corrupted. Thus, the set of training examples for each class is contaminated by examples of the other class...."
+            ],
+            "og:type": [
+              "article"
+            ],
+            "og:url": [
+              "https://proceedings.mlr.press/v30/Scott13.html"
+            ],
+            "og:image": [
+              "https://proceedings.mlr.press/v30/assets/images/logo-pmlr.png"
+            ],
+            "og:site_name": [
+              "PMLR"
+            ]
+          },
+          "text_excerpt": "Classification with Asymmetric Label Noise: Consistency and Maximal Denoising .hero-text { color: #303030; } (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m) })(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-92432422-1', 'auto'); ga('send', 'pageview'); MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: \"AMS\" } }, tex2jax: { inlineMath: [ ['$','$'], ['\\\\(', '\\\\)'] ], displayMath: [ ['$$','$$'], ['\\\\[', '\\\\]'",
+          "citation_status": "verified_primary_source"
+        }
+      ]
+    },
+    {
+      "id": "laird_ware_1982",
+      "title": "Random-Effects Models for Longitudinal Data",
+      "authors": [
+        "Nan M. Laird",
+        "James H. Ware"
+      ],
+      "year": 1982,
+      "doi": "10.2307/2529876",
+      "primary_url": "https://doi.org/10.2307/2529876",
+      "fetch_evidence": [
+        {
+          "id": "laird_ware_1982",
+          "url": "https://api.crossref.org/works/10.2307/2529876",
+          "final_url": "https://api.crossref.org/works/10.2307/2529876",
+          "http_status": 200,
+          "bytes": 1571,
+          "sha256": "635434322f85d6f0f215461a8b12dee8d195bb29e288b353fa690d11926dcc6b",
+          "retrieved_utc": "2026-10-26T05:49:44.328338+00:00",
+          "content_type": "application/json",
+          "cache_path": "/tmp/r11-stats-priorart/laird_ware_1982.json",
+          "metadata": {
+            "title": [
+              "Random-Effects Models for Longitudinal Data"
+            ],
+            "author": [
+              {
+                "given": "Nan M.",
+                "family": "Laird",
+                "sequence": "first",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "James H.",
+                "family": "Ware",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              }
+            ],
+            "DOI": "10.2307/2529876",
+            "publisher": "JSTOR",
+            "container-title": [
+              "Biometrics"
+            ],
+            "published": {
+              "date-parts": [
+                [
+                  1982,
+                  12
+                ]
+              ]
+            },
+            "link": null,
+            "abstract": null
+          }
+        },
+        {
+          "id": "laird_pubmed",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/7168798/",
+          "final_url": "https://pubmed.ncbi.nlm.nih.gov/7168798/",
+          "http_status": 200,
+          "bytes": 113351,
+          "sha256": "badd91e63a3da6a1da86cf3a08fe71096490a44fcc3fae7366bd4ca44e57b3b1",
+          "retrieved_utc": "2026-10-26T05:50:04.814961+00:00",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-stats-priorart/laird_pubmed.html",
+          "pdf_magic_valid": false
+        }
+      ],
+      "reading_level": "官方题录和完整PubMed摘要；JSTOR正文未取得",
+      "relevant_sections": "PubMed abstract",
+      "established_mechanism_zh": "纵向同一个体重复观测的依赖可以通过两层随机效应模型表示，个体参数来自总体分布。摘要明确说明 empirical Bayes、maximum likelihood 与 EM 的结合。",
+      "collision_with_R11_zh": "跨受试者/会话学习总体协方差，再用小样本目标观测计算收缩更新，属于经典混合效应/经验Bayes结构；仅把随机效应改名为适配几何不足以成为新算法。",
+      "limits_and_R11_boundary_zh": "R11若建立score-block观测模型，须明确每层随机效应以及within-session依赖；20个目标标签不能同时无约束估计总体D、会话R与任务偏移。此处未声称已读付费全文。"
+    },
+    {
+      "id": "bonilla_2007",
+      "title": "Multi-task Gaussian Process Prediction",
+      "authors": [
+        "Edwin V. Bonilla",
+        "Kian Ming A. Chai",
+        "Christopher K. I. Williams"
+      ],
+      "year": 2007,
+      "doi": null,
+      "primary_url": "https://proceedings.neurips.cc/paper_files/paper/2007/hash/66368270ffd51418ec58bd793f2d9b1b-Abstract.html",
+      "fetch_evidence": [
+        {
+          "id": "bonilla_page",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2007/hash/66368270ffd51418ec58bd793f2d9b1b-Abstract.html",
+          "final_url": "https://proceedings.neurips.cc/paper_files/paper/2007/hash/66368270ffd51418ec58bd793f2d9b1b-Abstract.html",
+          "http_status": 200,
+          "bytes": 8944,
+          "sha256": "6a79e3224b6cf005f133313f121789ec333f0630df3f00dff657fa53d1f9fc0c",
+          "retrieved_utc": "2026-10-26T05:50:04.401325+00:00",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-stats-priorart/bonilla_page.html",
+          "pdf_magic_valid": false
+        },
+        {
+          "id": "bonilla_pdf",
+          "url": "https://proceedings.neurips.cc/paper_files/paper/2007/file/66368270ffd51418ec58bd793f2d9b1b-Paper.pdf",
+          "final_url": "https://proceedings.neurips.cc/paper_files/paper/2007/file/66368270ffd51418ec58bd793f2d9b1b-Paper.pdf",
+          "http_status": 200,
+          "bytes": 174097,
+          "sha256": "b50b8656f7e4686f37423ac78ef34cc10494e227a02721ca2dd3df813300ae6e",
+          "retrieved_utc": "2026-10-26T05:50:04.336120+00:00",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-stats-priorart/bonilla_pdf.pdf",
+          "pdf_magic_valid": true,
+          "text_cache": "/tmp/r11-stats-priorart/bonilla_pdf.txt",
+          "text_extract_success": true
+        }
+      ],
+      "reading_level": "原文PDF已读",
+      "relevant_sections": "§2, eqs.(1)–(5), §2.3",
+      "established_mechanism_zh": "学习输入核与自由形式PSD任务协方差Kf，并使用任务独立噪声D；预测协方差为Kf⊗Kx+D⊗I，超参数可通过边际似然梯度或EM估计。",
+      "collision_with_R11_zh": "跨会话operator kernel、学习跨任务covariance、单独估计噪声并经验Bayes收缩均有直接先例。若R11只是φ(x)^T M φ(x′)并将M从meta-train拟合，这仍是学习核/多任务协方差。",
+      "limits_and_R11_boundary_zh": "该文的无噪声block design会发生任务迁移消除（§2.3）；因此不能把covariance非零当作必有跨任务迁移。R11须展示其noise与不完全支持如何实际改变目标更新。"
+    },
+    {
+      "id": "ledoit_wolf_2004",
+      "title": "A well-conditioned estimator for large-dimensional covariance matrices",
+      "authors": [
+        "Olivier Ledoit",
+        "Michael Wolf"
+      ],
+      "year": 2004,
+      "doi": "10.1016/S0047-259X(03)00096-4",
+      "primary_url": "https://doi.org/10.1016/S0047-259X(03)00096-4",
+      "fetch_evidence": [
+        {
+          "id": "ledoit_wolf_2004",
+          "url": "https://api.crossref.org/works/10.1016/S0047-259X(03)00096-4",
+          "final_url": "https://api.crossref.org/works/10.1016/S0047-259X(03)00096-4",
+          "http_status": 200,
+          "bytes": 9351,
+          "sha256": "e70389b938e885d68048ee00053ce236e41c6d3ff32b1d399223efb4af9fb29d",
+          "retrieved_utc": "2026-10-26T05:49:44.209084+00:00",
+          "content_type": "application/json",
+          "cache_path": "/tmp/r11-stats-priorart/ledoit_wolf_2004.json",
+          "metadata": {
+            "title": [
+              "A well-conditioned estimator for large-dimensional covariance matrices"
+            ],
+            "author": [
+              {
+                "given": "Olivier",
+                "family": "Ledoit",
+                "sequence": "first",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "Michael",
+                "family": "Wolf",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              }
+            ],
+            "DOI": "10.1016/s0047-259x(03)00096-4",
+            "publisher": "Elsevier BV",
+            "container-title": [
+              "Journal of Multivariate Analysis"
+            ],
+            "published": {
+              "date-parts": [
+                [
+                  2004,
+                  2
+                ]
+              ]
+            },
+            "link": [
+              {
+                "URL": "https://api.elsevier.com/content/article/PII:S0047259X03000964?httpAccept=text/xml",
+                "content-type": "text/xml",
+                "content-version": "vor",
+                "intended-application": "text-mining"
+              },
+              {
+                "URL": "https://api.elsevier.com/content/article/PII:S0047259X03000964?httpAccept=text/plain",
+                "content-type": "text/plain",
+                "content-version": "vor",
+                "intended-application": "text-mining"
+              }
+            ],
+            "abstract": null
+          }
+        }
+      ],
+      "reading_level": "Crossref官方题录已核；作者PDF受限；机制另由Chen原文§I–II交叉核对",
+      "relevant_sections": "Crossref bibliography; Chen et al.2010 introduction/§II",
+      "established_mechanism_zh": "将样本协方差向结构化目标收缩以改善高维小样本条件数，是已成熟的协方差估计方法。",
+      "collision_with_R11_zh": "给meta-train协方差加ρI、trace-normalization、自动选收缩强度或求逆稳定化不能独立算新机制。",
+      "limits_and_R11_boundary_zh": "原论文全文本次未取得；不把其大维渐近最优结论扩张为20个相关EEG标签下的最优分类/泛化结论。"
+    },
+    {
+      "id": "chen_2010",
+      "title": "Shrinkage Algorithms for MMSE Covariance Estimation",
+      "authors": [
+        "Yilun Chen",
+        "Ami Wiesel",
+        "Yonina C. Eldar",
+        "Alfred O. Hero III"
+      ],
+      "year": 2010,
+      "doi": "10.1109/TSP.2010.2053029",
+      "primary_url": "https://doi.org/10.1109/TSP.2010.2053029",
+      "fetch_evidence": [
+        {
+          "id": "chen_2010",
+          "url": "https://api.crossref.org/works/10.1109/TSP.2010.2053029",
+          "final_url": "https://api.crossref.org/works/10.1109/TSP.2010.2053029",
+          "http_status": 200,
+          "bytes": 6022,
+          "sha256": "0d0a743e6cfbfef5487b5720de4cc7f95bbf1bd6d479891e75953157a72ed012",
+          "retrieved_utc": "2026-10-26T05:49:43.972028+00:00",
+          "content_type": "application/json",
+          "cache_path": "/tmp/r11-stats-priorart/chen_2010.json",
+          "metadata": {
+            "title": [
+              "Shrinkage Algorithms for MMSE Covariance Estimation"
+            ],
+            "author": [
+              {
+                "given": "Yilun",
+                "family": "Chen",
+                "sequence": "first",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "Ami",
+                "family": "Wiesel",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "Yonina C.",
+                "family": "Eldar",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "Alfred O.",
+                "family": "Hero",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              }
+            ],
+            "DOI": "10.1109/tsp.2010.2053029",
+            "publisher": "Institute of Electrical and Electronics Engineers (IEEE)",
+            "container-title": [
+              "IEEE Transactions on Signal Processing"
+            ],
+            "published": {
+              "date-parts": [
+                [
+                  2010,
+                  10
+                ]
+              ]
+            },
+            "link": [
+              {
+                "URL": "http://xplorestaging.ieee.org/ielx5/78/5571790/05484583.pdf?arnumber=5484583",
+                "content-type": "unspecified",
+                "content-version": "vor",
+                "intended-application": "similarity-checking"
+              }
+            ],
+            "abstract": null
+          }
+        },
+        {
+          "id": "oas_2010_arxiv",
+          "url": "https://arxiv.org/abs/0907.4698",
+          "final_url": "https://arxiv.org/abs/0907.4698",
+          "http_status": 200,
+          "bytes": 43152,
+          "sha256": "d32155fa101064e52fcb93d897c522b9258a15ec545cde8a98cac35cd9109851",
+          "retrieved_utc": "2026-10-26T05:49:44.121016+00:00",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-stats-priorart/oas_2010_arxiv.html"
+        },
+        {
+          "id": "oas_pdf",
+          "url": "https://arxiv.org/pdf/0907.4698",
+          "final_url": "https://arxiv.org/pdf/0907.4698",
+          "http_status": 200,
+          "bytes": 239702,
+          "sha256": "0a74b89eb3e63ee49b15272668185186e3d3a9a3da64a79d9d14abe912379333",
+          "retrieved_utc": "2026-10-26T05:50:04.517776+00:00",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-stats-priorart/oas_pdf.pdf",
+          "pdf_magic_valid": true,
+          "text_cache": "/tmp/r11-stats-priorart/oas_pdf.txt",
+          "text_extract_success": true
+        }
+      ],
+      "reading_level": "作者arXiv原文PDF已读；Crossref核出版年份DOI",
+      "relevant_sections": "Abstract; §II problem formulation, theorem1; OAS derivation",
+      "established_mechanism_zh": "针对独立同分布Gaussian样本估计协方差，提出RBLW与oracle-approximating shrinkage (OAS)，在样本协方差与缩放identity之间选择收缩。RBLW对LW的MSE优势依赖Gaussian设定；OAS是对未知oracle的近似。",
+      "collision_with_R11_zh": "R11的noise covariance whitening如果使用OAS，OAS本身是基线/数值组件；对协方差做广义特征分解也不会由此获得新的噪声可辨识性。",
+      "limits_and_R11_boundary_zh": "采集位置自相关、异方差score、共享标签或嵌套prefix都违反简单iid设定；不能机械把trial数n=20代入并宣称OAS风险保证。"
+    },
+    {
+      "id": "friedman_1989",
+      "title": "Regularized Discriminant Analysis",
+      "authors": [
+        "Jerome H. Friedman"
+      ],
+      "year": 1989,
+      "doi": "10.1080/01621459.1989.10478752",
+      "primary_url": "https://doi.org/10.1080/01621459.1989.10478752",
+      "fetch_evidence": [
+        {
+          "id": "friedman_1989",
+          "url": "https://api.crossref.org/works/10.1080/01621459.1989.10478752",
+          "final_url": "https://api.crossref.org/works/10.1080/01621459.1989.10478752",
+          "http_status": 200,
+          "bytes": 6739,
+          "sha256": "84a86414f6fbc9d05b5fd6a7d7c9ee7115c25292952eb3aeb9e1d5dfb6721bd8",
+          "retrieved_utc": "2026-10-26T05:49:44.360730+00:00",
+          "content_type": "application/json",
+          "cache_path": "/tmp/r11-stats-priorart/friedman_1989.json",
+          "metadata": {
+            "title": [
+              "Regularized Discriminant Analysis"
+            ],
+            "author": [
+              {
+                "given": "Jerome H.",
+                "family": "Friedman",
+                "sequence": "first",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              }
+            ],
+            "DOI": "10.1080/01621459.1989.10478752",
+            "publisher": "Informa UK Limited",
+            "container-title": [
+              "Journal of the American Statistical Association"
+            ],
+            "published": {
+              "date-parts": [
+                [
+                  1989,
+                  3
+                ]
+              ]
+            },
+            "link": [
+              {
+                "URL": "http://www.tandfonline.com/doi/pdf/10.1080/01621459.1989.10478752",
+                "content-type": "unspecified",
+                "content-version": "vor",
+                "intended-application": "similarity-checking"
+              }
+            ],
+            "abstract": null
+          }
+        }
+      ],
+      "reading_level": "Crossref官方题录已核；publisher/author全文未取得",
+      "relevant_sections": "题录核查；仅将经典RDA结构作为需对照先例",
+      "established_mechanism_zh": "正则化判别分析通过对类协方差进行汇集和收缩，改善小样本判别的方差；在LDA/QDA及更强收缩之间连续调节。",
+      "collision_with_R11_zh": "冻结EEG特征、由source总体协方差与目标少标签均值产生线性判别，或在noise-whitened特征上训练收缩LDA，可能只是RDA/LDA迁移变体。",
+      "limits_and_R11_boundary_zh": "R11需要至少与source-pooled/shrinkage-LDA以及仅在20trial更新均值的版本比较，才能隔离学习适配operator的收益。原文未取得，不能声称已核对其每个定理或具体公式。"
+    },
+    {
+      "id": "coral_2016",
+      "title": "Return of Frustratingly Easy Domain Adaptation",
+      "authors": [
+        "Baochen Sun",
+        "Jiashi Feng",
+        "Kate Saenko"
+      ],
+      "year": 2016,
+      "doi": "10.1609/aaai.v30i1.10306",
+      "primary_url": "https://doi.org/10.1609/aaai.v30i1.10306",
+      "fetch_evidence": [
+        {
+          "id": "coral_2016",
+          "url": "https://api.crossref.org/works/10.1609/aaai.v30i1.10306",
+          "final_url": "https://api.crossref.org/works/10.1609/aaai.v30i1.10306",
+          "http_status": 200,
+          "bytes": 3271,
+          "sha256": "37e86b47aa5591575a0c605f8f1d16e5eb5938c0170dde74f5f1dc49c3361434",
+          "retrieved_utc": "2026-10-26T05:49:44.256113+00:00",
+          "content_type": "application/json",
+          "cache_path": "/tmp/r11-stats-priorart/coral_2016.json",
+          "metadata": {
+            "title": [
+              "Return of Frustratingly Easy Domain Adaptation"
+            ],
+            "author": [
+              {
+                "given": "Baochen",
+                "family": "Sun",
+                "sequence": "first",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "Jiashi",
+                "family": "Feng",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              },
+              {
+                "given": "Kate",
+                "family": "Saenko",
+                "sequence": "additional",
+                "affiliation": [],
+                "role": [
+                  {
+                    "vocabulary": "crossref",
+                    "role": "author"
+                  }
+                ]
+              }
+            ],
+            "DOI": "10.1609/aaai.v30i1.10306",
+            "publisher": "Association for the Advancement of Artificial Intelligence (AAAI)",
+            "container-title": [
+              "Proceedings of the AAAI Conference on Artificial Intelligence"
+            ],
+            "published": {
+              "date-parts": [
+                [
+                  2016,
+                  3,
+                  2
+                ]
+              ]
+            },
+            "link": [
+              {
+                "URL": "https://ojs.aaai.org/index.php/AAAI/article/download/10306/10165",
+                "content-type": "application/pdf",
+                "content-version": "vor",
+                "intended-application": "text-mining"
+              },
+              {
+                "URL": "https://ojs.aaai.org/index.php/AAAI/article/download/10306/10165",
+                "content-type": "unspecified",
+                "content-version": "vor",
+                "intended-application": "similarity-checking"
+              }
+            ],
+            "abstract": "<jats:p>Unlike human learning, machine learning often fails to handle changes between training (source) and test (target) input distributions. Such domain shifts, common in practical scenarios, severely damage the performance of conventional machine learning methods. Supervised domain adaptation methods have been proposed for the case when the target data have labels, including some that perform very well despite being ``frustratingly easy'' to implement. However, in practice, the target domain is often unlabeled, requiring unsupervised adaptation. We propose a simple, effective, and efficient method for unsupervised domain adaptation called CORrelation ALignment (CORAL). CORAL minimizes domain shift by aligning the second-order statistics of source and target distributions, without requiring any target labels. Even though it is extraordinarily simple--it can be implemented in four lines of Matlab code--CORAL performs remarkably well in extensive evaluations on standard benchmark datasets.</jats:p>"
+          }
+        },
+        {
+          "id": "coral_arxiv",
+          "url": "https://arxiv.org/pdf/1511.05547",
+          "final_url": "https://arxiv.org/pdf/1511.05547",
+          "http_status": 200,
+          "bytes": 911404,
+          "sha256": "63f38d2cf1e46551afa68993e51d8a73b23b8871bbdad6242a40db46962c770f",
+          "retrieved_utc": "2026-10-26T05:50:58.411922+00:00",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-stats-priorart/coral_arxiv.pdf",
+          "pdf_magic_valid": true,
+          "text_cache": "/tmp/r11-stats-priorart/coral_arxiv.txt",
+          "text_extract_success": true
+        }
+      ],
+      "reading_level": "作者arXiv原文PDF已读；Crossref核出版元数据",
+      "relevant_sections": "§3.1 eqs.(1)–(2), §3.2",
+      "established_mechanism_zh": "CORAL最小化源变换协方差与目标协方差的Frobenius距离，给出源whitening后按目标covariance重着色的线性变换。",
+      "collision_with_R11_zh": "特征whitening、second-order domain alignment、学习一个SPD线性几何以便迁移都已有非常直接先例。",
+      "limits_and_R11_boundary_zh": "原论文利用无标签目标输入，不等于R11可使用冻结query分布；本项目必须只用实际前20trial支持输入。R11若学习的是标签score可靠性而非边缘特征协方差，应以同等输入限制的CORAL/EA为对照证明区别。"
+    },
+    {
+      "id": "noise2noise",
+      "title": "Noise2Noise: Learning Image Restoration without Clean Data",
+      "authors": [
+        "Jaakko Lehtinen",
+        "Jacob Munkberg",
+        "Jon Hasselgren",
+        "Samuli Laine",
+        "Tero Karras",
+        "Miika Aittala",
+        "Timo Aila"
+      ],
+      "year": 2018,
+      "doi": null,
+      "primary_url": "https://proceedings.mlr.press/v80/lehtinen18a.html",
+      "reading_level": "官方PMLR题录；作者原文PDF由统计支线读取",
+      "relevant_sections": "条件均值与配对噪声监督部分",
+      "established_mechanism_zh": "平方损失下，保持给定输入的目标条件均值可用有噪声目标学习相同回归函数；以同潜变量的配对噪声观测替代clean target具有直接先例。",
+      "collision_with_R11_zh": "配对meta_train block提取稳定潜信号不是首次；R11的cross-block矩协方差虽非该文估计器，也不能把“以noise识别signal”作为全新原则。",
+      "limits_and_R11_boundary_zh": "两个EEG前缀块不天然是同潜信号的独立重复；类组成、serial dependence和会话漂移会改变条件均值。此文不提供R11协方差分解可识别性的定理。",
+      "fetch_evidence": [
+        {
+          "id": "noise2noise_2018",
+          "url": "https://proceedings.mlr.press/v80/lehtinen18a.html",
+          "final_url": "https://proceedings.mlr.press/v80/lehtinen18a.html",
+          "http_status": 200,
+          "bytes": 14328,
+          "sha256": "4f9f06d7d143ff603a4de827e00d499f5b9c8d6c4c43eb682e9ec4196e98cf63",
+          "retrieved_utc": "2026-10-26T05:49:43.914329+00:00",
+          "content_type": "text/html; charset=utf-8",
+          "cache_path": "/tmp/r11-stats-priorart/noise2noise_2018.html"
+        },
+        {
+          "id": "noise2noise_pdf",
+          "url": "https://proceedings.mlr.press/v80/lehtinen18a/lehtinen18a.pdf",
+          "final_url": "https://proceedings.mlr.press/v80/lehtinen18a/lehtinen18a.pdf",
+          "http_status": 200,
+          "bytes": 9737285,
+          "sha256": "742dd098012e3dceec5ee6f2572431259ebad0442b7170fbaa9f4c9e10f9089c",
+          "retrieved_utc": "2026-10-26T05:50:04.968752+00:00",
+          "content_type": "application/pdf",
+          "cache_path": "/tmp/r11-stats-priorart/noise2noise_pdf.pdf",
+          "pdf_magic_valid": true,
+          "text_cache": "/tmp/r11-stats-priorart/noise2noise_pdf.txt",
+          "text_extract_success": true
+        }
+      ]
+    }
+  ],
+  "scope_note_zh": "20篇有界原始文献审查；完整PDF、完整摘要和仅题录核查分级。不声称全球首次或穷尽截至日期所有论文。",
+  "rejected_source_probes": {
+    "alpaca": "404; guessed proceedings path invalid. Correct author source is arXiv1807.08912.",
+    "metacurvature": "arXiv1902.03399 title mismatch, unrelated computability paper. Correct source is1902.03356.",
+    "arxiv_kernel_search": "No matching paper returned; search result only.",
+    "kml_search": "Broad query result only; not a paper citation."
+  },
+  "statistical_sub_audit": "research/literature_stats_priorart.json"
+}

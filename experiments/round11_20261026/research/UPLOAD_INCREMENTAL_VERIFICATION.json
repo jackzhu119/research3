@@ -1,0 +1,24 @@
+{
+  "schema_version": "paper3-r11-upload-incremental-verification-v1",
+  "verified_utc": "2026-10-26T06:30:59.628826+00:00",
+  "command": "python -m pytest -q tests/test_platform_uploads.py",
+  "result": "21 passed in 0.72s",
+  "actual_network_writes": false,
+  "gpu_used": false,
+  "slurm_actions": false,
+  "verified_behaviors": [
+    "10,270-task plan inspects only cached completed scientific task; unchanged poll recopies zero sources",
+    "immutable per-task source capture and publish; only new tasks and changed reports republished",
+    "exact CSV and >16MiB JSON bytes preserved without truncation",
+    "full artifact verification persists before network retries and is not repeated for archived tasks",
+    "changed sealed bytes refused before archive publication",
+    "reporter uses durable completion signatures and persists last successful report identity",
+    "A/B failure state remains independent of science and other channel",
+    "large stage index Git-blob fallback preserves non-force head-bound CAS after concurrent update"
+  ],
+  "files": {
+    "paper3r11/platform/uploads.py": "0bfe00cbe05a58297d2bcf1860a5e34d254074ba40f0dffdfde39a83f7c31bf5",
+    "tests/test_platform_uploads.py": "74884d4fc118ba51ec8832bef98f26e7dec54747d7fcf65bf7c52e328f9527c8",
+    "R11_RESEARCH_PROPOSAL_ZH.md": "e471903b5b95e5c0e3dd35d272772fd01d632a61549567e39d3659854efb6efc"
+  }
+}

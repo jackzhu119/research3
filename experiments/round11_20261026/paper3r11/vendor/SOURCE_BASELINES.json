@@ -1,0 +1,121 @@
+{
+  "schema_version": "r10-native-baseline-provenance-v1",
+  "files": [
+    {
+      "path": "experiments/followup_20261024_r3/paper3r3/algorithm.py",
+      "ref": "c79a092eb243b9a8eefe7a7fdc14990fe1ffe0dd",
+      "git_blob_sha": "5c0263c9c08d19b13b791c81b8ee88221e9555b6",
+      "bytes": 21524,
+      "sha256": "ca003d76318ffbb68be376229b48d5ce55c9cf534221151a022b1e4fc1ae4619",
+      "round": 3,
+      "vendored_path": "native/paper3r3/algorithm.py",
+      "vendored_sha256": "ca003d76318ffbb68be376229b48d5ce55c9cf534221151a022b1e4fc1ae4619",
+      "transformations": []
+    },
+    {
+      "path": "experiments/followup_20261024_r4/paper3r4/core.py",
+      "ref": "c73778ff5d806bbc9db083d06ce3a34f900d4fb1",
+      "git_blob_sha": "5c0263c9c08d19b13b791c81b8ee88221e9555b6",
+      "bytes": 21524,
+      "sha256": "ca003d76318ffbb68be376229b48d5ce55c9cf534221151a022b1e4fc1ae4619",
+      "round": 4,
+      "vendored_path": "native/paper3r4/core.py",
+      "vendored_sha256": "ca003d76318ffbb68be376229b48d5ce55c9cf534221151a022b1e4fc1ae4619",
+      "transformations": []
+    },
+    {
+      "path": "experiments/followup_20261024_r4/paper3r4/algorithm.py",
+      "ref": "c73778ff5d806bbc9db083d06ce3a34f900d4fb1",
+      "git_blob_sha": "4655d9256bdde4516f5214711b66b3d85957ebe0",
+      "bytes": 21909,
+      "sha256": "e595d0256424b9f3e23a653d78de3a940140c667ace5118524060e1396fe9226",
+      "round": 4,
+      "vendored_path": "native/paper3r4/algorithm.py",
+      "vendored_sha256": "e595d0256424b9f3e23a653d78de3a940140c667ace5118524060e1396fe9226",
+      "transformations": []
+    },
+    {
+      "path": "experiments/followup_20261024_r7/paper3r7/baseline.py",
+      "ref": "8b0f721b70f27903289c084d5877bad716930347",
+      "git_blob_sha": "76c797de2a1f88ea14f2b70fb9ab2351c5eeb58e",
+      "bytes": 16593,
+      "sha256": "7dbf9c5712a80b1dead59bc6b01a6657f265557b3c4fac7dd0dd538adaa7b93e",
+      "round": 7,
+      "vendored_path": "native/paper3r7/baseline.py",
+      "vendored_sha256": "7dbf9c5712a80b1dead59bc6b01a6657f265557b3c4fac7dd0dd538adaa7b93e",
+      "transformations": []
+    },
+    {
+      "path": "experiments/followup_20261024_r7/paper3r7/head_capacity.py",
+      "ref": "8b0f721b70f27903289c084d5877bad716930347",
+      "git_blob_sha": "9aa3613206528dabd10611a0df477db377e0f8f6",
+      "bytes": 12470,
+      "sha256": "6e5611e74ba39e96f5fb3179e7f5f54b974e51c293eceb1da4a9313d0b72b05b",
+      "round": 7,
+      "vendored_path": "native/paper3r7/head_capacity.py",
+      "vendored_sha256": "6e5611e74ba39e96f5fb3179e7f5f54b974e51c293eceb1da4a9313d0b72b05b",
+      "transformations": []
+    },
+    {
+      "path": "experiments/followup_20261025_r8/paper3r8/transport.py",
+      "ref": "8f922f765c0c8f87a4aba783cfd58c700ad73af2",
+      "git_blob_sha": "a3ed2df0f3604dab8faa10f1c1871af1d12f3100",
+      "bytes": 17488,
+      "sha256": "cb592950552a27b3f82d371ade6238e8f1e6d81158f279ffcf5b364c28231882",
+      "round": 8,
+      "vendored_path": "native/paper3r8/transport.py",
+      "vendored_sha256": "cb592950552a27b3f82d371ade6238e8f1e6d81158f279ffcf5b364c28231882",
+      "transformations": []
+    },
+    {
+      "path": "experiments/followup_20261025_r9/paper3r9/gp.py",
+      "ref": "9a2f394b88c31d3e34934a8e629d18b2c73271d5",
+      "git_blob_sha": "d72182834228571ab3005bc6323b34c391b93c71",
+      "bytes": 16201,
+      "sha256": "5956354a457c95db4503494c74bb0e1a6e6e2f3cfaf661c5c04ca1d49ee93ad7",
+      "round": 9,
+      "vendored_path": "native/paper3r9/gp.py",
+      "vendored_sha256": "bb3dbd077632251d8fd34a43f83645c8f411f2954d8110c8d907da9e840e17ee",
+      "transformations": [
+        {
+          "kind": "existing_runtime_bugfix",
+          "old": "cumulative=torch.cumsum(pairweights[order],0)",
+          "new": "cumulative=torch.cumsum(pairweights[order].detach().cpu(),0).to(pairweights.device)",
+          "reason": "Same previously validated R9 deterministic CUDA float cumsum metadata fix; GP fit/predict algorithm unchanged."
+        }
+      ]
+    }
+  ],
+  "source_branch_refs": {
+    "3": {
+      "branch": "paper3-r3-progress",
+      "head": "c79a092eb243b9a8eefe7a7fdc14990fe1ffe0dd"
+    },
+    "4": {
+      "branch": "paper3-r4-progress",
+      "head": "c73778ff5d806bbc9db083d06ce3a34f900d4fb1"
+    },
+    "5": {
+      "branch": "paper3-r5-progress",
+      "head": "0218a4ba317b51dd71a9d966ef639fb748bded69"
+    },
+    "6": {
+      "branch": "paper3-r6-progress",
+      "head": "bb1201dd0be5604c9aac7b22dc2c86c5a0985999"
+    },
+    "7": {
+      "branch": "paper3-r7-progress",
+      "head": "8b0f721b70f27903289c084d5877bad716930347"
+    },
+    "8": {
+      "branch": "paper3-round8-20261025",
+      "head": "8f922f765c0c8f87a4aba783cfd58c700ad73af2"
+    },
+    "9": {
+      "branch": "paper3-round9-20261025",
+      "head": "9a2f394b88c31d3e34934a8e629d18b2c73271d5"
+    }
+  },
+  "original_paths_modified": false,
+  "new_algorithm_claimed": false
+}

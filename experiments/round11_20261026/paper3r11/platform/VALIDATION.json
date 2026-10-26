@@ -1,0 +1,38 @@
+{
+  "schema_version": "paper3-r11-platform-software-validation-v1",
+  "validated_utc": "2026-10-26T06:52:08.023873+00:00",
+  "test_command": "python -m pytest tests/test_platform_*.py tests/test_delivery.py tests/test_review_runtime.py -q",
+  "result": "105 passed in 12.01s",
+  "scope": "Integrated R11 CPU platform, persistent scientific subprocess, scalable uploader, immutable completion cache, observed-failure replay and offline delivery tests. Slurm/HTTP calls mocked; real CPU subprocesses import existing Torch2.5.1+cpu. No real school GPU/Slurm execution.",
+  "resources": {
+    "jobs": 4,
+    "gpus_per_job": 1,
+    "cpus_per_job": 16,
+    "memory_per_job": "64G",
+    "partition": "hpc_gpu"
+  },
+  "scaling": {
+    "campaign_stage_supported": true,
+    "plan_limit_bytes": 67108864,
+    "regular_status_task_row_limit": 64,
+    "per_claim_task_directory_scan": false,
+    "persistent_scientific_child_per_allocation": true,
+    "completion_recovery": "once_per_prepare_resume_process_metadata_only",
+    "terminal_dependency_selection": true
+  },
+  "files": {
+    "__init__.py": "5cdb572e4545573e3ed373478dd44fe186c355e89e13a8a07a3bd01ea7c095b1",
+    "common.py": "0614986e6c88ce412b0066d9e7330af708e602da9a9e3dd3bf4be0c9a5232905",
+    "entry.py": "11022fdfcc9549e00830e8abd070c7b64f47b49d3c7aa95d6c09197b3223e8fb",
+    "runtime.py": "2571408d97a9943a55cb9b5ef9d02a5cb92268f2f8ebcdb4719b6e6c2ebdf7c7",
+    "scheduler.py": "45f1e84c0ec365f6e1d74a9014da129bdbb9f672fecd3d64ea359a0df19ad698",
+    "science_daemon.py": "5b39dd94550ec762953d171bcaad8feef833045658a7f3a68d2d3713c5b23db1",
+    "uploads.py": "0bfe00cbe05a58297d2bcf1860a5e34d254074ba40f0dffdfde39a83f7c31bf5",
+    "vendor/__init__.py": "d121637b0990aca8df6765f8c85a4671ffe8661420f463c8c06eacb0be1070c7",
+    "vendor/lossless_publish.py": "e004c420b831e777138e7e84a4ce922be0fd39a948c6d87d61247d8d97e7f864",
+    "vendor/paper3_result_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3"
+  },
+  "gpu_precheck_executed": false,
+  "slurm_jobs_submitted": 0,
+  "credentials_published": false
+}
