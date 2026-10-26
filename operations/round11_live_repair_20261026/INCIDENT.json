@@ -1,0 +1,54 @@
+{
+  "schema_version": "paper3-r11-live-runtime-incident-v1",
+  "date_BJT": "2026-10-26",
+  "scope": "Non-invasive management-process recovery; original scientific package, plan, jobs and results remain authoritative",
+  "source_package_payload_sha256": "6ba6898438ff293ab80ef3fac230134e94430d7d87bdd8a5ecd4e8b24e9c9594",
+  "source_plan_recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
+  "source_package": "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e",
+  "project_root": "/public/home/zhuziyuan/projects/paper3",
+  "output": "runs/r11_campaign",
+  "jobs_initially_authorized": [
+    "775286",
+    "775287",
+    "775288",
+    "775289"
+  ],
+  "last_observation": {
+    "sample_utc": "2026-10-26T11:49:07Z",
+    "completed_tasks": 58,
+    "total_tasks": 10270,
+    "active_job_confirmed": "775286",
+    "active_training_pairs_session": 367,
+    "active_training_pairs_sessions_total": 396,
+    "active_progress_utc": "2026-10-26T11:49:05Z",
+    "scheduler_snapshot_stale": true,
+    "paper_latest_successful_index_complete_tasks": 1,
+    "full_archived_tasks": 53
+  },
+  "controller_failure": {
+    "error_type": "MemoryError",
+    "error_utc": "2026-10-26T08:48:17Z",
+    "trace": "runtime.controller_loop -> status -> _state -> common.read -> handle.read(max_bytes+1)",
+    "max_bytes_at_failure": 67108864,
+    "source_common_sha256": "0614986e6c88ce412b0066d9e7330af708e602da9a9e3dd3bf4be0c9a5232905",
+    "diagnosis": "Large read size argument can preallocate its configured maximum even for small JSON; will verify under bounded address-space test"
+  },
+  "paper_failure": {
+    "error_type": "ValidationError",
+    "observed_repeatedly": true,
+    "fixed_code_reproduced": "source_utf8_invalid",
+    "producer": "operator_train_task passes model_path/operator.npz in paper_artifacts",
+    "consumer": "lossless_publish.stage_file accepts UTF-8 text only",
+    "source_worker_sha256": "9bf2cfd2d0c2113dd7b4777a55811c9a1cc4bd2e59738867fafbe630dff0c58b",
+    "reproduction": "BINARY_REPRODUCTION.json"
+  },
+  "changes_forbidden": [
+    "scientific package files",
+    "signed scientific plan",
+    "model math and hyperparameters",
+    "checkpoints or result/completion seals",
+    "training job cancellation",
+    "unobserved duplicate Slurm submission",
+    "silent loss of binary paper artifacts"
+  ]
+}

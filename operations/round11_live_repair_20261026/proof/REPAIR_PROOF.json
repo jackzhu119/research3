@@ -1,0 +1,109 @@
+{
+  "schema_version": "paper3-r11-paper-binary-repair-proof-v1",
+  "verified_utc": "2026-10-26T12:13:35.760616+00:00",
+  "repair_id": "paper3-r11-paper-binary-base64-sidecar-v1",
+  "patch_installation": {
+    "repair_id": "paper3-r11-paper-binary-base64-sidecar-v1",
+    "patch_scope": "paper_process_memory_only",
+    "exact_original_bytes_scope": "text raw; binary after lossless base64 decode",
+    "binary_suffixes": [
+      ".bin",
+      ".gz",
+      ".jpeg",
+      ".jpg",
+      ".npy",
+      ".npz",
+      ".pdf",
+      ".png",
+      ".pt",
+      ".pth",
+      ".safetensors",
+      ".tar",
+      ".zip"
+    ],
+    "scientific_package_files_modified": false,
+    "original_plan_and_receipts_modified": false,
+    "full_archive_channel_unchanged": true,
+    "monitor_channel_unchanged": true,
+    "reporter_unchanged": true,
+    "ready_callback_scope": "after_original_paper_lock_and_process_receipt_before_network"
+  },
+  "original_failure": {
+    "error_type": "ValidationError",
+    "fixed_code": "source_utf8_invalid"
+  },
+  "original_paper_artifacts": [
+    "operator.npz",
+    "operator.json"
+  ],
+  "transport_source_paths": [
+    "operator-native-npz/binary-base64/REPRESENTATIONS.json",
+    "operator-native-npz/binary-base64/operator.npz.b64.txt",
+    "operator-native-npz/completion.json",
+    "operator-native-npz/operator.json",
+    "operator-native-npz/result.json"
+  ],
+  "representation": {
+    "original_bytes": 2413,
+    "original_sha256": "0dbcb0a555941529ab74c963b26abd9c27e3f95a02622f81478e92c2cdaf664b",
+    "encoded_bytes": 3220,
+    "encoded_sha256": "8a1a70ef86742ef785a6de4996267ea3bb85d5a3c0e7f59c562089f2ec52819d",
+    "encoding": "base64-rfc4648-ascii-no-newlines",
+    "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+    "decoded_bytes": 2413,
+    "decoded_sha256": "0dbcb0a555941529ab74c963b26abd9c27e3f95a02622f81478e92c2cdaf664b",
+    "strict_base64_validated": true,
+    "original_source_path": "operator-native-npz/operator.npz",
+    "representation_source_path": "operator-native-npz/binary-base64/operator.npz.b64.txt",
+    "original_task_identity": "adb84ddedf75f9c6a6e437ba884ab4dd5203aa6bdd4288f49ffcccb2cf49dd45",
+    "original_result_sha256": "7ba8de862a5c0e7b8a8d82ede2b5594480601c3a65dd4eb84200dadd73b64786",
+    "original_completion_sha256": "900834cc0bd545f9171aefc93b89d3f7fcd64f6a910231a3ee0994467485de0c"
+  },
+  "exact_original_bytes_scope": "text raw; binary after lossless base64 decode",
+  "original_operator_identity": "14de40d0391bf0aab92ac90e7065bd16d075e91724514731d34f46b5b1483a54",
+  "restored_operator_identity": "14de40d0391bf0aab92ac90e7065bd16d075e91724514731d34f46b5b1483a54",
+  "strict_base64_decode_and_whole_SHA256_passed": true,
+  "all_staged_transport_fragments_SHA256_verified": true,
+  "scientific_files_before": {
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/completion.json": "900834cc0bd545f9171aefc93b89d3f7fcd64f6a910231a3ee0994467485de0c",
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/result.json": "7ba8de862a5c0e7b8a8d82ede2b5594480601c3a65dd4eb84200dadd73b64786",
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/operator.json": "fe7c5ed69dce0ef64d5053be36631479c2c28193173c8c86dea6edec049a814a",
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/operator.npz": "0dbcb0a555941529ab74c963b26abd9c27e3f95a02622f81478e92c2cdaf664b"
+  },
+  "scientific_files_after": {
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/completion.json": "900834cc0bd545f9171aefc93b89d3f7fcd64f6a910231a3ee0994467485de0c",
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/result.json": "7ba8de862a5c0e7b8a8d82ede2b5594480601c3a65dd4eb84200dadd73b64786",
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/operator.json": "fe7c5ed69dce0ef64d5053be36631479c2c28193173c8c86dea6edec049a814a",
+    "/tmp/r11-paper-binary-repro-t_mk6f0e/scientific-output/operator-native-npz/operator.npz": "0dbcb0a555941529ab74c963b26abd9c27e3f95a02622f81478e92c2cdaf664b"
+  },
+  "scientific_files_unchanged": true,
+  "original_package_sources_before": {
+    "/workspace/paper3-round11/paper3r11/platform/uploads.py": "0bfe00cbe05a58297d2bcf1860a5e34d254074ba40f0dffdfde39a83f7c31bf5",
+    "/workspace/paper3-round11/paper3r11/platform/vendor/lossless_publish.py": "e004c420b831e777138e7e84a4ce922be0fd39a948c6d87d61247d8d97e7f864",
+    "/workspace/paper3-round11/paper3r11/algorithm.py": "108e8f0206fd29c9723f9a2acf04528c01d0ad593dbf105a72af41c214b39ac5"
+  },
+  "original_package_sources_after": {
+    "/workspace/paper3-round11/paper3r11/platform/uploads.py": "0bfe00cbe05a58297d2bcf1860a5e34d254074ba40f0dffdfde39a83f7c31bf5",
+    "/workspace/paper3-round11/paper3r11/platform/vendor/lossless_publish.py": "e004c420b831e777138e7e84a4ce922be0fd39a948c6d87d61247d8d97e7f864",
+    "/workspace/paper3-round11/paper3r11/algorithm.py": "108e8f0206fd29c9723f9a2acf04528c01d0ad593dbf105a72af41c214b39ac5"
+  },
+  "original_package_sources_unchanged": true,
+  "regression_command": "PYTHONDONTWRITEBYTECODE=1 python -B -m pytest -q -p no:cacheprovider tests/test_paper_fix.py",
+  "regression_result": "10 passed in 0.24s",
+  "tests_scope": [
+    "production NPZ round-trip",
+    "arbitrary non-UTF8 multi-block base64",
+    "old legal capture/receipt reuse",
+    "bad raw-binary cache recovery",
+    "source and plan immutability",
+    "corrupt chunk refusal",
+    "scope pointer path SHA readback",
+    "fixed-code secret-safe diagnostics",
+    "actual flock readiness before network",
+    "busy lock no false ready"
+  ],
+  "actual_remote_write": false,
+  "real_EEG_used": false,
+  "GPU_used": false,
+  "Slurm_actions": false
+}

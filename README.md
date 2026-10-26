@@ -10,6 +10,12 @@
 
 [第七轮完整总JSON定向补传](operations/round7_report_supplement_20261025/README_ZH.md) · [第九轮：实测依据、数学与代码](docs/experiments/ROUND9_ZH.md)（已设计，未提交学校任务）
 
+## 第十一轮在线运维恢复（2026-10-26）
+
+[故障原因与修复](operations/round11_live_repair_20261026/README_ZH.md) · [学校完整恢复命令](operations/round11_live_repair_20261026/delivery/SCHOOL_COMMANDS.md)
+
+原R11科学任务继续推进，但控制器读取状态时发生MemoryError，论文通道误将算子NPZ当UTF-8文本。独立管理进程修复按实际大小读取、明确base64二进制传输与归属进程恢复；不改科学包/计划/结果，不停止训练或取消原作业。仅在显式修复与submit下恢复既有四槽调度，先观察原作业再决定补位。
+
 ## 第十轮优化续跑：复用15项，连续执行165项（2026-10-26）
 
 [修订说明](experiments/round10_continuation_20261026/R10_CONTINUATION_SCIENCE_ZH.md) · [运行与恢复](experiments/round10_continuation_20261026/R10_CONTINUATION_IMPLEMENTATION_ZH.md) · [完整下载启动](experiments/round10_continuation_20261026/delivery/SCHOOL_COMMANDS.md)

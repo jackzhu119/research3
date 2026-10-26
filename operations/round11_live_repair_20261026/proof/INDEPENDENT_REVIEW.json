@@ -1,0 +1,70 @@
+{
+  "schema_version": "paper3-r11-live-operational-repair-independent-review-v1",
+  "status": "PASS_WITH_EXPLICIT_LIVE_VALIDATION_LIMITS",
+  "reviewed_utc": "2026-10-26T12:18:54.567770+00:00",
+  "repair_source_sha256": {
+    "controller_fix.py": "a8940db07e35c2e5882f1a61d7627b8a4788d2eba3355942cb64f89e44416b4c",
+    "repair.py": "3d63152c39ccaa50f99823e6159848fa7ba637128635c08b033726871fcd85e9",
+    "paper_fix.py": "8ec6568c01c08a7dcc61dba0587ba33a6491a607d3eb4904a3ab02fd184808a7"
+  },
+  "verification": {
+    "command": "/tmp/r10-school-cpu/bin/python -B -m pytest -q",
+    "passed": 34,
+    "failed": 0,
+    "duration_seconds": 0.67,
+    "independent_cases": 13,
+    "independent_file": "tests/test_independent_repair.py",
+    "independent_file_sha256": "2e16627e47b6fb2d92bf4354d0facb0a735917a7ba925cdda812cd2fa9f0c07f"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.2.6",
+    "torch": "2.5.1+cpu",
+    "scope": "CPU and local generated/proc/scheduler/transport fixtures only"
+  },
+  "checks": [
+    "A real limited-address-space subprocess reproduces original64MiB read MemoryError on tinyJSON; bounded reader succeeds at64/256MiB declared caps and preserves malformed/missing/oversize defaults",
+    "The original scheduler reconciles four already existing RUNNING allocation fixtures through squeue/sacct only, without sbatch/scancel; first repair cycle cannot submit",
+    "Plan/task/scheduler authorization identities are retained; original scientific code files and signed plan bytes remain unchanged",
+    "Only sameUID/currentPID-start identity and exact authorized Python/script/subcommand/plan/channel qualify as paper processes; unrelated scripts, science, full, controller and duplicate--plan are rejected",
+    "Original preparation plan path and same-byte output plan path are both permitted only when original launch metadata binds them; an arbitrary third identical copy is rejected",
+    "PID identity change prevents SIGTERM; accepted test-owned paper identity receives onlySIGTERM through a recorded fake signal function",
+    "Repeated repair while owned paper waits behind old lock or controller awaits first observation reuses pending child and staysPENDING; no duplicate child spawn or falseREADY",
+    "Actual >4MiB generated NPZ roundtrips through multi-block base64 and strict byte/SHA proof, restores identical NumPy arrays, preserves CSV UTF8/CRLF bytes and original result/completion/plan hashes and mtimes",
+    "Paper-only monkeypatch retains original full-cycle, monitor, reporter, stage_file and publish_snapshot API identities; full-channel sentinel remains unchanged",
+    "Binary mapping declares original and encoded paths, sizes, SHAs and source task/result/completion identities; raw-byte transport claim is explicitly false for encoded binary with decode scope",
+    "New scopedPAPER_DATA_LATEST path receives commit-bound GitblobSHA readback before published_index_paths_verified remains true; wrong pathSHA is rejected in local transport fixture",
+    "Paper readiness follows actual original paper lock acquisition and patched loop process receipt, precedes network; busy lock produces no false ready callback"
+  ],
+  "resolved_findings": [
+    {
+      "finding": "Process ownership initially relied on arbitrary argv membership.",
+      "resolution": "Exact Python-entry position and immediate upload/paper role, oneplan/channel argument, UID, authorized plan SHA/path, and repeatedPID-start identity now required."
+    },
+    {
+      "finding": "New child PIDs and reused waiting sidecars were initially reported as ready without an acknowledgement.",
+      "resolution": "PID/recipe/launch-token and role-specific patch/lock/first-observation flags determineREADY; pending and immediate exit states remain explicit."
+    },
+    {
+      "finding": "Scoped pointer inherited old published_index_paths_verified proof after replacing pointer contents.",
+      "resolution": "The newly published pointer path is read at its new commit and matched against expected GitblobSHA before marking verified."
+    }
+  ],
+  "original_scientific_source_check": {
+    "package": "/workspace/paper3-round11",
+    "production_files": 101,
+    "source_manifest_sha256": "c92d63799d57880c2b0eeef390bef93949eb775b1c47115b67c20a6db997667d",
+    "changed_files": [],
+    "all_original_production_hashes_match_pre_repair_final_verification": true
+  },
+  "scope_limits": [
+    "No actual school Slurm query, sbatch, scancel, GPU operation, remoteGitHub write or live process termination occurred in this review.",
+    "Existing job observations and process identities/signals use explicit fixtures; they do not prove that the school controller or uploader is currently ready.",
+    "A ready sidecar receipt confirms patched management code and required lock/observation acknowledgement, not finished remote uploads or all fourGPU allocations.",
+    "Repair patches newly started management processes in memory; existing scientific worker processes, mathematical code, checkpoints, plan and scientific result seals are untouched.",
+    "The bounded reader removes the reproduced oversized-read allocation and verified-plan duplication; it cannot guarantee absence of every future memory exhaustion.",
+    "BinaryA contents are explicitly encoded transport files. Original-byte identity holds after declared strictbase64 reconstruction; independentB remains the original raw archive.",
+    "Network failures still require normal independent retry and remote acknowledgements before any upload completion claim."
+  ],
+  "unresolved_release_blockers_found": []
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "paper3-r11-live-operational-repair-final-verification-v1",
+  "status": "SOFTWARE_VERIFIED_SCHOOL_APPLY_PENDING",
+  "verified_utc": "2026-10-26T12:19:14Z",
+  "full_repair_suite": {
+    "passed": 34,
+    "failed": 0,
+    "duration_seconds": 0.7,
+    "command": "python -m pytest -q tests",
+    "log_sha256": "4d46c50557cc52f1b6d8ccf28b52dffc281dd53a3c2f46d18bc27abde7e3af1f"
+  },
+  "environment": {
+    "python": "3.12.14",
+    "torch_for_generated_operator_fixture": "2.5.1+cpu",
+    "numpy_for_generated_operator_fixture": "2.2.6",
+    "pytest": "8.4.2"
+  },
+  "operational_dependencies": "standard library only; default installation does not import numerical libraries",
+  "verified_scopes": [
+    "Actual RLIMIT_AS small-JSON old64MiB read raisesMemoryError; bounded read succeeds",
+    "JSON limits/default semantics preserved; invalid task history not reset",
+    "Immutable original plan loaded once and same object reused; changed plan bytes rejected",
+    "Original scheduler reconciles4 existing job IDs with zero duplicate sbatch and zero scancel",
+    "UID/script/subcommand/authorized-plan/start-ticks ownership checks before paperSIGTERM",
+    "Foreign scientific/full/controller invocations rejected even with paper-like argv tokens",
+    "Original preparation-plan path and exact output-plan copy both bound to original launch hash",
+    "READY requires exactPID/recipe/launch nonce and real first observation or originalpaper lock",
+    "Pending sidecar reuse does not falsely claimREADY or duplicate child processes",
+    "Production algorithm NPZ→base64 ASCII→strict decode has same wholeSHA and model identity",
+    "All binary values across multiblock representations preserve original byte counts/SHA",
+    "Original NPZ/result/completion/scientific source hashes unchanged",
+    "Existing valid paper captures and remote receipts reusable; corrupt rawbinary cache rebuilt only",
+    "New scope pointer path verified at its own new commit",
+    "Fixed-code diagnostics allowlisted; no arbitrary exception/HTTP response/token output"
+  ],
+  "source_package_payload_sha256": "6ba6898438ff293ab80ef3fac230134e94430d7d87bdd8a5ecd4e8b24e9c9594",
+  "source_plan_recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
+  "production_files": {
+    "controller_fix.py": "a8940db07e35c2e5882f1a61d7627b8a4788d2eba3355942cb64f89e44416b4c",
+    "repair.py": "3d63152c39ccaa50f99823e6159848fa7ba637128635c08b033726871fcd85e9",
+    "paper_fix.py": "8ec6568c01c08a7dcc61dba0587ba33a6491a607d3eb4904a3ab02fd184808a7",
+    "build_delivery.py": "ca491880bd6e9029af3addb76dd45b3f98e60231072b81c059ac13799d78ddc8",
+    "installer_template.py": "0497bc5dd11d2988daa81b72d71c6a8fa93b59683da9118577ec9f52b195a2ef"
+  },
+  "original_files_readonly_sha256": {
+    "paper3r11/algorithm.py": "108e8f0206fd29c9723f9a2acf04528c01d0ad593dbf105a72af41c214b39ac5",
+    "paper3r11/worker.py": "9bf2cfd2d0c2113dd7b4777a55811c9a1cc4bd2e59738867fafbe630dff0c58b",
+    "paper3r11/platform/common.py": "0614986e6c88ce412b0066d9e7330af708e602da9a9e3dd3bf4be0c9a5232905",
+    "paper3r11/platform/runtime.py": "2571408d97a9943a55cb9b5ef9d02a5cb92268f2f8ebcdb4719b6e6c2ebdf7c7",
+    "paper3r11/platform/uploads.py": "0bfe00cbe05a58297d2bcf1860a5e34d254074ba40f0dffdfde39a83f7c31bf5",
+    "paper3r11/platform/scheduler.py": "45f1e84c0ec365f6e1d74a9014da129bdbb9f672fecd3d64ea359a0df19ad698",
+    "paper3r11/platform/vendor/lossless_publish.py": "e004c420b831e777138e7e84a4ce922be0fd39a948c6d87d61247d8d97e7f864"
+  },
+  "original_scientific_package_changed": false,
+  "signed_scientific_plan_changed": false,
+  "scientific_workers_signalled": 0,
+  "actual_slurm_jobs_submitted": 0,
+  "actual_slurm_jobs_cancelled": 0,
+  "actual_remote_uploads_performed": false,
+  "actual_school_repair_applied": false,
+  "scope_limits": [
+    "Local CPU/proc/scheduler-response fixtures; no direct school SSH execution",
+    "Remote upload success must be confirmed after the school sidecar starts",
+    "Management readiness does not imply four GPU allocations or all scientific tasks complete"
+  ]
+}
