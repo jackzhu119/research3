@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 58,
+  "complete_tasks": 60,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 13.8,
+    "progress_age_seconds": 4.8,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T23:57:59Z"
+    "updated_utc": "2026-10-26T00:01:08Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 58,
+      "complete": 60,
       "total": 234
     },
     "feature_reference": {
@@ -43,17 +43,10 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 41152,
+      "pid": 44451,
       "status": "RUNNING",
-      "task_key": "feature-reference-ea-seed20261018",
-      "worker_progress": {
-        "outer_update": 0,
-        "session": 395,
-        "sessions_total": 396,
-        "stage": "meta_train_prefix_features",
-        "status": "FAILED",
-        "updated_utc": "2026-10-25T23:52:01Z"
-      }
+      "task_key": "core-holdout-source_T2-seed20261020-409d852247",
+      "worker_progress": {}
     },
     "1": {
       "status": "NOT_STARTED"
@@ -127,7 +120,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "1:16:04",
+        "elapsed": "1:19:04",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -137,7 +130,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T23:58:12Z",
+    "observed_utc": "2026-10-26T00:01:12Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -163,7 +156,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792972692.785236,
+  "sampled_unix": 1792972872.7865603,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -202,23 +195,11 @@
       "index": 3,
       "job_id": "773686",
       "key": "feature-reference-ea-seed20261018",
-      "observations": [
-        {
-          "age_seconds": 20.8,
-          "path": "runs/followup_20261025_r9/feature-reference-ea-seed20261018/progress.json",
-          "values": {
-            "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-25T23:57:52Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "RETRYING"
     },
     {
-      "attempt": 14,
+      "attempt": 15,
       "family": "feature_reference",
       "index": 4,
       "job_id": "773686",
@@ -227,7 +208,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 14,
+      "attempt": 15,
       "family": "feature_reference",
       "index": 5,
       "job_id": "773686",
@@ -758,31 +739,43 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 64,
-      "job_id": null,
+      "job_id": "773686",
       "key": "core-pan2023-source_T2-seed20261019-29a9272b24",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 65,
-      "job_id": null,
+      "job_id": "773686",
       "key": "core-weibo2014-source_T2-seed20261019-689c445959",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 66,
-      "job_id": null,
+      "job_id": "773686",
       "key": "core-holdout-source_T2-seed20261020-409d852247",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 8.8,
+          "path": "runs/followup_20261025_r9/core-holdout-source_T2-seed20261020-409d852247/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "STARTING",
+            "updated_utc": "2026-10-26T00:01:04Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -14127,5 +14120,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T23:58:12Z"
+  "updated_utc": "2026-10-26T00:01:12Z"
 }
