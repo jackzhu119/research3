@@ -4,7 +4,7 @@
   "completed_by_kind": {
     "classical": 1,
     "meta_engineering": 5,
-    "meta_screening": 36,
+    "meta_screening": 37,
     "meta_selection": 3,
     "pilot": 1,
     "reference": 3,
@@ -15,7 +15,7 @@
     "progress_age_seconds": 10.3,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-26T04:04:07Z"
+    "updated_utc": "2026-10-26T04:07:07Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -53,7 +53,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 86082.3,
+    "progress_age_seconds": 86262.3,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -98,7 +98,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "5:22:09",
+        "elapsed": "5:25:09",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -108,7 +108,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "5:46:45",
+        "elapsed": "5:49:45",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -118,7 +118,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "10:45:45",
+        "elapsed": "10:48:45",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -128,7 +128,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T04:04:17Z",
+    "observed_utc": "2026-10-26T04:07:17Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -156,13 +156,13 @@
           "seed": 20261018
         },
         "error_type": "ExitCode-11",
-        "job_id": "772906",
+        "job_id": "772904",
         "key": "meta-54beab9b2df65963498b2b965aa08226f4ae2ec45ebed4762d26d3c658859976",
         "kind": "meta_screening",
         "method": "P",
         "observations": [],
-        "slot": 0,
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "slot": 1,
+        "status": "RUNNING"
       },
       {
         "configuration": {
@@ -237,51 +237,20 @@
         "method": "P+PCT",
         "observations": [
           {
-            "age_seconds": 4.3,
+            "age_seconds": 6.3,
             "path": "runs/meta/91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1/progress.json",
             "values": {
-              "confirmed_outer_updates_observed": 191,
-              "inner_updates_actual": 7640,
-              "outer_attempts_dispatched": 192,
-              "outer_updates_completed": 191,
+              "confirmed_outer_updates_observed": 259,
+              "inner_updates_actual": 10360,
+              "outer_attempts_dispatched": 260,
+              "outer_updates_completed": 259,
               "replayed_observed_outer_updates": 0,
               "status": "OUTER_ATTEMPT_DISPATCHED",
-              "validation_checkpoints": 3
+              "validation_checkpoints": 5
             }
           }
         ],
         "slot": 2,
-        "status": "RUNNING"
-      },
-      {
-        "configuration": {
-          "dimension": 4,
-          "method": "P+PCT",
-          "phase": "screening",
-          "radius": 0.05,
-          "seed": 20261018
-        },
-        "error_type": "ExitCode-11",
-        "job_id": "772904",
-        "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
-        "kind": "meta_screening",
-        "method": "P+PCT",
-        "observations": [
-          {
-            "age_seconds": 4.3,
-            "path": "runs/meta/d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667/progress.json",
-            "values": {
-              "confirmed_outer_updates_observed": 1011,
-              "inner_updates_actual": 39720,
-              "outer_attempts_dispatched": 1013,
-              "outer_updates_completed": 993,
-              "replayed_observed_outer_updates": 18,
-              "status": "OUTER_ATTEMPT_DISPATCHED",
-              "validation_checkpoints": 19
-            }
-          }
-        ],
-        "slot": 1,
         "status": "RUNNING"
       },
       {
@@ -299,7 +268,7 @@
         "method": "P+PCT",
         "observations": [
           {
-            "age_seconds": 10719.3,
+            "age_seconds": 10899.3,
             "path": "runs/meta/ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc/progress.json",
             "values": {
               "confirmed_outer_updates_observed": 594,
@@ -330,13 +299,13 @@
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       }
     ],
-    "completed_observed_actions": 50,
+    "completed_observed_actions": 51,
     "coordinator_declares_complete": false,
     "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
     "observed_actions": 61
   },
   "mainline_complete": false,
-  "parallel_plan_complete_tasks": 50,
+  "parallel_plan_complete_tasks": 51,
   "parallel_plan_total_tasks": 61,
   "planned_counts": {
     "calibration_profile": 14,
@@ -368,16 +337,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1792987457.2761323,
+  "sampled_unix": 1792987637.278017,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 333946.3,
+    "age_seconds": 334126.3,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 334290.3,
+    "age_seconds": 334470.3,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -565,13 +534,13 @@
         "seed": 20261018
       },
       "error_type": "ExitCode-11",
-      "job_id": "772906",
+      "job_id": "772904",
       "key": "meta-54beab9b2df65963498b2b965aa08226f4ae2ec45ebed4762d26d3c658859976",
       "kind": "meta_screening",
       "method": "P",
       "observations": [],
-      "slot": 0,
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "slot": 1,
+      "status": "RUNNING"
     },
     {
       "configuration": {
@@ -763,16 +732,16 @@
       "method": "P+PCT",
       "observations": [
         {
-          "age_seconds": 4.3,
+          "age_seconds": 6.3,
           "path": "runs/meta/91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1/progress.json",
           "values": {
-            "confirmed_outer_updates_observed": 191,
-            "inner_updates_actual": 7640,
-            "outer_attempts_dispatched": 192,
-            "outer_updates_completed": 191,
+            "confirmed_outer_updates_observed": 259,
+            "inner_updates_actual": 10360,
+            "outer_attempts_dispatched": 260,
+            "outer_updates_completed": 259,
             "replayed_observed_outer_updates": 0,
             "status": "OUTER_ATTEMPT_DISPATCHED",
-            "validation_checkpoints": 3
+            "validation_checkpoints": 5
           }
         }
       ],
@@ -996,23 +965,8 @@
       "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
       "kind": "meta_screening",
       "method": "P+PCT",
-      "observations": [
-        {
-          "age_seconds": 4.3,
-          "path": "runs/meta/d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667/progress.json",
-          "values": {
-            "confirmed_outer_updates_observed": 1011,
-            "inner_updates_actual": 39720,
-            "outer_attempts_dispatched": 1013,
-            "outer_updates_completed": 993,
-            "replayed_observed_outer_updates": 18,
-            "status": "OUTER_ATTEMPT_DISPATCHED",
-            "validation_checkpoints": 19
-          }
-        }
-      ],
       "slot": 1,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "configuration": {
@@ -1068,7 +1022,7 @@
       "method": "P+PCT",
       "observations": [
         {
-          "age_seconds": 10719.3,
+          "age_seconds": 10899.3,
           "path": "runs/meta/ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc/progress.json",
           "values": {
             "confirmed_outer_updates_observed": 594,
@@ -1170,5 +1124,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-26T04:04:17Z"
+  "updated_utc": "2026-10-26T04:07:17Z"
 }
