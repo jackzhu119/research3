@@ -86,7 +86,9 @@ class DigestCache:
             before = _signature(canonical)
         except OSError:
             return original(path)
-        key = str(canonical)
+        # NFS client mount device IDs may differ across GPU nodes. Retain each
+        # real client signature instead of evicting another node's warm entry.
+        key = str(canonical) + "|device=" + str(before[0])
         row = self.entries.get(key)
         if (isinstance(row, dict) and row.get("stat") == before
                 and isinstance(row.get("sha256"), str) and _HEX.fullmatch(row["sha256"])

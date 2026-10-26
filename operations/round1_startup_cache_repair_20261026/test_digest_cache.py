@@ -209,4 +209,30 @@ def test_independent_cache_snapshots_merge_after_other_process_flush(tmp_path):
     first.flush()
     second.flush()
     merged = helper.DigestCache(tmp_path, {"test": 1})
-    assert {Path(key).name for key in merged.entries} == {"a", "b"}
+    assert {Path(key.split("|device=", 1)[0]).name for key in merged.entries} == {"a", "b"}
+
+
+def test_different_nfs_client_device_ids_keep_independent_warm_entries(tmp_path, monkeypatch):
+    target = tmp_path / "shared-source"
+    target.write_bytes(b"same immutable NFS content")
+    original_signature = helper._signature
+    node = {"device": 101}
+    def node_signature(path):
+        signature = original_signature(path)
+        signature[0] = node["device"]
+        return signature
+    monkeypatch.setattr(helper, "_signature", node_signature)
+    first = helper.DigestCache(tmp_path, {"test": "shared-nfs"})
+    second = helper.DigestCache(tmp_path, {"test": "shared-nfs"})
+    expected = first.get(contracts.file_digest, target, sized=False)
+    node["device"] = 202
+    assert second.get(contracts.file_digest, target, sized=False) == expected
+    first.flush()
+    second.flush()
+    warm = helper.DigestCache(tmp_path, {"test": "shared-nfs"})
+    def no_read(path):
+        raise AssertionError("An unchanged previously hashed client must stay warm")
+    for device in (101, 202):
+        node["device"] = device
+        assert warm.get(no_read, target, sized=False) == expected
+    assert len(warm.entries) == 2 and warm.stats["hits"] == 2

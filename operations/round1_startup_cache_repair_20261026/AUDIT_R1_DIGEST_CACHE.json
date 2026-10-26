@@ -1,7 +1,7 @@
 {
   "schema_version": "paper3-r1-startup-digest-cache-audit-v1",
   "helper": "r1_digest_cache.py",
-  "helper_sha256": "fb704ad3030f27142ffc4c9694b3f4f46cd4cc065eb33c4341721ac6424a646b",
+  "helper_sha256": "12d26095b511cf608f4f5c7c6020fc38ca2402a60870eec254d4c1e3f8cf8440",
   "status": "FROZEN_REVIEWED",
   "observed_problem": {
     "action_total_seconds": 1699,
@@ -16,6 +16,7 @@
     "entry_evidence": "Only successful original native hash calls with stable pre/post file identity; no declared expected SHA seeding",
     "file_identity": ["resolved_path", "st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns"],
     "signature_on_hits": "Recheck stat and resolve original argument to detect symlink retarget",
+    "shared_storage_client_variants": "Each canonical path retains a separate entry per real st_dev to avoid cache eviction between NFS clients with different mount device IDs",
     "implementation_namespace": "Root plus actual native hash implementation file SHA256",
     "persistence": "Operational JSON index, nonblocking file lock, merge latest index, atomic replace",
     "cache_failure_behavior": "Cold original hash; cache write failure does not terminate training",
@@ -35,7 +36,7 @@
   },
   "validation": {
     "interpreter": "Python3.12.14 local stdlib-only optimization, no CUDA execution",
-    "new_tests": {"passed": 9, "seconds": 0.48},
+    "new_tests": {"passed": 10, "seconds": 0.48},
     "original_action_startup_regression_tests": {"passed": 9, "seconds": 0.02},
     "meaningful_cases": [
       "Real native file_digest and sha256_file return contracts, imported and lazy aliases",
@@ -47,7 +48,8 @@
       "Failed native read propagates, no entry for impossible returned byte count",
       "Symlink retarget during hit signature causes original hash of new target",
       "Spawned owned child process cache idempotence and normal-exit persistence",
-      "Independent process snapshots merge existing entries on flush"
+      "Independent process snapshots merge existing entries on flush",
+      "Different NFS clients preserve both st_dev variants of the same shared input and both remain cache hits after merge"
     ],
     "independent_read_only_review": "No release-blocking bug identified"
   },
