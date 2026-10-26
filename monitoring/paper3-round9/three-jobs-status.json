@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 57,
+  "complete_tasks": 58,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 19.8,
+    "progress_age_seconds": 13.8,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-25T23:54:53Z"
+    "updated_utc": "2026-10-25T23:57:59Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 57,
+      "complete": 58,
       "total": 234
     },
     "feature_reference": {
@@ -43,14 +43,16 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 37567,
+      "pid": 41152,
       "status": "RUNNING",
-      "task_key": "core-holdout-source_T2-seed20261019-c112133f64",
+      "task_key": "feature-reference-ea-seed20261018",
       "worker_progress": {
         "outer_update": 0,
-        "stage": "loading",
-        "status": "STARTING",
-        "updated_utc": "2026-10-25T23:54:17Z"
+        "session": 395,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_features",
+        "status": "FAILED",
+        "updated_utc": "2026-10-25T23:52:01Z"
       }
     },
     "1": {
@@ -125,7 +127,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "1:13:05",
+        "elapsed": "1:16:04",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -135,7 +137,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-25T23:55:13Z",
+    "observed_utc": "2026-10-25T23:58:12Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -161,14 +163,14 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792972512.7820039,
+  "sampled_unix": 1792972692.785236,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 14,
+      "attempt": 15,
       "family": "feature_reference",
       "index": 0,
       "job_id": "773686",
@@ -177,7 +179,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 14,
+      "attempt": 15,
       "family": "feature_reference",
       "index": 1,
       "job_id": "773686",
@@ -186,7 +188,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 14,
+      "attempt": 15,
       "family": "feature_reference",
       "index": 2,
       "job_id": "773686",
@@ -195,13 +197,25 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 14,
+      "attempt": 15,
       "family": "feature_reference",
       "index": 3,
       "job_id": "773686",
       "key": "feature-reference-ea-seed20261018",
+      "observations": [
+        {
+          "age_seconds": 20.8,
+          "path": "runs/followup_20261025_r9/feature-reference-ea-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "stage": "loading",
+            "status": "STARTING",
+            "updated_utc": "2026-10-25T23:57:52Z"
+          }
+        }
+      ],
       "slot": 0,
-      "status": "RETRYING"
+      "status": "RUNNING"
     },
     {
       "attempt": 14,
@@ -740,23 +754,8 @@
       "index": 63,
       "job_id": "773686",
       "key": "core-holdout-source_T2-seed20261019-c112133f64",
-      "observations": [
-        {
-          "age_seconds": 15.8,
-          "path": "runs/followup_20261025_r9/core-holdout-source_T2-seed20261019-c112133f64/progress.json",
-          "values": {
-            "budget": 16,
-            "outer_update": 0,
-            "session": 105,
-            "sessions_total": 105,
-            "stage": "done",
-            "status": "COMPLETE",
-            "updated_utc": "2026-10-25T23:54:57Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -14128,5 +14127,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-25T23:55:13Z"
+  "updated_utc": "2026-10-25T23:58:12Z"
 }
