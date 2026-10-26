@@ -1,0 +1,20 @@
+{
+  "module": "paper3r9.gp",
+  "original_source_sha256": "5956354a457c95db4503494c74bb0e1a6e6e2f3cfaf661c5c04ca1d49ee93ad7",
+  "executed_source_sha256": "bb3dbd077632251d8fd34a43f83645c8f411f2954d8110c8d907da9e840e17ee",
+  "corrections": [
+    "weighted_reference_deterministic_cpu_cumsum"
+  ],
+  "native_source_file_changed": false,
+  "deterministic_algorithms_disabled": false,
+  "operation_device": "CPU float64 prefix sum; restore original weights device",
+  "max_pairweights": 32640,
+  "max_transfer_bytes_each_direction": 261120,
+  "python": "3.12.14",
+  "torch": "2.8.0+cpu",
+  "numpy": "2.3.5",
+  "actual_gpu_executed": false,
+  "source_original_path": "/workspace/paper3-round9/paper3r9/gp.py",
+  "old_span": "        cumulative=torch.cumsum(pairweights[order],0)\n",
+  "new_span": "        cumulative=torch.cumsum(pairweights[order].detach().cpu(),0).to(pairweights.device)\n"
+}
