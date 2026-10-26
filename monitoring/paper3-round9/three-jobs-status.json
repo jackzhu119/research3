@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 107,
+  "complete_tasks": 108,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 29.2,
+    "progress_age_seconds": 23.2,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T00:57:38Z"
+    "updated_utc": "2026-10-26T01:00:44Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -36,23 +36,23 @@
       "total": 12
     },
     "stress": {
-      "complete": 35,
+      "complete": 36,
       "total": 432
     }
   },
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 46402,
+      "pid": 49533,
       "status": "RUNNING",
-      "task_key": "feature-reference-raw-seed20261018",
+      "task_key": "feature-reference-ea-seed20261018",
       "worker_progress": {
         "outer_update": 0,
         "session": 395,
         "sessions_total": 396,
         "stage": "meta_train_prefix_features",
         "status": "FAILED",
-        "updated_utc": "2026-10-26T00:52:13Z"
+        "updated_utc": "2026-10-26T00:54:55Z"
       }
     },
     "1": {
@@ -127,7 +127,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "2:15:59",
+        "elapsed": "2:18:59",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -137,7 +137,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T00:58:07Z",
+    "observed_utc": "2026-10-26T01:01:07Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -163,7 +163,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792976287.1852028,
+  "sampled_unix": 1792976467.1964676,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -175,25 +175,11 @@
       "index": 0,
       "job_id": "773686",
       "key": "feature-reference-raw-seed20261018",
-      "observations": [
-        {
-          "age_seconds": 6.2,
-          "path": "runs/followup_20261025_r9/feature-reference-raw-seed20261018/progress.json",
-          "values": {
-            "outer_update": 0,
-            "session": 395,
-            "sessions_total": 396,
-            "stage": "meta_train_prefix_features",
-            "status": "FAILED",
-            "updated_utc": "2026-10-26T00:58:01Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "RETRYING"
     },
     {
-      "attempt": 24,
+      "attempt": 25,
       "family": "feature_reference",
       "index": 1,
       "job_id": "773686",
@@ -202,7 +188,7 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 24,
+      "attempt": 25,
       "family": "feature_reference",
       "index": 2,
       "job_id": "773686",
@@ -211,13 +197,27 @@
       "status": "RETRYING"
     },
     {
-      "attempt": 24,
+      "attempt": 25,
       "family": "feature_reference",
       "index": 3,
       "job_id": "773686",
       "key": "feature-reference-ea-seed20261018",
+      "observations": [
+        {
+          "age_seconds": 9.2,
+          "path": "runs/followup_20261025_r9/feature-reference-ea-seed20261018/progress.json",
+          "values": {
+            "outer_update": 0,
+            "session": 271,
+            "sessions_total": 396,
+            "stage": "meta_train_prefix_features",
+            "status": "PREPARING_REFERENCE",
+            "updated_utc": "2026-10-26T01:00:58Z"
+          }
+        }
+      ],
       "slot": 0,
-      "status": "RETRYING"
+      "status": "RUNNING"
     },
     {
       "attempt": 24,
@@ -2767,13 +2767,13 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "stress",
       "index": 287,
-      "job_id": null,
+      "job_id": "773686",
       "key": "stress-weibo2014-source_frozen-seed20261019-2c080cb65f",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -14129,5 +14129,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T00:58:07Z"
+  "updated_utc": "2026-10-26T01:01:07Z"
 }
