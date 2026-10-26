@@ -5,17 +5,17 @@
     "classical": 1,
     "meta_engineering": 5,
     "meta_screening": 45,
-    "meta_selection": 3,
+    "meta_selection": 4,
     "pilot": 1,
     "reference": 3,
     "source": 1
   },
   "coordinator": {
     "phase": "META_SCREENING",
-    "progress_age_seconds": 25.8,
+    "progress_age_seconds": 2.8,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-26T07:45:27Z"
+    "updated_utc": "2026-10-26T07:48:50Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -53,7 +53,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 99377.8,
+    "progress_age_seconds": 99557.8,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -98,7 +98,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "9:03:44",
+        "elapsed": "9:06:44",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -108,7 +108,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "9:28:20",
+        "elapsed": "9:31:20",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -118,7 +118,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "14:27:20",
+        "elapsed": "14:30:20",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -128,35 +128,28 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T07:45:52Z",
+    "observed_utc": "2026-10-26T07:48:52Z",
     "status": "OBSERVED"
   },
   "mainline": {
     "active_actions": [
       {
         "job_id": "772906",
-        "key": "meta-selection-P",
-        "kind": "meta_selection",
-        "method": "P",
-        "observations": [],
-        "slot": 0,
-        "status": "RUNNING"
-      },
-      {
         "key": "meta-selection-P+PCT",
         "kind": "meta_selection",
         "method": "P+PCT",
         "observations": [],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "slot": 0,
+        "status": "RUNNING"
       }
     ],
-    "completed_observed_actions": 59,
+    "completed_observed_actions": 60,
     "coordinator_declares_complete": false,
     "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
     "observed_actions": 61
   },
   "mainline_complete": false,
-  "parallel_plan_complete_tasks": 59,
+  "parallel_plan_complete_tasks": 60,
   "parallel_plan_total_tasks": 61,
   "planned_counts": {
     "calibration_profile": 14,
@@ -188,16 +181,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793000752.835216,
+  "sampled_unix": 1793000932.8366773,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 347241.8,
+    "age_seconds": 347421.8,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 347585.8,
+    "age_seconds": 347765.8,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -913,16 +906,17 @@
       "key": "meta-selection-P",
       "kind": "meta_selection",
       "method": "P",
-      "observations": [],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
+      "job_id": "772906",
       "key": "meta-selection-P+PCT",
       "kind": "meta_selection",
       "method": "P+PCT",
       "observations": [],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "key": "pilot",
@@ -952,5 +946,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-26T07:45:52Z"
+  "updated_utc": "2026-10-26T07:48:52Z"
 }
