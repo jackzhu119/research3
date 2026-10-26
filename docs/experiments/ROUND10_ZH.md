@@ -1,5 +1,7 @@
 # 第十轮：证据保留的查询函数校准
 
+> 最新续跑见 [R10优化修订](ROUND10_CONTINUATION_ZH.md)：原15项已经真实完成；新165项四卡64G、配对选型与自动衔接。以下初始设计快照保留。
+
 - [中文科研方案与最新真实结果核查](../../experiments/round10_20261026/R10_RESEARCH_PROPOSAL_ZH.md)
 - [完整数学与可证明性质](../../experiments/round10_20261026/R10_MATH.md)
 - [阶段实验、强基线、消融与统计](../../experiments/round10_20261026/R10_EXPERIMENT_PLAN.md)

@@ -10,6 +10,12 @@
 
 [第七轮完整总JSON定向补传](operations/round7_report_supplement_20261025/README_ZH.md) · [第九轮：实测依据、数学与代码](docs/experiments/ROUND9_ZH.md)（已设计，未提交学校任务）
 
+## 第十轮优化续跑：复用15项，连续执行165项（2026-10-26）
+
+[修订说明](experiments/round10_continuation_20261026/R10_CONTINUATION_SCIENCE_ZH.md) · [运行与恢复](experiments/round10_continuation_20261026/R10_CONTINUATION_IMPLEMENTATION_ZH.md) · [完整下载启动](experiments/round10_continuation_20261026/delivery/SCHOOL_COMMANDS.md)
+
+原R10机制实验已完成15/15并完整回传。优化版保留原结果与原选型重建，按selection参与者相对EA的配对增益one-SE选型；check及旧性能门槛仅诊断，不中断整个探索队列。新165任务为3参考节点＋18方法×3种子×3旧队列，**4个独立单卡作业、各16CPU/64G**。原seed18参考精确复用，旧14评价不重跑；持久科学进程、失败隔离、恢复、独立增量双通道。修订后证据标为探索性，未声称独立确认或新性能突破。默认仅安装，正式续跑须显式 `--continue --submit`。
+
 ## 第十一轮：前缀—未来得分输运（2026-10-26）
 
 [研究与文献](experiments/round11_20261026/R11_RESEARCH_PROPOSAL_ZH.md) · [数学](experiments/round11_20261026/R11_MATH.md) · [10270任务实验](experiments/round11_20261026/R11_EXPERIMENT_PLAN.md) · [代码与运行](experiments/round11_20261026/R11_IMPLEMENTATION.md) · [完整一行启动](experiments/round11_20261026/delivery/SCHOOL_COMMANDS.md)

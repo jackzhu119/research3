@@ -1,0 +1,82 @@
+{"event": "R10_INSTALL_COMPLETE", "utc": "2026-10-26T11:48:43Z", "schema_version": "paper3-r10-installation-v1", "package": "/tmp/paper3-r10-optimized-install-0rne3q9h/paper3-round10-optimized/732fc55ce9c1a7dec2ca", "payload_sha256": "732fc55ce9c1a7dec2cab3b198c4fb7fbadd60305189c76baaf82416c2f472e6", "manifest_sha256": "fcac555950ba52ab6d321e1e62e726d4a9c9b3a8f4e5015dc45acb7d73b60fd5", "files": 224, "reused": true, "installed_utc": "2026-10-26T11:48:43Z", "training_jobs_submitted": 0, "training_jobs_cancelled": 0, "torch_imported": false, "dependencies_installed": false, "data_downloaded": false, "scientific_outputs_changed": false}
+{"event": "R10_EXPLICIT_OPERATION_STARTED", "utc": "2026-10-26T11:48:43Z", "operation": "validate", "training_submission_authorized": false}
+{
+  "status": "CPU_SOFTWARE_CHECK_PASSED",
+  "checks": [
+    "finite_support_fit",
+    "proper_probabilities",
+    "c1_exact_anchor",
+    "pickle_free_exact_resume"
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.2.6",
+    "torch": "2.5.1+cpu",
+    "pytest": "8.4.2"
+  },
+  "gpu_initialized": false,
+  "jobs_submitted": 0,
+  "real_EEG_performance_validated": false,
+  "diagnostics": {
+    "version": "paper3-r10-query-profile-v1",
+    "fit_identity": "56ad8a405e85d715b52ba2b30aea5813584ee2cf7b471f13ef7de05d7b85f636",
+    "queries": [
+      {
+        "map_correction": -1.7853614418875172,
+        "kernel_innovation": 1.3499956708074023e-10,
+        "support_projection_energy": 13.499999999965,
+        "correction": -1.4002748376827052,
+        "declared_profile_innovation": 1.3499956708074023e-10,
+        "upper": -1.4002748376827052,
+        "zeta": 0.11085913901618522,
+        "reason": "certified_nonzero_update",
+        "tilts": 15,
+        "unconverged_inner_solves": 0,
+        "root_iterations_budget": 12,
+        "root_bracket_width": 2.6927165172732637e-05,
+        "dual_certificate_valid_despite_root_budget": true,
+        "converged": true,
+        "certificate": "analytic_dual_outer_bound_float64_guarded"
+      },
+      {
+        "map_correction": 1.7853614418875166,
+        "kernel_innovation": 1.3499779072390083e-10,
+        "support_projection_energy": 13.499999999965002,
+        "correction": 1.400274837682702,
+        "declared_profile_innovation": 1.3499779072390083e-10,
+        "upper": -1.400274837682702,
+        "zeta": 0.11085913901618524,
+        "reason": "certified_nonzero_update",
+        "tilts": 15,
+        "unconverged_inner_solves": 0,
+        "root_iterations_budget": 12,
+        "root_bracket_width": 2.6927165172732637e-05,
+        "dual_certificate_valid_despite_root_budget": true,
+        "converged": true,
+        "certificate": "analytic_dual_outer_bound_float64_guarded"
+      },
+      {
+        "map_correction": -4.440892098500626e-16,
+        "kernel_innovation": 72.000000000125,
+        "support_projection_energy": 8.999999999975,
+        "correction": 0.0,
+        "declared_profile_innovation": 72.000000000125,
+        "reason": "support_null_completion_witness",
+        "certificate": "anchor_feasible",
+        "null_witness_cost": 1.3695501826729901e-33
+      }
+    ],
+    "summary": {
+      "queries": 3,
+      "reason_counts": {
+        "certified_nonzero_update": 2,
+        "support_null_completion_witness": 1
+      },
+      "nonzero_updates": 2,
+      "prediction_seconds": 0.008180603996152058,
+      "query_labels_seen": 0,
+      "query_batch_statistics_updated": false,
+      "true_future_risk_or_coverage_guaranteed": false
+    }
+  }
+}
