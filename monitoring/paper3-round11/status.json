@@ -1,11 +1,11 @@
 {
   "blocked_tasks": 2,
-  "complete_task_keys_sha256": "0fa5808a4f6f3599b5502f034222e973c1216d9b2e021c885f06c14f3effb715",
-  "complete_tasks": 323,
+  "complete_task_keys_sha256": "a917fe36618aca722653fede7cc073ecfac1584b3741d385406f21305693cb49",
+  "complete_tasks": 324,
   "completion_counts_from_durable_verified_cache": true,
   "family_summary": {
     "evaluate": {
-      "active": 0,
+      "active": 1,
       "blocked": 1,
       "complete": 52,
       "total": 1881
@@ -17,9 +17,9 @@
       "total": 3
     },
     "operator_train": {
-      "active": 3,
+      "active": 2,
       "blocked": 1,
-      "complete": 268,
+      "complete": 269,
       "total": 8385
     },
     "selection": {
@@ -32,16 +32,16 @@
   "monitoring_rehashes_full_payloads": false,
   "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
   "reporter": {
-    "complete_tasks": 321,
+    "complete_tasks": 323,
     "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
-    "status": "PARTIAL_REPORT_GENERATED",
+    "status": "WAITING_FOR_NEW_COMPLETION",
     "total_tasks": 10270,
     "training_controlled": false,
-    "updated_utc": "2026-10-26T17:47:50Z"
+    "updated_utc": "2026-10-26T17:49:59Z"
   },
   "round": 11,
-  "runnable_remaining_tasks": 9945,
-  "sampled_unix": 1793036907.9465706,
+  "runnable_remaining_tasks": 9944,
+  "sampled_unix": 1793037048.4871545,
   "scheduler": {
     "bootstrap_ready": {
       "first_slurm_observation_performed": false,
@@ -123,8 +123,8 @@
   "task_phase_counts": {
     "BLOCKED_CONFIGURATION": 1,
     "BLOCKED_DEPENDENCY": 1,
-    "COMPLETE": 323,
-    "NEW": 9942,
+    "COMPLETE": 324,
+    "NEW": 9941,
     "RUNNING": 3
   },
   "task_rows_included": 21,
@@ -132,25 +132,27 @@
   "tasks": [
     {
       "attempt": 1,
-      "attempt_token": "fb206dd5c178d8bd85716bccd40989693bc70c12d253541363bcbbb255afa80e",
+      "attempt_token": "149de8b017a1c2a14cbe4d5f58230c536d3f17876466a6a12d2dbcd222bc3c45",
       "current_error": null,
       "historical_failures": 0,
       "job_id": "775286",
-      "key": "operator_train-meta_train-operator-s20261020-81c1260b2d3a",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T17:48:27Z",
+      "key": "evaluate-meta_validation-operator-s20261020-68449a7ccd5d",
+      "kind": "evaluate",
+      "last_numerical_advance_utc": "2026-10-26T17:50:47Z",
       "numerical_advance_age_seconds": 0.0,
       "numerical_progress": {
-        "attempt_token": "fb206dd5c178d8bd85716bccd40989693bc70c12d253541363bcbbb255afa80e",
+        "attempt_token": "149de8b017a1c2a14cbe4d5f58230c536d3f17876466a6a12d2dbcd222bc3c45",
         "budget": 20,
-        "session": 127,
-        "sessions_total": 396,
-        "stage": "meta_train_prefix_to_future",
-        "status": "BUILDING_TRAINING_PAIRS",
-        "updated_utc": "2026-10-26T17:48:24Z"
+        "outer_update": 0,
+        "session": 4,
+        "sessions_total": 485,
+        "stage": "support_fit",
+        "status": "PREDICTING",
+        "total_updates": 1,
+        "updated_utc": "2026-10-26T17:50:43Z"
       },
       "phase": "RUNNING",
-      "progress_age_seconds": 3.5,
+      "progress_age_seconds": 4.9,
       "progress_is_current_attempt": true,
       "slot": 0
     },
@@ -162,19 +164,11 @@
       "job_id": "775289",
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261018-31e9b46f4c14",
       "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T17:48:27Z",
-      "numerical_advance_age_seconds": 0.0,
-      "numerical_progress": {
-        "attempt_token": "8bd83035915c9fc8e44dc231449c9b129670de1f73a691656e5018760bf3b849",
-        "budget": 4,
-        "session": 17,
-        "sessions_total": 396,
-        "stage": "meta_train_prefix_to_future",
-        "status": "BUILDING_TRAINING_PAIRS",
-        "updated_utc": "2026-10-26T17:48:25Z"
-      },
+      "last_numerical_advance_utc": "2026-10-26T17:50:38Z",
+      "numerical_advance_age_seconds": 9.7,
+      "numerical_progress": {},
       "phase": "RUNNING",
-      "progress_age_seconds": 2.6,
+      "progress_age_seconds": 4.1,
       "progress_is_current_attempt": true,
       "slot": 3
     },
@@ -186,11 +180,19 @@
       "job_id": "775288",
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261018-c17681d458c1",
       "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
+      "last_numerical_advance_utc": "2026-10-26T17:50:48Z",
+      "numerical_advance_age_seconds": 0.0,
+      "numerical_progress": {
+        "attempt_token": "b0d8fafbc8edfdda534349168e9ed7ba7c156c2814fb0964a86c39eb7b137a22",
+        "budget": 8,
+        "session": 349,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_to_future",
+        "status": "BUILDING_TRAINING_PAIRS",
+        "updated_utc": "2026-10-26T17:50:44Z"
+      },
       "phase": "RUNNING",
-      "progress_age_seconds": 2.6,
+      "progress_age_seconds": 4.2,
       "progress_is_current_attempt": true,
       "slot": 2
     },
@@ -209,7 +211,7 @@
       "key": "operator_train-meta_train-operator-s20261018-582a71fd8b2b",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T16:45:51Z",
-      "numerical_advance_age_seconds": 3756.4,
+      "numerical_advance_age_seconds": 3896.9,
       "numerical_progress": {
         "attempt_token": "81945b4cb43740885ce48bb3b9f8f6b33dd762b4e734b713e266f0ffad682b77",
         "session": 396,
@@ -219,7 +221,7 @@
         "updated_utc": "2026-10-26T16:45:40Z"
       },
       "phase": "BLOCKED_CONFIGURATION",
-      "progress_age_seconds": 3767.6,
+      "progress_age_seconds": 3908.2,
       "progress_is_current_attempt": true,
       "slot": 1
     },
@@ -241,6 +243,29 @@
     },
     {
       "attempt": 1,
+      "attempt_token": "fb206dd5c178d8bd85716bccd40989693bc70c12d253541363bcbbb255afa80e",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775286",
+      "key": "operator_train-meta_train-operator-s20261020-81c1260b2d3a",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T17:50:31Z",
+      "numerical_advance_age_seconds": 16.6,
+      "numerical_progress": {
+        "attempt_token": "fb206dd5c178d8bd85716bccd40989693bc70c12d253541363bcbbb255afa80e",
+        "session": 396,
+        "sessions_total": 396,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T17:50:37Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 0
+    },
+    {
+      "attempt": 1,
       "attempt_token": "078b67c88cc3320738a19fc55d65a154524a8debae298a7827b3ce663c7ce809",
       "current_error": null,
       "historical_failures": 0,
@@ -248,7 +273,7 @@
       "key": "operator_train-meta_train-operator-s20261020-899be8e82539",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T17:48:17Z",
-      "numerical_advance_age_seconds": 10.6,
+      "numerical_advance_age_seconds": 151.5,
       "numerical_progress": {
         "attempt_token": "078b67c88cc3320738a19fc55d65a154524a8debae298a7827b3ce663c7ce809",
         "session": 396,
@@ -271,7 +296,7 @@
       "key": "evaluate-meta_validation-operator-s20261019-7677107cd172",
       "kind": "evaluate",
       "last_numerical_advance_utc": "2026-10-26T17:48:11Z",
-      "numerical_advance_age_seconds": 16.1,
+      "numerical_advance_age_seconds": 156.6,
       "numerical_progress": {
         "attempt_token": "39be1280bade81d6f80e712d640683ab9870a99a84f88fb978ad02972fd362d4",
         "session": 485,
@@ -294,7 +319,7 @@
       "key": "operator_train-meta_train-operator-s20261020-f7d7f249acf9",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T17:47:01Z",
-      "numerical_advance_age_seconds": 86.0,
+      "numerical_advance_age_seconds": 226.6,
       "numerical_progress": {
         "attempt_token": "5eca650b8b5140739f7a89ab81fb07e12a625a49bb59a19e3150772b621ced4e",
         "session": 396,
@@ -317,7 +342,7 @@
       "key": "operator_train-meta_train-operator-s20261020-92e00fb3853b",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T17:44:40Z",
-      "numerical_advance_age_seconds": 227.3,
+      "numerical_advance_age_seconds": 367.9,
       "numerical_progress": {
         "attempt_token": "e3aa62eebaf6ac3fac2ec3d1aabf947fcec62887326cf2cce1a01590f4fb7713",
         "session": 396,
@@ -340,7 +365,7 @@
       "key": "operator_train-meta_train-operator-s20261020-9e92db6f6b7e",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T17:44:14Z",
-      "numerical_advance_age_seconds": 253.8,
+      "numerical_advance_age_seconds": 394.3,
       "numerical_progress": {
         "attempt_token": "49182451336fe90dac0e4d3149e22c40de85f7a012f9c90b21a4d92a80fb20b7",
         "session": 396,
@@ -363,7 +388,7 @@
       "key": "operator_train-meta_train-operator-s20261019-f869b46b64fa",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T17:43:28Z",
-      "numerical_advance_age_seconds": 299.9,
+      "numerical_advance_age_seconds": 440.4,
       "numerical_progress": {
         "attempt_token": "dcf4d4c8acd298b3c22484862ad43f55ff7925e68c0eedfa6981d7b9dfe25c52",
         "session": 396,
@@ -386,7 +411,7 @@
       "key": "operator_train-meta_train-operator-s20261019-f481beabab9a",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T17:41:36Z",
-      "numerical_advance_age_seconds": 411.3,
+      "numerical_advance_age_seconds": 551.9,
       "numerical_progress": {
         "attempt_token": "dd5e9cc7359f9c8c03abd0ec50a6e7a9739c5dd2515b8d5da47d4c0662ca64ee",
         "session": 396,
@@ -399,45 +424,6 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": 2
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "e84e0cb8f1cea81cf0218188e437c083980a39f1ce2eead8b13cd82d697a8a97",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775286",
-      "key": "evaluate-meta_validation-operator-s20261018-d671f214a2a2",
-      "kind": "evaluate",
-      "last_numerical_advance_utc": "2026-10-26T17:41:27Z",
-      "numerical_advance_age_seconds": 420.3,
-      "numerical_progress": {
-        "attempt_token": "e84e0cb8f1cea81cf0218188e437c083980a39f1ce2eead8b13cd82d697a8a97",
-        "session": 485,
-        "sessions_total": 485,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T17:41:30Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 0
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "evaluate-meta_validation-operator-s20261020-68449a7ccd5d",
-      "kind": "evaluate",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
     },
     {
       "attempt": 0,
@@ -550,10 +536,26 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-f3b192e4dbb7",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
     }
   ],
   "total_tasks": 10270,
-  "updated_utc": "2026-10-26T17:48:27Z",
+  "updated_utc": "2026-10-26T17:50:48Z",
   "uploads": {
     "full": {
       "channel": "full",
