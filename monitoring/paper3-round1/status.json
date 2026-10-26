@@ -16,7 +16,7 @@
     "progress_age_seconds": 1.1,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-26T11:21:34Z"
+    "updated_utc": "2026-10-26T11:24:28Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -54,7 +54,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 112320.1,
+    "progress_age_seconds": 112494.1,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -99,7 +99,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "12:39:27",
+        "elapsed": "12:42:21",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -109,7 +109,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "13:04:03",
+        "elapsed": "13:06:57",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -119,7 +119,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "18:03:03",
+        "elapsed": "18:05:57",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -129,7 +129,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T11:21:35Z",
+    "observed_utc": "2026-10-26T11:24:29Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -144,26 +144,22 @@
         "status": "RUNNING"
       },
       {
-        "error_type": "ExitCode-11",
+        "error_type": "ExitCode75",
         "job_id": "772906",
         "key": "profile-B5",
         "kind": "calibration_profile",
         "method": "B5",
-        "observations": [
-          {
-            "age_seconds": 55.1,
-            "path": "runs/training_campaign_v1/profiles/B5/progress.json",
-            "values": {}
-          }
-        ],
         "slot": 0,
-        "status": "RUNNING"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
+        "job_id": "772906",
         "key": "profile-B10",
         "kind": "calibration_profile",
         "method": "B10",
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "observations": [],
+        "slot": 0,
+        "status": "RUNNING"
       },
       {
         "key": "profile-B11",
@@ -1614,16 +1610,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793013695.1464286,
+  "sampled_unix": 1793013869.062989,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 360184.1,
+    "age_seconds": 360358.1,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 360528.1,
+    "age_seconds": 360702.1,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -2418,20 +2414,13 @@
       "status": "COMPLETE"
     },
     {
-      "error_type": "ExitCode-11",
+      "error_type": "ExitCode75",
       "job_id": "772906",
       "key": "profile-B5",
       "kind": "calibration_profile",
       "method": "B5",
-      "observations": [
-        {
-          "age_seconds": 55.1,
-          "path": "runs/training_campaign_v1/profiles/B5/progress.json",
-          "values": {}
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "job_id": "772906",
@@ -2466,10 +2455,13 @@
       "status": "COMPLETE"
     },
     {
+      "job_id": "772906",
       "key": "profile-B10",
       "kind": "calibration_profile",
       "method": "B10",
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "observations": [],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "key": "profile-B11",
@@ -3884,5 +3876,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-26T11:21:35Z"
+  "updated_utc": "2026-10-26T11:24:29Z"
 }
