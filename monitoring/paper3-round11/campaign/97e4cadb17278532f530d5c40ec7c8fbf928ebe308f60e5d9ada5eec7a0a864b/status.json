@@ -1,13 +1,13 @@
 {
   "blocked_tasks": 0,
-  "complete_task_keys_sha256": "27117ef8fd84659234d770d50caa4cd688bbd3b6116708233bb5af6d217818b5",
-  "complete_tasks": 159,
+  "complete_task_keys_sha256": "9a4a82c8fce18f1fc1e2b474221b55c448109431343920025d9d36787caa880f",
+  "complete_tasks": 161,
   "completion_counts_from_durable_verified_cache": true,
   "family_summary": {
     "evaluate": {
-      "active": 1,
+      "active": 0,
       "blocked": 0,
-      "complete": 25,
+      "complete": 26,
       "total": 1881
     },
     "feature_reference": {
@@ -17,9 +17,9 @@
       "total": 3
     },
     "operator_train": {
-      "active": 1,
+      "active": 2,
       "blocked": 0,
-      "complete": 131,
+      "complete": 132,
       "total": 8385
     },
     "selection": {
@@ -32,16 +32,16 @@
   "monitoring_rehashes_full_payloads": false,
   "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
   "reporter": {
-    "complete_tasks": 159,
+    "complete_tasks": 161,
     "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
-    "status": "WAITING_FOR_NEW_COMPLETION",
+    "status": "PARTIAL_REPORT_GENERATED",
     "total_tasks": 10270,
     "training_controlled": false,
-    "updated_utc": "2026-10-26T14:37:54Z"
+    "updated_utc": "2026-10-26T14:40:07Z"
   },
   "round": 11,
-  "runnable_remaining_tasks": 10111,
-  "sampled_unix": 1793025485.6177752,
+  "runnable_remaining_tasks": 10109,
+  "sampled_unix": 1793025626.3935504,
   "scheduler": {
     "bootstrap_ready": {
       "first_slurm_observation_performed": false,
@@ -121,8 +121,8 @@
   "stage": "campaign",
   "status": "RUNNING_OR_READY",
   "task_phase_counts": {
-    "COMPLETE": 159,
-    "NEW": 10109,
+    "COMPLETE": 161,
+    "NEW": 10107,
     "RUNNING": 2
   },
   "task_rows_included": 18,
@@ -130,29 +130,43 @@
   "tasks": [
     {
       "attempt": 1,
-      "attempt_token": "1ca373241dafefcbacd551cc15081496bdd4b804f0d44b73f9c1cd2c06a5916a",
+      "attempt_token": "25d325b0d414876ad1a7e36e5abf9b59b0e6899e096910afef71541381c46206",
       "current_error": null,
       "historical_failures": 0,
       "job_id": "775286",
-      "key": "evaluate-meta_validation-operator_no_noise_tuned-s20261019-4a07ac754465",
-      "kind": "evaluate",
-      "last_numerical_advance_utc": "2026-10-26T14:38:05Z",
+      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-2162fbadae7e",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T14:40:12Z",
+      "numerical_advance_age_seconds": 13.7,
+      "numerical_progress": {},
+      "phase": "RUNNING",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 0
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "fb3517279efec383034d1b0c54b8eefdc8919046de0cd1c368df8744c6a497b1",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775287",
+      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-3b2050dc573a",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T14:40:26Z",
       "numerical_advance_age_seconds": 0.0,
       "numerical_progress": {
-        "attempt_token": "1ca373241dafefcbacd551cc15081496bdd4b804f0d44b73f9c1cd2c06a5916a",
-        "budget": 4,
-        "outer_update": 0,
-        "session": 420,
-        "sessions_total": 485,
-        "stage": "support_fit",
-        "status": "PREDICTING",
-        "total_updates": 1,
-        "updated_utc": "2026-10-26T14:38:02Z"
+        "attempt_token": "fb3517279efec383034d1b0c54b8eefdc8919046de0cd1c368df8744c6a497b1",
+        "budget": 16,
+        "session": 150,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_to_future",
+        "status": "BUILDING_TRAINING_PAIRS",
+        "updated_utc": "2026-10-26T14:40:21Z"
       },
       "phase": "RUNNING",
-      "progress_age_seconds": 3.3,
+      "progress_age_seconds": 5.1,
       "progress_is_current_attempt": true,
-      "slot": 0
+      "slot": 1
     },
     {
       "attempt": 1,
@@ -162,13 +176,43 @@
       "job_id": "775287",
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-b0a8c80a915b",
       "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T14:37:58Z",
-      "numerical_advance_age_seconds": 6.6,
-      "numerical_progress": {},
-      "phase": "RUNNING",
-      "progress_age_seconds": 2.5,
-      "progress_is_current_attempt": true,
+      "last_numerical_advance_utc": "2026-10-26T14:38:59Z",
+      "numerical_advance_age_seconds": 87.0,
+      "numerical_progress": {
+        "attempt_token": "5ecfc03586bfab9b26b37ccd7bbb88282cb2cc03a37b2066596c67cccac2853b",
+        "session": 396,
+        "sessions_total": 396,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T14:39:02Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
       "slot": 1
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "1ca373241dafefcbacd551cc15081496bdd4b804f0d44b73f9c1cd2c06a5916a",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775286",
+      "key": "evaluate-meta_validation-operator_no_noise_tuned-s20261019-4a07ac754465",
+      "kind": "evaluate",
+      "last_numerical_advance_utc": "2026-10-26T14:38:35Z",
+      "numerical_advance_age_seconds": 110.4,
+      "numerical_progress": {
+        "attempt_token": "1ca373241dafefcbacd551cc15081496bdd4b804f0d44b73f9c1cd2c06a5916a",
+        "session": 485,
+        "sessions_total": 485,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T14:38:39Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 0
     },
     {
       "attempt": 1,
@@ -179,7 +223,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-b7dca9fbd726",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T14:35:55Z",
-      "numerical_advance_age_seconds": 130.2,
+      "numerical_advance_age_seconds": 270.9,
       "numerical_progress": {
         "attempt_token": "3d1de55c989a0e6606684f08f02755f0f1396a465c3b34d57f52ba9ba76e1748",
         "session": 396,
@@ -202,7 +246,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-2193832cf1ff",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T14:34:23Z",
-      "numerical_advance_age_seconds": 222.1,
+      "numerical_advance_age_seconds": 362.9,
       "numerical_progress": {
         "attempt_token": "3d9be7bd59ea9713dd9bc983dcf9f91311f0f4db916d972a7f74a1127de064c9",
         "session": 396,
@@ -225,7 +269,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-d1079eed4c7a",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T14:33:05Z",
-      "numerical_advance_age_seconds": 300.4,
+      "numerical_advance_age_seconds": 441.2,
       "numerical_progress": {
         "attempt_token": "41955152fa81324d3559bc13d785b80e466307aa50e9cc92ed5210ac862a28d6",
         "session": 396,
@@ -248,7 +292,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-3d71dd9e9786",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T14:31:10Z",
-      "numerical_advance_age_seconds": 415.2,
+      "numerical_advance_age_seconds": 556.0,
       "numerical_progress": {
         "attempt_token": "d6763863a00dd06905217b8de9bbfcd9cd7472de682994b9d2275d18155e7496",
         "session": 396,
@@ -271,7 +315,7 @@
       "key": "evaluate-meta_validation-operator_no_noise_tuned-s20261018-d6d59b8ed835",
       "kind": "evaluate",
       "last_numerical_advance_utc": "2026-10-26T14:29:45Z",
-      "numerical_advance_age_seconds": 500.4,
+      "numerical_advance_age_seconds": 641.2,
       "numerical_progress": {
         "attempt_token": "6a38eec6c7db0fb5df5af5745ae04cc6e1ab723ec120a81ecf168da0164f5afd",
         "session": 485,
@@ -294,7 +338,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-19d578a197c5",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T14:28:56Z",
-      "numerical_advance_age_seconds": 549.2,
+      "numerical_advance_age_seconds": 690.0,
       "numerical_progress": {
         "attempt_token": "1515f9e9a34b27d7ebeda4ad5f4a439b02b2481ea98793957aaf44ccb72886ff",
         "session": 396,
@@ -307,84 +351,6 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": 0
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "7a3d07af5771c148392d363a3ac48686319daa5bf69282512a2ed08a6bbd40f5",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775286",
-      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-cc50948075b3",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T14:26:56Z",
-      "numerical_advance_age_seconds": 668.7,
-      "numerical_progress": {
-        "attempt_token": "7a3d07af5771c148392d363a3ac48686319daa5bf69282512a2ed08a6bbd40f5",
-        "session": 396,
-        "sessions_total": 396,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T14:26:58Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 0
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "504805656c1e488c107ead8c80ecf94402c72c0008790abcf1bcea5d83faa816",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775287",
-      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261018-b0cb0ae3cf62",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T14:25:29Z",
-      "numerical_advance_age_seconds": 756.1,
-      "numerical_progress": {
-        "attempt_token": "504805656c1e488c107ead8c80ecf94402c72c0008790abcf1bcea5d83faa816",
-        "session": 396,
-        "sessions_total": 396,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T14:25:33Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 1
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-2162fbadae7e",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-3b2050dc573a",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
     },
     {
       "attempt": 0,
@@ -481,10 +447,42 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-298bdc596d86",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "evaluate-meta_validation-operator_erm_tuned-s20261018-e846411dcf36",
+      "kind": "evaluate",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
     }
   ],
   "total_tasks": 10270,
-  "updated_utc": "2026-10-26T14:38:05Z",
+  "updated_utc": "2026-10-26T14:40:26Z",
   "uploads": {
     "full": {
       "channel": "full",
