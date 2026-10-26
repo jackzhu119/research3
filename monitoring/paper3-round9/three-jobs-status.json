@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 122,
+  "complete_tasks": 126,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 5.1,
+    "progress_age_seconds": 12.1,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T01:27:56Z"
+    "updated_utc": "2026-10-26T01:30:49Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -32,7 +32,7 @@
       "total": 702
     },
     "select": {
-      "complete": 5,
+      "complete": 9,
       "total": 12
     },
     "stress": {
@@ -43,24 +43,42 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 18598,
+      "pid": 21061,
       "status": "RUNNING",
-      "task_key": "select-raw-rbf-seed20261020",
+      "task_key": "select-ea-linear-seed20261020",
       "worker_progress": {
         "budget": 20,
         "outer_update": 0,
-        "session": 64,
+        "session": 13,
         "sessions_total": 97,
         "stage": "meta_validation",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-26T01:27:33Z"
+        "updated_utc": "2026-10-26T01:29:57Z"
       }
     },
     "1": {
-      "status": "NOT_STARTED"
+      "job_id": "773687",
+      "pid": 7759,
+      "status": "RUNNING",
+      "task_key": "select-ea-rbf-seed20261018",
+      "worker_progress": {
+        "outer_update": 0,
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-26T01:30:11Z"
+      }
     },
     "2": {
-      "status": "NOT_STARTED"
+      "job_id": "773688",
+      "pid": 7762,
+      "status": "RUNNING",
+      "task_key": "select-ea-rbf-seed20261019",
+      "worker_progress": {
+        "outer_update": 0,
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-26T01:30:11Z"
+      }
     }
   },
   "interpretation": "Round 9 independent three-job stream; optimizer progress and scheduler state are reported separately.",
@@ -86,39 +104,29 @@
       "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu",
-      "queue_reason": "(None)",
+      "queue_reason": "gpu3",
       "slot": 1,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     },
     {
       "attempt": 1,
       "cpus": 16,
       "job_id": "773688",
-      "live_reason_or_node": "(Resources)",
-      "live_state": "PENDING",
+      "live_reason_or_node": "gpu3",
+      "live_state": "RUNNING",
       "memory": "64G",
       "partition": "hpc_gpu",
-      "queue_reason": "(Priority)",
+      "queue_reason": "gpu3",
       "slot": 2,
-      "slurm_state": "PENDING",
+      "slurm_state": "RUNNING",
       "status": "ACKNOWLEDGED"
     }
   ],
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "0:00",
-        "job_id": "773688",
-        "marker": "paper3r9p-3f5bf3cb30e49773",
-        "name": "paper3r9p-3f5bf3cb30e49773-s2-a1",
-        "node": "",
-        "partition": "hpc_gpu",
-        "reason_or_node": "(Resources)",
-        "state": "PENDING"
-      },
-      {
-        "elapsed": "2:45:53",
+        "elapsed": "2:48:53",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -128,7 +136,17 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "0:04",
+        "elapsed": "2:38",
+        "job_id": "773688",
+        "marker": "paper3r9p-3f5bf3cb30e49773",
+        "name": "paper3r9p-3f5bf3cb30e49773-s2-a1",
+        "node": "gpu3",
+        "partition": "hpc_gpu1",
+        "reason_or_node": "gpu3",
+        "state": "RUNNING"
+      },
+      {
+        "elapsed": "3:04",
         "job_id": "773687",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s1-a1",
@@ -138,7 +156,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T01:28:01Z",
+    "observed_utc": "2026-10-26T01:31:01Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,7 +182,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792978081.1276093,
+  "sampled_unix": 1792978261.1287997,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -923,68 +941,83 @@
       "index": 83,
       "job_id": "773686",
       "key": "select-raw-rbf-seed20261020",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "select",
+      "index": 84,
+      "job_id": "773687",
+      "key": "select-ea-linear-seed20261018",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "select",
+      "index": 85,
+      "job_id": "773688",
+      "key": "select-ea-linear-seed20261019",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "select",
+      "index": 86,
+      "job_id": "773686",
+      "key": "select-ea-linear-seed20261020",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "select",
+      "index": 87,
+      "job_id": "773687",
+      "key": "select-ea-rbf-seed20261018",
       "observations": [
         {
-          "age_seconds": 28.1,
-          "path": "runs/followup_20261025_r9/select-raw-rbf-seed20261020/progress.json",
+          "age_seconds": 20.1,
+          "path": "runs/followup_20261025_r9/select-ea-rbf-seed20261018/progress.json",
           "values": {
             "budget": 20,
             "outer_update": 0,
-            "session": 64,
+            "session": 31,
             "sessions_total": 97,
             "stage": "meta_validation",
             "status": "EVALUATING",
-            "updated_utc": "2026-10-26T01:27:33Z"
+            "updated_utc": "2026-10-26T01:30:41Z"
           }
         }
       ],
-      "slot": 0,
+      "slot": 1,
       "status": "RUNNING"
     },
     {
-      "attempt": 0,
-      "family": "select",
-      "index": 84,
-      "job_id": null,
-      "key": "select-ea-linear-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "select",
-      "index": 85,
-      "job_id": null,
-      "key": "select-ea-linear-seed20261019",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "select",
-      "index": 86,
-      "job_id": null,
-      "key": "select-ea-linear-seed20261020",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "select",
-      "index": 87,
-      "job_id": null,
-      "key": "select-ea-rbf-seed20261018",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
+      "attempt": 1,
       "family": "select",
       "index": 88,
-      "job_id": null,
+      "job_id": "773688",
       "key": "select-ea-rbf-seed20261019",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 20.1,
+          "path": "runs/followup_20261025_r9/select-ea-rbf-seed20261019/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 43,
+            "sessions_total": 97,
+            "stage": "meta_validation",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-26T01:30:41Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -13917,7 +13950,6 @@
       "index": 1524,
       "job_id": null,
       "key": "anchor_sensitivity-holdout-cap_ea_rbf_0p25-seed20261019-8ad60c143f",
-      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -14131,5 +14163,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T01:28:01Z"
+  "updated_utc": "2026-10-26T01:31:01Z"
 }
