@@ -1,7 +1,7 @@
 {
   "blocked_tasks": 0,
-  "complete_task_keys_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
-  "complete_tasks": 0,
+  "complete_task_keys_sha256": "e509baacbc000a2ac801990e629f295fc0ac91ac97a360606e7c5c5ad5bd7cdd",
+  "complete_tasks": 1,
   "completion_counts_from_durable_verified_cache": true,
   "family_summary": {
     "evaluate": {
@@ -13,7 +13,7 @@
     "feature_reference": {
       "active": 1,
       "blocked": 0,
-      "complete": 0,
+      "complete": 1,
       "total": 3
     },
     "operator_train": {
@@ -37,11 +37,11 @@
     "status": "WAITING_FOR_NEW_COMPLETION",
     "total_tasks": 10270,
     "training_controlled": false,
-    "updated_utc": "2026-10-26T09:07:54Z"
+    "updated_utc": "2026-10-26T09:09:54Z"
   },
   "round": 11,
-  "runnable_remaining_tasks": 10270,
-  "sampled_unix": 1793005692.4690635,
+  "runnable_remaining_tasks": 10269,
+  "sampled_unix": 1793005829.4732432,
   "scheduler": {
     "bootstrap_ready": {
       "first_slurm_observation_performed": false,
@@ -135,12 +135,34 @@
   "stage": "campaign",
   "status": "CONTROLLER_ERROR",
   "task_phase_counts": {
-    "NEW": 10269,
+    "COMPLETE": 1,
+    "NEW": 10268,
     "RUNNING": 1
   },
-  "task_rows_included": 9,
+  "task_rows_included": 10,
   "task_rows_truncated": true,
   "tasks": [
+    {
+      "attempt": 1,
+      "attempt_token": "228b6596bf9e2b921c3f0bba104543cf71ddfe7c2c3fe0b4fc9c8bc6333d5297",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775286",
+      "key": "feature_reference-meta_train-feature_reference-s20261019-30885dbdb462",
+      "kind": "feature_reference",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {
+        "attempt_token": "228b6596bf9e2b921c3f0bba104543cf71ddfe7c2c3fe0b4fc9c8bc6333d5297",
+        "stage": "identity_validation",
+        "status": "STARTING",
+        "updated_utc": "2026-10-26T09:10:23Z"
+      },
+      "phase": "RUNNING",
+      "progress_age_seconds": 6.5,
+      "progress_is_current_attempt": true,
+      "slot": 0
+    },
     {
       "attempt": 1,
       "attempt_token": "4b977af141221b5d6b1c393ca503a9f463215e15bd9bde0a467403c4ecbbbf00",
@@ -153,30 +175,14 @@
       "numerical_advance_age_seconds": null,
       "numerical_progress": {
         "attempt_token": "4b977af141221b5d6b1c393ca503a9f463215e15bd9bde0a467403c4ecbbbf00",
-        "stage": "identity_validation",
-        "status": "STARTING",
-        "updated_utc": "2026-10-26T09:08:10Z"
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T09:10:23Z"
       },
-      "phase": "RUNNING",
-      "progress_age_seconds": 2.4,
-      "progress_is_current_attempt": true,
-      "slot": 0
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "feature_reference-meta_train-feature_reference-s20261019-30885dbdb462",
-      "kind": "feature_reference",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
+      "phase": "COMPLETE",
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
-      "slot": null
+      "slot": 0
     },
     {
       "attempt": 0,
@@ -289,10 +295,26 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator-s20261019-a648b47779a5",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
     }
   ],
   "total_tasks": 10270,
-  "updated_utc": "2026-10-26T09:08:12Z",
+  "updated_utc": "2026-10-26T09:10:29Z",
   "uploads": {
     "full": {
       "channel": "full",
@@ -321,7 +343,7 @@
       "status": "PARTIAL",
       "total_tasks": 10270,
       "training_controlled": false,
-      "updated_utc": "2026-10-26T09:06:23Z"
+      "updated_utc": "2026-10-26T09:08:24Z"
     },
     "paper": {
       "bytes": 20250104,
@@ -343,7 +365,7 @@
       "status": "PAPER_DATA_PARTIAL_FILES_VERIFIED",
       "total_tasks": 10270,
       "training_controlled": false,
-      "updated_utc": "2026-10-26T09:06:23Z"
+      "updated_utc": "2026-10-26T09:08:25Z"
     }
   }
 }
