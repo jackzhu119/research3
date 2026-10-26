@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 1320,
+  "complete_tasks": 1339,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 41.5,
+    "progress_age_seconds": 15.5,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T05:17:55Z"
+    "updated_utc": "2026-10-26T05:21:21Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -28,7 +28,7 @@
       "total": 54
     },
     "prior_sensitivity": {
-      "complete": 501,
+      "complete": 520,
       "total": 702
     },
     "select": {
@@ -43,23 +43,28 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 24505,
+      "pid": 28648,
       "status": "RUNNING",
-      "task_key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l0p5_map-seed20261020-b8f7bc9057",
-      "worker_progress": {}
+      "task_key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l1p0_map-seed20261020-1f660f1fe8",
+      "worker_progress": {
+        "outer_update": 0,
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-26T05:20:56Z"
+      }
     },
     "1": {
       "job_id": "773687",
-      "pid": 1411,
+      "pid": 5852,
       "status": "RUNNING",
-      "task_key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l0p5_map-seed20261020-6b2b7bc13e",
+      "task_key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l1p0_map-seed20261020-522d6a1e62",
       "worker_progress": {}
     },
     "2": {
       "job_id": "773688",
-      "pid": 1423,
+      "pid": 5849,
       "status": "RUNNING",
-      "task_key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l0p5_map-seed20261020-eecdef18b1",
+      "task_key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l1p0_map-seed20261020-40efe6c772",
       "worker_progress": {}
     }
   },
@@ -108,7 +113,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "6:36:29",
+        "elapsed": "6:39:29",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -118,7 +123,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "3:50:14",
+        "elapsed": "3:53:14",
         "job_id": "773688",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s2-a1",
@@ -128,7 +133,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "3:50:40",
+        "elapsed": "3:53:40",
         "job_id": "773687",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s1-a1",
@@ -138,7 +143,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T05:18:37Z",
+    "observed_utc": "2026-10-26T05:21:37Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -164,7 +169,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792991916.5065258,
+  "sampled_unix": 1792992096.5077,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -12033,211 +12038,241 @@
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1318,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l0p5_map-seed20261019-8aeba4aa27",
-      "slot": null,
+      "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1319,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l0p5_map-seed20261019-708ad27222",
-      "slot": null,
+      "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1320,
-      "job_id": null,
+      "job_id": "773686",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l0p5_map-seed20261020-b8f7bc9057",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1321,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l0p5_map-seed20261020-6b2b7bc13e",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1322,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l0p5_map-seed20261020-eecdef18b1",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1323,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261018-e2fa4ae982",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1324,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261018-1ab33d03c2",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1325,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261018-a3a5585062",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1326,
-      "job_id": null,
+      "job_id": "773686",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261019-541ef7218c",
-      "slot": null,
-      "status": "NEW"
+      "slot": 0,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1327,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261019-ee7d4b3ecd",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1328,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261019-b4352e119a",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1329,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261020-b61641b87c",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1330,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261020-035153210b",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1331,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l0p5_anchored_laplace-seed20261020-f0480cd771",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1332,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l1p0_map-seed20261018-3b797654c7",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1333,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l1p0_map-seed20261018-199fa47b9f",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1334,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l1p0_map-seed20261018-12cfb5e15e",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1335,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l1p0_map-seed20261019-d8d7944d3a",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1336,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l1p0_map-seed20261019-c27bf1cb75",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1337,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l1p0_map-seed20261019-ace2af25ae",
-      "slot": null,
-      "status": "NEW"
+      "slot": 2,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1338,
-      "job_id": null,
+      "job_id": "773686",
       "key": "prior_sensitivity-holdout-prior_ea_rbf_t0p1_l1p0_map-seed20261020-1f660f1fe8",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 10.5,
+          "path": "runs/followup_20261025_r9/prior_sensitivity-holdout-prior_ea_rbf_t0p1_l1p0_map-seed20261020-1f660f1fe8/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 0,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-26T05:21:26Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1339,
-      "job_id": null,
+      "job_id": "773688",
       "key": "prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l1p0_map-seed20261020-40efe6c772",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 7.5,
+          "path": "runs/followup_20261025_r9/prior_sensitivity-pan2023-prior_ea_rbf_t0p1_l1p0_map-seed20261020-40efe6c772/progress.json",
+          "values": {
+            "budget": 20,
+            "outer_update": 0,
+            "session": 28,
+            "sessions_total": 28,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-26T05:21:29Z"
+          }
+        }
+      ],
+      "slot": 2,
+      "status": "RUNNING"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "prior_sensitivity",
       "index": 1340,
-      "job_id": null,
+      "job_id": "773687",
       "key": "prior_sensitivity-weibo2014-prior_ea_rbf_t0p1_l1p0_map-seed20261020-522d6a1e62",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -13904,7 +13939,6 @@
       "index": 1525,
       "job_id": null,
       "key": "anchor_sensitivity-pan2023-cap_ea_rbf_0p25-seed20261019-8745ae421a",
-      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -13933,7 +13967,6 @@
       "index": 1528,
       "job_id": null,
       "key": "anchor_sensitivity-pan2023-cap_ea_rbf_0p25-seed20261020-5e8c729046",
-      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -14117,5 +14150,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T05:18:36Z"
+  "updated_utc": "2026-10-26T05:21:36Z"
 }
