@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 110,
+  "complete_tasks": 113,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 0.2,
+    "progress_age_seconds": 26.2,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T01:10:07Z"
+    "updated_utc": "2026-10-26T01:12:41Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -20,7 +20,7 @@
       "total": 234
     },
     "feature_reference": {
-      "complete": 0,
+      "complete": 2,
       "total": 6
     },
     "label_null": {
@@ -36,21 +36,21 @@
       "total": 12
     },
     "stress": {
-      "complete": 38,
+      "complete": 39,
       "total": 432
     }
   },
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 961,
+      "pid": 3187,
       "status": "RUNNING",
-      "task_key": "stress-holdout-source_frozen-seed20261020-b0d8342b89",
+      "task_key": "feature-reference-raw-seed20261019",
       "worker_progress": {
         "outer_update": 0,
         "stage": "loading",
         "status": "STARTING",
-        "updated_utc": "2026-10-26T01:09:33Z"
+        "updated_utc": "2026-10-26T01:11:51Z"
       }
     },
     "1": {
@@ -125,7 +125,7 @@
         "state": "PENDING"
       },
       {
-        "elapsed": "2:27:59",
+        "elapsed": "2:30:59",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -135,7 +135,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T01:10:07Z",
+    "observed_utc": "2026-10-26T01:13:07Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -161,29 +161,29 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792977007.2005033,
+  "sampled_unix": 1792977187.2090106,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
   "task_count_scope": "Three-job controller local COMPLETE receipt observations; no aggregate report rebuilt.",
   "tasks": [
     {
-      "attempt": 26,
+      "attempt": 27,
       "family": "feature_reference",
       "index": 0,
       "job_id": "773686",
       "key": "feature-reference-raw-seed20261018",
       "slot": 0,
-      "status": "RETRYING"
+      "status": "COMPLETE"
     },
     {
-      "attempt": 26,
+      "attempt": 27,
       "family": "feature_reference",
       "index": 1,
       "job_id": "773686",
       "key": "feature-reference-raw-seed20261019",
       "slot": 0,
-      "status": "RETRYING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 26,
@@ -2783,23 +2783,8 @@
       "index": 290,
       "job_id": "773686",
       "key": "stress-holdout-source_frozen-seed20261020-b0d8342b89",
-      "observations": [
-        {
-          "age_seconds": 4.2,
-          "path": "runs/followup_20261025_r9/stress-holdout-source_frozen-seed20261020-b0d8342b89/progress.json",
-          "values": {
-            "budget": 20,
-            "outer_update": 0,
-            "session": 0,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-26T01:10:03Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 0,
@@ -13942,6 +13927,7 @@
       "index": 1527,
       "job_id": null,
       "key": "anchor_sensitivity-holdout-cap_ea_rbf_0p25-seed20261020-554c274869",
+      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -14128,5 +14114,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T01:10:07Z"
+  "updated_utc": "2026-10-26T01:13:07Z"
 }
