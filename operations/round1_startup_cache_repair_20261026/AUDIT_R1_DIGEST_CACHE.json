@@ -1,0 +1,60 @@
+{
+  "schema_version": "paper3-r1-startup-digest-cache-audit-v1",
+  "helper": "r1_digest_cache.py",
+  "helper_sha256": "fb704ad3030f27142ffc4c9694b3f4f46cd4cc065eb33c4341721ac6424a646b",
+  "status": "FROZEN_REVIEWED",
+  "observed_problem": {
+    "action_total_seconds": 1699,
+    "native_training_stage_seconds": 162,
+    "startup_overhead_seconds_approx": 1537,
+    "mechanism": "Original verify_meta_inputs and verify_meta_engineering load verified inputs independently, re-reading full metadata and source files for SHA256; another action starts a new process without prior in-memory successes."
+  },
+  "implementation": {
+    "scope": "Only R1 operational startup context and future owned-stage child bootstrap",
+    "native_functions": ["p3work.contracts.file_digest", "tools.r2_backup.sha256_file"],
+    "aliases": "Canonical definitions and loaded p3work/tools aliases patched by original function object identity; later from-imports inherit canonical wrappers",
+    "entry_evidence": "Only successful original native hash calls with stable pre/post file identity; no declared expected SHA seeding",
+    "file_identity": ["resolved_path", "st_dev", "st_ino", "st_size", "st_mtime_ns", "st_ctime_ns"],
+    "signature_on_hits": "Recheck stat and resolve original argument to detect symlink retarget",
+    "implementation_namespace": "Root plus actual native hash implementation file SHA256",
+    "persistence": "Operational JSON index, nonblocking file lock, merge latest index, atomic replace",
+    "cache_failure_behavior": "Cold original hash; cache write failure does not terminate training",
+    "process_cleanup": "Context finally; ordinary atexit and multiprocessing Finalize for owned-stage children",
+    "observability": ["R1_FILE_DIGEST_CACHE_ACTIVE", "R1_FILE_DIGEST_CACHE_PROGRESS at most once per30seconds on hash calls", "R1_FILE_DIGEST_CACHE_SUMMARY"],
+    "activation": "Next new R1 action or owned-stage child; no signal to current warm child"
+  },
+  "preserved": {
+    "original_validators_execute": true,
+    "expected_frozen_digest_comparisons_execute": true,
+    "actual_gpu_probe_execute": true,
+    "prior_audited_runtime_transfer_and_f0_lineage": true,
+    "scientific_source_files_changed": 0,
+    "checkpoint_files_changed": 0,
+    "scientific_plan_files_changed": 0,
+    "jobs_cancelled_or_submitted": 0
+  },
+  "validation": {
+    "interpreter": "Python3.12.14 local stdlib-only optimization, no CUDA execution",
+    "new_tests": {"passed": 9, "seconds": 0.48},
+    "original_action_startup_regression_tests": {"passed": 9, "seconds": 0.02},
+    "meaningful_cases": [
+      "Real native file_digest and sha256_file return contracts, imported and lazy aliases",
+      "Two actual multiprocessing spawn processes: first reads data once, second reads data zero times with same real digest",
+      "Same-size content mutation restoring mtime still invalidates ctime; atomic replacement invalidates inode",
+      "File mutation during hash never produces a cached entry",
+      "Corrupt/unwritable cache degrades to correct native hash; symlink escape uncached",
+      "Original validator rejects wrong expected SHA even on cache hit",
+      "Failed native read propagates, no entry for impossible returned byte count",
+      "Symlink retarget during hit signature causes original hash of new target",
+      "Spawned owned child process cache idempotence and normal-exit persistence",
+      "Independent process snapshots merge existing entries on flush"
+    ],
+    "independent_read_only_review": "No release-blocking bug identified"
+  },
+  "limits": [
+    "First uncached file read still uses the original hash function and may remain slow on school shared storage",
+    "Per-trial source QC and direct numpy signal hashing remain native; this does not promise zero validation I/O or second-level startup",
+    "A nonblocking flush losing a lock race can lose cache optimization for that exit but not scientific correctness",
+    "Real school GPU runtime and filesystem timing have not been measured here"
+  ]
+}
