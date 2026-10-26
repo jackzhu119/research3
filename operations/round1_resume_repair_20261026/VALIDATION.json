@@ -1,0 +1,37 @@
+{
+  "checked_utc": "2026-10-26T02:43:13.673256+00:00",
+  "command": "python -m pytest -q test_clock_recovery.py test_driver_compat.py test_combined_resume.py test_delivery.py /workspace/paper3_hpc/tests/test_recovery_budget.py",
+  "result": "82 passed in 1.95s",
+  "scope": "Local CPU software fixtures; original checkpoint full SHA/identity/RNG loader and native meta loop; no school GPU execution claimed",
+  "covered": [
+    "Observed raw driver transition with meta and future owned source-extension identities",
+    "Cross-node clock recovery after native checkpoint verification",
+    "Preserved full original clock block and charged floors",
+    "Same uninterrupted versus resumed CPU RNG/sampler/tensor trajectory",
+    "Combined real runtime-transfer comparison, identity reconciliation and native checkpoint recovery",
+    "Self-contained offline installer, idempotent preserved digests, action/owned/runtime hooks",
+    "Pretraining-only child refresh protocol, healthy child preservation, PID/claim verification",
+    "Original recovery-budget regression suite"
+  ],
+  "package": {
+    "schema_version": "paper3-r1-resume-installer-package-v3",
+    "entry": "FIX-PAPER3-R1-RESUME.py",
+    "bytes": 29039,
+    "sha256": "c621f91ae1dceda87bfb65496640833ad7b1e6ec613f27c60de5db9f20bac9f6",
+    "payload_sha256": "2df296371964507a8ec5b39c405f322351c3c826a9181e7dadf706d5833372b5",
+    "helpers": {
+      "r1_clock_recovery.py": "0c6fe86cfe90b6f3afa87c928e823251a8b73927f41f9d7caa1981e5d15a0f00",
+      "r1_driver_compat.py": "7d559c020678687d6daa7b10d3b2a607afdc03eaec8470facda61167e7de5165",
+      "node_refresh.py": "0445cf00d6c8ec1be83a7ed544eb776e1d2c3f9ff8a81abb85fe48f0f3b2e56d"
+    },
+    "known_operational_source_lineage": {
+      "action_startup.py": "e2141c386bf7590e4d738e11661b7f0cd297c06b9f4ae5ed7fa5c2c72fe1df42",
+      "audited_runtime.py": "3a0382742e0625867b968ba349b6ed76b31642f59f7a2d0f4688c46accca9478",
+      "r1_spawn_bootstrap.py": "43513735525e678138d23fa848d901c3c780ece11a57cba3d675f158d13ca9d8"
+    },
+    "default_changes_jobs": false,
+    "optional_flag": "--refresh-pretraining",
+    "school_jobs_changed_by_assistant": 0
+  },
+  "school_jobs_changed_by_assistant": 0
+}

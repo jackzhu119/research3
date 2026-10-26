@@ -1,0 +1,71 @@
+{
+  "schema_version": "paper3-r1-clock-recovery-audit-v1",
+  "helper": "r1_clock_recovery.py",
+  "helper_sha256": "0c6fe86cfe90b6f3afa87c928e823251a8b73927f41f9d7caa1981e5d15a0f00",
+  "status": "FROZEN_REVIEWED",
+  "confirmed_school_error": {
+    "job": "772906",
+    "action": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
+    "error_type": "WallBudgetBlocked",
+    "reason": "Operational clock history is unknown; use report/minimum_charged_seconds for diagnostics",
+    "error_utc": "2026-10-26T01:41:38Z",
+    "identity_sha256": "7cbaf14c5b3cf8b826569c4a5654c978ca81dfc28f416c4b187f7d8573be6be1",
+    "clock_reasons": ["boot_changed_or_unknown"],
+    "historical_node_boot": "5e2dff02-30a5-468d-b605-8e61bf353afb",
+    "blocked_observed_node_boot": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5",
+    "historical_start_utc_seconds": 1792976738.360695,
+    "historical_start_monotonic_seconds": 2129165.092619733,
+    "blocked_observed_utc_seconds": 1792978897.978574,
+    "blocked_observed_monotonic_seconds": 2128729.387174312,
+    "recorded_utc_elapsed_seconds": 2159.617879152298,
+    "incomparable_monotonic_delta_seconds": -435.7054454209283,
+    "durable_charged_seconds_preserved": 8808.231801792514,
+    "checkpoint_high_water_seconds_preserved": 6648.600285200402,
+    "classification": "An unclosed operational clock interval moved across distinct kernel boot/monotonic clocks. This is not ordinary max-wall exhaustion and increasing the existing wall cap cannot clear it."
+  },
+  "narrow_authorization": {
+    "scope": "Only R1 operational process installs the overlay; only registered native meta-job checkpoint resumes at root/runs/meta/<native job SHA> qualify",
+    "allocation": "Real numeric SLURM_JOB_ID remains required; helper grants no GPU, data or scientific fit capability",
+    "checkpoint": "Native full SHA/bytes/identity checkpoint load and RNG restoration must return successfully first; exact current latest descriptor and sidecar must match",
+    "clock_case": "Only clock_block.reasons exactly [boot_changed_or_unknown] with two known different recorded boots and matching original interval/identity",
+    "continued_failures_rejected": ["UTC rollback", "same-boot elapsed-clock disagreement", "unknown boot identity", "new current UTC rollback", "known monotonic rollback on current or historical node", "missing resume", "changed identity", "damaged checkpoint", "changed latest descriptor"],
+    "accounting": "Original exclusive journal lock is retained; original clock block and unjoinable interval are copied verbatim into authorized_clock_recoveries; every existing charged floor is retained; no exact elapsed time is invented",
+    "future_interval": "Original native start_interval opens a new interval using the actual current clock",
+    "time_provenance": "Unknown elapsed seconds remain null and exact_cumulative_elapsed_claimed remains false in the durable journal, report and returned result provenance metadata; native caller includes metadata in its next receipt",
+    "metadata_read_bound_bytes": 8388609
+  },
+  "unchanged": {
+    "native_scientific_source_bytes": true,
+    "existing_checkpoint_bytes": true,
+    "source_models_and_references": true,
+    "job_configuration_seed_and_update_caps": true,
+    "optimizer_rng_and_sampler_resume": true,
+    "actual_gpu_and_driver_observations": true,
+    "existing_completed_receipts": true,
+    "all_existing_native_result_fields": true
+  },
+  "validation": {
+    "new_tests": {"passed": 18, "seconds": 1.27},
+    "original_native_recovery_budget_tests": {"passed": 22, "seconds": 0.15},
+    "local_interpreter": "Python3.12.14 with Torch2.8.0+cpu and NumPy2.3.5; software tests only, no real EEG/CUDA fitting",
+    "actual_native_loop_integration": "The original run_outer_loop fails on the retained cross-node clock block. After the overlay, the same verified checkpoint reaches100 updates with exactly the same tensor, Python/NumPy/Torch RNG trajectory and sampler cursor as an uninterrupted CPU fixture. Existing checkpoint bytes remain identical.",
+    "other_cases": [
+      "Actual school clock values and charged amounts preserved verbatim; native new interval adds only observed new time",
+      "Unsafe clock cases and missing checkpoint proof retain the original block",
+      "Missing allocation, changed code identity, damaged checkpoint and changed latest descriptor cannot authorize recovery",
+      "Conflicting installation root is rejected",
+      "Legacy unknown-interval counts cannot decrease",
+      "A failed amendment releases the original exclusive OS journal lock and retains the original blocked state",
+      "Bounded corrupt metadata read avoids reading unlimited bytes",
+      "Timing provenance annotation preserves all original result fields and applies on later resumes with no new resolution"
+    ],
+    "independent_review": "No release-blocking resume bug identified; root hardening requests applied and tested"
+  },
+  "actions_executed_here": {
+    "school_jobs_cancelled": 0,
+    "school_jobs_submitted": 0,
+    "signals_sent": 0,
+    "shared_runtime_wrappers_modified": 0,
+    "implementation_and_tests_only_in_assigned_directory": true
+  }
+}

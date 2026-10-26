@@ -1,0 +1,104 @@
+{
+  "schema_version": "paper3-r1-independent-resume-review-v1",
+  "reviewed_utc": "2026-10-26T02:45:40.470218+00:00",
+  "disposition": "READY_FOR_USER_MANUAL_APPLY_AND_SCHOOL_VERIFICATION",
+  "scope": "Two operational repairs only: observed CUDA12.1 driver compatibility and verified native meta-checkpoint cross-boot clock accounting. No first-validation performance optimization is included.",
+  "reviewed_files": [
+    {
+      "path": "r1_driver_compat.py",
+      "bytes": 5030,
+      "sha256": "7d559c020678687d6daa7b10d3b2a607afdc03eaec8470facda61167e7de5165"
+    },
+    {
+      "path": "r1_clock_recovery.py",
+      "bytes": 14126,
+      "sha256": "0c6fe86cfe90b6f3afa87c928e823251a8b73927f41f9d7caa1981e5d15a0f00"
+    },
+    {
+      "path": "delivery_template.py",
+      "bytes": 18661,
+      "sha256": "51e697996a723807750775348419c132e2494c6679b9cbf59dad97bd3ca89077"
+    },
+    {
+      "path": "build.py",
+      "bytes": 2948,
+      "sha256": "d7edf7127df9c87cd6f69739d3902723ecc69eda4009082b731a5447373e0bf3"
+    },
+    {
+      "path": "test_combined_resume.py",
+      "bytes": 7716,
+      "sha256": "9c2e78bec853262496a6db6e451454879c5d9b7f067ff94c514c3bfd5b9ab249"
+    },
+    {
+      "path": "FIX-PAPER3-R1-RESUME.py",
+      "bytes": 29039,
+      "sha256": "c621f91ae1dceda87bfb65496640833ad7b1e6ec613f27c60de5db9f20bac9f6"
+    }
+  ],
+  "core_runtime_helpers": [
+    "r1_driver_compat.py",
+    "r1_clock_recovery.py"
+  ],
+  "existing_optional_utility": "node_refresh.py; unchanged pretraining-only refresh protocol, never installed as a scientific kernel",
+  "excluded_changes": [
+    "first-validation performance optimization",
+    "native numerical kernels",
+    "data/split/seed changes",
+    "scientific update-cap changes",
+    "actual runtime or GPU-property forgery"
+  ],
+  "driver_review": {
+    "allowed_pair_only": [
+      "535.104.12",
+      "550.54.14"
+    ],
+    "framework_guard": "Equal original raw Python3.12.3/full-build strings, Torch2.5.1+cu121, CUDA12.1 and cuDNN90100; all other original comparisons remain exact",
+    "normalized_field_in_temporary_comparison_only": "driver_versions",
+    "original_profiles_and_checkpoint_identity_unchanged": true,
+    "actual_and_historical_observations_journaled_separately": true,
+    "root_conflict_rejected": true,
+    "bitwise_equivalence_or_equal_speed_claimed": false
+  },
+  "clock_review": {
+    "native_checkpoint_full_SHA_identity_RNG_loader_precedes_wall_budget_recovery": true,
+    "qualifies_only_registered_same_identity_latest_checkpoint_in_R1_allocation": true,
+    "only_clock_block_reason": [
+      "boot_changed_or_unknown"
+    ],
+    "unknown_boot_UTCrollback_or_same_boot_monotonic_rollback_stays_blocked": true,
+    "old_uncertain_interval_and_complete_block_preserved_in_append_only_event": true,
+    "durable_and_checkpoint_charged_floors_never_decreased": true,
+    "max_wall_and_scientific_update_limits_unchanged": true,
+    "unknown_elapsed_seconds_inferred": false,
+    "unknown_interval_counts_preserved": true,
+    "clock_uncertainty_qualification_carried_into_future_native_result": true,
+    "failed_amendment_retains_original_block_and_releases_owned_lock": true
+  },
+  "delivery_review": {
+    "audited_runtime_installs_driver_policy_before_future_native_validation": true,
+    "action_startup_and_owned_stage_bootstrap_install_driver_then_clock": true,
+    "native_meta_aliases_resolve_the_wrapped_module_globals": true,
+    "existing_digest_cache_F0_lineage_runtime_policy_hooks_preserved": true,
+    "helper_source_SHA_bound_before_dynamic_import": true,
+    "default_submits_cancels_or_signals_jobs": false,
+    "optional_refresh_uses_only_existing_allocations_and_exact_PID_claim_argv_checks": true,
+    "observed_current_native_progress_keeps_the_child": true,
+    "native_sources_checkpoints_plans_and_existing_completed_receipts_not_rewritten": true
+  },
+  "independent_tests": {
+    "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 NUMEXPR_NUM_THREADS=1 python -B -m pytest -q test_clock_recovery.py test_driver_compat.py test_delivery.py test_combined_resume.py",
+    "passed": 60,
+    "failed": 0,
+    "seconds": 1.8,
+    "combined_critical_case": "Real runtime_transfer.reconcile_identity plus audited_runtime and narrow driver helper preserve the historical550/80 identity while journaling actual535/40; native CPU checkpoint resumes exact sampler/RNG trajectory to100 updates after clock repair, with old checkpoint/sidecar/identity bytes unchanged and recorded8808-second floor retained.",
+    "fixtures_only": true,
+    "GPU_or_EEG_fit_performed": false
+  },
+  "school_connection_attempted": false,
+  "school_job_submitted_cancelled_or_signalled_by_reviewer": false,
+  "actual_CUDA_resume_validation_pending": true,
+  "cross_GPU_bitwise_resume_or_new_hardware_timing_validation_claimed": false,
+  "remaining_limits": [
+    "CPU software fixtures validate control flow and native checkpoint semantics; they do not establish cross-GPU bitwise equality or equal engineering speed. Actual school resume and subsequent scientific phase gates remain in force."
+  ]
+}
