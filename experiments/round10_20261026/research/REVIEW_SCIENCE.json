@@ -1,0 +1,363 @@
+{
+  "schema_version": "paper3-r10-independent-science-review-v1",
+  "reviewed_utc": "2026-10-26T05:14:04.070279+00:00",
+  "status": "PASS_WITH_EXPLICIT_SCIENTIFIC_LIMITS_NO_OPEN_REVIEW_BLOCKERS",
+  "scope": "Independent code/math/protocol review; CPU synthetic tests only. No real R10 EEG efficacy claim. No GPU, Slurm submission, cancellation or external app mutation.",
+  "reviewer": "r10_review_science",
+  "reviewed_files": {
+    "R10_EXPERIMENT_PLAN.md": "df8ac3723e89f40d07770a32ea9e1cdc66c8e2278b6b75d327f44f128ed3b250",
+    "R10_MATH.md": "0c1d7fdccf788e59d871a8837504ef07fca307623ccb765d04bde4dc513fdeed",
+    "R10_RESEARCH_PROPOSAL_ZH.md": "6b755b2fdaa2f75f78bf88c0a5be6f08b7c26cbcf612083f5117ccd4c879d69f",
+    "evidence/early/EFFECT_AUDIT.json": "7543290ec29a18889faa0eaca76be6b2456bdf25db5e217f57d007d7e12755fb",
+    "evidence/late/R1_LATEST_STATUS.json": "6f25ced13a3f47edfdd99154413c536641c8a5e214084a8e7be0444157fff784",
+    "evidence/late/R9_ALL_AVAILABLE_GP_COMPARISONS.json": "ab14c2ee6cd20b4494e966d68a239a6491b9582419f1322c32284600a84586ec",
+    "evidence/late/R9_FRESH_RBF_RESTORE_AUDIT.json": "2982bb4f97d7f3708ee020bee2b7974e3b861a2153c4a70687d4bb52bbf295f9",
+    "evidence/late/R9_ORIGINAL_PRIMARY_AVAILABLE.json": "bf393c7d739d8a9b1cbefa6bba2c01eb29bc88e1359789f629a40d7c151f959c",
+    "paper3r10/ablations.py": "68600b54d54f18cc6c04ba8d29df1326e2622f75bf452060b3e59e2d77fa3702",
+    "paper3r10/algorithm.py": "6fa50fe53ee4e80b3fe9e500b12cc14eb54b5e0bfde8afac1c30611fadba1e48",
+    "paper3r10/baseline_registry.json": "3af2d86da71b6f0441b7dee761754954107e0ca545dad465c6b5feb7e6fdca77",
+    "paper3r10/baselines.py": "e6f3c0bdf79bcbc193fb99e39b23990eece66295f45fefd6b79f57d1c773eb8e",
+    "paper3r10/cli.py": "6ba1f209fd54cbd2169efaf299e5a598b16160fa20bed5b03d5bc392fa3cf623",
+    "paper3r10/confirmation.py": "13e646da019271fe5aea3d34f5a55326d25f05453c2d0b9eae39a4bd8ae7b87b",
+    "paper3r10/data.py": "2f613c15a682d68c4eb10be3475d5c64be0d5daec5da9e5cf41d789533f0dba3",
+    "paper3r10/metrics.py": "d8b62a6a8cb227c1181e9f8e0962b6485dd966c900c741033d2c346965d45ae3",
+    "paper3r10/platform/common.py": "e987ed72d65912ca69e50a9d7fb1db9fc4e58d9e32d61a48dcf8cbeec9529525",
+    "paper3r10/registry.py": "6636243db579234b576e3852ee475ce544c2f16723362f5d28e0808270bc8f74",
+    "paper3r10/report.py": "b4916399cf89f1b7fd0dae2f464a8fe49e3a9cff7545b589e58862220b6d71cb",
+    "paper3r10/selection.py": "148ffb5829325449a8b9c330c73180986eb6594452722e2aa7b723962272cd69",
+    "paper3r10/statistics.py": "4741963ca28aff48591db38c45abf6a10c65ffd63a8fedeb3988c0c8958a1af4",
+    "paper3r10/study.py": "816e79f90871900e8366ded16b30805beefa5063f681ca2c844fd112507753a9",
+    "paper3r10/worker.py": "395176a0df7e76ffb7ce531a6adef7c0635d51d6763c91895a9e0ae79f5d1099",
+    "research/BASELINE_IMPLEMENTATION_AUDIT.md": "6dfc0f4a49677a5920f1bb5999987bf50dda4004db6ee534fc27216c6aed25ca",
+    "research/REGISTRY_DISCOVERY.md": "82c7bc8f75cf9d177c6ce68f4cbc453ed40ed1fe15f290e379d06494794e1212",
+    "research/evidence_r2_r7.md": "03516e908856fe0994eae3aded43e3a83ea5190b37f0649974fdce9cc54b26c4",
+    "research/evidence_r8_r9.md": "d5564e63ce7e654eb352b264118cb3df14478319239ea187e686b4bb06d42b6e",
+    "research/literature_review.md": "79b3a15d015fb2ba9653200337ac0efc0f6fa301dd06ecc3ab2b018d5b6f8b81",
+    "research/synthetic_nonzero_cpu_stress.json": "79a4725f923fbda605d2689c8f38c81f0d15c5bf064c00dec5b3a4355a7db7e1",
+    "tests/test_baselines.py": "814e80c22d269d858f7e67373f10c7b9ec3b19656d2c26d6c1d2904f12a229f6",
+    "tests/test_data_worker.py": "79d0248e271a43a1cf4102eb0158eab1ab6a848e7421719d6db852af67460d3c",
+    "tests/test_registry.py": "3bed4e67063ee6cc9dc390f89eddc953dda6a21535759a7345e39195e4e32c4d",
+    "tests/test_review_science.py": "73a0863483421681f207a0618557d65806e6932ec7f776f4553ce3036e364b5d"
+  },
+  "mathematical_assessment": {
+    "core": "No concrete error found in support Cholesky RKHS parameterization, UID-nugget query-null completion witness, strong-convexity gradient-residual dual outer bound, or one-sided anchor-relative action.",
+    "matched_ablations": "Completed-square quadratic approximation retains gradient correction and s/lambda; matched variance gate uses prior kqq/lambda and posterior h^T H^-1 h+s/lambda. These remain explicitly uncertified for nonlinear support set, and are distinct from native R9 ordinary-likelihood baseline.",
+    "limits": [
+      "Real-arithmetic conditional set statement is not a true-future risk or coverage guarantee.",
+      "Float64 guarded implementation is not formal IEEE-754 interval certification.",
+      "Finite-budget adaptive dual actions do not inherit universal c-monotonicity of exact minimax endpoints.",
+      "c=0 direct MAP ablation is not the exact finite-optimization compatible-set profile endpoint."
+    ]
+  },
+  "findings": [
+    {
+      "id": "SCI-001",
+      "severity": "blocker",
+      "status": "FIXED_IN_PRODUCTION_AND_INDEPENDENT_REGRESSION_PASSES",
+      "finding": "Worker previously scored unbounded EA softmax against bounded R10 fallback, producing artificial NLL gain at saturated wrong logits. Worker now applies a common numerical probability policy and retains raw native logs separately.",
+      "test": "test_zero_update_fallback_and_ea_have_identical_saturated_scoring"
+    },
+    {
+      "id": "SCI-002",
+      "severity": "blocker",
+      "status": "FIXED_WRITER_AND_FORMAL_FIELD_SCOPE_REGRESSIONS_PASS",
+      "finding": "Actual freeze writer previously emitted source_code_manifest_sha256 but formal builder checked optional code_manifest_sha256; study registry identity was absent. Writer now emits shared fields; changed-code/registry regressions pass. Missing-field and software-only-scope rejection still fail at review snapshot.",
+      "tests": [
+        "test_actual_freeze_writer_emits_enforced_code_and_registry_identities",
+        "test_actual_freeze_rejects_code_change_on_formal_transfer",
+        "test_actual_freeze_rejects_registry_change_on_formal_transfer",
+        "test_formal_transfer_rejects_freeze_with_missing_binding",
+        "test_formal_transfer_rejects_software_only_freeze"
+      ]
+    },
+    {
+      "id": "SCI-003",
+      "severity": "pre_submission_gate",
+      "status": "FIXED_BUILDER_AND_SUBMISSION_REGRESSIONS_PASS",
+      "finding": "Formal confirmation now requires reviewed exact dataset/participant history, participant disjointness, signal contract, eligible original-B20 future physical-run events and valid NPY metadata before submission. Both direct-builder and submission validation reject incomplete manifests. Full array SHA is checked on worker first-open before fit.",
+      "test": "test_confirmation_manifest_without_review_or_sessions_is_blocked_before_jobs"
+    },
+    {
+      "id": "SCI-004",
+      "severity": "protocol",
+      "status": "FIXED_BOTH_MATCHED_CONTROLS_IMPLEMENTED_AND_REVIEWED",
+      "finding": "Math/proposal required matched quadratic and variance-gate controls, absent from original16-method plan. Both now implemented in ablations.py; owner integrating18-method study/worker/docs."
+    },
+    {
+      "id": "SCI-005",
+      "severity": "documentation",
+      "status": "FIXED_PROPOSAL_PROTOCOL_AND_EARLY_EVIDENCE_DOCUMENTATION",
+      "finding": "head_rank4 was described as meta_train-fixed subspace, but code uses target-support PCA, h<=min(4,n-1,observed_rank). It uses no query data; document actual support-only control."
+    },
+    {
+      "id": "SCI-006",
+      "severity": "evidence_label",
+      "status": "FIXED_EXACT_KEYS_EFFECTS_AND_DIRECTIONS_VERIFIED_IN_FINAL_DOCS",
+      "finding": "R6 significant NLL difference0.001030673 and BA difference-0.035714pp are map:uq_joint versus map:uq_map, meaning different meta-trained geometry with both target MAP. Actual joint:uq_joint versus map:uq_joint has NLL improvement0.000064418,p0.809814,Holm1; BA-0.011905pp,p1. Supplemental R6-minus-EA entries also refer to map:uq_joint. Exact keys must distinguish meta-trained geometry from target inference.",
+      "source_rows": [
+        {
+          "candidate": "map:uq_joint",
+          "baseline": "map:uq_map",
+          "metric": "nll_balanced",
+          "partition": "pan2023_published_order",
+          "budget": "20",
+          "scenario": "clean",
+          "n_participants": "14",
+          "delta": "0.0010306729968010222",
+          "ci95": "[0.000743873190579496, 0.0013334616307814156]",
+          "inference": "fixed_external_multimetric_primary_family",
+          "n_paired_session_seed_rows": "84",
+          "excluded_metric_session_seed_rows": "0",
+          "candidate_mean": "0.8693367197274805",
+          "baseline_mean": "0.8703673927242814",
+          "direction": "baseline_minus_candidate",
+          "positive_delta_means_improvement": "True",
+          "unit": "balanced_NLL_units",
+          "completed_seeds": "[20261018, 20261019, 20261020]",
+          "pending_seeds": "[]",
+          "all_required_seeds_ready": "True",
+          "matched_session_grid": "True",
+          "expected_cohort_ready": "True",
+          "metric_ready": "True",
+          "p": "0.000244140625",
+          "p_holm": "0.00341796875",
+          "p_method": "exact_paired_sign_flip",
+          "positive_evidence": "True",
+          "primary": "True",
+          "holm_family_size": "16",
+          "test_assumption": "participant paired differences sign-symmetric under null",
+          "round": 6
+        },
+        {
+          "candidate": "map:uq_joint",
+          "baseline": "map:uq_map",
+          "metric": "ba",
+          "partition": "pan2023_published_order",
+          "budget": "20",
+          "scenario": "clean",
+          "n_participants": "14",
+          "delta": "-0.035714285714286004",
+          "ci95": "[-0.09523809523809561, 0.02380952380952383]",
+          "inference": "fixed_external_multimetric_primary_family",
+          "n_paired_session_seed_rows": "84",
+          "excluded_metric_session_seed_rows": "0",
+          "candidate_mean": "0.6045238095238096",
+          "baseline_mean": "0.6048809523809524",
+          "direction": "candidate_minus_baseline",
+          "positive_delta_means_improvement": "True",
+          "unit": "percentage_points",
+          "completed_seeds": "[20261018, 20261019, 20261020]",
+          "pending_seeds": "[]",
+          "all_required_seeds_ready": "True",
+          "matched_session_grid": "True",
+          "expected_cohort_ready": "True",
+          "metric_ready": "True",
+          "p": "0.453125",
+          "p_holm": "1.0",
+          "p_method": "exact_paired_sign_flip",
+          "positive_evidence": "False",
+          "primary": "True",
+          "holm_family_size": "16",
+          "test_assumption": "participant paired differences sign-symmetric under null",
+          "round": 6
+        },
+        {
+          "candidate": "joint:uq_joint",
+          "baseline": "map:uq_joint",
+          "metric": "nll_balanced",
+          "partition": "pan2023_published_order",
+          "budget": "20",
+          "scenario": "clean",
+          "n_participants": "14",
+          "delta": "6.441758940174878e-05",
+          "ci95": "[-0.00013858414214798945, 0.00034728679657512523]",
+          "inference": "fixed_external_multimetric_primary_family",
+          "n_paired_session_seed_rows": "84",
+          "excluded_metric_session_seed_rows": "0",
+          "candidate_mean": "0.8692723021380787",
+          "baseline_mean": "0.8693367197274805",
+          "direction": "baseline_minus_candidate",
+          "positive_delta_means_improvement": "True",
+          "unit": "balanced_NLL_units",
+          "completed_seeds": "[20261018, 20261019, 20261020]",
+          "pending_seeds": "[]",
+          "all_required_seeds_ready": "True",
+          "matched_session_grid": "True",
+          "expected_cohort_ready": "True",
+          "metric_ready": "True",
+          "p": "0.809814453125",
+          "p_holm": "1.0",
+          "p_method": "exact_paired_sign_flip",
+          "positive_evidence": "False",
+          "primary": "True",
+          "holm_family_size": "16",
+          "test_assumption": "participant paired differences sign-symmetric under null",
+          "round": 6
+        },
+        {
+          "candidate": "joint:uq_joint",
+          "baseline": "map:uq_joint",
+          "metric": "ba",
+          "partition": "pan2023_published_order",
+          "budget": "20",
+          "scenario": "clean",
+          "n_participants": "14",
+          "delta": "-0.011904761904761916",
+          "ci95": "[-0.05952380952381037, 0.03571428571428654]",
+          "inference": "fixed_external_multimetric_primary_family",
+          "n_paired_session_seed_rows": "84",
+          "excluded_metric_session_seed_rows": "0",
+          "candidate_mean": "0.604404761904762",
+          "baseline_mean": "0.6045238095238096",
+          "direction": "candidate_minus_baseline",
+          "positive_delta_means_improvement": "True",
+          "unit": "percentage_points",
+          "completed_seeds": "[20261018, 20261019, 20261020]",
+          "pending_seeds": "[]",
+          "all_required_seeds_ready": "True",
+          "matched_session_grid": "True",
+          "expected_cohort_ready": "True",
+          "metric_ready": "True",
+          "p": "1.0",
+          "p_holm": "1.0",
+          "p_method": "exact_paired_sign_flip",
+          "positive_evidence": "False",
+          "primary": "True",
+          "holm_family_size": "16",
+          "test_assumption": "participant paired differences sign-symmetric under null",
+          "round": 6
+        }
+      ]
+    },
+    {
+      "id": "SCI-007",
+      "severity": "documentation",
+      "status": "FIXED_DOCUMENTATION_QUALIFIERS_REVIEWED",
+      "finding": "Literature summary needs same exact-vs-finite-budget monotonicity and c=0 finite-fit caveats already present in R10_MATH."
+    },
+    {
+      "id": "SCI-008",
+      "severity": "data_join",
+      "status": "FIXED_INDEPENDENT_ALIAS_REGRESSION_PASSES",
+      "finding": "Reviewed independent-cohort metadata originally allowed valid cache_index duplicates, permitting distinct support/query UIDs to reference one EEG row. Metadata audit now rejects repeated (arraySHA,index) within and across sessions.",
+      "test": "test_independent_cache_cannot_alias_support_and_future_storage"
+    },
+    {
+      "id": "SCI-009",
+      "severity": "reference_transfer",
+      "status": "FIXED_GLOBAL_REFERENCE_CHOICE_FROZEN_AND_FALLBACK_AVAILABLE",
+      "finding": "Strategy is computed over currently used stage seeds. For same registry with R9EA reference for seed1 only, mechanism uses reuse_r9_ea but formal uses build_meta_train_prefix for all3seeds, changing seed1 geometry after selection. Freeze code/registry matching alone does not prevent this derivation change.",
+      "reproduction": {
+        "synthetic_only": true,
+        "same_registry_sha256": true,
+        "mechanism_reference_strategy": "reuse_r9_ea",
+        "formal_reference_strategy": "build_meta_train_prefix",
+        "jobs_submitted": 0
+      },
+      "related": "Unconditional missing mechanism_reuse errors in registry.validate_registry also prevent the documented rebuild fallback when first-seed R9 reference is absent.",
+      "repair": "Every stage derives reuse/build from the full fixed3seed registry requiring both EA and raw references. Freeze stores exact reference_strategy and formal builder/common reject mismatch. Missing optional reuse artifacts select rebuild and no longer block CLI availability.",
+      "repaired_reproduction": {
+        "synthetic_only": true,
+        "same_registry_sha256": true,
+        "mechanism_reference_strategy": "build_meta_train_prefix",
+        "formal_reference_strategy": "build_meta_train_prefix",
+        "mismatched_frozen_strategy_rejected": true,
+        "jobs_submitted": 0
+      }
+    }
+  ],
+  "validation": [
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_algorithm.py tests/test_algorithm_math.py tests/test_ablations.py tests/test_baselines.py",
+      "result": "60 passed in2.33s",
+      "environment": "Torch2.5.1+cpu,NumPy2.2.6,pytest8.4.2"
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_review_science.py",
+      "result": "4 passed,5 failed in1.11s;5 failures correspond to documented open guards"
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_review_science.py tests/test_algorithm.py tests/test_algorithm_math.py tests/test_ablations.py tests/test_baselines.py tests/test_data_worker.py tests/test_statistics_selection.py tests/test_study_cli.py",
+      "result": "117passed,2failed in4.35s; two failures are direct confirmation builder acceptance and outdated positive confirmation fixture; current submit boundary correctly rejects invalid confirmation."
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_review_science.py tests/test_algorithm.py tests/test_algorithm_math.py tests/test_ablations.py tests/test_baselines.py tests/test_data_worker.py tests/test_statistics_selection.py tests/test_study_cli.py",
+      "result": "119 passed in4.25s",
+      "scope": "Final independent scientific/code/protocol regression, CPU only."
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_registry.py tests/test_review_science.py",
+      "result": "29 passed in1.23s",
+      "scope": "After reference-fallback availability alignment; includes all10 independent reviewer regressions."
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_baselines.py tests/test_registry.py tests/test_data_worker.py tests/test_review_science.py",
+      "result": "60 passed in2.29s",
+      "scope": "Independent narrowfinal rawRBF/nativeparity/publicvslegacyalias/registry/worker regressions after finalrepresentative change; CPUonly."
+    }
+  ],
+  "caveats": [
+    "Synthetic CPU tests and one local measured1000-query active-update benchmark do not establish EEG efficacy, school GPU timing, stage2PASS, or independent confirmation.",
+    "Conditional model-set proper-loss statement requires a valid outer interval and does not imply true future BA/NLL/coverage.",
+    "Float64 guarded residual-dual implementation is not a formal IEEE-754 interval proof; exact set monotonicity does not universally apply to finite-budget adaptive approximations.",
+    "Historical holdout/Pan/Weibo data influenced design and remain exploratory. R9EA-RBF source coverage still has4missing original-family hypotheses; missing effects are not fabricated.",
+    "Rashomon sets, kernel power functions, convex duality and minimax regret are established. Candidate novelty is the specific EEG calibration coupling, under bounded literature search.",
+    "File hashes below identify this reviewed snapshot; later changes require a new review or targeted verification."
+  ],
+  "independent_synthetic_active_update_benchmark": {
+    "scope": "SYNTHETIC_CPU_ONLY_NOT_EEG_OR_STAGE2_PASS",
+    "queries_measured": 1000,
+    "default_max_root": 12,
+    "support_rows": 20,
+    "feature_dimension": 2,
+    "amplitude": 3.0,
+    "evidence_fraction": 0.1,
+    "include_intercept": false,
+    "prediction_seconds_measured": 3.676503535998563,
+    "nonzero_updates": 1000,
+    "reason_counts": {
+      "certified_nonzero_update": 1000
+    },
+    "first_probability": [
+      0.12687907390539643,
+      0.8731209260946036
+    ],
+    "all_finite_normalized": true,
+    "fit_gain": 11.928821188237396,
+    "algorithm_sha256": "6fa50fe53ee4e80b3fe9e500b12cc14eb54b5e0bfde8afac1c30611fadba1e48",
+    "true_future_risk_or_coverage_guaranteed": false,
+    "real_data_stage2_gate_evaluated": false,
+    "gpu_or_slurm_used": false,
+    "benchmark_note": "One measured1000-query synthetic active-update run on local CPU; not school timing or proof of real EEG throughput."
+  },
+  "final_assessment": "The reviewed implementation and protocol are internally consistent after owner repairs. Independent CPU-only regressions pass. This is design/software/mathematical-fixture acceptance, not real EEG efficacy, GPU compatibility certification, independent-cohort confirmation, or proof of worldwide novelty.",
+  "latest_prior_evidence_scope": {
+    "R8": "Actual2835/2835, all40original BA/NLL primary contrasts non-significant after Holm.",
+    "R9": "Initial39GParchives at68a8d5c plus33freshraw-RBFarchives at a752d00a7b56972d67e1786eb122b218828e3616:72GParchives951549293compressedbytes. Full3seed rawlinear/RBF MAP/PP/global/anchored comparisons recovered.20of24original primary contrasts available;4EA-RBF contrasts absent, without assigned effects. Available original-family conservativeHolm24 values all1.",
+    "R1": "Partial ongoing meta-learning program; detailed fresh task/wrapper counts are separately recorded and not treated as completed efficacy evidence.",
+    "reviewer_limit": "Reviewer inspected compact SHA-bound audit outputs and source semantics, but did not independently re-download/recompute every underlying raw EEG prediction archive."
+  },
+  "final_r9_representative_delta_review": {
+    "status": "PASS_NO_NEW_BLOCKERS",
+    "public_raw_key": "r9_raw_anchored",
+    "canonical_raw_method": "r9_raw_rbf_anchored",
+    "raw_kernel": "rbf",
+    "ea_method": "r9_ea_linear_anchored",
+    "legacy_explicit_method": "r9_raw_linear_anchored",
+    "findings": [
+      "Public raw key strictly requires nativeR9 RBF anchored_laplace; passing linear config to that public key is rejected.",
+      "Explicit legacy raw-linear method remains available and keeps linear semantics; it cannot silently satisfy the stronger publicrawrepresentative.",
+      "Registry deterministically requires the rawRBF or EAlinear native select task, originalmeta_validation role and corresponding selected_config preprocessing/kernel/predictive, then retains nativeGPfields. No target scores enter representative configuration selection.",
+      "Worker verifies registered native result/source/data/seed/checkpoint identities and selected-checkpointSHA before extraction; final method semantics match baseline_registry.json.",
+      "Raw and EA reference geometry remains training-only; rawRBF and actualEAlinear predictions have nativeCPUparity coverage.",
+      "Audit descriptions now distinguish rawRBF from EAlinear. Missing completeEA-RBF priorcoverage remains explicit rather than replaced by a fabricated claim."
+    ],
+    "production_files": [
+      "paper3r10/baselines.py",
+      "paper3r10/registry.py",
+      "paper3r10/worker.py",
+      "paper3r10/baseline_registry.json"
+    ],
+    "no_new_features_or_rolling_source_results": true
+  }
+}

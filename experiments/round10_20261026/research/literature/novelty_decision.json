@@ -1,0 +1,73 @@
+{
+  "schema_version": "paper3-r10-bounded-literature-novelty-audit-v1",
+  "cutoff_date": "2026-10-26",
+  "written_utc": "2026-10-26T04:17:04.285381+00:00",
+  "source_manifest": "primary_source_fetch_manifest.json",
+  "primary_html_bibliography": "primary_html_bibliography.json",
+  "official_pubmed_metadata": "pubmed_primary_bibliography.json",
+  "selected_candidate": "C",
+  "selection_scope": "Conditional research recommendation only; integrate latest raw R8/R9 audit before freezing final scientific configuration.",
+  "candidates": [
+    {
+      "id": "A",
+      "name": "Exact nuisance-head quotient spatial update",
+      "recommendation": "do_not_select_as_main",
+      "prior_art_overlap": [
+        "R3 ridge-Schur/profiled/information radius",
+        "Plumlee and Joseph2018 orthogonalGP",
+        "Tuo2019 projectedkernelcalibration"
+      ],
+      "fundamental_limitation": "If the n-row head design has full row rank, exact nuisance-orthogonal support information is zero. Finite ridge is prior information, not independently identified spatial signal.",
+      "novelty_risk": "high",
+      "compute": "small matrices, cheap; meaningful update space may vanish",
+      "falsification": "head-absorbing synthetic example and real full-head rank test"
+    },
+    {
+      "id": "B",
+      "name": "Predictable calibration-prefix evidence process",
+      "recommendation": "reserve_not_main",
+      "prior_art_overlap": [
+        "Henzi and Ziegel2022 sequential proper-score e-values",
+        "cross-fitting and risk-control literature"
+      ],
+      "fundamental_limitation": "At most20 dependent acquisition positions; conditional dominance null and future-session shift need explicit assumptions. Optional stopping validity is not future-BA improvement.",
+      "novelty_risk": "high unless a new coupled mechanism is specified",
+      "compute": "serial prefix fits; few observations may yield no updates",
+      "falsification": "prequential power and false-update simulations under explicitly stated null"
+    },
+    {
+      "id": "C",
+      "name": "Gain-relative complete query-function ambiguity with anchor-relative proper-loss action",
+      "recommendation": "implement_and_falsify_in_stages",
+      "prior_art_overlap": [
+        "Nguyenetal2026 Rashomonpredictionintervals",
+        "Marxetal2020 predictivemultiplicity",
+        "Loog2016 contrastivepessimisticbaselinelearning",
+        "Nematollahi_etal2021 robustBayesianregret",
+        "Kanagawaetal2025_2026 kernelpowerfunction/GP_RKHS equivalences",
+        "R9 sourceanchoredlogisticGP andqueryvariancegate"
+      ],
+      "bounded_search_conclusion": "No exact published isomorph of the full proposed gain-relative logistic-RKHS completion + certified dual profile outer bounds + fixed-anchor proper-loss resolver was found in this bounded search through2026-10-26. This is not a proof of worldwide novelty.",
+      "permitted_new_claim": "A specific coupled EEG calibration algorithm, finite-support solver and zero-update certificates, subject to strong-baseline comparisons and mechanism ablations.",
+      "forbidden_new_claims": [
+        "invented GP",
+        "invented Schur complement/power function",
+        "invented Rashomon set or profile interval",
+        "invented minimax regret/clipping",
+        "future risk or95percent coverage guarantee from model-set validity",
+        "performance breakthrough before real experiments"
+      ],
+      "novelty_risk": "moderate; needs exact comparator scrutiny and empirical evidence",
+      "compute": "frozen encoder and n<=20 systems; potentially two nonlinear profile solves per query, report actual latency and certification skip rate",
+      "falsification": [
+        "remove support-nullspace completion",
+        "MAP and full-anchor limits",
+        "R9 variance-fraction resolver",
+        "quadratic profile approximation",
+        "EA and strongest existing comparison family"
+      ]
+    }
+  ],
+  "guarantee_scope": "Only a correctly computed prespecified model-compatible probability interval; no claim that actual future conditional probability belongs to it.",
+  "copyright": "Only hashes, primary metadata and our original bounded summaries are published; full documents remain in local audit cache."
+}

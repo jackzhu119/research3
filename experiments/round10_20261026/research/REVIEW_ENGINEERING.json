@@ -1,0 +1,188 @@
+{
+  "schema_version": "paper3-r10-independent-engineering-review-v1",
+  "status": "PASS_CPU_ENGINEERING_REVIEW",
+  "reviewer": "independent_r10_review_runtime",
+  "reviewed_utc": "2026-10-26T05:13:31Z",
+  "scope": "R10 platform, explicit execution boundary, immutable scientific identity, finite recovery, independent complete uploads, offline installer",
+  "file_sha256": {
+    "START.py": "4d0d970d8284320906c889c4fcb9ef2c59d29b8ec9fe988f41f3cbc096cc07bc",
+    "build_delivery.py": "46f4418aa1888a60f56a0369b3726ab1c6d6d592f1250f6403ec0a99f33b1b91",
+    "delivery_template.py": "bbc94ec3ec3e65250e42c38ef0cd80d67baaa6eb98cdda8bfacf79b0106d43ca",
+    "paper3r10/baselines.py": "e6f3c0bdf79bcbc193fb99e39b23990eece66295f45fefd6b79f57d1c773eb8e",
+    "paper3r10/cli.py": "6ba1f209fd54cbd2169efaf299e5a598b16160fa20bed5b03d5bc392fa3cf623",
+    "paper3r10/confirmation.py": "13e646da019271fe5aea3d34f5a55326d25f05453c2d0b9eae39a4bd8ae7b87b",
+    "paper3r10/platform/VENDOR.json": "82ff5771d30799323c6f9946e765ab9dcbb2551b24dfe8751af36415f34aae0b",
+    "paper3r10/platform/common.py": "e987ed72d65912ca69e50a9d7fb1db9fc4e58d9e32d61a48dcf8cbeec9529525",
+    "paper3r10/platform/entry.py": "7ee4c3929ad76e074d8b953234ec280298dd365c2d86f0398b7187cfe7aedd98",
+    "paper3r10/platform/import_cache.py": "ddc5429e83af2faa5c99fed97e2d190a6deddb3e6c32857c7ef02bc77c42ed16",
+    "paper3r10/platform/runtime.py": "7bd41728625b11c8f2acdc66932d3077d0ac167f93f6dadc057a16b661b800f8",
+    "paper3r10/platform/scheduler.py": "c4b688f890b60e92c09e2a96470d51a14324a6037de50263bc240f0880116337",
+    "paper3r10/platform/uploads.py": "fc5e38ff76726589d29a8a39cca917b56820f250e6971c69522c4fe457a07cae",
+    "paper3r10/platform/vendor/lossless_publish.py": "e004c420b831e777138e7e84a4ce922be0fd39a948c6d87d61247d8d97e7f864",
+    "paper3r10/platform/vendor/paper3_result_transport.py": "b8d808ad45209d06c68fda81fd0a9821f271f19fa18269a85ab27a246654ecf3",
+    "paper3r10/registry.py": "6636243db579234b576e3852ee475ce544c2f16723362f5d28e0808270bc8f74",
+    "paper3r10/report.py": "b4916399cf89f1b7fd0dae2f464a8fe49e3a9cff7545b589e58862220b6d71cb",
+    "paper3r10/selection.py": "148ffb5829325449a8b9c330c73180986eb6594452722e2aa7b723962272cd69",
+    "paper3r10/selfcheck.py": "99181d26e5b5a6d8b2617a09081a7c6dbd8e97ac00443131fc2019e06d6eb452",
+    "paper3r10/study.py": "816e79f90871900e8366ded16b30805beefa5063f681ca2c844fd112507753a9",
+    "paper3r10/worker.py": "395176a0df7e76ffb7ce531a6adef7c0635d51d6763c91895a9e0ae79f5d1099",
+    "tests/test_delivery.py": "c3f37dd2f8f6dcbd9f15336f3fba07cab1b1e7ae3940823fb9c18692e7b5a1ad",
+    "tests/test_platform_registry.py": "e2fdccbfea3d237c8a9f9e8cb6012f663b1660f97d38ea77cc3bbf6e3c2f9494",
+    "tests/test_review_runtime.py": "25b2cc7ffcb95150f931e8da1edc51f43b033cf9f766f086796b9daeb83b06a3",
+    "tests/test_study_cli.py": "4ac24201b60914323e0f7ccce51e319ae0509183ef6274cdace338661d6cf898"
+  },
+  "execution": {
+    "python": "3.12.14",
+    "interpreter": "/tmp/r10-school-cpu/bin/python",
+    "gpu_initialized": false,
+    "slurm_rpc_executed": false,
+    "network_mutations": false,
+    "production_edits_by_reviewer": false,
+    "independent_test_file": "tests/test_review_runtime.py",
+    "reviewer_test_edits": [
+      "tests/test_review_runtime.py",
+      "tests/test_study_cli.py (parent-authorized valid positive confirmation fixture and freeze metadata helper)"
+    ]
+  },
+  "tests": [
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_platform_contract.py tests/test_platform_runtime.py tests/test_platform_uploads.py tests/test_delivery.py tests/test_study_cli.py tests/test_review_runtime.py",
+      "result": "82 passed in1.11s",
+      "exit_code": 0
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_review_runtime.py tests/test_study_cli.py",
+      "result": "24 passed in0.48s",
+      "exit_code": 0
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_delivery.py tests/test_registry.py tests/test_review_runtime.py",
+      "result": "48 passed in0.66s",
+      "exit_code": 0,
+      "scope": "Final delta verification executed by independent engineering reviewer"
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests/test_platform_registry.py",
+      "result": "2 passed in0.01s",
+      "exit_code": 0,
+      "scope": "Final optional-reuse fallback verification executed by independent engineering reviewer"
+    },
+    {
+      "command": "/tmp/r10-school-cpu/bin/python -m pytest -q tests",
+      "result": "216 passed in5.13s",
+      "exit_code": 0,
+      "reported_by": "root final verification; not rerun by independent engineering reviewer"
+    },
+    {
+      "command": "START.py validate --cpu",
+      "result": "CPU selfcheck passed",
+      "reported_by": "root final verification; no GPU precheck executed"
+    }
+  ],
+  "blocking_findings": [],
+  "resolved_findings": [
+    {
+      "id": "E1",
+      "severity_at_discovery": "BLOCKER",
+      "issue": "Worker dies before claiming a task bypassed task failure limit and caused endless fresh allocations.",
+      "observed_before_fix": "30 mocked sbatch calls over20 polls.",
+      "resolution": "Durable per-slot maximum3 worker failures; controller returns blocked after inflight allocations drain; no cancellation.",
+      "verification": "Final four-slot boot-failure allocation budget stops at12 total; checkpoint75 replacements retain availability. Historical pre-fix evidence used the original three-slot setting."
+    },
+    {
+      "id": "E2",
+      "severity_at_discovery": "BLOCKER",
+      "issue": "Structural invalid partition submission retried forever.",
+      "observed_before_fix": "20 mocked sbatch calls over20 polls.",
+      "resolution": "Global durable structural submission block; explicit resume --submit --retry-blocked clears both task and scheduler quarantine while retaining history.",
+      "verification": "Independent invalid-partition regression and native scheduler/runtime tests pass."
+    },
+    {
+      "id": "E3",
+      "severity_at_discovery": "BLOCKER",
+      "issue": "Actual freeze writer emitted source_code_manifest_sha256 while formal reader checked code_manifest_sha256; actual freeze omitted study_registry_sha256. Formal runtime plan loading also allowed refreshed code/registry declarations with a stale freeze.",
+      "resolution": "Actual freeze emits canonical SHA bindings; study builder and common formal load guard require nonmissing equality with exact code and registry. Exact secondary ablation comparison family and the global three-seed reference strategy are also frozen and checked.",
+      "verification": "Actual writer-to-builder tests and runtime re-sign bypass tests each reject changed code and changed registry."
+    },
+    {
+      "id": "E4",
+      "severity_at_discovery": "BLOCKER",
+      "issue": "Mechanism worker used method_config while selection froze config, permitting a freeze of a different configuration.",
+      "resolution": "All science stages reject method_config differing from canonical config.",
+      "verification": "Independent development override regression passes."
+    },
+    {
+      "id": "E5",
+      "severity_at_discovery": "BLOCKER",
+      "issue": "Same-recipe COMPLETE report with valid report hash but stale/different completed task keys was accepted as complete paper delivery.",
+      "resolution": "Compact report receipt and fallback report require exact task keys hash, count, recipe and report SHA. Independent reporter creates reports without network credentials and uses a bounded300second CPU child.",
+      "verification": "Both missing-key and same-count/different-key stale reports remain PARTIAL; reporter retry tests pass."
+    },
+    {
+      "id": "E6",
+      "severity_at_discovery": "BLOCKER",
+      "issue": "SOFTWARE_TEST_ONLY development freeze could authorize a REAL_DATA formal plan.",
+      "resolution": "Formal builder and runtime require REAL_DATA freeze scope, independently of the formal plan synthetic flag.",
+      "verification": "Independent software-freeze promotion regression passes."
+    }
+  ],
+  "verified_contracts": [
+    "Installer default performs only an offline, content-addressed, SHA-verified code installation; no Torch, NumPy, socket or subprocess import is needed for that path.",
+    "Prepare and submit-without-explicit-flag do not query Slurm, submit jobs, allocate GPU, start numerical workers, install dependencies or read upload credentials.",
+    "Controller requires exact plan SHA authorization before scheduler observation or submission; scheduler commands own only the exact R10 marker and never issue scancel.",
+    "Four single-GPU worker slots use16CPUs and68G each; task flock leases plus independent scientific locks protect numerical ownership rather than trusting PIDs.",
+    "USR1/STOP checkpoint pause uses exit75; completed exact results are sealed and reused; persistent task failures and preclaim allocation failures have finite quarantine.",
+    "Paper channel copies complete CSV/JSON bytes and records exact fragment manifests; no participant rows are truncated or sanitized.",
+    "Full channel packs declared task output trees including predictions, per-fit model states and manifests, splits bounded parts and checks hashes; its network retry cannot change training state.",
+    "Stage and recipe specific paper/full/monitor paths isolate late mechanism uploads; head-bound non-force CAS retries merge concurrent evidence.",
+    "Independent CAS409 test proves an old mechanism publication reloads a concurrently published formal index and preserves the formal active pointer and both channel records.",
+    "CPU validation and existing-allocation GPU precheck are separate finite commands; this review executed CPU and mocked checks only.",
+    "Formal confirmation load_plan runs a standard-library-only metadata/history/session and NPY-header audit before submission, with sample hashing deferred to first scientific open.",
+    "Positive independent-confirmation metadata fixture uses40unique acquired events and cache rows, an actual safe40x11x128 NPY, physical prefix/future runs, and an exact dataset/participant history review; the real metadata guard runs without a mock.",
+    "Optional incomplete R9 EA/RAW feature-reference reuse does not become a new GPU startup gate; the frozen strategy selects meta_train-prefix reference construction across all3seeds.",
+    "The final delivery selector packages authored research and bounded compact evidence while excluding recursive historical result trees and arrays."
+  ],
+  "review_limitations": [
+    "No school GPU allocation, GPU precheck, real EEG run, Slurm submission or cancellation was performed.",
+    "Network publication behavior was checked using local mocks only; no external upload was performed by this reviewer.",
+    "Full artifact payloads are verified at scientific sealing and archive preparation. Frequent status/report checks explicitly use small immutable receipts and compact metrics instead of rehashing every prediction/checkpoint.",
+    "This review certifies only the listed source hashes and CPU engineering contracts; it makes no real-EEG accuracy or actual A100 runtime claim."
+  ],
+  "effective_resources": {
+    "jobs": 4,
+    "gpus_per_job": 1,
+    "cpus_per_job": 16,
+    "memory_per_job": "68G",
+    "gpus_total": 4,
+    "cpus_total": 64,
+    "memory_total": "272G",
+    "partition": "hpc_gpu",
+    "executed": false
+  },
+  "manual_validation": {
+    "status": "FULL_CURRENT_CODE_PACKAGE_DEFAULT_OFFLINE_INSTALL_PASSED",
+    "files": 124,
+    "payload_bytes": 667218,
+    "blocked_imports": [
+      "torch",
+      "numpy",
+      "requests",
+      "socket",
+      "subprocess"
+    ],
+    "all_installed_file_SHA256_verified": true,
+    "gpu_initialized": false,
+    "slurm_rpc_executed": false,
+    "network_mutations": false,
+    "scratch_directory_removed_after_verification": true,
+    "source_snapshot_note": "Executed before final bounded-evidence selector and R9 representative delta; default installer implementation unchanged. Final selector and runtime contracts rechecked in the final targeted test commands."
+  },
+  "final_delta_review": {
+    "scope": "Narrow final source refresh; no new feature implementation by reviewer",
+    "registry_fallback": "Availability and study planning both require all3seeds EA+RAW for reuse; when optional reuse is incomplete, meta_train reference construction remains available. Required source/cache/formal baseline identities stay checked.",
+    "public_r9_representative": "Worker public raw R9 alias now resolves the strict native RBF representative and its registered native evaluation configuration; EA representative remains linear. Scientific baseline validation is covered by the root final suite.",
+    "delivery_selector": "Authored research and bounded <=4MiB top-level early/late evidence are included; recursive historical trees, arrays, symlinks and private paths stay excluded. Installer default execution boundary is unchanged.",
+    "effective_resources": "4single-GPU allocations, each16CPUs and68G; total4GPUs/64CPUs/272G; no allocation executed",
+    "source_frozen_for_final_delivery": true
+  }
+}

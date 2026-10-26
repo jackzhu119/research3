@@ -10,6 +10,12 @@
 
 [第七轮完整总JSON定向补传](operations/round7_report_supplement_20261025/README_ZH.md) · [第九轮：实测依据、数学与代码](docs/experiments/ROUND9_ZH.md)（已设计，未提交学校任务）
 
+## 第十轮：新算法、完整证据和四作业交付（2026-10-26）
+
+[研究方案](experiments/round10_20261026/R10_RESEARCH_PROPOSAL_ZH.md) · [数学推导](experiments/round10_20261026/R10_MATH.md) · [实验方案](experiments/round10_20261026/R10_EXPERIMENT_PLAN.md) · [代码与部署](experiments/round10_20261026/R10_IMPLEMENTATION.md) · [一行安装及正式提交](experiments/round10_20261026/delivery/SCHOOL_COMMANDS.md)
+
+R10资源为**4个独立单卡作业，各16CPU/68G**。基于R2–R8完整论文数据及R9最新可取得原始预测核查，实施支持证据保留的查询函数校准与严格消融。15任务机制实验通过后再冻结并展开165项探索实验；新数据独立确认另57项。CPU及合成验证已完成，尚未运行R10真实EEG或学校GPU实验；安装默认不提交，正式执行须显式`--submit`。原九轮下面的日期快照保留，最新原始证据与范围见研究方案。
+
 ## 各轮最新回传
 
 <!-- PAPER3_LIVE_STATUS_START -->

@@ -1,0 +1,170 @@
+{
+  "schema_version": "r10-baseline-registry-v1",
+  "methods": {
+    "frozen": {
+      "canonical": "source_frozen",
+      "fit": "none",
+      "artifacts": []
+    },
+    "support_ea": {
+      "canonical": "support_EA",
+      "fit": "native R7 label-free per-trial-unit-trace .05-shrinkage source-reference recoloring",
+      "artifacts": [],
+      "ignores_config_variant": true
+    },
+    "head_bias": {
+      "canonical": "head_bias",
+      "fit": "R10 controlled bias-only SGD100 with original full-dimensional ridge normalization",
+      "artifacts": []
+    },
+    "head_rank4": {
+      "canonical": "head_rank4",
+      "fit": "R10 controlled label-free acquired-support PCA rank<=4 head SGD100",
+      "artifacts": []
+    },
+    "head_full": {
+      "canonical": "head_full",
+      "fit": "Original full residual-head SGD100, original featuredim+1 ridge",
+      "artifacts": []
+    },
+    "head_sgd10": {
+      "canonical": "head_sgd10",
+      "fit": "native R7 full residual-head SGD10",
+      "artifacts": []
+    },
+    "head_sgd100": {
+      "canonical": "head_sgd100",
+      "fit": "Original full residual-head SGD100",
+      "artifacts": []
+    },
+    "sgd10": {
+      "canonical": "sgd10",
+      "fit": "native R3 nonlinear spatial+head SGD10",
+      "artifacts": [
+        "spatial_basis",
+        "basis_provenance"
+      ]
+    },
+    "sgd100": {
+      "canonical": "sgd100",
+      "fit": "native R3 nonlinear spatial+head SGD100",
+      "artifacts": [
+        "spatial_basis",
+        "basis_provenance"
+      ]
+    },
+    "r3_protected": {
+      "canonical": "r3_protected",
+      "fit": "native R3 information_protected (actual declared rank4 radius.15 head_l2.1)",
+      "artifacts": [
+        "spatial_basis",
+        "basis_provenance"
+      ]
+    },
+    "r3_tangent_protected": {
+      "canonical": "r3_tangent_protected",
+      "fit": "native R3 tangent_protected",
+      "artifacts": [
+        "spatial_basis",
+        "basis_provenance"
+      ]
+    },
+    "r4_xfit_select_stack": {
+      "canonical": "r4_xfit_select_stack",
+      "fit": "native R4 blocked OOF one-SE selection plus simplex Brier stacking; paid prefix positions retained",
+      "artifacts": [
+        "spatial_basis",
+        "basis_provenance"
+      ]
+    },
+    "r8_fiber_bounded": {
+      "canonical": "r8_fiber_bounded",
+      "fit": "native R8 fixed fiber bounded beta.1 pooled alpha1 shrinkage.05 aligned",
+      "artifacts": [
+        "class_reference",
+        "class_reference_provenance"
+      ]
+    },
+    "r9_raw_anchored": {
+      "canonical": "r9_raw_rbf_anchored",
+      "fit": "native R9 ordinary Bernoulli RBF GP anchored Laplace, original meta-validation selected configuration",
+      "artifacts": [
+        "r9_reference_raw",
+        "r9_config_raw",
+        "r9_config_provenance_raw"
+      ]
+    },
+    "r9_ea_anchored": {
+      "canonical": "r9_ea_linear_anchored",
+      "fit": "native R9 ordinary Bernoulli linear GP after actual native support-EA, meta-validation config",
+      "artifacts": [
+        "r9_reference_ea",
+        "r9_config_ea",
+        "r9_config_provenance_ea"
+      ]
+    }
+  },
+  "artifact_contract": {
+    "spatial_basis": {
+      "shape": [
+        99,
+        4
+      ],
+      "dtype": "float64",
+      "role": "meta_train",
+      "must_match": [
+        "seed",
+        "source_checkpoint_sha256",
+        "input_contract_sha256"
+      ]
+    },
+    "class_reference": {
+      "shape": [
+        10,
+        10
+      ],
+      "role": "meta_train_prefix20_only",
+      "must_match": [
+        "seed",
+        "source_checkpoint_sha256",
+        "input_contract_sha256"
+      ]
+    },
+    "r9_reference_raw/ea": {
+      "keys": [
+        "mean",
+        "whitener",
+        "lengthscale",
+        "provenance",
+        "diagnostics"
+      ],
+      "shape": {
+        "mean": [
+          "feature_dim"
+        ],
+        "whitener": [
+          "feature_dim",
+          "feature_dim"
+        ]
+      },
+      "role": "meta_train_prefix20_only",
+      "provenance": {
+        "preprocessing": "raw or ea"
+      }
+    },
+    "r9_config_raw/ea": {
+      "type": "native GPConfig JSON",
+      "kernel": {
+        "raw": "rbf",
+        "ea": "linear"
+      },
+      "predictive": "anchored_laplace",
+      "selection_role": "meta_validation",
+      "do_not_infer_from_target": true
+    }
+  },
+  "fit_never_receives_queries": true,
+  "target_query_statistics_used": false,
+  "missing_artifact_policy": "explicit error, no random or zero learned-artifact substitute",
+  "historical_native_source_manifest": "vendor/SOURCE_BASELINES.json"
+}
