@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 229,
+  "complete_tasks": 235,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 13.2,
+    "progress_age_seconds": 33.2,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T02:09:48Z"
+    "updated_utc": "2026-10-26T02:12:28Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 172,
+      "complete": 178,
       "total": 234
     },
     "feature_reference": {
@@ -43,40 +43,45 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 1789,
+      "pid": 4133,
       "status": "RUNNING",
-      "task_key": "core-pan2023-ea_linear_pp-seed20261020-e855cc37c7",
+      "task_key": "core-pan2023-ea_linear_anchored-seed20261019-3199995a5f",
       "worker_progress": {
         "budget": 8,
         "outer_update": 0,
-        "session": 22,
+        "session": 18,
         "sessions_total": 28,
         "stage": "pan2023_published_order",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-26T02:09:08Z"
+        "updated_utc": "2026-10-26T02:11:53Z"
       }
     },
     "1": {
       "job_id": "773687",
-      "pid": 52236,
+      "pid": 55902,
       "status": "RUNNING",
-      "task_key": "core-pan2023-ea_linear_anchored-seed20261018-c2c5186150",
+      "task_key": "core-holdout-ea_linear_global_mixture-seed20261018-6bb249d29a",
       "worker_progress": {
-        "budget": 8,
         "outer_update": 0,
-        "session": 8,
-        "sessions_total": 28,
-        "stage": "pan2023_published_order",
-        "status": "EVALUATING",
-        "updated_utc": "2026-10-26T02:09:10Z"
+        "stage": "loading",
+        "status": "STARTING",
+        "updated_utc": "2026-10-26T02:11:42Z"
       }
     },
     "2": {
       "job_id": "773688",
-      "pid": 53560,
+      "pid": 54665,
       "status": "RUNNING",
-      "task_key": "core-holdout-ea_linear_anchored-seed20261019-6587256a8f",
-      "worker_progress": {}
+      "task_key": "core-pan2023-ea_linear_anchored-seed20261020-de12e63b12",
+      "worker_progress": {
+        "budget": 8,
+        "outer_update": 0,
+        "session": 10,
+        "sessions_total": 28,
+        "stage": "pan2023_published_order",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-26T02:11:41Z"
+      }
     }
   },
   "interpretation": "Round 9 independent three-job stream; optimizer progress and scheduler state are reported separately.",
@@ -124,7 +129,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "3:27:53",
+        "elapsed": "3:30:53",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -134,7 +139,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "41:38",
+        "elapsed": "44:38",
         "job_id": "773688",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s2-a1",
@@ -144,7 +149,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "42:04",
+        "elapsed": "45:04",
         "job_id": "773687",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s1-a1",
@@ -154,7 +159,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T02:10:01Z",
+    "observed_utc": "2026-10-26T02:13:01Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -180,7 +185,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792980601.151937,
+  "sampled_unix": 1792980781.1521864,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1875,23 +1880,8 @@
       "index": 187,
       "job_id": "773686",
       "key": "core-pan2023-ea_linear_pp-seed20261020-e855cc37c7",
-      "observations": [
-        {
-          "age_seconds": 23.2,
-          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_pp-seed20261020-e855cc37c7/progress.json",
-          "values": {
-            "budget": 16,
-            "outer_update": 0,
-            "session": 2,
-            "sessions_total": 28,
-            "stage": "pan2023_published_order",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-26T02:09:38Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -1917,23 +1907,8 @@
       "index": 190,
       "job_id": "773687",
       "key": "core-pan2023-ea_linear_anchored-seed20261018-c2c5186150",
-      "observations": [
-        {
-          "age_seconds": 21.2,
-          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_anchored-seed20261018-c2c5186150/progress.json",
-          "values": {
-            "budget": 12,
-            "outer_update": 0,
-            "session": 12,
-            "sessions_total": 28,
-            "stage": "pan2023_published_order",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-26T02:09:40Z"
-          }
-        }
-      ],
       "slot": 1,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -1950,18 +1925,69 @@
       "index": 192,
       "job_id": "773688",
       "key": "core-holdout-ea_linear_anchored-seed20261019-6587256a8f",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 193,
+      "job_id": "773686",
+      "key": "core-pan2023-ea_linear_anchored-seed20261019-3199995a5f",
       "observations": [
         {
-          "age_seconds": 9.2,
-          "path": "runs/followup_20261025_r9/core-holdout-ea_linear_anchored-seed20261019-6587256a8f/progress.json",
+          "age_seconds": 10.2,
+          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_anchored-seed20261019-3199995a5f/progress.json",
           "values": {
-            "budget": 8,
+            "budget": 16,
             "outer_update": 0,
-            "session": 73,
-            "sessions_total": 105,
-            "stage": "holdout",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-26T02:09:52Z"
+            "session": 28,
+            "sessions_total": 28,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-26T02:12:51Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 194,
+      "job_id": "773688",
+      "key": "core-weibo2014-ea_linear_anchored-seed20261019-d8fc18586f",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 195,
+      "job_id": "773687",
+      "key": "core-holdout-ea_linear_anchored-seed20261020-6ee08fb683",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 196,
+      "job_id": "773688",
+      "key": "core-pan2023-ea_linear_anchored-seed20261020-de12e63b12",
+      "observations": [
+        {
+          "age_seconds": 14.2,
+          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_anchored-seed20261020-de12e63b12/progress.json",
+          "values": {
+            "budget": 16,
+            "outer_update": 0,
+            "session": 28,
+            "sessions_total": 28,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-26T02:12:47Z"
           }
         }
       ],
@@ -1969,58 +1995,37 @@
       "status": "RUNNING"
     },
     {
-      "attempt": 0,
-      "family": "core",
-      "index": 193,
-      "job_id": null,
-      "key": "core-pan2023-ea_linear_anchored-seed20261019-3199995a5f",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 194,
-      "job_id": null,
-      "key": "core-weibo2014-ea_linear_anchored-seed20261019-d8fc18586f",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 195,
-      "job_id": null,
-      "key": "core-holdout-ea_linear_anchored-seed20261020-6ee08fb683",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 196,
-      "job_id": null,
-      "key": "core-pan2023-ea_linear_anchored-seed20261020-de12e63b12",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 197,
-      "job_id": null,
+      "job_id": "773687",
       "key": "core-weibo2014-ea_linear_anchored-seed20261020-a6c04562e9",
-      "slot": null,
-      "status": "NEW"
+      "slot": 1,
+      "status": "COMPLETE"
     },
     {
-      "attempt": 0,
+      "attempt": 1,
       "family": "core",
       "index": 198,
-      "job_id": null,
+      "job_id": "773687",
       "key": "core-holdout-ea_linear_global_mixture-seed20261018-6bb249d29a",
-      "slot": null,
-      "status": "NEW"
+      "observations": [
+        {
+          "age_seconds": 26.2,
+          "path": "runs/followup_20261025_r9/core-holdout-ea_linear_global_mixture-seed20261018-6bb249d29a/progress.json",
+          "values": {
+            "budget": 16,
+            "outer_update": 0,
+            "session": 105,
+            "sessions_total": 105,
+            "stage": "done",
+            "status": "COMPLETE",
+            "updated_utc": "2026-10-26T02:12:35Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
     },
     {
       "attempt": 0,
@@ -14175,5 +14180,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T02:10:01Z"
+  "updated_utc": "2026-10-26T02:13:01Z"
 }
