@@ -1,13 +1,13 @@
 {
   "aggregate_results_destination": "paper3-results:results/paper3/round-09",
   "allocation_mode": "THREE_INDEPENDENT_SINGLE_GPU_JOBS",
-  "complete_tasks": 223,
+  "complete_tasks": 229,
   "coordinator": {
     "phase": "TASK_DAG",
-    "progress_age_seconds": 11.2,
+    "progress_age_seconds": 13.2,
     "progress_path": "runs/followup_20261025_r9/runtime/three_jobs/progress.json",
     "status": "RUNNING",
-    "updated_utc": "2026-10-26T02:06:50Z"
+    "updated_utc": "2026-10-26T02:09:48Z"
   },
   "experiment": "paper3-round9",
   "families": {
@@ -16,7 +16,7 @@
       "total": 108
     },
     "core": {
-      "complete": 166,
+      "complete": 172,
       "total": 234
     },
     "feature_reference": {
@@ -43,31 +43,39 @@
   "gpu_slots": {
     "0": {
       "job_id": "773686",
-      "pid": 56196,
+      "pid": 1789,
       "status": "RUNNING",
-      "task_key": "core-pan2023-ea_linear_pp-seed20261018-bf4af306a7",
+      "task_key": "core-pan2023-ea_linear_pp-seed20261020-e855cc37c7",
       "worker_progress": {
-        "budget": 4,
+        "budget": 8,
         "outer_update": 0,
-        "session": 18,
+        "session": 22,
         "sessions_total": 28,
         "stage": "pan2023_published_order",
         "status": "EVALUATING",
-        "updated_utc": "2026-10-26T02:06:08Z"
+        "updated_utc": "2026-10-26T02:09:08Z"
       }
     },
     "1": {
       "job_id": "773687",
-      "pid": 50163,
+      "pid": 52236,
       "status": "RUNNING",
-      "task_key": "core-holdout-ea_linear_pp-seed20261020-9ddb61703a",
-      "worker_progress": {}
+      "task_key": "core-pan2023-ea_linear_anchored-seed20261018-c2c5186150",
+      "worker_progress": {
+        "budget": 8,
+        "outer_update": 0,
+        "session": 8,
+        "sessions_total": 28,
+        "stage": "pan2023_published_order",
+        "status": "EVALUATING",
+        "updated_utc": "2026-10-26T02:09:10Z"
+      }
     },
     "2": {
       "job_id": "773688",
-      "pid": 50160,
+      "pid": 53560,
       "status": "RUNNING",
-      "task_key": "core-weibo2014-ea_linear_pp-seed20261019-8ad6194305",
+      "task_key": "core-holdout-ea_linear_anchored-seed20261019-6587256a8f",
       "worker_progress": {}
     }
   },
@@ -116,7 +124,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "3:24:53",
+        "elapsed": "3:27:53",
         "job_id": "773686",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s0-a1",
@@ -126,7 +134,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "38:38",
+        "elapsed": "41:38",
         "job_id": "773688",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s2-a1",
@@ -136,7 +144,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "39:04",
+        "elapsed": "42:04",
         "job_id": "773687",
         "marker": "paper3r9p-3f5bf3cb30e49773",
         "name": "paper3r9p-3f5bf3cb30e49773-s1-a1",
@@ -146,7 +154,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-26T02:07:01Z",
+    "observed_utc": "2026-10-26T02:10:01Z",
     "status": "OBSERVED"
   },
   "phase": "TASK_DAG",
@@ -172,7 +180,7 @@
   "resource_scope": "Requested configuration; current Slurm queue observations are separate, not GPU utilization.",
   "round": 9,
   "round_output": "/public/home/zhuziyuan/projects/paper3/runs/followup_20261025_r9",
-  "sampled_unix": 1792980421.1511688,
+  "sampled_unix": 1792980601.151937,
   "schema_version": "paper3-round9-three-jobs-monitor-v1",
   "scientific_completion_claimed": false,
   "status": "RUNNING",
@@ -1813,23 +1821,8 @@
       "index": 181,
       "job_id": "773686",
       "key": "core-pan2023-ea_linear_pp-seed20261018-bf4af306a7",
-      "observations": [
-        {
-          "age_seconds": 23.2,
-          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_pp-seed20261018-bf4af306a7/progress.json",
-          "values": {
-            "budget": 8,
-            "outer_update": 0,
-            "session": 23,
-            "sessions_total": 28,
-            "stage": "pan2023_published_order",
-            "status": "EVALUATING",
-            "updated_utc": "2026-10-26T02:06:38Z"
-          }
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "attempt": 1,
@@ -1864,83 +1857,116 @@
       "index": 185,
       "job_id": "773688",
       "key": "core-weibo2014-ea_linear_pp-seed20261019-8ad6194305",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 186,
+      "job_id": "773687",
+      "key": "core-holdout-ea_linear_pp-seed20261020-9ddb61703a",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 187,
+      "job_id": "773686",
+      "key": "core-pan2023-ea_linear_pp-seed20261020-e855cc37c7",
       "observations": [
         {
-          "age_seconds": 15.2,
-          "path": "runs/followup_20261025_r9/core-weibo2014-ea_linear_pp-seed20261019-8ad6194305/progress.json",
+          "age_seconds": 23.2,
+          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_pp-seed20261020-e855cc37c7/progress.json",
           "values": {
+            "budget": 16,
             "outer_update": 0,
-            "stage": "loading",
-            "status": "STARTING",
-            "updated_utc": "2026-10-26T02:06:46Z"
+            "session": 2,
+            "sessions_total": 28,
+            "stage": "pan2023_published_order",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-26T02:09:38Z"
+          }
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 188,
+      "job_id": "773687",
+      "key": "core-weibo2014-ea_linear_pp-seed20261020-ae86be1683",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 189,
+      "job_id": "773688",
+      "key": "core-holdout-ea_linear_anchored-seed20261018-381c39ab80",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 190,
+      "job_id": "773687",
+      "key": "core-pan2023-ea_linear_anchored-seed20261018-c2c5186150",
+      "observations": [
+        {
+          "age_seconds": 21.2,
+          "path": "runs/followup_20261025_r9/core-pan2023-ea_linear_anchored-seed20261018-c2c5186150/progress.json",
+          "values": {
+            "budget": 12,
+            "outer_update": 0,
+            "session": 12,
+            "sessions_total": 28,
+            "stage": "pan2023_published_order",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-26T02:09:40Z"
+          }
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 191,
+      "job_id": "773688",
+      "key": "core-weibo2014-ea_linear_anchored-seed20261018-727cc68ebc",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "attempt": 1,
+      "family": "core",
+      "index": 192,
+      "job_id": "773688",
+      "key": "core-holdout-ea_linear_anchored-seed20261019-6587256a8f",
+      "observations": [
+        {
+          "age_seconds": 9.2,
+          "path": "runs/followup_20261025_r9/core-holdout-ea_linear_anchored-seed20261019-6587256a8f/progress.json",
+          "values": {
+            "budget": 8,
+            "outer_update": 0,
+            "session": 73,
+            "sessions_total": 105,
+            "stage": "holdout",
+            "status": "EVALUATING",
+            "updated_utc": "2026-10-26T02:09:52Z"
           }
         }
       ],
       "slot": 2,
       "status": "RUNNING"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 186,
-      "job_id": null,
-      "key": "core-holdout-ea_linear_pp-seed20261020-9ddb61703a",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 187,
-      "job_id": null,
-      "key": "core-pan2023-ea_linear_pp-seed20261020-e855cc37c7",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 188,
-      "job_id": null,
-      "key": "core-weibo2014-ea_linear_pp-seed20261020-ae86be1683",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 189,
-      "job_id": null,
-      "key": "core-holdout-ea_linear_anchored-seed20261018-381c39ab80",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 190,
-      "job_id": null,
-      "key": "core-pan2023-ea_linear_anchored-seed20261018-c2c5186150",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 191,
-      "job_id": null,
-      "key": "core-weibo2014-ea_linear_anchored-seed20261018-727cc68ebc",
-      "slot": null,
-      "status": "NEW"
-    },
-    {
-      "attempt": 0,
-      "family": "core",
-      "index": 192,
-      "job_id": null,
-      "key": "core-holdout-ea_linear_anchored-seed20261019-6587256a8f",
-      "slot": null,
-      "status": "NEW"
     },
     {
       "attempt": 0,
@@ -13909,7 +13935,6 @@
       "index": 1521,
       "job_id": null,
       "key": "anchor_sensitivity-holdout-cap_ea_rbf_0p25-seed20261018-6f64aa874f",
-      "observations": [],
       "slot": null,
       "status": "NEW"
     },
@@ -14150,5 +14175,5 @@
   ],
   "total_tasks": 1548,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-26T02:07:01Z"
+  "updated_utc": "2026-10-26T02:10:01Z"
 }
