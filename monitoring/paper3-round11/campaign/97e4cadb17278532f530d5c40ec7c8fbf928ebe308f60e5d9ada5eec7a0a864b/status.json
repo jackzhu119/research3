@@ -1,13 +1,13 @@
 {
   "blocked_tasks": 4,
-  "complete_task_keys_sha256": "fa047751459563b0b01c81093f75482595614be030ce83a207a751a726549a36",
-  "complete_tasks": 521,
+  "complete_task_keys_sha256": "9837ba4091611f5d122bac8c5046570de446dd77ffda7772ffcaa83bf3fcbe30",
+  "complete_tasks": 523,
   "completion_counts_from_durable_verified_cache": true,
   "family_summary": {
     "evaluate": {
-      "active": 1,
+      "active": 0,
       "blocked": 2,
-      "complete": 84,
+      "complete": 85,
       "total": 1881
     },
     "feature_reference": {
@@ -17,9 +17,9 @@
       "total": 3
     },
     "operator_train": {
-      "active": 1,
+      "active": 2,
       "blocked": 2,
-      "complete": 434,
+      "complete": 435,
       "total": 8385
     },
     "selection": {
@@ -32,16 +32,16 @@
   "monitoring_rehashes_full_payloads": false,
   "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
   "reporter": {
-    "complete_tasks": 521,
+    "complete_tasks": 523,
     "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
-    "status": "WAITING_FOR_NEW_COMPLETION",
+    "status": "PARTIAL_REPORT_GENERATED",
     "total_tasks": 10270,
     "training_controlled": false,
-    "updated_utc": "2026-10-26T22:52:58Z"
+    "updated_utc": "2026-10-26T22:55:19Z"
   },
   "round": 11,
-  "runnable_remaining_tasks": 9745,
-  "sampled_unix": 1793055222.9348292,
+  "runnable_remaining_tasks": 9743,
+  "sampled_unix": 1793055364.5764015,
   "scheduler": {
     "bootstrap_ready": {
       "first_slurm_observation_performed": false,
@@ -123,8 +123,8 @@
   "task_phase_counts": {
     "BLOCKED_CONFIGURATION": 2,
     "BLOCKED_DEPENDENCY": 2,
-    "COMPLETE": 521,
-    "NEW": 9743,
+    "COMPLETE": 523,
+    "NEW": 9741,
     "RUNNING": 2
   },
   "task_rows_included": 22,
@@ -132,53 +132,51 @@
   "tasks": [
     {
       "attempt": 1,
-      "attempt_token": "65891b777b9662431a74a2c10f5809380420448fae9cadc8c52639f9b2fccff1",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775289",
-      "key": "evaluate-meta_validation-operator_no_noise_tuned-s20261020-726e385674a4",
-      "kind": "evaluate",
-      "last_numerical_advance_utc": "2026-10-26T22:53:42Z",
-      "numerical_advance_age_seconds": 0.0,
-      "numerical_progress": {
-        "attempt_token": "65891b777b9662431a74a2c10f5809380420448fae9cadc8c52639f9b2fccff1",
-        "budget": 16,
-        "outer_update": 0,
-        "session": 383,
-        "sessions_total": 485,
-        "stage": "support_fit",
-        "status": "PREDICTING",
-        "total_updates": 1,
-        "updated_utc": "2026-10-26T22:53:40Z"
-      },
-      "phase": "RUNNING",
-      "progress_age_seconds": 2.9,
-      "progress_is_current_attempt": true,
-      "slot": 3
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "a8f75a582ffeb335b16164ba19a08ae7ec8fb0ccf3d097b6d0cbbaaaadd74b85",
+      "attempt_token": "96a5575aa063a6ae18884aaaa671f319dbda012fe611118597c3180437a2a92e",
       "current_error": null,
       "historical_failures": 0,
       "job_id": "775288",
-      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-68889cc07ddd",
+      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-f1d07b7ea933",
       "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T22:53:42Z",
+      "last_numerical_advance_utc": "2026-10-26T22:56:04Z",
       "numerical_advance_age_seconds": 0.0,
       "numerical_progress": {
-        "attempt_token": "a8f75a582ffeb335b16164ba19a08ae7ec8fb0ccf3d097b6d0cbbaaaadd74b85",
-        "budget": 8,
-        "session": 389,
+        "attempt_token": "96a5575aa063a6ae18884aaaa671f319dbda012fe611118597c3180437a2a92e",
+        "budget": 12,
+        "session": 300,
         "sessions_total": 396,
         "stage": "meta_train_prefix_to_future",
         "status": "BUILDING_TRAINING_PAIRS",
-        "updated_utc": "2026-10-26T22:53:41Z"
+        "updated_utc": "2026-10-26T22:56:00Z"
       },
       "phase": "RUNNING",
-      "progress_age_seconds": 1.9,
+      "progress_age_seconds": 4.3,
       "progress_is_current_attempt": true,
       "slot": 2
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "da8c3ee8d403b6bde54d751a4aed41d638767f58832b6d345653f5ed980e481b",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775289",
+      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-2e9c29541969",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T22:56:04Z",
+      "numerical_advance_age_seconds": 0.0,
+      "numerical_progress": {
+        "attempt_token": "da8c3ee8d403b6bde54d751a4aed41d638767f58832b6d345653f5ed980e481b",
+        "budget": 16,
+        "session": 187,
+        "sessions_total": 396,
+        "stage": "meta_train_prefix_to_future",
+        "status": "BUILDING_TRAINING_PAIRS",
+        "updated_utc": "2026-10-26T22:56:00Z"
+      },
+      "phase": "RUNNING",
+      "progress_age_seconds": 4.3,
+      "progress_is_current_attempt": true,
+      "slot": 3
     },
     {
       "attempt": 1,
@@ -195,7 +193,7 @@
       "key": "operator_train-meta_train-operator-s20261018-582a71fd8b2b",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T16:45:51Z",
-      "numerical_advance_age_seconds": 22071.7,
+      "numerical_advance_age_seconds": 22213.1,
       "numerical_progress": {
         "attempt_token": "81945b4cb43740885ce48bb3b9f8f6b33dd762b4e734b713e266f0ffad682b77",
         "session": 396,
@@ -205,7 +203,7 @@
         "updated_utc": "2026-10-26T16:45:40Z"
       },
       "phase": "BLOCKED_CONFIGURATION",
-      "progress_age_seconds": 22082.9,
+      "progress_age_seconds": 22224.3,
       "progress_is_current_attempt": true,
       "slot": 1
     },
@@ -240,7 +238,7 @@
       "key": "operator_train-meta_train-operator-s20261020-817f22660e10",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T18:50:36Z",
-      "numerical_advance_age_seconds": 14586.1,
+      "numerical_advance_age_seconds": 14727.5,
       "numerical_progress": {
         "attempt_token": "e9cbda38a0cfe8f92573a169626e4214e4b86fd23ec9adb31fa0666f226f2994",
         "session": 396,
@@ -250,7 +248,7 @@
         "updated_utc": "2026-10-26T18:49:23Z"
       },
       "phase": "BLOCKED_CONFIGURATION",
-      "progress_age_seconds": 14659.9,
+      "progress_age_seconds": 14801.3,
       "progress_is_current_attempt": true,
       "slot": 2
     },
@@ -272,6 +270,52 @@
     },
     {
       "attempt": 1,
+      "attempt_token": "65891b777b9662431a74a2c10f5809380420448fae9cadc8c52639f9b2fccff1",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775289",
+      "key": "evaluate-meta_validation-operator_no_noise_tuned-s20261020-726e385674a4",
+      "kind": "evaluate",
+      "last_numerical_advance_utc": "2026-10-26T22:54:39Z",
+      "numerical_advance_age_seconds": 85.3,
+      "numerical_progress": {
+        "attempt_token": "65891b777b9662431a74a2c10f5809380420448fae9cadc8c52639f9b2fccff1",
+        "session": 485,
+        "sessions_total": 485,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T22:54:48Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 3
+    },
+    {
+      "attempt": 1,
+      "attempt_token": "a8f75a582ffeb335b16164ba19a08ae7ec8fb0ccf3d097b6d0cbbaaaadd74b85",
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": "775288",
+      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-68889cc07ddd",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": "2026-10-26T22:53:47Z",
+      "numerical_advance_age_seconds": 137.3,
+      "numerical_progress": {
+        "attempt_token": "a8f75a582ffeb335b16164ba19a08ae7ec8fb0ccf3d097b6d0cbbaaaadd74b85",
+        "session": 396,
+        "sessions_total": 396,
+        "stage": "complete",
+        "status": "COMPLETE",
+        "updated_utc": "2026-10-26T22:54:16Z"
+      },
+      "phase": "COMPLETE",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": 2
+    },
+    {
+      "attempt": 1,
       "attempt_token": "871b69b9bd28742c7104fe8094cd649fed505e7369fc15acd4f9e8a37919685c",
       "current_error": null,
       "historical_failures": 0,
@@ -279,7 +323,7 @@
       "key": "operator_train-meta_train-operator_erm_tuned-s20261018-75b637c9abc7",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T22:49:57Z",
-      "numerical_advance_age_seconds": 225.2,
+      "numerical_advance_age_seconds": 366.8,
       "numerical_progress": {
         "attempt_token": "871b69b9bd28742c7104fe8094cd649fed505e7369fc15acd4f9e8a37919685c",
         "session": 396,
@@ -302,7 +346,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-89ca4b48d938",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T22:49:35Z",
-      "numerical_advance_age_seconds": 247.4,
+      "numerical_advance_age_seconds": 389.1,
       "numerical_progress": {
         "attempt_token": "fcd065eecbcbd7e7df0aba0b9c4ed21359d2c0ff95495b019bbaf2b11ad21582",
         "session": 396,
@@ -325,7 +369,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-c77fb38bf4ee",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T22:46:26Z",
-      "numerical_advance_age_seconds": 436.2,
+      "numerical_advance_age_seconds": 577.8,
       "numerical_progress": {
         "attempt_token": "acd435c4647a758bcc6a9ae215fd8da25ccba855513f645ebd890170d2c2d1c2",
         "session": 396,
@@ -348,7 +392,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-fee2469d40f0",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T22:45:41Z",
-      "numerical_advance_age_seconds": 481.0,
+      "numerical_advance_age_seconds": 622.7,
       "numerical_progress": {
         "attempt_token": "8ff6b4a593823d571888bfab1defdf8f160d98a1017980b088d6b1d4ddbb4734",
         "session": 396,
@@ -371,7 +415,7 @@
       "key": "evaluate-meta_validation-operator_no_noise_tuned-s20261019-3aca2cab4929",
       "kind": "evaluate",
       "last_numerical_advance_utc": "2026-10-26T22:42:48Z",
-      "numerical_advance_age_seconds": 654.6,
+      "numerical_advance_age_seconds": 796.2,
       "numerical_progress": {
         "attempt_token": "b4102310e71e20b2fe859570060a1a66e7927ff9754db4907e4e81cdabac70b8",
         "session": 485,
@@ -394,7 +438,7 @@
       "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-5f9c5aeecc1a",
       "kind": "operator_train",
       "last_numerical_advance_utc": "2026-10-26T22:42:15Z",
-      "numerical_advance_age_seconds": 687.7,
+      "numerical_advance_age_seconds": 829.3,
       "numerical_progress": {
         "attempt_token": "07b579b9dd1c406f076ecf77b32b64b68eba4ca725a417da70b10113df5424fd",
         "session": 396,
@@ -407,84 +451,6 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": 3
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "c1bd297d83572694da34b9d330213e020d1ed76f9667c7baf429a4e3ca9e4323",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775289",
-      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261020-8bcd2df9ce5e",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T22:39:00Z",
-      "numerical_advance_age_seconds": 882.0,
-      "numerical_progress": {
-        "attempt_token": "c1bd297d83572694da34b9d330213e020d1ed76f9667c7baf429a4e3ca9e4323",
-        "session": 396,
-        "sessions_total": 396,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T22:39:03Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 3
-    },
-    {
-      "attempt": 1,
-      "attempt_token": "57e3ff4a16b7abbcf747359b3f774d8b74ed4c292143588ffc31af461768c9df",
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": "775288",
-      "key": "operator_train-meta_train-operator_no_noise_tuned-s20261019-8a3ef853fa46",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": "2026-10-26T22:38:05Z",
-      "numerical_advance_age_seconds": 937.3,
-      "numerical_progress": {
-        "attempt_token": "57e3ff4a16b7abbcf747359b3f774d8b74ed4c292143588ffc31af461768c9df",
-        "session": 396,
-        "sessions_total": 396,
-        "stage": "complete",
-        "status": "COMPLETE",
-        "updated_utc": "2026-10-26T22:38:06Z"
-      },
-      "phase": "COMPLETE",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": 2
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-f1d07b7ea933",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
-    },
-    {
-      "attempt": 0,
-      "attempt_token": null,
-      "current_error": null,
-      "historical_failures": 0,
-      "job_id": null,
-      "key": "operator_train-meta_train-operator_erm_tuned-s20261018-2e9c29541969",
-      "kind": "operator_train",
-      "last_numerical_advance_utc": null,
-      "numerical_advance_age_seconds": null,
-      "numerical_progress": {},
-      "phase": "NEW",
-      "progress_age_seconds": null,
-      "progress_is_current_attempt": false,
-      "slot": null
     },
     {
       "attempt": 0,
@@ -581,10 +547,42 @@
       "progress_age_seconds": null,
       "progress_is_current_attempt": false,
       "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "operator_train-meta_train-operator_erm_tuned-s20261019-4e8058bc0107",
+      "kind": "operator_train",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
+    },
+    {
+      "attempt": 0,
+      "attempt_token": null,
+      "current_error": null,
+      "historical_failures": 0,
+      "job_id": null,
+      "key": "evaluate-meta_validation-operator_erm_tuned-s20261019-62431cc79886",
+      "kind": "evaluate",
+      "last_numerical_advance_utc": null,
+      "numerical_advance_age_seconds": null,
+      "numerical_progress": {},
+      "phase": "NEW",
+      "progress_age_seconds": null,
+      "progress_is_current_attempt": false,
+      "slot": null
     }
   ],
   "total_tasks": 10270,
-  "updated_utc": "2026-10-26T22:53:42Z",
+  "updated_utc": "2026-10-26T22:56:04Z",
   "uploads": {
     "full": {
       "channel": "full",
@@ -5887,6 +5885,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58502,
+          "decoded_sha256": "43a22a22e9cd95e248352efe9eefe815ead01ef8f2d2a46e54c8907c57d702ae",
+          "encoded_bytes": 78004,
+          "encoded_sha256": "2e5c3b9c8c2eb8c85b9d3439c6117cb54cbd6b013bcc13f3ba3f162fdcb379f2",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58502,
+          "original_completion_sha256": "d44652a1efa0df3cbf117bbd70a6c0b63ad1e2823cf769a4013aab026dc7df99",
+          "original_result_sha256": "2cc64c04ee6201df1c9e833d3e0733c28f8758cba88a51912f412bf7d7206846",
+          "original_sha256": "43a22a22e9cd95e248352efe9eefe815ead01ef8f2d2a46e54c8907c57d702ae",
+          "original_source_path": "operator_train-meta_train-operator-s20261019-6e0df1eff2bb/operator.npz",
+          "original_task_identity": "eec7f99f4f11efd46087a77532adeadd5fba0a9bb4847bb980bc04d2f4c64971",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261019-6e0df1eff2bb/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58425,
           "decoded_sha256": "17b32a78d306a5f73bce40bcbf66a0601f13fc8805f3ef36a3b7229eb2b8596f",
           "encoded_bytes": 77900,
@@ -6415,6 +6429,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58540,
+          "decoded_sha256": "f67ae7c36affa1d6e919476bfac449c2e93dc608875fd52aeeb44e7bf858b839",
+          "encoded_bytes": 78056,
+          "encoded_sha256": "4f03dd72c831e6dc70dced1db34fbb163942fe6775be181c197545a968723922",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58540,
+          "original_completion_sha256": "549d402d634aca3e16ee4d8e959339ab4e727da7bc4f3ccefefbba2873bae032",
+          "original_result_sha256": "f39412fbb3bc2b368e218e4189c6cfcd512b24d807745b32386c31048f6a2bdc",
+          "original_sha256": "f67ae7c36affa1d6e919476bfac449c2e93dc608875fd52aeeb44e7bf858b839",
+          "original_source_path": "operator_train-meta_train-operator-s20261019-a89649c4758b/operator.npz",
+          "original_task_identity": "67c50f72429161934af100904afcd52c0edd172ddd873b52ba79fd6e14204f6a",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261019-a89649c4758b/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58498,
           "decoded_sha256": "0ee66213e5962a1f01e795753004ed6c75e404e942cd84f67e1deb06796890e2",
           "encoded_bytes": 78000,
@@ -6652,6 +6682,22 @@
           "original_task_identity": "7e714d1a14da81fad870fbaed6e69450efb424e21d5d5d42cc2f60fc9507c53d",
           "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
           "representation_source_path": "operator_train-meta_train-operator-s20261019-c874af3dee25/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
+          "decoded_bytes": 58513,
+          "decoded_sha256": "8076206c5e6f459ac37e7c414e3e8e4fb27963a1b7d9dc45b377b38dd3258257",
+          "encoded_bytes": 78020,
+          "encoded_sha256": "0afbb2bd2b5d35c02e7999e0749306ad29dc7dbdaf7ab724f1e6dc5642b9839c",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58513,
+          "original_completion_sha256": "0d94e6613f532ab65575ea91cb11f93abd7a12bc0bbaa67866f984238cddc6f7",
+          "original_result_sha256": "a3162ba8ae7e2018b02a863d06d1488db2c053e9b6c66a53ec52cb70164d1e04",
+          "original_sha256": "8076206c5e6f459ac37e7c414e3e8e4fb27963a1b7d9dc45b377b38dd3258257",
+          "original_source_path": "operator_train-meta_train-operator-s20261019-ce1e4fe33371/operator.npz",
+          "original_task_identity": "a678bc45c61cc5c834145dbe86fc42d892aff04bb5995274c7499d2d67de66b4",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261019-ce1e4fe33371/binary-base64/operator.npz.b64.txt",
           "strict_base64_validated": true
         },
         {
@@ -7439,6 +7485,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58572,
+          "decoded_sha256": "31870fd5e5f447e743ce2900c52fe9208e72bc3b23bdbf820380c69b4911a975",
+          "encoded_bytes": 78096,
+          "encoded_sha256": "62491fe3a8b21fc764bcb90ccfdeec226c4b50c9ded9ef475c97cf0a5cf30229",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58572,
+          "original_completion_sha256": "f063fb3a9363d457126b61aac1590b37eece4d2261111fce94b0b3cba8da1f0c",
+          "original_result_sha256": "6f00039df83206714057fe1164dc4b99e1d62af2efe8c0989fc901c0c7f3f201",
+          "original_sha256": "31870fd5e5f447e743ce2900c52fe9208e72bc3b23bdbf820380c69b4911a975",
+          "original_source_path": "operator_train-meta_train-operator-s20261020-31b9074cba38/operator.npz",
+          "original_task_identity": "336a7b3b42bf0291528dc193b354b0d45cb8775aa489beac6e4eff05603b44cc",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261020-31b9074cba38/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58440,
           "decoded_sha256": "6a8ddb19b02d7b78951a60b525e7e8e36c284b8d8c7fe3a2fa5a26205d69d270",
           "encoded_bytes": 77920,
@@ -7807,6 +7869,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58506,
+          "decoded_sha256": "d6c6ef852927c7081920fa9297094fc91f8180076c84fb09ef6f33354636b46c",
+          "encoded_bytes": 78008,
+          "encoded_sha256": "0d5c68e4a0894bd095fac152aa6a604c0d246fa833c918d724f604ffd5c3a8aa",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58506,
+          "original_completion_sha256": "e3db9afd8a4dec2e17dbab358258847da768dc4110d3d77066f10cab66ce9e98",
+          "original_result_sha256": "c928d300101baf1ae0e3ae6a9b33eca21859edca6c0bee9f8e723ce952374b1f",
+          "original_sha256": "d6c6ef852927c7081920fa9297094fc91f8180076c84fb09ef6f33354636b46c",
+          "original_source_path": "operator_train-meta_train-operator-s20261020-62658f5cf00b/operator.npz",
+          "original_task_identity": "c71650ebd1b0e5702f51922e30bcf6629d9d28d3c55988d1d2de9bd42573e10b",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261020-62658f5cf00b/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58439,
           "decoded_sha256": "2c5378ef43c85c8c38bca970cc4100116ccd5d0d5f64922f3a0534a049adb319",
           "encoded_bytes": 77920,
@@ -8047,6 +8125,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58543,
+          "decoded_sha256": "ded81fbd07b224a9da25f5969c003d4f1c902e9e3bf7d8841f51bfa005a6a8be",
+          "encoded_bytes": 78060,
+          "encoded_sha256": "8a7bbad93764daa443381b57896f61c4ab82620cf89518ea6a41f8876c8cf46a",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58543,
+          "original_completion_sha256": "d1bb21f52b020d5a48ba83ccb786ed94226b8d278859b72444285be4237ace7a",
+          "original_result_sha256": "0d4091b5fb7c7ba6b062c1e245d9ee03dc10fade6d46feec441512dec1ab780c",
+          "original_sha256": "ded81fbd07b224a9da25f5969c003d4f1c902e9e3bf7d8841f51bfa005a6a8be",
+          "original_source_path": "operator_train-meta_train-operator-s20261020-9942e6aab4d3/operator.npz",
+          "original_task_identity": "9ee2a15cd07ebf6de119b062490399d005a60a3e67bf02bd4c407a4dfcc5121e",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261020-9942e6aab4d3/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58544,
           "decoded_sha256": "180d81d477f20b960e4e2cbb4a7f27daf6d5ce39a309d55cf231d858a4416ed4",
           "encoded_bytes": 78060,
@@ -8223,6 +8317,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58540,
+          "decoded_sha256": "b88e5702c4ad88fdb14f0aa8ab844d9bc57badc79379811e288dfc0c1a9cbd4a",
+          "encoded_bytes": 78056,
+          "encoded_sha256": "de16223656c471dff88a3f4280f5b3d8ecf1f5f6831d9a6f89e3490d862e5db3",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58540,
+          "original_completion_sha256": "c005ea8f9718a70dd5d3419aaa074140ae7001650543197ffd1b649630a2d6ce",
+          "original_result_sha256": "162d86447259618ba411a31a4dba8da18edb99a14828c2412ab6a82f6d43414a",
+          "original_sha256": "b88e5702c4ad88fdb14f0aa8ab844d9bc57badc79379811e288dfc0c1a9cbd4a",
+          "original_source_path": "operator_train-meta_train-operator-s20261020-b4e8801e35e1/operator.npz",
+          "original_task_identity": "1bfa54b9417523ea8a56ab0ea46ab0e4d5477cd098ca7f73fad54d9bc209b059",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261020-b4e8801e35e1/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58525,
           "decoded_sha256": "e8791777448fdbed76e716ef72c0a981d96f0508b1f6f477bc799677c551005b",
           "encoded_bytes": 78036,
@@ -8348,6 +8458,22 @@
           "original_task_identity": "39416e5831c3eee96a52e96f96638a57a9f1edfbb8d910f9cdc3b9abee40c1cf",
           "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
           "representation_source_path": "operator_train-meta_train-operator-s20261020-ccedb6d8950c/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
+          "decoded_bytes": 58482,
+          "decoded_sha256": "7a894f6aa874f93fa023b95155cbe4c6d7d0d41a8a18828e24adfe7145885390",
+          "encoded_bytes": 77976,
+          "encoded_sha256": "7e2683fde073017ef1e8a7b12e8a88b77540622fc4cf431f6b967632feb896ec",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58482,
+          "original_completion_sha256": "6aeae7b1d514755e2b46edb6239318b65ce5959e542a824e19b84024e52eeaa0",
+          "original_result_sha256": "b531f6db6f635f94740cb9d5b4a015560f62d4b3406428a13e3d08a0a60dcf0f",
+          "original_sha256": "7a894f6aa874f93fa023b95155cbe4c6d7d0d41a8a18828e24adfe7145885390",
+          "original_source_path": "operator_train-meta_train-operator-s20261020-cd60fe53c151/operator.npz",
+          "original_task_identity": "0adebe0a6e678ca7f5631094daf3b0465a15c558ea37c897081a4b3fae8e2eea",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator-s20261020-cd60fe53c151/binary-base64/operator.npz.b64.txt",
           "strict_base64_validated": true
         },
         {
@@ -9391,6 +9517,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58499,
+          "decoded_sha256": "4be061efc268fa1e455da5e1b5f38502c57659312b2a8945b6bc136fb8a4b2c3",
+          "encoded_bytes": 78000,
+          "encoded_sha256": "54e34c21a3f392b8e18c30ad3675a4277269953b53f99eeac059a4b9e56ca66d",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58499,
+          "original_completion_sha256": "0b837e5524909f4e28c6ca99ed99677269fcdc2076d0a5da696e5c8333feba9a",
+          "original_result_sha256": "9e4cdefbf1be3722d86f23ba91fa3f3e0f8564a0bc25cab79fb07a64d5b2ff54",
+          "original_sha256": "4be061efc268fa1e455da5e1b5f38502c57659312b2a8945b6bc136fb8a4b2c3",
+          "original_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-4ece0e00b976/operator.npz",
+          "original_task_identity": "d33cfebce15e6f6e024f27afd24ea057ec426ce2198547518a84ec9edb5bccdf",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-4ece0e00b976/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58479,
           "decoded_sha256": "801743986e88d347f87fb6e455aa2dced96b0c729b61eb78fd86f63d1b9472a2",
           "encoded_bytes": 77972,
@@ -9404,6 +9546,38 @@
           "original_task_identity": "214dc04561cf8cda1e3f01bbcfa01708603d16032302c28357275fdbbe75b1a3",
           "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
           "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-4fe0b1abab35/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
+          "decoded_bytes": 58520,
+          "decoded_sha256": "7b8953010c40265bb1e22b112a2a2fd23bf4bd0ccd40b29b2f55ddaad9c6864e",
+          "encoded_bytes": 78028,
+          "encoded_sha256": "55ac3a186e5a31db01c6224ae555ad60cf60cc5a0a90a7b55b46b34db5ecf630",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58520,
+          "original_completion_sha256": "4b4cc7098b329788388c4b5ed97351664b2dfc7eab1b8b68da71b43f763b41d5",
+          "original_result_sha256": "fb1690406ec51c0c5ffc37989ba45b506aca2833227dac78badce2d24ff8f418",
+          "original_sha256": "7b8953010c40265bb1e22b112a2a2fd23bf4bd0ccd40b29b2f55ddaad9c6864e",
+          "original_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-5c07fae70e53/operator.npz",
+          "original_task_identity": "ec7780b7efd97a25c90bac9f86fe702b852e63cfbc8e14bd6ef63ecf13952e45",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-5c07fae70e53/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
+          "decoded_bytes": 58476,
+          "decoded_sha256": "ec0d408b2ae3cebcb6cf1fc207d32a26ddf9ece449e88a4212a464c46b572ad9",
+          "encoded_bytes": 77968,
+          "encoded_sha256": "22d121cc75ab333bdece77ceddc8a793bf7acfb6df04692e750e00473f607128",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58476,
+          "original_completion_sha256": "e1882cdeabc70e8c3aac3d644d4ce21713a6a4a0c2005f1ade3bf684dd00764e",
+          "original_result_sha256": "b92174ecc0b0243a58538e6c1212aa37f61643f80a1165eae992c6c2bffd7e4c",
+          "original_sha256": "ec0d408b2ae3cebcb6cf1fc207d32a26ddf9ece449e88a4212a464c46b572ad9",
+          "original_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-61ac8d7fe507/operator.npz",
+          "original_task_identity": "0a92b93a2b595c44ec28678bfa4fde2be685be10420b91fad37a11eeaf044be1",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-61ac8d7fe507/binary-base64/operator.npz.b64.txt",
           "strict_base64_validated": true
         },
         {
@@ -9455,6 +9629,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58420,
+          "decoded_sha256": "abdd866dd7fee52fc904157a705a902cae5376e3c5d3c01234f7e37927588b31",
+          "encoded_bytes": 77896,
+          "encoded_sha256": "73f9617eccf201a3a12e2b587ba61a5f53518f5bd38d006746150a2ac33433b4",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58420,
+          "original_completion_sha256": "743585a54a9ccc584f8c079333bbeac9963f558e98017dfd23a908f27097fe1b",
+          "original_result_sha256": "e4277ffc18171b20a4ba33062fe95f21b4a97935b1f071e7a73102cd8276cb88",
+          "original_sha256": "abdd866dd7fee52fc904157a705a902cae5376e3c5d3c01234f7e37927588b31",
+          "original_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-b770e208109c/operator.npz",
+          "original_task_identity": "dcf8dce9a02c4e66b4e37727f3b43bc0cbedca456165ed8c5e469b0fe61b9368",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-b770e208109c/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58498,
           "decoded_sha256": "0ee736fb8b853b41864e41f335e880bd867d9c42c37a28b7d10cae3133a3f597",
           "encoded_bytes": 78000,
@@ -9484,6 +9674,22 @@
           "original_task_identity": "da12d47dc4353e8509ca16bc321445c472f3eed1851f81c7fb14a796108c17ad",
           "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
           "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-d8f4aa0508d0/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
+          "decoded_bytes": 58430,
+          "decoded_sha256": "6554c4112881038601462c5c5a24245ecd99d7d537a398bb3abedf8bd6ddc3f6",
+          "encoded_bytes": 77908,
+          "encoded_sha256": "8dd4e695a5d6427101e8d621245a03fba11d853ad8f6397f02ee3e2a067132ae",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58430,
+          "original_completion_sha256": "fdfe53e09f220cc4142541a1baaaf32417f9fb9692163f5cf9e76c266271a515",
+          "original_result_sha256": "483fc5d6fd2bfd83cf91b3738740147b6a803a1499afc361cebc54a75e852529",
+          "original_sha256": "6554c4112881038601462c5c5a24245ecd99d7d537a398bb3abedf8bd6ddc3f6",
+          "original_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-e8b6225ddea7/operator.npz",
+          "original_task_identity": "da473774285a7771d64190a054cc40e082b0a7e317a5e4c1b61d315e887809da",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261018-e8b6225ddea7/binary-base64/operator.npz.b64.txt",
           "strict_base64_validated": true
         },
         {
@@ -9647,6 +9853,22 @@
           "strict_base64_validated": true
         },
         {
+          "decoded_bytes": 58425,
+          "decoded_sha256": "242693c18cb3287afe883514839db8c7f7af8f3c566c501e9adbda636cbdcd5b",
+          "encoded_bytes": 77900,
+          "encoded_sha256": "8eaeb963433f57d653a27d5cb22680677e2710a9aeae98d8c47413800b652ef9",
+          "encoding": "base64-rfc4648-ascii-no-newlines",
+          "original_bytes": 58425,
+          "original_completion_sha256": "4e876823edff2d1cf46932b7eaa410fa22db396c872bb5bf63f858558656b706",
+          "original_result_sha256": "2704a131e325ef318cce97013ce959d36550bda21d7271fc8b68d9ed6c1b3786",
+          "original_sha256": "242693c18cb3287afe883514839db8c7f7af8f3c566c501e9adbda636cbdcd5b",
+          "original_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261019-fbb352853b4c/operator.npz",
+          "original_task_identity": "1ef6b5cc468204b1aef85edabe39a0a57deefee021ed249fca2846e78eb2cc9a",
+          "reconstruction": "Concatenate the representation source-manifest fragments in number order without separators. Decode the resulting ASCII bytes with RFC4648 base64 and strict validation. Verify original_bytes and original_sha256 before writing the declared original_source_path under a chosen restore directory.",
+          "representation_source_path": "operator_train-meta_train-operator_no_noise_tuned-s20261019-fbb352853b4c/binary-base64/operator.npz.b64.txt",
+          "strict_base64_validated": true
+        },
+        {
           "decoded_bytes": 58434,
           "decoded_sha256": "a682cbc713f914a70da626ad09b8b61e41eae4c279a0642919a584ced66990e0",
           "encoded_bytes": 77912,
@@ -9807,30 +10029,30 @@
           "strict_base64_validated": true
         }
       ],
-      "bytes": 2569066781,
+      "bytes": 2655102085,
       "channel": "paper",
       "collection_status": "PARTIAL",
-      "commit": "499fbc9e94630b6047a359b7c61fbf7cc567f912",
-      "complete_tasks": 493,
+      "commit": "28f6faa4eea8a2db53baadfa549258d21d1505f9",
+      "complete_tasks": 509,
       "exact_original_bytes": true,
       "exact_original_bytes_scope": "text raw; binary after lossless base64 decode",
-      "files": 3370,
+      "files": 3480,
       "full_raw_results_uploaded": false,
       "incremental_immutable_task_captures": true,
-      "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/paper-data/2fb23d1015db5e1519d86bff7559555a438a64a7c7ec2708dbfa343bd485c51d/manifest.json",
+      "manifest": "results/paper3/round-11/stages/campaign/97e4cadb17278532/paper-data/7306b78efc221fb37e25a5cc58fdf0731d6f7d129b07585a3631550d2eb8537f/manifest.json",
       "original_scientific_files_modified": false,
       "paper_sidecar_repair_id": "paper3-r11-paper-binary-base64-sidecar-v1",
       "recipe_sha256": "97e4cadb17278532f530d5c40ec7c8fbf928ebe308f60e5d9ada5eec7a0a864b",
       "remote_complete_blob_GET_SHA256_verified": true,
       "round": 11,
       "schema_version": "paper3-r11-incremental-paper-pointer-v1",
-      "snapshot_id": "2fb23d1015db5e1519d86bff7559555a438a64a7c7ec2708dbfa343bd485c51d",
+      "snapshot_id": "7306b78efc221fb37e25a5cc58fdf0731d6f7d129b07585a3631550d2eb8537f",
       "stage": "campaign",
       "status": "PAPER_DATA_PARTIAL_FILES_VERIFIED",
       "total_tasks": 10270,
       "training_controlled": false,
       "transport_representations_changed": true,
-      "updated_utc": "2026-10-26T22:29:48Z"
+      "updated_utc": "2026-10-26T22:55:00Z"
     }
   }
 }
