@@ -1,0 +1,2352 @@
+{
+  "schema_version": "paper3-r1-r11-visible-diagnostic-v1",
+  "sampled_utc": "2026-10-27T11:13:36Z",
+  "root": "/public/home/zhuziyuan/projects/paper3",
+  "scientific_jobs_signalled": 0,
+  "jobs_submitted": 0,
+  "plan_or_checkpoint_files_changed": 0,
+  "report_only_memory_repair_applied": false,
+  "r1_progress": {
+    "status": "RUNNING_OR_QUEUED",
+    "phase": "DEVELOPMENT_SCREENING",
+    "updated_utc": "2026-10-27T11:13:24Z",
+    "task_observation_valid": true,
+    "counts": {
+      "COMPLETE": 186,
+      "WAITING_DEPENDENCY_OR_SLOT": 20,
+      "RUNNING": 1
+    },
+    "completed_by_kind": {
+      "calibration_profile": 13,
+      "classical": 1,
+      "development": 109,
+      "development_selection": 3,
+      "meta_engineering": 5,
+      "meta_screening": 45,
+      "meta_selection": 5,
+      "pilot": 1,
+      "reference": 3,
+      "source": 1
+    },
+    "jobs": [
+      {
+        "attempt": 2,
+        "cpus": 12,
+        "gpus": 1,
+        "held_requested": false,
+        "job_id": "772906",
+        "memory": "43G",
+        "node": "gpu1",
+        "partition": "hpc_gpu",
+        "queue_reason": "gpu1",
+        "slot": 0,
+        "slurm_state": "RUNNING",
+        "status": "ACKNOWLEDGED"
+      },
+      {
+        "attempt": 2,
+        "cpus": 12,
+        "gpus": 1,
+        "held_requested": false,
+        "job_id": "772904",
+        "memory": "43G",
+        "node": "gpu2",
+        "partition": "hpc_gpu",
+        "queue_reason": "gpu2",
+        "slot": 1,
+        "slurm_state": "RUNNING",
+        "status": "ACKNOWLEDGED"
+      },
+      {
+        "attempt": 2,
+        "cpus": 12,
+        "gpus": 1,
+        "held_requested": false,
+        "job_id": "772905",
+        "memory": "42G",
+        "node": "gpu2",
+        "partition": "hpc_gpu",
+        "queue_reason": "gpu2",
+        "slot": 2,
+        "slurm_state": "RUNNING",
+        "status": "ACKNOWLEDGED"
+      }
+    ],
+    "active_or_retained_error_tasks": [
+      {
+        "affinity_slot": 0,
+        "error_type": "ExitCode75",
+        "expected_receipt": "runs/training_campaign_v1/profiles/B5/receipt.json",
+        "job_id": "772906",
+        "key": "profile-B5",
+        "kind": "calibration_profile",
+        "method": "B5",
+        "previous_running_record_was_stale": true,
+        "progress_path": "runs/training_campaign_v1/profiles/B5/progress.json",
+        "retry_at": 1793093779.0703108,
+        "serial": false,
+        "slot": 0,
+        "status": "RUNNING"
+      }
+    ]
+  },
+  "workers": [
+    {
+      "status": "OK",
+      "value": {
+        "slot": 0,
+        "job_id": "772906",
+        "pid": 18219,
+        "phase": "ACTION_RUNNING",
+        "updated_utc": "2026-10-27T11:13:21Z",
+        "updated_at": 1793099601.1248093,
+        "child_pid": 7139,
+        "error": null,
+        "action_key": "profile-B5",
+        "action_kind": "calibration_profile",
+        "expected_receipt": "runs/training_campaign_v1/profiles/B5/receipt.json",
+        "action_progress": [
+          {
+            "file": "runs/training_campaign_v1/profiles/B5/progress.json",
+            "age_seconds": 450.1,
+            "values": {}
+          }
+        ],
+        "claim_token": "8c5020e88950475fb83fc4d232a0bb28"
+      }
+    },
+    {
+      "status": "OK",
+      "value": {
+        "slot": 1,
+        "job_id": "772904",
+        "pid": 40297,
+        "phase": "WAITING_READY_ACTION",
+        "updated_utc": "2026-10-27T11:13:31Z",
+        "updated_at": 1793099611.9606416,
+        "child_pid": null,
+        "error": null
+      }
+    },
+    {
+      "status": "UNAVAILABLE",
+      "code": 1,
+      "reason": "Traceback (most recent call last):\n  File \"<string>\", line 7, in <module>\nOSError: [Errno 5] Input/output error\n",
+      "oversized": false
+    }
+  ],
+  "r1_controller": {
+    "status": "OK",
+    "value": {
+      "additional_gpu_jobs_beyond_original_slots": 0,
+      "completed_claims_reconciled": [],
+      "live_allocations_signalled": 0,
+      "original_scientific_sources_changed": false,
+      "parallel_policy": {
+        "eligible_primary_slots": [
+          0,
+          1,
+          2
+        ],
+        "hardware_equivalence_claimed_for_fallback": false,
+        "legacy_primary_slot0_fallback": false,
+        "native_action_identities_changed": false,
+        "phase_barriers_preserved": true,
+        "primary_timing_hardware_pooled": false,
+        "repair_id": "paper3-r1-existing-allocation-parallel-v1",
+        "routing_primary_slots": [
+          0,
+          1,
+          2
+        ],
+        "routing_rejections": {},
+        "serial_selections_preserved": true
+      },
+      "phase": "DEVELOPMENT_SCREENING",
+      "repair_id": "paper3-r1-existing-allocation-parallel-v1",
+      "scheduler": {
+        "active_job_ids": [
+          "772904",
+          "772905",
+          "772906"
+        ],
+        "controller_status": "RUNNING",
+        "inflight_jobs": 3,
+        "jobs": [
+          {
+            "attempt": 2,
+            "cpus": 12,
+            "gpus": 1,
+            "held_requested": false,
+            "job_id": "772906",
+            "memory": "43G",
+            "node": "gpu1",
+            "partition": "hpc_gpu",
+            "queue_reason": "gpu1",
+            "slot": 0,
+            "slurm_state": "RUNNING",
+            "status": "ACKNOWLEDGED"
+          },
+          {
+            "attempt": 2,
+            "cpus": 12,
+            "gpus": 1,
+            "held_requested": false,
+            "job_id": "772904",
+            "memory": "43G",
+            "node": "gpu2",
+            "partition": "hpc_gpu",
+            "queue_reason": "gpu2",
+            "slot": 1,
+            "slurm_state": "RUNNING",
+            "status": "ACKNOWLEDGED"
+          },
+          {
+            "attempt": 2,
+            "cpus": 12,
+            "gpus": 1,
+            "held_requested": false,
+            "job_id": "772905",
+            "memory": "42G",
+            "node": "gpu2",
+            "partition": "hpc_gpu",
+            "queue_reason": "gpu2",
+            "slot": 2,
+            "slurm_state": "RUNNING",
+            "status": "ACKNOWLEDGED"
+          }
+        ],
+        "marker": "paper3r1p-84c2da292f724ce9",
+        "resources": {
+          "cpus_total": 36,
+          "excluded_nodes": "",
+          "gpus_total": 3,
+          "jobs": 3,
+          "memory_total": "128G"
+        },
+        "terminal_job_ids": [
+          "772076",
+          "772077",
+          "772078"
+        ]
+      },
+      "status": "RUNNING",
+      "updated_utc": "2026-10-27T11:13:24Z"
+    }
+  },
+  "r1_refresh_policy": {
+    "status": "OK",
+    "value": {
+      "allocations_cancelled": 0,
+      "automatic_child_refresh": false,
+      "completed_results_reset": 0,
+      "hotfix_id": "paper3-r1-refresh-disabled-v1",
+      "launch_token": "e786367f3f0d50ed1421293f068ea5c2389800f0ff254801877b53bec3edd781",
+      "management_refresh_steps_signalled": 0,
+      "management_signals": [
+        "SIGTERM"
+      ],
+      "manager_pid": 902367,
+      "old_manager_pid": 657557,
+      "old_package": "/public/home/zhuziyuan/paper3-r1-full-repair/2bfd664251ee5d1bcaf5",
+      "old_package_files_changed": 0,
+      "old_refresh_step_pids": [],
+      "old_refresh_steps_remaining": 0,
+      "overlay": "/public/home/zhuziyuan/paper3-r1-full-repair/refresh-fixed-43aeea5f1714c8171352",
+      "scientific_children_signalled": 0,
+      "scientific_files_changed": 0,
+      "start_ticks": "243881858",
+      "status": "R1_REFRESH_HOTFIX_CONTROLLER_READY",
+      "supervisor_sha256": "43aeea5f1714c8171352b3ec2c86a2e907c8b49d95431b96da33fe8b9f8db0c7",
+      "updated_utc": "2026-10-27T02:06:01Z",
+      "work": "/public/home/zhuziyuan/paper3-r1-full-repair/work"
+    }
+  },
+  "r1_claims": {
+    "status": "OK",
+    "value": {
+      "profile-B5": {
+        "slot": 0,
+        "job_id": "772906",
+        "pid": 18219,
+        "token": "8c5020e88950475fb83fc4d232a0bb28",
+        "claimed_utc": 1793098891.5875516,
+        "serial": false,
+        "action_kind": "calibration_profile"
+      }
+    }
+  },
+  "b5_backoff": {
+    "retry_after": 1793093779.0703108,
+    "error": "ExitCode75",
+    "job_id": "772906",
+    "attempt_token": "963afa119b434194a0bd2ed192337777"
+  },
+  "b5_progress": {
+    "status": "OK",
+    "value": {
+      "identity_sha256": "3a22efc255ca65bf5e9abd4f4fcc0477ad3626d0538f19ad622108ef2b3516e5",
+      "fit_attempts_dispatched": 9,
+      "completed": {
+        "c392e1651efee1252ed3133b012fc2360a9a0f6ed6153375654fbbeff1455596": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 0,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 2,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/c392e1651efee1252ed3133b012fc2360a9a0f6ed6153375654fbbeff1455596/attempt-000002/candidate_state.json",
+            "sha256": "8c8d85c536bbe710528560b00ab14883a0add1ccda96e8ae21194b1e1fd396a6"
+          }
+        },
+        "b8aa0b33565f9f67cc247f91ceb6352385930df7670cd415008969773bee5738": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 1,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 3,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/b8aa0b33565f9f67cc247f91ceb6352385930df7670cd415008969773bee5738/attempt-000003/candidate_state.json",
+            "sha256": "cca46aec86e4ae413fd8efa9399a36d8e2a6622bd526aefd586fab16510f0f7b"
+          }
+        },
+        "d20070a29f3d7231222afb0f35609f5096bd6571f5e38506129293479f0df777": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 2,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 4,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/d20070a29f3d7231222afb0f35609f5096bd6571f5e38506129293479f0df777/attempt-000004/candidate_state.json",
+            "sha256": "ae1d6d67f8c1544ec267d9680f233993f1974faaff51790dd51a1b200a9655e7"
+          }
+        },
+        "fadb668e0319588e762f50a45cf0cf27841012830ef61fff8934501c19d139ac": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 3,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 5,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/fadb668e0319588e762f50a45cf0cf27841012830ef61fff8934501c19d139ac/attempt-000005/candidate_state.json",
+            "sha256": "6db5b003f0818258d28d42d62c0cf4c36d204832bc9ff98308507087e5607ccc"
+          }
+        },
+        "67e62ebe9212e5feb91f6da9d0ee23ce147a1e3d90503b255865da35fd3f4702": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 4,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 6,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/67e62ebe9212e5feb91f6da9d0ee23ce147a1e3d90503b255865da35fd3f4702/attempt-000006/candidate_state.json",
+            "sha256": "ee52cb60d6e86bca6845ae65fb6a6cc47b23ff527a200b1b353110edc98f5a66"
+          }
+        },
+        "e287b437b05912b2b2d68a79e72377e854913c7f5acb67224610ac63e4763d5c": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 5,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 8,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/e287b437b05912b2b2d68a79e72377e854913c7f5acb67224610ac63e4763d5c/attempt-000008/candidate_state.json",
+            "sha256": "9d19c391d4bfd5f186bf2de955b1363c35be983ecc039df1f12db0c538dfa8ce"
+          }
+        },
+        "57e212aa7d5019eb62a38ac3df4905164e6978487a710e740e981511455cc210": {
+          "job": {
+            "method": "B5",
+            "configuration_index": 6,
+            "seed": 20261018,
+            "phase": "screening"
+          },
+          "attempt": 9,
+          "candidate_state": {
+            "path": "runs/training_campaign_v1/profiles/B5/fits/57e212aa7d5019eb62a38ac3df4905164e6978487a710e740e981511455cc210/attempt-000009/candidate_state.json",
+            "sha256": "d6fcba1afff1aee5d5f29fc71bc226f027c6e473a3417d649ac62c2f307ec054"
+          }
+        }
+      },
+      "active": null,
+      "initial_fit_attempt_limit": 9,
+      "fit_attempt_limit": 9,
+      "fit_limit_amendments": [],
+      "initial_gpu_limit_seconds": 443400,
+      "gpu_limit_seconds": 35028600,
+      "gpu_limit_amendments": [
+        {
+          "previous": 443400,
+          "new": 886800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 886800,
+          "new": 1330200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 1330200,
+          "new": 1773600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 1773600,
+          "new": 2217000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 2217000,
+          "new": 2660400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 2660400,
+          "new": 3103800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 3103800,
+          "new": 3547200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 3547200,
+          "new": 3990600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 3990600,
+          "new": 4434000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 4434000,
+          "new": 4877400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 4877400,
+          "new": 5320800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 5320800,
+          "new": 5764200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 5764200,
+          "new": 6207600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 6207600,
+          "new": 6651000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 6651000,
+          "new": 7094400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 7094400,
+          "new": 7537800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 7537800,
+          "new": 7981200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 7981200,
+          "new": 8424600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 8424600,
+          "new": 8868000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 8868000,
+          "new": 9311400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 9311400,
+          "new": 9754800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 9754800,
+          "new": 10198200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 10198200,
+          "new": 10641600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 10641600,
+          "new": 11085000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 11085000,
+          "new": 11528400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 11528400,
+          "new": 11971800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 11971800,
+          "new": 12415200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 12415200,
+          "new": 12858600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 12858600,
+          "new": 13302000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 13302000,
+          "new": 13745400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 13745400,
+          "new": 14188800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 14188800,
+          "new": 14632200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 14632200,
+          "new": 15075600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 15075600,
+          "new": 15519000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 15519000,
+          "new": 15962400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 15962400,
+          "new": 16405800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 16405800,
+          "new": 16849200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 16849200,
+          "new": 17292600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 17292600,
+          "new": 17736000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 17736000,
+          "new": 18179400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 18179400,
+          "new": 18622800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 18622800,
+          "new": 19066200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 19066200,
+          "new": 19509600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 19509600,
+          "new": 19953000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 19953000,
+          "new": 20396400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 20396400,
+          "new": 20839800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 20839800,
+          "new": 21283200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 21283200,
+          "new": 21726600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 21726600,
+          "new": 22170000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 22170000,
+          "new": 22613400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 22613400,
+          "new": 23056800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 23056800,
+          "new": 23500200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 23500200,
+          "new": 23943600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 23943600,
+          "new": 24387000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 24387000,
+          "new": 24830400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 24830400,
+          "new": 25273800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 25273800,
+          "new": 25717200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 25717200,
+          "new": 26160600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 26160600,
+          "new": 26604000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 26604000,
+          "new": 27047400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 27047400,
+          "new": 27490800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 27490800,
+          "new": 27934200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 27934200,
+          "new": 28377600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 28377600,
+          "new": 28821000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 28821000,
+          "new": 29264400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 29264400,
+          "new": 29707800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 29707800,
+          "new": 30151200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 30151200,
+          "new": 30594600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 30594600,
+          "new": 31038000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 31038000,
+          "new": 31481400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 31481400,
+          "new": 31924800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 31924800,
+          "new": 32368200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 32368200,
+          "new": 32811600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 32811600,
+          "new": 33255000,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 33255000,
+          "new": 33698400,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 33698400,
+          "new": 34141800,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 34141800,
+          "new": 34585200,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous": 34585200,
+          "new": 35028600,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        }
+      ],
+      "wall_ledger_initialized": true
+    }
+  },
+  "b5_wall_budget": {
+    "status": "OK",
+    "value": {
+      "schema_version": "paper3-operational-wall-budget-v1",
+      "identity_sha256": "3a22efc255ca65bf5e9abd4f4fcc0477ad3626d0538f19ad622108ef2b3516e5",
+      "scope": "operational_only_no_scientific_identity_change",
+      "initial_max_wall_seconds": 443400.0,
+      "max_wall_seconds": 35028600.0,
+      "durable_wall_seconds": 51287.2392844772,
+      "checkpoint_wall_high_water_seconds": 51287.2289688359,
+      "interval": {
+        "sequence": 86,
+        "identity_sha256": "3a22efc255ca65bf5e9abd4f4fcc0477ad3626d0538f19ad622108ef2b3516e5",
+        "base_wall_seconds": 51287.2289688359,
+        "start_utc_seconds": 1793099151.46246,
+        "start_monotonic_seconds": 2248982.871014001,
+        "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5",
+        "intent": "persisted_before_work",
+        "last_observed_utc_seconds": 1793099151.472744,
+        "last_observed_monotonic_seconds": 2248982.881329642
+      },
+      "next_interval_sequence": 87,
+      "clock_block": null,
+      "amendments": [
+        {
+          "previous_max_wall_seconds": 443400.0,
+          "new_max_wall_seconds": 886800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 886800.0,
+          "new_max_wall_seconds": 1330200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 1330200.0,
+          "new_max_wall_seconds": 1773600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 1773600.0,
+          "new_max_wall_seconds": 2217000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 2217000.0,
+          "new_max_wall_seconds": 2660400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 2660400.0,
+          "new_max_wall_seconds": 3103800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 3103800.0,
+          "new_max_wall_seconds": 3547200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 3547200.0,
+          "new_max_wall_seconds": 3990600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 3990600.0,
+          "new_max_wall_seconds": 4434000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 4434000.0,
+          "new_max_wall_seconds": 4877400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 4877400.0,
+          "new_max_wall_seconds": 5320800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 5320800.0,
+          "new_max_wall_seconds": 5764200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 5764200.0,
+          "new_max_wall_seconds": 6207600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 6207600.0,
+          "new_max_wall_seconds": 6651000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 6651000.0,
+          "new_max_wall_seconds": 7094400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 7094400.0,
+          "new_max_wall_seconds": 7537800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 7537800.0,
+          "new_max_wall_seconds": 7981200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 7981200.0,
+          "new_max_wall_seconds": 8424600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 8424600.0,
+          "new_max_wall_seconds": 8868000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 8868000.0,
+          "new_max_wall_seconds": 9311400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 9311400.0,
+          "new_max_wall_seconds": 9754800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 9754800.0,
+          "new_max_wall_seconds": 10198200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 10198200.0,
+          "new_max_wall_seconds": 10641600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 10641600.0,
+          "new_max_wall_seconds": 11085000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 11085000.0,
+          "new_max_wall_seconds": 11528400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 11528400.0,
+          "new_max_wall_seconds": 11971800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 11971800.0,
+          "new_max_wall_seconds": 12415200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 12415200.0,
+          "new_max_wall_seconds": 12858600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 12858600.0,
+          "new_max_wall_seconds": 13302000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 13302000.0,
+          "new_max_wall_seconds": 13745400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 13745400.0,
+          "new_max_wall_seconds": 14188800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 14188800.0,
+          "new_max_wall_seconds": 14632200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 14632200.0,
+          "new_max_wall_seconds": 15075600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 15075600.0,
+          "new_max_wall_seconds": 15519000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 15519000.0,
+          "new_max_wall_seconds": 15962400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 15962400.0,
+          "new_max_wall_seconds": 16405800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 16405800.0,
+          "new_max_wall_seconds": 16849200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 16849200.0,
+          "new_max_wall_seconds": 17292600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 17292600.0,
+          "new_max_wall_seconds": 17736000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 17736000.0,
+          "new_max_wall_seconds": 18179400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 18179400.0,
+          "new_max_wall_seconds": 18622800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 18622800.0,
+          "new_max_wall_seconds": 19066200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 19066200.0,
+          "new_max_wall_seconds": 19509600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 19509600.0,
+          "new_max_wall_seconds": 19953000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 19953000.0,
+          "new_max_wall_seconds": 20396400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 20396400.0,
+          "new_max_wall_seconds": 20839800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 20839800.0,
+          "new_max_wall_seconds": 21283200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 21283200.0,
+          "new_max_wall_seconds": 21726600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 21726600.0,
+          "new_max_wall_seconds": 22170000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 22170000.0,
+          "new_max_wall_seconds": 22613400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 22613400.0,
+          "new_max_wall_seconds": 23056800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 23056800.0,
+          "new_max_wall_seconds": 23500200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 23500200.0,
+          "new_max_wall_seconds": 23943600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 23943600.0,
+          "new_max_wall_seconds": 24387000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 24387000.0,
+          "new_max_wall_seconds": 24830400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 24830400.0,
+          "new_max_wall_seconds": 25273800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 25273800.0,
+          "new_max_wall_seconds": 25717200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 25717200.0,
+          "new_max_wall_seconds": 26160600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 26160600.0,
+          "new_max_wall_seconds": 26604000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 26604000.0,
+          "new_max_wall_seconds": 27047400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 27047400.0,
+          "new_max_wall_seconds": 27490800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 27490800.0,
+          "new_max_wall_seconds": 27934200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 27934200.0,
+          "new_max_wall_seconds": 28377600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 28377600.0,
+          "new_max_wall_seconds": 28821000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 28821000.0,
+          "new_max_wall_seconds": 29264400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 29264400.0,
+          "new_max_wall_seconds": 29707800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 29707800.0,
+          "new_max_wall_seconds": 30151200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 30151200.0,
+          "new_max_wall_seconds": 30594600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 30594600.0,
+          "new_max_wall_seconds": 31038000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 31038000.0,
+          "new_max_wall_seconds": 31481400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 31481400.0,
+          "new_max_wall_seconds": 31924800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 31924800.0,
+          "new_max_wall_seconds": 32368200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 32368200.0,
+          "new_max_wall_seconds": 32811600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 32811600.0,
+          "new_max_wall_seconds": 33255000.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 33255000.0,
+          "new_max_wall_seconds": 33698400.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 33698400.0,
+          "new_max_wall_seconds": 34141800.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 34141800.0,
+          "new_max_wall_seconds": 34585200.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        },
+        {
+          "previous_max_wall_seconds": 34585200.0,
+          "new_max_wall_seconds": 35028600.0,
+          "note": "User authorized continuous checkpoint resume on 2026-10-23. Extend operational wall/GPU time only; retain registered update counts, fit attempts, per-calibration limits, identities and cumulative charges.",
+          "scientific_identity_changed": false
+        }
+      ],
+      "recovery_events": [
+        {
+          "clock": {
+            "utc_seconds": 1793008373.664956,
+            "monotonic_seconds": 2158205.073531491,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1985.9577820301056,
+          "monotonic_elapsed_seconds": 1985.9577789283358,
+          "charged_wall_seconds": 1986.8612259160727,
+          "reasons": [],
+          "charged_increment_seconds": 1984.1814612131566,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793009438.48601,
+            "monotonic_seconds": 2159269.894592673,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1064.7965490818024,
+          "monotonic_elapsed_seconds": 1064.796539273113,
+          "charged_wall_seconds": 3051.657774997875,
+          "reasons": [],
+          "charged_increment_seconds": 788.6019414374605,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793010744.577535,
+            "monotonic_seconds": 2160575.986107151,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 808.4602370262146,
+          "monotonic_elapsed_seconds": 808.4602190311998,
+          "charged_wall_seconds": 4357.726678712759,
+          "reasons": [],
+          "charged_increment_seconds": 726.2905113459565,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793012069.509437,
+            "monotonic_seconds": 2161900.917992374,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 781.1845450401306,
+          "monotonic_elapsed_seconds": 781.1845004390925,
+          "charged_wall_seconds": 5682.635270779487,
+          "reasons": [],
+          "charged_increment_seconds": 733.258186024148,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793013128.614498,
+            "monotonic_seconds": 2162960.023066547,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1059.0769188404083,
+          "monotonic_elapsed_seconds": 1059.0769049259834,
+          "charged_wall_seconds": 6741.712189619895,
+          "reasons": [],
+          "charged_increment_seconds": 785.3517935969867,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793021894.104585,
+            "monotonic_seconds": 2171725.513152713,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1189.0278959274292,
+          "monotonic_elapsed_seconds": 1189.0279107708484,
+          "charged_wall_seconds": 11492.321526955813,
+          "reasons": [],
+          "charged_increment_seconds": 917.8767010536976,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793028634.11194,
+            "monotonic_seconds": 2178465.520500025,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 2145.1398179531097,
+          "monotonic_elapsed_seconds": 2145.1398041849025,
+          "charged_wall_seconds": 15789.080893761944,
+          "reasons": [],
+          "charged_increment_seconds": 1087.0168459322304,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793030224.1796,
+            "monotonic_seconds": 2180055.588180961,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1590.0385229587555,
+          "monotonic_elapsed_seconds": 1590.038518115878,
+          "charged_wall_seconds": 17379.1194167207,
+          "reasons": [],
+          "charged_increment_seconds": 1589.3837271449156,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793030876.612031,
+            "monotonic_seconds": 2180708.011202555,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 652.40882396698,
+          "monotonic_elapsed_seconds": 652.3994000083767,
+          "charged_wall_seconds": 18031.52824068768,
+          "reasons": [],
+          "charged_increment_seconds": 651.706003235653,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793031602.069648,
+            "monotonic_seconds": 2181433.478210187,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 725.4266800880432,
+          "monotonic_elapsed_seconds": 725.426649121102,
+          "charged_wall_seconds": 18756.954920775723,
+          "reasons": [],
+          "charged_increment_seconds": 490.6601128298789,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793033251.958524,
+            "monotonic_seconds": 2183083.367085279,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1649.8610498905182,
+          "monotonic_elapsed_seconds": 1649.8610222949646,
+          "charged_wall_seconds": 20406.81597066624,
+          "reasons": [],
+          "charged_increment_seconds": 844.288999105338,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793039145.405564,
+            "monotonic_seconds": 2188976.814149065,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 857.940591096878,
+          "monotonic_elapsed_seconds": 857.940629132092,
+          "charged_wall_seconds": 23549.95291339606,
+          "reasons": [],
+          "charged_increment_seconds": 607.6128228511661,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793039790.881297,
+            "monotonic_seconds": 2189622.265108098,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 645.4514300823212,
+          "monotonic_elapsed_seconds": 645.4266430200078,
+          "charged_wall_seconds": 24195.40434347838,
+          "reasons": [],
+          "charged_increment_seconds": 419.4778970214538,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793042907.17382,
+            "monotonic_seconds": 2192738.582378092,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 725.4796221256256,
+          "monotonic_elapsed_seconds": 725.4796310313977,
+          "charged_wall_seconds": 26330.67305486556,
+          "reasons": [],
+          "charged_increment_seconds": 723.251393198967,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793044007.80637,
+            "monotonic_seconds": 2193839.214950267,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1100.600506067276,
+          "monotonic_elapsed_seconds": 1100.6005008281209,
+          "charged_wall_seconds": 27431.273560932837,
+          "reasons": [],
+          "charged_increment_seconds": 1099.8451137994416,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793044906.324088,
+            "monotonic_seconds": 2194737.732642516,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 898.4880712032318,
+          "monotonic_elapsed_seconds": 898.4880310092121,
+          "charged_wall_seconds": 28329.76163213607,
+          "reasons": [],
+          "charged_increment_seconds": 664.9069249653257,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793045662.980309,
+            "monotonic_seconds": 2195494.388867358,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 756.624251127243,
+          "monotonic_elapsed_seconds": 756.6242234972306,
+          "charged_wall_seconds": 29086.385883263312,
+          "reasons": [],
+          "charged_increment_seconds": 753.6244045975618,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793050872.539844,
+            "monotonic_seconds": 2200703.94839895,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1117.457486152649,
+          "monotonic_elapsed_seconds": 1117.55059785489,
+          "charged_wall_seconds": 32479.519308954477,
+          "reasons": [],
+          "charged_increment_seconds": 1117.0622230120935,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793051469.988694,
+            "monotonic_seconds": 2201301.3972626,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 597.4147038459778,
+          "monotonic_elapsed_seconds": 597.4146888097748,
+          "charged_wall_seconds": 33076.934012800455,
+          "reasons": [],
+          "charged_increment_seconds": 595.594862960279,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793052549.214773,
+            "monotonic_seconds": 2202380.623331995,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1079.19761800766,
+          "monotonic_elapsed_seconds": 1079.197585452348,
+          "charged_wall_seconds": 34156.131630808115,
+          "reasons": [],
+          "charged_increment_seconds": 860.5747246271931,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793053320.972649,
+            "monotonic_seconds": 2203152.381206834,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 771.7193231582642,
+          "monotonic_elapsed_seconds": 771.7192950453609,
+          "charged_wall_seconds": 34927.85095396638,
+          "reasons": [],
+          "charged_increment_seconds": 771.1163253933191,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793056684.381972,
+            "monotonic_seconds": 2206515.790528109,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 1641.5019931793213,
+          "monotonic_elapsed_seconds": 1641.501988099888,
+          "charged_wall_seconds": 37222.077822318766,
+          "reasons": [],
+          "charged_increment_seconds": 1638.8040250916965,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793059263.835565,
+            "monotonic_seconds": 2209095.244146047,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 987.6905100345612,
+          "monotonic_elapsed_seconds": 987.6905373809859,
+          "charged_wall_seconds": 38614.12941593258,
+          "reasons": [],
+          "charged_increment_seconds": 510.57026475667953,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793062039.418039,
+            "monotonic_seconds": 2211870.826598938,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 2775.5516500473022,
+          "monotonic_elapsed_seconds": 2775.551614722237,
+          "charged_wall_seconds": 41389.68106597988,
+          "reasons": [],
+          "charged_increment_seconds": 2559.5907554831356,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        },
+        {
+          "clock": {
+            "utc_seconds": 1793064958.652955,
+            "monotonic_seconds": 2214790.06151876,
+            "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5"
+          },
+          "utc_elapsed_seconds": 2919.1992421150208,
+          "monotonic_elapsed_seconds": 2919.199219633825,
+          "charged_wall_seconds": 44308.8803080949,
+          "reasons": [],
+          "charged_increment_seconds": 2672.9900817358866,
+          "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
+        }
+      ],
+      "closed_intervals": 85
+    }
+  },
+  "b5_latest": {
+    "status": "OK",
+    "value": {
+      "action_key": "profile-B5",
+      "slot": 0,
+      "job_id": "772906",
+      "claim_token": "963afa119b434194a0bd2ed192337777",
+      "returncode": 75,
+      "receipt_complete": false,
+      "status": "PAUSED",
+      "returned": {
+        "status": "PAUSED",
+        "result": {
+          "status": "PAUSED",
+          "receipt": null,
+          "new_fit": true
+        },
+        "action_key": "profile-B5",
+        "claim_token": "963afa119b434194a0bd2ed192337777",
+        "receipt_complete": false
+      },
+      "log": "/public/home/zhuziyuan/projects/paper3/runs/training_campaign_parallel_v1/actions/d0ca02490e54ebb786a63802604f31d670b4720e8065099c306fe4b7e65e8386/attempts/963afa119b434194a0bd2ed192337777/kernel.log",
+      "finished_at": 1793093719.0357676
+    }
+  },
+  "b5_last_kernel": {
+    "status": "OK",
+    "value": "{\"event\": \"R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED\", \"native_sources_changed\": false, \"observed_driver_versions\": [\"535.104.12\", \"550.54.14\"], \"utc\": \"2026-10-27T09:23:38Z\", \"version\": \"paper3-r1-observed-cu121-driver-transition-v1\"}\n{\"event\": \"R1_FILE_DIGEST_CACHE_ACTIVE\", \"loaded_entries\": 68814, \"source_hashes_reused_from_declarations\": false, \"utc\": \"2026-10-27T09:28:10Z\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_STARTED\", \"utc\": \"2026-10-27T09:28:10Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.0, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_FINISHED\", \"utc\": \"2026-10-27T09:28:10Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.256, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\", \"hardware_type\": \"A100_PCIE_40GB\", \"observed_gpu\": {\"device_name\": \"NVIDIA A100-PCIE-40GB\", \"device_uuid\": \"818da03d-1fae-8bf8-1290-45492aedfc86\", \"device_total_memory_bytes\": 42298834944, \"device_compute_capability\": [8, 0], \"python\": \"3.12.3\", \"torch\": \"2.5.1+cu121\", \"cuda\": \"12.1\"}}\n{\"event\": \"R1_STARTUP_SCOPE_ACTIVE\", \"utc\": \"2026-10-27T09:28:10Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.263, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\"}\nKERNEL_READY 963afa119b434194a0bd2ed192337777\n{\"stage\": \"STARTED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"expected_receipt\": \"runs/training_campaign_v1/profiles/B5/receipt.json\", \"pid\": 28981}\n{\"status\": \"CONTINUOUS_CHILD_TIME_WINDOW\", \"stage\": \"development_calibration_profile\", \"prior_max_wall_seconds\": 1290, \"max_wall_seconds\": 34585200, \"budget\": {\"path\": \"runs/training_campaign_v1/budgets/operational/7d944f7e86b51e7fadc55beb3e39862d20292d878ec42b04089edb74a23df46b.json\", \"sha256\": \"d6f9158d2583f4bd250f761b8fcea8a45935313a222f4980f552f90a3a663c88\"}, \"scientific_update_limits_changed\": false, \"cumulative_charges_reset\": false}\n{\"bytes_reused\": 690499123, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"window_acceptance.py\", \"hashes_saved\": 1, \"hits\": 2489, \"misses\": 1, \"utc\": \"2026-10-27T09:28:41Z\"}\n{\"bytes_reused\": 759158755, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 3051, \"misses\": 1, \"utc\": \"2026-10-27T09:29:11Z\"}\n{\"bytes_reused\": 937210891, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 4346, \"misses\": 1, \"utc\": \"2026-10-27T09:29:41Z\"}\n{\"bytes_reused\": 1097940070, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 5515, \"misses\": 1, \"utc\": \"2026-10-27T09:30:12Z\"}\n{\"bytes_reused\": 1369119865, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6456, \"misses\": 1, \"utc\": \"2026-10-27T09:30:42Z\"}\n{\"bytes_reused\": 1423724033, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 7077, \"misses\": 1, \"utc\": \"2026-10-27T09:31:12Z\"}\n{\"bytes_reused\": 1446783362, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 8025, \"misses\": 1, \"utc\": \"2026-10-27T09:31:42Z\"}\n{\"bytes_reused\": 1469474134, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 9105, \"misses\": 1, \"utc\": \"2026-10-27T09:32:12Z\"}\n{\"bytes_reused\": 1494013005, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 10272, \"misses\": 1, \"utc\": \"2026-10-27T09:32:42Z\"}\n{\"bytes_reused\": 1518047042, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 11415, \"misses\": 1, \"utc\": \"2026-10-27T09:33:12Z\"}\n{\"bytes_reused\": 1841941128, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 13297, \"misses\": 1, \"utc\": \"2026-10-27T09:33:42Z\"}\n{\"event\": \"R1_SOURCE_CONTEXT_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:07Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 0, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 0, \"dependencies\": 2464}\n{\"bytes_reused\": 3673885206, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"artifact_manifest.json\", \"hashes_saved\": 1, \"hits\": 26622, \"misses\": 1, \"utc\": \"2026-10-27T09:34:12Z\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:28Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 1, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 0, \"method\": \"B5\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:28Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 1, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 1, \"dependencies\": 2605, \"anchors\": 7, \"source_payloads_revalidated_on_hit\": false}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:35Z\", \"context_verifications\": 1, \"context_hits\": 1, \"bank_verifications\": 2, \"bank_hits\": 2, \"boundary_checks\": 0, \"anchor_checks\": 3, \"method\": \"B5\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:41Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 4, \"boundary_checks\": 0, \"anchor_checks\": 6, \"method\": \"B5\"}\n{\"bytes_reused\": 3848631931, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 27541, \"misses\": 1, \"utc\": \"2026-10-27T09:34:43Z\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:35:04Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 6, \"boundary_checks\": 0, \"anchor_checks\": 9, \"dependencies\": 2629, \"anchors\": 9, \"source_payloads_revalidated_on_hit\": false}\n{\"stage\": \"PAUSED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"receipt\": null, \"elapsed_seconds\": 420.733}\n{\"event\": \"R1_STARTUP_SCOPE_RETURNED\", \"utc\": \"2026-10-27T09:35:11Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 421.229, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\", \"status\": \"RETURNED\"}\n{\"bytes_reused\": 3955314855, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_SUMMARY\", \"hashes_saved\": 1, \"hits\": 27898, \"misses\": 1, \"utc\": \"2026-10-27T09:35:12Z\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_FINISHED\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:35:12Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 13, \"boundary_checks\": 1, \"anchor_checks\": 15, \"dependencies\": 2629, \"anchors\": 9, \"source_snapshot_persisted\": false}\n{\"event\": \"R1_ACTION_RETURNED\", \"utc\": \"2026-10-27T09:35:12Z\", \"action_key\": \"profile-B5\", \"status\": \"PAUSED\"}\n"
+  },
+  "slot_0_kernel": {
+    "status": "OK",
+    "value": "{\"event\": \"R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED\", \"native_sources_changed\": false, \"observed_driver_versions\": [\"535.104.12\", \"550.54.14\"], \"utc\": \"2026-10-27T11:01:42Z\", \"version\": \"paper3-r1-observed-cu121-driver-transition-v1\"}\n{\"event\": \"R1_FILE_DIGEST_CACHE_ACTIVE\", \"loaded_entries\": 82915, \"source_hashes_reused_from_declarations\": false, \"utc\": \"2026-10-27T11:05:39Z\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_STARTED\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.0, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_FINISHED\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.127, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\", \"hardware_type\": \"A100_PCIE_40GB\", \"observed_gpu\": {\"device_name\": \"NVIDIA A100-PCIE-40GB\", \"device_uuid\": \"818da03d-1fae-8bf8-1290-45492aedfc86\", \"device_total_memory_bytes\": 42298834944, \"device_compute_capability\": [8, 0], \"python\": \"3.12.3\", \"torch\": \"2.5.1+cu121\", \"cuda\": \"12.1\"}}\n{\"event\": \"R1_STARTUP_SCOPE_ACTIVE\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.132, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\"}\nKERNEL_READY 8c5020e88950475fb83fc4d232a0bb28\n{\"stage\": \"STARTED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"expected_receipt\": \"runs/training_campaign_v1/profiles/B5/receipt.json\", \"pid\": 7139}\n{\"status\": \"CONTINUOUS_CHILD_TIME_WINDOW\", \"stage\": \"development_calibration_profile\", \"prior_max_wall_seconds\": 1290, \"max_wall_seconds\": 35028600, \"budget\": {\"path\": \"runs/training_campaign_v1/budgets/operational/dc01260e746a2293315854ff546ff0bf8d1217cf37f16693e1f1960f309cd91f.json\", \"sha256\": \"63c382c9ee0c93bb29632af3cd08a24c5f98f32ede83e2e1134774c2e1d9878b\"}, \"scientific_update_limits_changed\": false, \"cumulative_charges_reset\": false}\n{\"bytes_reused\": 427694317, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 1088, \"misses\": 1, \"utc\": \"2026-10-27T11:06:09Z\"}\n{\"bytes_reused\": 690499123, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"window_acceptance.py\", \"hashes_saved\": 1, \"hits\": 2489, \"misses\": 1, \"utc\": \"2026-10-27T11:06:44Z\"}\n{\"bytes_reused\": 800059035, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 3347, \"misses\": 1, \"utc\": \"2026-10-27T11:07:14Z\"}\n{\"bytes_reused\": 900156673, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 4075, \"misses\": 1, \"utc\": \"2026-10-27T11:07:44Z\"}\n{\"bytes_reused\": 1004572589, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"backup_receipt.json\", \"hashes_saved\": 1, \"hits\": 4835, \"misses\": 1, \"utc\": \"2026-10-27T11:08:14Z\"}\n{\"bytes_reused\": 1103712140, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 5557, \"misses\": 1, \"utc\": \"2026-10-27T11:08:44Z\"}\n{\"bytes_reused\": 1342006173, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6306, \"misses\": 1, \"utc\": \"2026-10-27T11:09:20Z\"}\n{\"bytes_reused\": 1411513587, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6930, \"misses\": 1, \"utc\": \"2026-10-27T11:09:51Z\"}\n{\"bytes_reused\": 1446783362, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 8025, \"misses\": 1, \"utc\": \"2026-10-27T11:10:21Z\"}\n{\"bytes_reused\": 1473213661, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 9282, \"misses\": 1, \"utc\": \"2026-10-27T11:10:51Z\"}\n{\"bytes_reused\": 1500988422, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 10605, \"misses\": 1, \"utc\": \"2026-10-27T11:11:21Z\"}\n{\"bytes_reused\": 1525813082, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 11775, \"misses\": 1, \"utc\": \"2026-10-27T11:11:51Z\"}\n{\"bytes_reused\": 1700771052, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 12460, \"misses\": 1, \"utc\": \"2026-10-27T11:12:21Z\"}\n{\"bytes_reused\": 1856116048, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"identity.json\", \"hashes_saved\": 1, \"hits\": 13374, \"misses\": 1, \"utc\": \"2026-10-27T11:12:51Z\"}\n{\"bytes_reused\": 2505084452, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 15768, \"misses\": 1, \"utc\": \"2026-10-27T11:13:21Z\"}\n"
+  },
+  "r11_scheduler": {
+    "status": "OK",
+    "value": {
+      "controller_status": "RUNNING",
+      "created_at": 1792998411.894521,
+      "inflight_jobs": 4,
+      "last_successful_queue_observation_utc": "2026-10-27T11:13:22Z",
+      "marker": "paper3r11p-cd7c7f56e16ace79",
+      "slots": {
+        "0": {
+          "attempts": [
+            {
+              "acknowledged_at": 1792998412.1263847,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s0-a1",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-0-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-0-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=0,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s0-a1",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e/paper3r11/platform/entry.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/round11_preparation/plan-campaign.json",
+                "--slot",
+                "0",
+                "--device",
+                "cuda:0"
+              ],
+              "exit_code": 1,
+              "exit_signal": 0,
+              "finished_at": 1793063129.3376453,
+              "intent_at": 1792998412.0479343,
+              "job_id": "775286",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s0-a1",
+              "node": "gpu2",
+              "observed_at": 1793017653.732622,
+              "outcome": "RETRY_WORKER",
+              "queue_reason": "gpu2",
+              "sequence": 1,
+              "slot": 0,
+              "slurm_state": "FAILED",
+              "status": "FINISHED"
+            },
+            {
+              "acknowledged_at": 1793063163.7754323,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s0-a2",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-0-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-0-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=0,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s0-a2",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-r11-io-repair/b77ce0305a49d4aee7d0/resume_io.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/plan.json",
+                "--package",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e",
+                "--slot",
+                "0",
+                "--device",
+                "cuda:0"
+              ],
+              "intent_at": 1793063163.679713,
+              "job_id": "776301",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s0-a2",
+              "node": "gpu3",
+              "observed_at": 1793099602.409681,
+              "queue_reason": "gpu3",
+              "sequence": 2,
+              "slot": 0,
+              "slurm_state": "RUNNING",
+              "status": "ACKNOWLEDGED"
+            }
+          ],
+          "next_submit_at": 1793063159.3376653,
+          "rejections": 0,
+          "worker_failures": 1
+        },
+        "1": {
+          "attempts": [
+            {
+              "acknowledged_at": 1792998412.2274754,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s1-a1",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-1-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-1-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=1,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s1-a1",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e/paper3r11/platform/entry.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/round11_preparation/plan-campaign.json",
+                "--slot",
+                "1",
+                "--device",
+                "cuda:0"
+              ],
+              "exit_code": 1,
+              "exit_signal": 0,
+              "finished_at": 1793063129.3691347,
+              "intent_at": 1792998412.1468165,
+              "job_id": "775287",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s1-a1",
+              "node": "gpu1",
+              "observed_at": 1793017653.7397318,
+              "outcome": "RETRY_WORKER",
+              "queue_reason": "gpu1",
+              "sequence": 1,
+              "slot": 1,
+              "slurm_state": "FAILED",
+              "status": "FINISHED"
+            },
+            {
+              "acknowledged_at": 1793063163.9068646,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s1-a2",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-1-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-1-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=1,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s1-a2",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-r11-io-repair/b77ce0305a49d4aee7d0/resume_io.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/plan.json",
+                "--package",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e",
+                "--slot",
+                "1",
+                "--device",
+                "cuda:0"
+              ],
+              "intent_at": 1793063163.8065035,
+              "job_id": "776302",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s1-a2",
+              "node": "gpu3",
+              "observed_at": 1793099602.4228973,
+              "queue_reason": "gpu3",
+              "sequence": 2,
+              "slot": 1,
+              "slurm_state": "RUNNING",
+              "status": "ACKNOWLEDGED"
+            }
+          ],
+          "next_submit_at": 1793063159.3691537,
+          "rejections": 0,
+          "worker_failures": 1
+        },
+        "2": {
+          "attempts": [
+            {
+              "acknowledged_at": 1792998412.3316684,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s2-a1",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-2-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-2-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=2,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s2-a1",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e/paper3r11/platform/entry.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/round11_preparation/plan-campaign.json",
+                "--slot",
+                "2",
+                "--device",
+                "cuda:0"
+              ],
+              "intent_at": 1792998412.2497146,
+              "job_id": "775288",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s2-a1",
+              "node": "gpu1",
+              "observed_at": 1793099602.438016,
+              "queue_reason": "gpu1",
+              "sequence": 1,
+              "slot": 2,
+              "slurm_state": "RUNNING",
+              "status": "ACKNOWLEDGED"
+            }
+          ],
+          "next_submit_at": 0,
+          "rejections": 0,
+          "worker_failures": 0
+        },
+        "3": {
+          "attempts": [
+            {
+              "acknowledged_at": 1792998412.433728,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s3-a1",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-3-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-3-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=3,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s3-a1",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e/paper3r11/platform/entry.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/round11_preparation/plan-campaign.json",
+                "--slot",
+                "3",
+                "--device",
+                "cuda:0"
+              ],
+              "exit_code": 1,
+              "exit_signal": 0,
+              "finished_at": 1793096940.0220513,
+              "intent_at": 1792998412.3542786,
+              "job_id": "775289",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s3-a1",
+              "node": "gpu1",
+              "observed_at": 1793096909.4887874,
+              "outcome": "RETRY_WORKER",
+              "queue_reason": "gpu1",
+              "sequence": 1,
+              "slot": 3,
+              "slurm_state": "FAILED",
+              "status": "FINISHED"
+            },
+            {
+              "acknowledged_at": 1793096970.8502786,
+              "command": [
+                "sbatch",
+                "--parsable",
+                "--job-name=paper3r11p-cd7c7f56e16ace79-s3-a2",
+                "--comment=paper3r11p-cd7c7f56e16ace79",
+                "--partition=hpc_gpu",
+                "--nodes=1",
+                "--ntasks=1",
+                "--cpus-per-task=16",
+                "--mem=64G",
+                "--gres=gpu:1",
+                "--time=5-03:00:00",
+                "--signal=B:USR1@300",
+                "--no-requeue",
+                "--chdir=/tmp",
+                "--open-mode=append",
+                "--output=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-3-%j.out",
+                "--error=/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/logs/slot-3-%j.err",
+                "--export=ALL,BASH_ENV=,ENV=,PYTHONHOME=,PYTHONPATH=,PYTHONUNBUFFERED=1,PAPER3_MULTI_SLOT=3,PAPER3_MULTI_MARKER=paper3r11p-cd7c7f56e16ace79,PAPER3_MULTI_ATTEMPT_NAME=paper3r11p-cd7c7f56e16ace79-s3-a2",
+                "--account=zhuziyuan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/runtime/single-gpu-worker.sbatch",
+                "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+                "-I",
+                "-S",
+                "-B",
+                "-u",
+                "/public/home/zhuziyuan/paper3-r11-management-recovery/5ec5d5282e9611628c66/entry.py",
+                "worker",
+                "--plan",
+                "/public/home/zhuziyuan/projects/paper3/runs/r11_campaign/plan.json",
+                "--package",
+                "/public/home/zhuziyuan/paper3-round11/6ba6898438ff293ab80e",
+                "--slot",
+                "3",
+                "--device",
+                "cuda:0"
+              ],
+              "intent_at": 1793096970.7414627,
+              "job_id": "777013",
+              "marker": "paper3r11p-cd7c7f56e16ace79",
+              "name": "paper3r11p-cd7c7f56e16ace79-s3-a2",
+              "node": "",
+              "observed_at": 1793099602.452684,
+              "queue_reason": "(AssocGrpGRES)",
+              "sequence": 2,
+              "slot": 3,
+              "slurm_state": "PENDING",
+              "status": "ACKNOWLEDGED"
+            }
+          ],
+          "next_submit_at": 1793096970.0220754,
+          "rejections": 0,
+          "worker_failures": 1
+        }
+      },
+      "updated_at": 1793099602.467319,
+      "version": 1
+    }
+  },
+  "r11_controller": {
+    "status": "OK",
+    "value": {
+      "automatic_replacement_authorized": true,
+      "controller_status": "RUNNING",
+      "first_cycle_submit_allowed": true,
+      "inflight_jobs": 4,
+      "jobs": [
+        {
+          "attempt": 2,
+          "cpus": 16,
+          "excluded_nodes": "",
+          "gpus": 1,
+          "job_id": "776301",
+          "memory": "64G",
+          "name": "paper3r11p-cd7c7f56e16ace79-s0-a2",
+          "node": "gpu3",
+          "partition": "hpc_gpu",
+          "quarantine": null,
+          "queue_reason": "gpu3",
+          "slot": 0,
+          "slurm_state": "RUNNING",
+          "status": "ACKNOWLEDGED",
+          "worker_failures": 1
+        },
+        {
+          "attempt": 2,
+          "cpus": 16,
+          "excluded_nodes": "",
+          "gpus": 1,
+          "job_id": "776302",
+          "memory": "64G",
+          "name": "paper3r11p-cd7c7f56e16ace79-s1-a2",
+          "node": "gpu3",
+          "partition": "hpc_gpu",
+          "quarantine": null,
+          "queue_reason": "gpu3",
+          "slot": 1,
+          "slurm_state": "RUNNING",
+          "status": "ACKNOWLEDGED",
+          "worker_failures": 1
+        },
+        {
+          "attempt": 1,
+          "cpus": 16,
+          "excluded_nodes": "",
+          "gpus": 1,
+          "job_id": "775288",
+          "memory": "64G",
+          "name": "paper3r11p-cd7c7f56e16ace79-s2-a1",
+          "node": "gpu1",
+          "partition": "hpc_gpu",
+          "quarantine": null,
+          "queue_reason": "gpu1",
+          "slot": 2,
+          "slurm_state": "RUNNING",
+          "status": "ACKNOWLEDGED",
+          "worker_failures": 0
+        },
+        {
+          "attempt": 2,
+          "cpus": 16,
+          "excluded_nodes": "",
+          "gpus": 1,
+          "job_id": "777013",
+          "memory": "64G",
+          "name": "paper3r11p-cd7c7f56e16ace79-s3-a2",
+          "node": "",
+          "partition": "hpc_gpu",
+          "quarantine": null,
+          "queue_reason": "(AssocGrpGRES)",
+          "slot": 3,
+          "slurm_state": "PENDING",
+          "status": "ACKNOWLEDGED",
+          "worker_failures": 1
+        }
+      ],
+      "marker": "paper3r11p-cd7c7f56e16ace79",
+      "operational_repair": true,
+      "original_operational_history": {
+        "known_job_ids": [
+          "775286",
+          "775287",
+          "775288",
+          "775289",
+          "776301",
+          "776302"
+        ],
+        "marker": "paper3r11p-cd7c7f56e16ace79",
+        "prior_authorization_verified": true,
+        "scientific_results_changed": false,
+        "tasks_reset": false
+      },
+      "queue_observation_successful": true,
+      "repair_id": "paper3-r11-management-recovery-v2",
+      "resources": {
+        "cpus_total": 64,
+        "gpus_total": 4,
+        "jobs": 4,
+        "memory_total": "256G"
+      },
+      "scientific_sources_changed": false,
+      "scientific_workers_signalled": 0,
+      "submission_block": null,
+      "task_state_observation_successful": true,
+      "task_status": {
+        "blocked_tasks": 0,
+        "complete_state_history_preserved": true,
+        "complete_tasks": 1444,
+        "completion_counts_from_durable_verified_cache": true,
+        "observation_successful": true,
+        "runnable_remaining_tasks": 8826,
+        "total_tasks": 10270,
+        "updated_utc": "2026-10-27T11:13:22Z"
+      },
+      "updated_utc": "2026-10-27T11:13:22Z"
+    }
+  },
+  "r11_errors": {
+    "status": "OK",
+    "value": {}
+  },
+  "live_queue": {
+    "code": 0,
+    "output": "777013|PENDING|0:00||(AssocGrpGRES)\n775288|RUNNING|19:42:00|gpu1|gpu1\n772906|RUNNING|1-12:31:30|gpu1|gpu1\n772905|RUNNING|1-12:56:06|gpu2|gpu2\n772904|RUNNING|1-17:55:06|gpu2|gpu2\n776302|RUNNING|9:52:49|gpu3|gpu3\n776301|RUNNING|9:52:55|gpu3|gpu3\n",
+    "detail": ""
+  },
+  "selection_hook": {
+    "schema_version": "paper3-r1-selection-startup-continuation-v1",
+    "status": "R1_FUTURE_STARTUP_CONTINUATION_INSTALLED",
+    "activation": "FUTURE_ACTIONS_ONLY",
+    "package": "/public/home/zhuziyuan/paper3-r1-r11-continuation/4e51fed36e3c2a87b707",
+    "root": "/public/home/zhuziyuan/projects/paper3",
+    "helpers": {
+      "selection_cache.py": {
+        "path": "/public/home/zhuziyuan/paper3-r1-r11-continuation/4e51fed36e3c2a87b707/selection_cache.py",
+        "sha256": "4b9f164faf1fa15c29382f140cddf0dab6b6eeb5eaa429a68770a16889205c33"
+      },
+      "b5_retry_budget.py": {
+        "path": "/public/home/zhuziyuan/paper3-r1-r11-continuation/4e51fed36e3c2a87b707/b5_retry_budget.py",
+        "sha256": "12a6038b6558f22e880b0ed957ea51d6ce34c25d1947be84d66feac58c43d50e"
+      }
+    },
+    "operational_files": [
+      {
+        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/action_startup.py",
+        "before_sha256": "1aeaabfc2329ce460cf4542cd49944753208efc502274c5cab4e6f178383cd0a",
+        "after_sha256": "39366ff6e4060a5a2a9c7164a9747a3f21ca3768a8b9ea14ce479a965b1dfb46",
+        "changed": true
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/action_startup.py",
+        "before_sha256": "1aeaabfc2329ce460cf4542cd49944753208efc502274c5cab4e6f178383cd0a",
+        "after_sha256": "39366ff6e4060a5a2a9c7164a9747a3f21ca3768a8b9ea14ce479a965b1dfb46",
+        "changed": true
+      }
+    ],
+    "preserved_sources": [
+      {
+        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/START.py",
+        "sha256": "31eead679bca46a826b91c9833b9f1e45f031bfcf95a81a64b1ed8db0a39165b"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/audited_runtime.py",
+        "sha256": "d43e1cc9bd08d7cfff4255a969e99743da51702a18080d3963d8ab96a99925c8"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/kernel_bridge.py",
+        "sha256": "444a1cfd5ef516e1de59bdd2cefb6d7b3a50f8c1f7a6c7a29876b46381ce49c3"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/scheduler.py",
+        "sha256": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/worker.py",
+        "sha256": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-full-repair/2bfd664251ee5d1bcaf5/verified_context_cache.py",
+        "sha256": "bd5716d74f6aa09fa9c9abd61e4604df78f717e43552a4e124d0e9bf177bef40"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/START.py",
+        "sha256": "a03cb53e89f19f6a48dc6159e61e322042bba8bf709c4a97a3e6db8bfe7b2987"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/audited_runtime.py",
+        "sha256": "d43e1cc9bd08d7cfff4255a969e99743da51702a18080d3963d8ab96a99925c8"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/kernel_bridge.py",
+        "sha256": "444a1cfd5ef516e1de59bdd2cefb6d7b3a50f8c1f7a6c7a29876b46381ce49c3"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/scheduler.py",
+        "sha256": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3"
+      },
+      {
+        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/worker.py",
+        "sha256": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836"
+      },
+      {
+        "path": "/public/home/zhuziyuan/projects/paper3/p3work/classical_training.py",
+        "sha256": "c22b1f58684ba82709a330af30ab392f2f8561699514099158460fbc0bc03098"
+      },
+      {
+        "path": "/public/home/zhuziyuan/projects/paper3/p3work/development_evaluation.py",
+        "sha256": "dc5de7376b5b774dd7d846cdce2cf6d1ba4f5f51df228130c275e13ec6724618"
+      },
+      {
+        "path": "/public/home/zhuziyuan/projects/paper3/p3work/meta_training.py",
+        "sha256": "499427d197a7f7aaef35f7b25a41f685077419d6bddb1e197f8e8a825ed4a2f2"
+      },
+      {
+        "path": "/public/home/zhuziyuan/projects/paper3/p3work/method_registry.py",
+        "sha256": "c6404b3a8e7e1759663aaaee4f3cee1df67baaf0932554b501a13d6f9370c9ee"
+      }
+    ],
+    "existing_children_modified": false,
+    "current_selection_interrupted": false,
+    "jobs_submitted": 0,
+    "jobs_cancelled": 0,
+    "signals_sent": 0,
+    "scientific_files_changed": 0,
+    "plan_files_changed": 0,
+    "checkpoint_files_changed": 0,
+    "controller_or_queue_modified": false,
+    "receipt_path": "/public/home/zhuziyuan/paper3-r1-selection-continuation/applied-e0c5a6f5cf3e8a6450355bed043446f708bf2ea96fd89a0a51fafb35c72cf718.json",
+    "receipt_persisted": true
+  }
+}
