@@ -12,18 +12,18 @@
       "phase": "RUNNING",
       "progress": {
         "attempt_token": "b61066e7d313259c70aeb96f869d3a621c191975d4bd47d5daa5edb2b314084d",
-        "budget": 4,
+        "budget": 16,
         "intervention": "shift-persistent-g0-a0p05",
-        "raw_condition": "shift_full_sgd",
+        "raw_condition": "shift_top_q",
         "raw_fit_reused": false,
         "session": "11",
         "stage": "support_sgd",
-        "step": 100,
-        "support_objective": 0.5402472530394677,
+        "step": 60,
+        "support_objective": 0.5912493371951589,
         "task_key": "shift-pilot-S2-s20261019",
         "task_kind": "shift_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T21:45:30Z"
+        "updated_utc": "2026-10-27T21:47:34Z"
       },
       "progress_is_current_attempt": true,
       "slot": 1
@@ -37,18 +37,18 @@
       "phase": "RUNNING",
       "progress": {
         "attempt_token": "3c4d4f973ccd2696d32710488e3775473e14e93f128862b64c9acd2515dd3bba",
-        "budget": 12,
-        "intervention": "shift-persistent-g0-a0p05",
-        "raw_condition": "shift_full_sgd",
+        "budget": 20,
+        "intervention": "shift-support_only-g1-a0p05",
+        "raw_condition": "shift_top_q",
         "raw_fit_reused": false,
         "session": "7",
         "stage": "support_sgd",
-        "step": 80,
-        "support_objective": 0.7180279229404195,
+        "step": 40,
+        "support_objective": 0.6165434450422346,
         "task_key": "shift-pilot-S2-s20261020",
         "task_kind": "shift_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T21:45:30Z"
+        "updated_utc": "2026-10-27T21:47:34Z"
       },
       "progress_is_current_attempt": true,
       "slot": 0
@@ -66,7 +66,7 @@
         "job_id": "776379",
         "name": "paper3m12-b04a1db8d593f259-s0-a1",
         "node": "gpu2",
-        "observed_utc": "2026-10-27T21:45:13Z",
+        "observed_utc": "2026-10-27T21:47:23Z",
         "reason": "gpu2",
         "slot": 0,
         "slurm_state": "RUNNING",
@@ -78,7 +78,7 @@
         "job_id": "776380",
         "name": "paper3m12-b04a1db8d593f259-s1-a1",
         "node": "gpu1",
-        "observed_utc": "2026-10-27T21:45:13Z",
+        "observed_utc": "2026-10-27T21:47:23Z",
         "reason": "gpu1",
         "slot": 1,
         "slurm_state": "RUNNING",
@@ -90,7 +90,7 @@
         "job_id": "776381",
         "name": "paper3m12-b04a1db8d593f259-s2-a1",
         "node": "",
-        "observed_utc": "2026-10-27T21:45:13Z",
+        "observed_utc": "2026-10-27T21:47:23Z",
         "reason": "(AssocGrpGRES)",
         "slot": 2,
         "slurm_state": "PENDING",
@@ -102,7 +102,7 @@
         "job_id": "776382",
         "name": "paper3m12-b04a1db8d593f259-s3-a1",
         "node": "",
-        "observed_utc": "2026-10-27T21:45:13Z",
+        "observed_utc": "2026-10-27T21:47:23Z",
         "reason": "(AssocGrpGRES)",
         "slot": 3,
         "slurm_state": "PENDING",
@@ -111,7 +111,7 @@
       }
     ],
     "marker": "paper3m12-b04a1db8d593f259",
-    "observed_utc": "2026-10-27T21:45:19Z",
+    "observed_utc": "2026-10-27T21:47:23Z",
     "queue_observation_successful": true
   },
   "schema_version": "paper3-m12-operational-status-v1",
@@ -126,11 +126,11 @@
     "SKIPPED_DECISION": 139
   },
   "total_tasks": 217,
-  "updated_utc": "2026-10-27T21:45:33Z",
+  "updated_utc": "2026-10-27T21:47:37Z",
   "uploads": {
     "full": {
       "channel": "full",
-      "commit": "f9117b92a73677de0d75b5aa59942f37010f23cd",
+      "commit": "6d6d15572fb8244d0c504b05aa2a5b4fff914d4f",
       "complete_tasks": 54,
       "completed_task_keys_sha256": "1e9f126725e09c7323b315315ae7a1182b22a09ac76d7a849928a2ba2c593dcf",
       "independent_from_other_channel": true,
@@ -143,7 +143,7 @@
       "status": "PARTIAL",
       "total_tasks": 217,
       "training_controlled": false,
-      "updated_utc": "2026-10-27T21:45:24Z"
+      "updated_utc": "2026-10-27T21:47:29Z"
     },
     "paper": {
       "channel": "paper",
@@ -164,26 +164,52 @@
     }
   },
   "workers": [
-    {},
+    {
+      "attempt_token": "3c4d4f973ccd2696d32710488e3775473e14e93f128862b64c9acd2515dd3bba",
+      "job_id": "776379",
+      "last_activity_utc": "2026-10-27T21:47:34Z",
+      "last_numerical_advance_utc": "2026-10-27T21:47:34Z",
+      "numerical_progress": {
+        "attempt_token": "3c4d4f973ccd2696d32710488e3775473e14e93f128862b64c9acd2515dd3bba",
+        "budget": 20,
+        "intervention": "shift-support_only-g1-a0p05",
+        "raw_condition": "shift_top_q",
+        "raw_fit_reused": false,
+        "session": "7",
+        "stage": "support_sgd",
+        "step": 40,
+        "support_objective": 0.6165434450422346,
+        "task_key": "shift-pilot-S2-s20261020",
+        "task_kind": "shift_block",
+        "total_steps": 100,
+        "updated_utc": "2026-10-27T21:47:34Z"
+      },
+      "phase": "RUNNING",
+      "pid": 55568,
+      "slot": 0,
+      "task_key": "shift-pilot-S2-s20261020",
+      "task_kind": "shift_block",
+      "updated_utc": "2026-10-27T21:21:46Z"
+    },
     {
       "attempt_token": "b61066e7d313259c70aeb96f869d3a621c191975d4bd47d5daa5edb2b314084d",
       "job_id": "776380",
-      "last_activity_utc": "2026-10-27T21:45:31Z",
-      "last_numerical_advance_utc": "2026-10-27T21:45:31Z",
+      "last_activity_utc": "2026-10-27T21:47:34Z",
+      "last_numerical_advance_utc": "2026-10-27T21:47:34Z",
       "numerical_progress": {
         "attempt_token": "b61066e7d313259c70aeb96f869d3a621c191975d4bd47d5daa5edb2b314084d",
-        "budget": 4,
+        "budget": 16,
         "intervention": "shift-persistent-g0-a0p05",
         "raw_condition": "shift_top_q",
         "raw_fit_reused": false,
         "session": "11",
         "stage": "support_sgd",
-        "step": 10,
-        "support_objective": 0.5560692788496802,
+        "step": 60,
+        "support_objective": 0.5912493371951589,
         "task_key": "shift-pilot-S2-s20261019",
         "task_kind": "shift_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T21:45:31Z"
+        "updated_utc": "2026-10-27T21:47:34Z"
       },
       "phase": "RUNNING",
       "pid": 33513,
