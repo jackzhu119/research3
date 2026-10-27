@@ -1,0 +1,87 @@
+{
+  "schema_version": "paper3-r1-native-crash-audit-v1",
+  "audited_utc": "2026-10-27T01:16:16.634676+00:00",
+  "observed_failed_attempt": {
+    "task_key": "development-8f4d5138fdefaa085d670ab0e816a7fb2b1c580ef2a3321d7aaf0dad42abd0f2",
+    "slot": 0,
+    "slurm_job_id": "772906",
+    "finished_utc": "2026-10-27T00:42:17Z",
+    "returncode": -11,
+    "receipt_complete": false,
+    "kernel_log": "runs/training_campaign_parallel_v1/actions/adabbd734c00a0db8cfdb6bc1f253cc443c28b24ea6ef035ef8c90287952ac6c/attempts/48a8666b1d214b91ad2389644a6bb0bc/kernel.log"
+  },
+  "established_findings": [
+    "R1 subprocess returncode -11 is consistent with termination by SIGSEGV, not a Python ValueError, normal checkpoint exit or five-minute diagnostic timeout.",
+    "Original action_startup.active arms faulthandler.dump_traceback_later(300, repeat=True) for every action and cancels it on context exit.",
+    "The user-provided failed log ends in a partially written periodic stack dump while pathlib.read_bytes was on the main-thread stack; earlier partially written dumps sometimes continued, so truncation alone is not proof of cause.",
+    "No explicit resource.setrlimit/RLIMIT manipulation, manual mmap closure or ctypes/native-memory writes was found in the inspected R1 startup/digest/clock/driver overlays.",
+    "Classical source-bank loading repeats full verified_context and pilot/cache verification. Pilot verifier opens readonly NumPy memmaps and parses per-trial JSON; backup receipt verification uses whole-file read_bytes. Digest caching does not avoid this Python/NumPy validation work.",
+    "bytes_reused and cache-hit counts describe saved native hash work, not GPU model updates or actual data bytes read during this attempt."
+  ],
+  "causal_limits": [
+    "Available Python stack traces do not establish which native library or interpreter routine caused SIGSEGV.",
+    "No reproducible segfault has been produced locally. Local Python 3.12.14 differs from the school Python 3.12.3.",
+    "Periodic native stack unwinding is temporally correlated with the final exit and is optional observability; removing it is a risk mitigation, not a demonstrated root-cause proof.",
+    "Removing repeated verification reduces avoidable work/allocation pressure but does not itself prove a native-crash fix."
+  ],
+  "implemented_mitigation": {
+    "module": "newdiagnostics.py",
+    "repair_id": "paper3-r1-no-periodic-native-stack-v1",
+    "scope": "fresh owned R1 action children only",
+    "effective_traceback_interval": 0,
+    "fatal_fault_reporting": "enable on live stderr if available; unavailable diagnostic never gates science",
+    "existing_parent_heartbeat_retained": true,
+    "new_background_threads": 0,
+    "checkpoint_signal_handlers_changed": false,
+    "original_validators_or_scientific_parameters_changed": false,
+    "native_root_cause_claimed": false
+  },
+  "validation": {
+    "focused_tests_passed": 11,
+    "failed": 0,
+    "original_production_action_startup_tested": true,
+    "original_source_bytes_unchanged": true,
+    "school_jobs_signalled": 0,
+    "slurm_calls": 0,
+    "gpu_used": false
+  },
+  "audited_sources": {
+    "action_startup": {
+      "path": "/workspace/paper3-r1-hardware-fix/action_startup.py",
+      "sha256": "e2141c386bf7590e4d738e11661b7f0cd297c06b9f4ae5ed7fa5c2c72fe1df42"
+    },
+    "kernel_bridge": {
+      "path": "/workspace/paper3-r1-hardware-fix/kernel_bridge.py",
+      "sha256": "444a1cfd5ef516e1de59bdd2cefb6d7b3a50f8c1f7a6c7a29876b46381ce49c3"
+    },
+    "digest_cache": {
+      "path": "/workspace/paper3-r1-startup-cache-repair/r1_digest_cache.py",
+      "sha256": "12d26095b511cf608f4f5c7c6020fc38ca2402a60870eec254d4c1e3f8cf8440"
+    },
+    "clock_recovery": {
+      "path": "/workspace/paper3-r1-resume-repair-20261026/r1_clock_recovery.py",
+      "sha256": "0c6fe86cfe90b6f3afa87c928e823251a8b73927f41f9d7caa1981e5d15a0f00"
+    },
+    "driver_compat": {
+      "path": "/workspace/paper3-r1-resume-repair-20261026/r1_driver_compat.py",
+      "sha256": "7d559c020678687d6daa7b10d3b2a607afdc03eaec8470facda61167e7de5165"
+    },
+    "classical_training": {
+      "path": "/workspace/paper3-r11-repo/p3work/classical_training.py",
+      "sha256": "c22b1f58684ba82709a330af30ab392f2f8561699514099158460fbc0bc03098"
+    },
+    "pilot_verification": {
+      "path": "/workspace/paper3-r11-repo/tools/run_controlled_pilot.py",
+      "sha256": "856393030d10cdbbee54138fefadce6ee8520243f9e54d00feb7d5328088172c"
+    },
+    "fit_artifacts": {
+      "path": "/workspace/paper3-r11-repo/p3work/fit_artifacts.py",
+      "sha256": "88679de09a33ed1c9c2fc0c25d3b4d69865a5ad21246d4b8c696160d4183d63f"
+    },
+    "backup_restore": {
+      "path": "/workspace/paper3-r11-repo/tools/r2_restore.py",
+      "sha256": "7794d080facce35b14ab680e9fbaa397e9c4a5758e0082a53e33f8a2faa314ae"
+    }
+  },
+  "new_module_sha256": "02a71b67b5b8c6f4466f055eca6e948f2e82d528a614b7254582ad2d38ecc34f"
+}

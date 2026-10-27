@@ -1,0 +1,146 @@
+{
+  "schema_version": "paper3-r1-live-deployment-audit-v1",
+  "checked_utc": "2026-10-27T01:16:58.323295+00:00",
+  "progress_head": "f6fb6bbd7797d7eba9e88e4a515a04d77c5aa739",
+  "sampled_utc": "2026-10-27T01:04:58Z",
+  "sampled_beijing": "2026-10-27T09:04:58+08:00",
+  "complete_actions": 101,
+  "total_actions": 207,
+  "completed_by_kind": {
+    "calibration_profile": 13,
+    "classical": 1,
+    "development": 28,
+    "meta_engineering": 5,
+    "meta_screening": 45,
+    "meta_selection": 4,
+    "pilot": 1,
+    "reference": 3,
+    "source": 1
+  },
+  "coordinator": {
+    "phase": "DEVELOPMENT_SCREENING",
+    "progress_age_seconds": 17.9,
+    "progress_path": "runs/training_campaign_parallel_v1/progress.json",
+    "status": "RUNNING_OR_QUEUED",
+    "updated_utc": "2026-10-27T01:04:41Z"
+  },
+  "jobs": [
+    {
+      "attempt": 2,
+      "cpus": 12,
+      "job_id": "772906",
+      "live_reason_or_node": "gpu1",
+      "live_state": "RUNNING",
+      "memory": "43G",
+      "partition": "hpc_gpu",
+      "queue_reason": "gpu1",
+      "slot": 0,
+      "slurm_state": "RUNNING"
+    },
+    {
+      "attempt": 2,
+      "cpus": 12,
+      "job_id": "772904",
+      "live_reason_or_node": "gpu2",
+      "live_state": "RUNNING",
+      "memory": "43G",
+      "partition": "hpc_gpu",
+      "queue_reason": "gpu2",
+      "slot": 1,
+      "slurm_state": "RUNNING"
+    },
+    {
+      "attempt": 2,
+      "cpus": 12,
+      "job_id": "772905",
+      "live_reason_or_node": "gpu2",
+      "live_state": "RUNNING",
+      "memory": "42G",
+      "partition": "hpc_gpu",
+      "queue_reason": "gpu2",
+      "slot": 2,
+      "slurm_state": "RUNNING"
+    }
+  ],
+  "active_or_failed_actions": [
+    {
+      "job_id": "772906",
+      "key": "meta-selection-P+PCT",
+      "kind": "meta_selection",
+      "method": "P+PCT",
+      "observations": [],
+      "slot": 0,
+      "status": "RUNNING"
+    },
+    {
+      "error_type": "ExitCode-11",
+      "job_id": "772906",
+      "key": "profile-B5",
+      "kind": "calibration_profile",
+      "method": "B5",
+      "slot": 0,
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B4",
+        "phase": "screening",
+        "seed": 20261018
+      },
+      "error_type": "ExitCode-11",
+      "job_id": "772906",
+      "key": "development-8f4d5138fdefaa085d670ab0e816a7fb2b1c580ef2a3321d7aaf0dad42abd0f2",
+      "kind": "development",
+      "method": "B4",
+      "observations": [
+        {
+          "age_seconds": 1443.9,
+          "path": "runs/training_campaign_v1/development/8f4d5138fdefaa085d670ab0e816a7fb2b1c580ef2a3321d7aaf0dad42abd0f2/progress.json",
+          "values": {}
+        }
+      ],
+      "slot": 0,
+      "status": "RUNNING"
+    }
+  ],
+  "native_progress_versus_state_warning": "mtime/heartbeat and Slurm RUNNING do not establish numerical updates; old RUNNING records may remain stale",
+  "source_evidence": {
+    "original_parallel_branch": "paper3-parallel-migrations-20261025",
+    "original_parallel_head": "491c87a249ed7a61ca0eb925bc3f6d743c986d13",
+    "original_runtime_files": {
+      "test_scheduler.py": "9dc2b1bcfb5d4fe22b6f4335388bc8af7d6f311635033f86f526d58cc34280d3",
+      "START.py": "a03cb53e89f19f6a48dc6159e61e322042bba8bf709c4a97a3e6db8bfe7b2987",
+      "test_START.py": "c0520e3d8a62f56f39cedd792c694bbda223c77e58bc7e2204fa02474a377fa3",
+      "scheduler.py": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3",
+      "test_worker.py": "e70bc306b1935c4066ddeef61c794759d3cb7ca57cb9f823b18355c770355da9",
+      "worker.py": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836"
+    },
+    "worker_entry": "operations/parallel_20261025/round1/worker.py"
+  },
+  "deployment_findings": {
+    "old_parent_imports_bridge_once": true,
+    "claim_loop_reads_queue_ready_actions_each_iteration": true,
+    "affinity_is_filtered_from_queue_action_record": true,
+    "new_queue_controller_can_enable_existing_idle_allocations_without_parent_reload": true,
+    "fresh_action_child_reads_action_startup_on_import": true,
+    "spawn_stage_reads_launch_package_and_operational_bootstrap": true,
+    "prior_patched_operational_files": [
+      "action_startup.py",
+      "audited_runtime.py",
+      "r1_spawn_bootstrap.py"
+    ],
+    "observed_active_package": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802",
+    "observed_direct_package": "/public/home/zhuziyuan/paper3-direct-train/656cb8e704b87c4e69e2fcee840093beff03a3f8df964272dd6b63789ae48528",
+    "prior_resume_helper_payload_sha256": "2df296371964507a8ec5b39c405f322351c3c826a9181e7dadf706d5833372b5",
+    "discovery_rule": "Use current runtime/launch.json and scheduler attempts --package, direct_package,payload_manifest; observed paths are evidence, not substitute for current live declarations"
+  },
+  "prohibited_claims": [
+    "No proof all3GPUs training",
+    "No exact native SIGSEGV root cause established by monitoring JSON",
+    "No school-side repair applied by this audit"
+  ],
+  "actual_school_mutations": 0,
+  "actual_slurm_calls": 0,
+  "actual_gpu_used": false,
+  "reference_url": "https://github.com/jackzhu119/research3/blob/f6fb6bbd7797d7eba9e88e4a515a04d77c5aa739/monitoring/paper3-round1/status.json"
+}
