@@ -15,10 +15,10 @@
   },
   "coordinator": {
     "phase": "DEVELOPMENT_SCREENING",
-    "progress_age_seconds": 35.4,
+    "progress_age_seconds": 1.4,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-27T11:15:34Z"
+    "updated_utc": "2026-10-27T11:19:08Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -56,7 +56,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 198394.4,
+    "progress_age_seconds": 198574.4,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -101,7 +101,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1-12:34:01",
+        "elapsed": "1-12:37:01",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -111,7 +111,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1-12:58:37",
+        "elapsed": "1-13:01:37",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -121,7 +121,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1-17:57:37",
+        "elapsed": "1-18:00:37",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -131,7 +131,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-27T11:16:09Z",
+    "observed_utc": "2026-10-27T11:19:09Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -252,13 +252,13 @@
         "method": "B5",
         "observations": [
           {
-            "age_seconds": 618.4,
+            "age_seconds": 798.4,
             "path": "runs/training_campaign_v1/profiles/B5/progress.json",
             "values": {}
           }
         ],
         "slot": 0,
-        "status": "RUNNING"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "key": "selection-B10",
@@ -271,14 +271,16 @@
         "key": "selection-B11",
         "kind": "development_selection",
         "method": "B11",
-        "observations": [],
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
+        "job_id": "772906",
         "key": "selection-B3",
         "kind": "development_selection",
         "method": "B3",
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "observations": [],
+        "slot": 0,
+        "status": "RUNNING"
       },
       {
         "key": "selection-B4",
@@ -367,16 +369,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793099769.38347,
+  "sampled_unix": 1793099949.3837304,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 446258.4,
+    "age_seconds": 446438.4,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 446602.4,
+    "age_seconds": 446782.4,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -2689,13 +2691,13 @@
       "method": "B5",
       "observations": [
         {
-          "age_seconds": 618.4,
+          "age_seconds": 798.4,
           "path": "runs/training_campaign_v1/profiles/B5/progress.json",
           "values": {}
         }
       ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "job_id": "772906",
@@ -2787,7 +2789,6 @@
       "key": "selection-B11",
       "kind": "development_selection",
       "method": "B11",
-      "observations": [],
       "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
@@ -2799,10 +2800,13 @@
       "status": "COMPLETE"
     },
     {
+      "job_id": "772906",
       "key": "selection-B3",
       "kind": "development_selection",
       "method": "B3",
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "observations": [],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "key": "selection-B4",
@@ -2860,5 +2864,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-27T11:16:09Z"
+  "updated_utc": "2026-10-27T11:19:09Z"
 }
