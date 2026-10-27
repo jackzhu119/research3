@@ -1,32 +1,8 @@
 {
   "automatic_child_refresh": false,
   "blocked_tasks": 0,
-  "complete_tasks": 49,
+  "complete_tasks": 50,
   "current_tasks": [
-    {
-      "attempt": 1,
-      "current_error": null,
-      "job_id": "776379",
-      "key": "head-pilot-S53-s20261020",
-      "kind": "head_block",
-      "phase": "RUNNING",
-      "progress": {
-        "attempt_token": "41947a7395b9df499cdaf7984acf1edc3415c1b5ee4d40052275cf4c9712435b",
-        "budget": 16,
-        "intervention": "clean",
-        "raw_condition": "top_q_head_bias",
-        "session": "11",
-        "stage": "head_competition_fit",
-        "step": 30,
-        "support_objective": 0.7019660860984094,
-        "task_key": "head-pilot-S53-s20261020",
-        "task_kind": "head_block",
-        "total_steps": 100,
-        "updated_utc": "2026-10-27T19:51:28Z"
-      },
-      "progress_is_current_attempt": true,
-      "slot": 0
-    },
     {
       "attempt": 1,
       "current_error": null,
@@ -36,20 +12,44 @@
       "phase": "RUNNING",
       "progress": {
         "attempt_token": "81d29cba9b4dc1950495e94f8c8a134c2e394a974e6dbdf0352b2ccb4a561026",
-        "budget": 8,
+        "budget": 4,
         "intervention": "clean",
-        "raw_condition": "top_q_head_bias",
-        "session": "5",
+        "raw_condition": "random_q_4_head_full",
+        "session": "6",
         "stage": "head_competition_fit",
-        "step": 10,
-        "support_objective": 0.48588253917950414,
+        "step": 90,
+        "support_objective": 0.4492245853188717,
         "task_key": "head-pilot-S1-s20261018",
         "task_kind": "head_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T19:51:28Z"
+        "updated_utc": "2026-10-27T19:55:44Z"
       },
       "progress_is_current_attempt": true,
       "slot": 1
+    },
+    {
+      "attempt": 1,
+      "current_error": null,
+      "job_id": "776379",
+      "key": "head-pilot-S1-s20261019",
+      "kind": "head_block",
+      "phase": "RUNNING",
+      "progress": {
+        "attempt_token": "b2f5daa8f4cf2f902609d1388bd45c6f641eb08fe092ebe432d2a1a9b59d0a51",
+        "budget": 16,
+        "intervention": "clean",
+        "raw_condition": "random_q_1_head_frozen",
+        "session": "1",
+        "stage": "head_competition_fit",
+        "step": 80,
+        "support_objective": 0.4523807208704528,
+        "task_key": "head-pilot-S1-s20261019",
+        "task_kind": "head_block",
+        "total_steps": 100,
+        "updated_utc": "2026-10-27T19:55:44Z"
+      },
+      "progress_is_current_attempt": true,
+      "slot": 0
     }
   ],
   "monitoring_full_scientific_payloads_rehashed": false,
@@ -64,7 +64,7 @@
         "job_id": "776379",
         "name": "paper3m12-b04a1db8d593f259-s0-a1",
         "node": "gpu2",
-        "observed_utc": "2026-10-27T19:51:26Z",
+        "observed_utc": "2026-10-27T19:55:33Z",
         "reason": "gpu2",
         "slot": 0,
         "slurm_state": "RUNNING",
@@ -76,7 +76,7 @@
         "job_id": "776380",
         "name": "paper3m12-b04a1db8d593f259-s1-a1",
         "node": "gpu1",
-        "observed_utc": "2026-10-27T19:51:26Z",
+        "observed_utc": "2026-10-27T19:55:33Z",
         "reason": "gpu1",
         "slot": 1,
         "slurm_state": "RUNNING",
@@ -88,7 +88,7 @@
         "job_id": "776381",
         "name": "paper3m12-b04a1db8d593f259-s2-a1",
         "node": "",
-        "observed_utc": "2026-10-27T19:51:26Z",
+        "observed_utc": "2026-10-27T19:55:33Z",
         "reason": "(AssocGrpGRES)",
         "slot": 2,
         "slurm_state": "PENDING",
@@ -100,7 +100,7 @@
         "job_id": "776382",
         "name": "paper3m12-b04a1db8d593f259-s3-a1",
         "node": "",
-        "observed_utc": "2026-10-27T19:51:26Z",
+        "observed_utc": "2026-10-27T19:55:33Z",
         "reason": "(AssocGrpGRES)",
         "slot": 3,
         "slurm_state": "PENDING",
@@ -109,7 +109,7 @@
       }
     ],
     "marker": "paper3m12-b04a1db8d593f259",
-    "observed_utc": "2026-10-27T19:51:26Z",
+    "observed_utc": "2026-10-27T19:55:33Z",
     "queue_observation_successful": true
   },
   "schema_version": "paper3-m12-operational-status-v1",
@@ -118,21 +118,21 @@
   "skipped_by_decision": 139,
   "status": "RUNNING_OR_READY",
   "task_phase_counts": {
-    "COMPLETE": 49,
-    "NEW": 27,
+    "COMPLETE": 50,
+    "NEW": 26,
     "RUNNING": 2,
     "SKIPPED_DECISION": 139
   },
   "total_tasks": 217,
-  "updated_utc": "2026-10-27T19:51:30Z",
+  "updated_utc": "2026-10-27T19:55:48Z",
   "uploads": {
     "full": {
       "channel": "full",
-      "commit": "e5b8980cf759b435d9b596fc94a8ab06eac735de",
-      "complete_tasks": 49,
-      "completed_task_keys_sha256": "2e7896a66d4d89d3e824e1a45dcf378888d1c87245ce6f633fdb534c1a660274",
+      "commit": "01610d2b3276285b63c135da0d8e938af361b711",
+      "complete_tasks": 50,
+      "completed_task_keys_sha256": "b30fc117702f4d5d653145dcb4db000cb390007a73575b38750a547dded7039a",
       "independent_from_other_channel": true,
-      "original_bytes": 294639944,
+      "original_bytes": 300763981,
       "recipe_sha256": "b04a1db8d593f2590cb57649ae0dc55f3ac751bc2b36c08cd9782b6d62748343",
       "remote_complete_blob_GET_SHA256_verified": true,
       "round": 12,
@@ -141,7 +141,7 @@
       "status": "PARTIAL",
       "total_tasks": 217,
       "training_controlled": false,
-      "updated_utc": "2026-10-27T19:51:21Z"
+      "updated_utc": "2026-10-27T19:55:40Z"
     },
     "paper": {
       "channel": "paper",
@@ -163,32 +163,57 @@
   },
   "workers": [
     {
-      "attempt_token": "41947a7395b9df499cdaf7984acf1edc3415c1b5ee4d40052275cf4c9712435b",
+      "attempt_token": "b2f5daa8f4cf2f902609d1388bd45c6f641eb08fe092ebe432d2a1a9b59d0a51",
       "job_id": "776379",
-      "last_activity_utc": "2026-10-27T19:51:28Z",
-      "last_numerical_advance_utc": "2026-10-27T19:51:28Z",
+      "last_activity_utc": "2026-10-27T19:55:44Z",
+      "last_numerical_advance_utc": "2026-10-27T19:55:44Z",
       "numerical_progress": {
-        "attempt_token": "41947a7395b9df499cdaf7984acf1edc3415c1b5ee4d40052275cf4c9712435b",
+        "attempt_token": "b2f5daa8f4cf2f902609d1388bd45c6f641eb08fe092ebe432d2a1a9b59d0a51",
         "budget": 16,
         "intervention": "clean",
-        "raw_condition": "top_q_head_bias",
-        "session": "11",
+        "raw_condition": "random_q_1_head_frozen",
+        "session": "1",
         "stage": "head_competition_fit",
-        "step": 30,
-        "support_objective": 0.7019660860984094,
-        "task_key": "head-pilot-S53-s20261020",
+        "step": 80,
+        "support_objective": 0.4523807208704528,
+        "task_key": "head-pilot-S1-s20261019",
         "task_kind": "head_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T19:51:28Z"
+        "updated_utc": "2026-10-27T19:55:44Z"
       },
       "phase": "RUNNING",
       "pid": 55568,
       "slot": 0,
-      "task_key": "head-pilot-S53-s20261020",
+      "task_key": "head-pilot-S1-s20261019",
       "task_kind": "head_block",
-      "updated_utc": "2026-10-27T19:05:04Z"
+      "updated_utc": "2026-10-27T19:53:08Z"
     },
-    {},
+    {
+      "attempt_token": "81d29cba9b4dc1950495e94f8c8a134c2e394a974e6dbdf0352b2ccb4a561026",
+      "job_id": "776380",
+      "last_activity_utc": "2026-10-27T19:55:44Z",
+      "last_numerical_advance_utc": "2026-10-27T19:55:44Z",
+      "numerical_progress": {
+        "attempt_token": "81d29cba9b4dc1950495e94f8c8a134c2e394a974e6dbdf0352b2ccb4a561026",
+        "budget": 4,
+        "intervention": "clean",
+        "raw_condition": "random_q_4_head_full",
+        "session": "6",
+        "stage": "head_competition_fit",
+        "step": 90,
+        "support_objective": 0.4492245853188717,
+        "task_key": "head-pilot-S1-s20261018",
+        "task_kind": "head_block",
+        "total_steps": 100,
+        "updated_utc": "2026-10-27T19:55:44Z"
+      },
+      "phase": "RUNNING",
+      "pid": 33513,
+      "slot": 1,
+      "task_key": "head-pilot-S1-s20261018",
+      "task_kind": "head_block",
+      "updated_utc": "2026-10-27T19:33:18Z"
+    },
     {},
     {}
   ]
