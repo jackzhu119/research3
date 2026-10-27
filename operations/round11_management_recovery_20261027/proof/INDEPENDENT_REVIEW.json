@@ -1,0 +1,68 @@
+{
+  "actual_gpu_calls": 0,
+  "actual_network_writes": 0,
+  "actual_school_submissions": 0,
+  "date_utc": "2026-10-27",
+  "findings": [
+    {
+      "evidence": "Old bounded_read maps OSError/JSON failure to None; native _state raises ValueError; old controller retries only OSError",
+      "issue": "Controller exits on transient required task-state observation",
+      "repair": "Strict actual-size required reads, bounded retries, no empty-state fallback; live controller defers observation and submission on unavailable state"
+    },
+    {
+      "issue": "Scheduler has separate swallowing reader and exists-to-empty branch",
+      "repair": "Required retained four-slot scheduler load is process-local and validated before queue reconciliation; no lost acknowledgement is silently discarded"
+    },
+    {
+      "evidence": "completed_task_rows outside the old try block",
+      "issue": "Reporter can die before its original report exception handler",
+      "repair": "Whole-cycle retry plus heartbeat and actual recipe/SHA-bound report coverage, owned CPU child only"
+    },
+    {
+      "evidence": "Parent-read actual school log contains successful verified transfers and index publications after the old URLError, through 2026-10-27T04:56:49Z",
+      "issue": "Full-upload old error receipt is stale during successful long cycle",
+      "repair": "Preserve healthy paper/full writers and their locks/cache; independent observer exposes later persisted remote proofs without claiming a new GET or transfer completion"
+    },
+    {
+      "issue": "Future uploader nested retries can keep cycle status stale",
+      "repair": "Bounded cancellable retries and bounded cache import apply to newly started uploader after original writer naturally releases its lock; not retroactively claimed for live legacy writer"
+    }
+  ],
+  "limitations": [
+    "Software fixtures and local CPU management tests do not prove school deployment already occurred",
+    "Permanent readable identity mismatch remains explicit and does not trigger speculative state reconstruction",
+    "Existing healthy uploader transport remains its original code until it naturally releases its lock; observer readiness is not a network-recovery or full-archive-completion claim",
+    "Actual on-disk corruption and the original URLError subtype were not inferred from the generic status alone"
+  ],
+  "original_scientific_source_git_status_clean": true,
+  "review_source_sha256": {
+    "controller.py": "d207622709fd98382e45c3b66d9c9f164feb39fdae526015fc9883126362ffe6",
+    "entry.py": "6eab1425986e24e766ebc4ced4dda968f8f2bffa70fb4f0d2cfe98b146ee65cd",
+    "environment.py": "b4cd9639082c9ac0f199036759f4d90a6c0cf06bbd478fec847d3d4584bd4113",
+    "network.py": "7aa2920fd88a4b69653a208442e4f4a821220087b2ddb3a78100db2432568a07",
+    "processes.py": "37eea2f12668afe207281f2796dca4692c722f9a8ca6e6b666ce6e8726467f95",
+    "report_child.py": "361003bc1474dfb17d3029f94ef7ca2cb748e6e51f4024fff4d0404a82a49a4e",
+    "report_fix.py": "067a327c407868919ab39fea6a1fc87eea9f91c27af7606dc0ae58fb9351c6a0",
+    "state_io.py": "4399ecbe80cd5da6b586550294bc13c76f8669176816121fa6d419f2a97f161c",
+    "supervisor.py": "a49632494dcedabd85656956661b2a7349ed22f256598485aa4cc398fce8f41c",
+    "upload_fix.py": "052754c10fc02cece93bb1e5a41a3e854c4a3e8047247a06182eefc11051ac61"
+  },
+  "schema_version": "paper3-r11-management-independent-review-v1",
+  "status": "CPU_REVIEW_AND_NATIVE_INTEGRATION_PASSED",
+  "test_source_sha256": "a13b39d63afba28b0939f14813c6f34aa95fc4ec5c0fcff0b35ae9e5946db368",
+  "tests": {
+    "combined_state_controller_report_native_integration_passed": 42,
+    "combined_upload_network_native_integration_passed": 27,
+    "owned_native_integration_passed": 2,
+    "scopes": [
+      "Actual original R11 plan/seal/runtime/scheduler/report contracts",
+      "Real sealed arbitrary-byte scientific fixture preserved byte-for-byte",
+      "Actual native paper base64 capture reconstructed and verified",
+      "Actual deterministic full tar archive reconstructed in memory",
+      "Four retained allocation observations with no sbatch/scancel",
+      "Five role READY receipts and exact nonce matching",
+      "Genuine held full-upload lock preserved while no replacement client is created",
+      "Existing RUNNING attempt and unrelated BLOCKED failure history unchanged"
+    ]
+  }
+}
