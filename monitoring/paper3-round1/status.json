@@ -4,7 +4,7 @@
   "completed_by_kind": {
     "calibration_profile": 13,
     "classical": 1,
-    "development": 33,
+    "development": 34,
     "meta_engineering": 5,
     "meta_screening": 45,
     "meta_selection": 5,
@@ -17,7 +17,7 @@
     "progress_age_seconds": 19.0,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-27T02:04:34Z"
+    "updated_utc": "2026-10-27T02:07:34Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -55,7 +55,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 165318.0,
+    "progress_age_seconds": 165498.0,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -100,7 +100,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1-03:22:45",
+        "elapsed": "1-03:25:45",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -110,7 +110,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1-03:47:21",
+        "elapsed": "1-03:50:21",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -120,7 +120,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1-08:46:21",
+        "elapsed": "1-08:49:21",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -130,7 +130,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-27T02:04:53Z",
+    "observed_utc": "2026-10-27T02:07:53Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -242,7 +242,13 @@
         "key": "development-18e8f399671f5b51bf532b9e80f073c531459f639470e74002435a24e04b9a92",
         "kind": "development",
         "method": "B6",
-        "observations": [],
+        "observations": [
+          {
+            "age_seconds": 11.0,
+            "path": "runs/training_campaign_v1/development/18e8f399671f5b51bf532b9e80f073c531459f639470e74002435a24e04b9a92/progress.json",
+            "values": {}
+          }
+        ],
         "slot": 2,
         "status": "RUNNING"
       },
@@ -281,7 +287,7 @@
         "kind": "development",
         "method": "B4",
         "slot": 2,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -339,7 +345,7 @@
         "kind": "development",
         "method": "B4",
         "slot": 0,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -397,7 +403,7 @@
         "kind": "development",
         "method": "B6",
         "slot": 0,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -654,27 +660,6 @@
       },
       {
         "configuration": {
-          "method": "B4",
-          "phase": "screening",
-          "seed": 20261018
-        },
-        "error_type": "KeyboardInterrupt",
-        "job_id": "772904",
-        "key": "development-888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530",
-        "kind": "development",
-        "method": "B4",
-        "observations": [
-          {
-            "age_seconds": 6.0,
-            "path": "runs/training_campaign_v1/development/888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530/progress.json",
-            "values": {}
-          }
-        ],
-        "slot": 1,
-        "status": "RUNNING"
-      },
-      {
-        "configuration": {
           "method": "P+PCT",
           "phase": "screening",
           "seed": 20261018
@@ -729,7 +714,7 @@
         "kind": "development",
         "method": "B6",
         "slot": 0,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -798,7 +783,7 @@
         "kind": "development",
         "method": "B4",
         "slot": 0,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -818,12 +803,19 @@
           "seed": 20261018
         },
         "error_type": "KeyboardInterrupt",
-        "job_id": "772906",
+        "job_id": "772904",
         "key": "development-ac7dbbde0e6703add550a74d5cccdc27f260fa41020743ebea9f6836e78d9351",
         "kind": "development",
         "method": "B4",
-        "slot": 0,
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "observations": [
+          {
+            "age_seconds": 3.0,
+            "path": "runs/training_campaign_v1/development/ac7dbbde0e6703add550a74d5cccdc27f260fa41020743ebea9f6836e78d9351/progress.json",
+            "values": {}
+          }
+        ],
+        "slot": 1,
+        "status": "RUNNING"
       },
       {
         "configuration": {
@@ -848,7 +840,7 @@
         "kind": "development",
         "method": "B6",
         "slot": 2,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "configuration": {
@@ -1128,7 +1120,7 @@
         "kind": "calibration_profile",
         "method": "B5",
         "slot": 2,
-        "status": "RETRY_WAIT"
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
         "key": "selection-B0",
@@ -1215,13 +1207,13 @@
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       }
     ],
-    "completed_observed_actions": 107,
+    "completed_observed_actions": 108,
     "coordinator_declares_complete": false,
     "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
     "observed_actions": 207
   },
   "mainline_complete": false,
-  "parallel_plan_complete_tasks": 107,
+  "parallel_plan_complete_tasks": 108,
   "parallel_plan_total_tasks": 207,
   "planned_counts": {
     "calibration_profile": 14,
@@ -1253,16 +1245,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793066693.0375378,
+  "sampled_unix": 1793066873.038501,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 413182.0,
+    "age_seconds": 413362.0,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 413526.0,
+    "age_seconds": 413706.0,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -1378,7 +1370,13 @@
       "key": "development-18e8f399671f5b51bf532b9e80f073c531459f639470e74002435a24e04b9a92",
       "kind": "development",
       "method": "B6",
-      "observations": [],
+      "observations": [
+        {
+          "age_seconds": 11.0,
+          "path": "runs/training_campaign_v1/development/18e8f399671f5b51bf532b9e80f073c531459f639470e74002435a24e04b9a92/progress.json",
+          "values": {}
+        }
+      ],
       "slot": 2,
       "status": "RUNNING"
     },
@@ -1443,7 +1441,7 @@
       "kind": "development",
       "method": "B4",
       "slot": 2,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "configuration": {
@@ -1514,7 +1512,7 @@
       "kind": "development",
       "method": "B4",
       "slot": 0,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "configuration": {
@@ -1598,7 +1596,7 @@
       "kind": "development",
       "method": "B6",
       "slot": 0,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "configuration": {
@@ -2015,20 +2013,12 @@
         "phase": "screening",
         "seed": 20261018
       },
-      "error_type": "KeyboardInterrupt",
       "job_id": "772904",
       "key": "development-888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530",
       "kind": "development",
       "method": "B4",
-      "observations": [
-        {
-          "age_seconds": 6.0,
-          "path": "runs/training_campaign_v1/development/888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530/progress.json",
-          "values": {}
-        }
-      ],
       "slot": 1,
-      "status": "RUNNING"
+      "status": "COMPLETE"
     },
     {
       "configuration": {
@@ -2112,7 +2102,7 @@
       "kind": "development",
       "method": "B6",
       "slot": 0,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "configuration": {
@@ -2207,7 +2197,7 @@
       "kind": "development",
       "method": "B4",
       "slot": 0,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "configuration": {
@@ -2227,12 +2217,19 @@
         "seed": 20261018
       },
       "error_type": "KeyboardInterrupt",
-      "job_id": "772906",
+      "job_id": "772904",
       "key": "development-ac7dbbde0e6703add550a74d5cccdc27f260fa41020743ebea9f6836e78d9351",
       "kind": "development",
       "method": "B4",
-      "slot": 0,
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "observations": [
+        {
+          "age_seconds": 3.0,
+          "path": "runs/training_campaign_v1/development/ac7dbbde0e6703add550a74d5cccdc27f260fa41020743ebea9f6836e78d9351/progress.json",
+          "values": {}
+        }
+      ],
+      "slot": 1,
+      "status": "RUNNING"
     },
     {
       "configuration": {
@@ -2257,7 +2254,7 @@
       "kind": "development",
       "method": "B6",
       "slot": 2,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "configuration": {
@@ -3464,7 +3461,7 @@
       "kind": "calibration_profile",
       "method": "B5",
       "slot": 2,
-      "status": "RETRY_WAIT"
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     },
     {
       "job_id": "772906",
@@ -3621,5 +3618,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-27T02:04:53Z"
+  "updated_utc": "2026-10-27T02:07:53Z"
 }
