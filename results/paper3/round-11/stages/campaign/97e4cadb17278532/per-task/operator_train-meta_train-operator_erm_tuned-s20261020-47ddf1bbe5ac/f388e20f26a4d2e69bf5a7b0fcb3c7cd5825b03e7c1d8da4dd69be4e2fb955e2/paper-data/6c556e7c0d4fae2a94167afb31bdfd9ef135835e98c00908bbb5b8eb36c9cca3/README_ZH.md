@@ -1,0 +1,19 @@
+# 第11轮 · 已有论文分析数据
+
+原样保存已有报告、CSV、计划及任务回执；没有重新训练或重新计算统计。
+
+[完整文件与校验清单](manifest.json)
+
+| 原文件 | 字节数 | 精确分片清单 |
+|---|---:|---|
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/result.json | 2476 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/result.json.json) |
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/completion.json | 1099 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/completion.json.json) |
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/binary-base64/operator.npz.b64.txt | 78056 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/binary-base64/operator.npz.b64.txt.json) |
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/operator.json | 4663 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/operator.json.json) |
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/training-pairs.json | 5445438 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/training-pairs.json.json) |
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/runtime.json | 1135 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/runtime.json.json) |
+| operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/binary-base64/REPRESENTATIONS.json | 2268 | [原始字节与 SHA256](source-manifests/operator_train-meta_train-operator_erm_tuned-s20261020-47ddf1bbe5ac/binary-base64/REPRESENTATIONS.json.json) |
+
+按各源清单的分片顺序直接拼接，不添加换行。所有分片均经完整远端 GET/SHA256 核验。
+缺失项、报告时效和任务完整性见清单 metadata；文件已回传不代表科研结论已验证。
+本快速通道与完整逐试次输出归档的 LATEST.json 分别保留。
