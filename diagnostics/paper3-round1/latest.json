@@ -1,6 +1,6 @@
 {
   "schema_version": "paper3-r1-r11-visible-diagnostic-v1",
-  "sampled_utc": "2026-10-27T11:13:36Z",
+  "sampled_utc": "2026-10-27T12:25:48Z",
   "root": "/public/home/zhuziyuan/projects/paper3",
   "scientific_jobs_signalled": 0,
   "jobs_submitted": 0,
@@ -9,7 +9,7 @@
   "r1_progress": {
     "status": "RUNNING_OR_QUEUED",
     "phase": "DEVELOPMENT_SCREENING",
-    "updated_utc": "2026-10-27T11:13:24Z",
+    "updated_utc": "2026-10-27T12:25:35Z",
     "task_observation_valid": true,
     "counts": {
       "COMPLETE": 186,
@@ -83,8 +83,20 @@
         "method": "B5",
         "previous_running_record_was_stale": true,
         "progress_path": "runs/training_campaign_v1/profiles/B5/progress.json",
-        "retry_at": 1793093779.0703108,
+        "retry_at": 1793099808.2982507,
         "serial": false,
+        "slot": 0,
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "affinity_slot": 0,
+        "expected_receipt": "runs/training_campaign_v1/selections/B3.json",
+        "job_id": "772906",
+        "key": "selection-B3",
+        "kind": "development_selection",
+        "method": "B3",
+        "progress_path": "runs/training_campaign_v1/selections/progress.json",
+        "serial": true,
         "slot": 0,
         "status": "RUNNING"
       }
@@ -98,21 +110,15 @@
         "job_id": "772906",
         "pid": 18219,
         "phase": "ACTION_RUNNING",
-        "updated_utc": "2026-10-27T11:13:21Z",
-        "updated_at": 1793099601.1248093,
-        "child_pid": 7139,
+        "updated_utc": "2026-10-27T12:25:33Z",
+        "updated_at": 1793103933.05727,
+        "child_pid": 20090,
         "error": null,
-        "action_key": "profile-B5",
-        "action_kind": "calibration_profile",
-        "expected_receipt": "runs/training_campaign_v1/profiles/B5/receipt.json",
-        "action_progress": [
-          {
-            "file": "runs/training_campaign_v1/profiles/B5/progress.json",
-            "age_seconds": 450.1,
-            "values": {}
-          }
-        ],
-        "claim_token": "8c5020e88950475fb83fc4d232a0bb28"
+        "action_key": "selection-B3",
+        "action_kind": "development_selection",
+        "expected_receipt": "runs/training_campaign_v1/selections/B3.json",
+        "action_progress": [],
+        "claim_token": "3bde265f54f842db9846db76e83e0891"
       }
     },
     {
@@ -121,18 +127,25 @@
         "slot": 1,
         "job_id": "772904",
         "pid": 40297,
-        "phase": "WAITING_READY_ACTION",
-        "updated_utc": "2026-10-27T11:13:31Z",
-        "updated_at": 1793099611.9606416,
+        "phase": "WAITING_SERIAL_ACTION",
+        "updated_utc": "2026-10-27T12:25:46Z",
+        "updated_at": 1793103946.3740885,
         "child_pid": null,
         "error": null
       }
     },
     {
-      "status": "UNAVAILABLE",
-      "code": 1,
-      "reason": "Traceback (most recent call last):\n  File \"<string>\", line 7, in <module>\nOSError: [Errno 5] Input/output error\n",
-      "oversized": false
+      "status": "OK",
+      "value": {
+        "slot": 2,
+        "job_id": "772905",
+        "pid": 43425,
+        "phase": "WAITING_SERIAL_ACTION",
+        "updated_utc": "2026-10-27T12:25:46Z",
+        "updated_at": 1793103946.9301941,
+        "child_pid": null,
+        "error": null
+      }
     }
   ],
   "r1_controller": {
@@ -231,7 +244,7 @@
         ]
       },
       "status": "RUNNING",
-      "updated_utc": "2026-10-27T11:13:24Z"
+      "updated_utc": "2026-10-27T12:25:35Z"
     }
   },
   "r1_refresh_policy": {
@@ -265,22 +278,22 @@
   "r1_claims": {
     "status": "OK",
     "value": {
-      "profile-B5": {
+      "selection-B3": {
         "slot": 0,
         "job_id": "772906",
         "pid": 18219,
-        "token": "8c5020e88950475fb83fc4d232a0bb28",
-        "claimed_utc": 1793098891.5875516,
-        "serial": false,
-        "action_kind": "calibration_profile"
+        "token": "3bde265f54f842db9846db76e83e0891",
+        "claimed_utc": 1793099748.319469,
+        "serial": true,
+        "action_kind": "development_selection"
       }
     }
   },
   "b5_backoff": {
-    "retry_after": 1793093779.0703108,
+    "retry_after": 1793099808.2982507,
     "error": "ExitCode75",
     "job_id": "772906",
-    "attempt_token": "963afa119b434194a0bd2ed192337777"
+    "attempt_token": "8c5020e88950475fb83fc4d232a0bb28"
   },
   "b5_progress": {
     "status": "OK",
@@ -867,19 +880,9 @@
       "scope": "operational_only_no_scientific_identity_change",
       "initial_max_wall_seconds": 443400.0,
       "max_wall_seconds": 35028600.0,
-      "durable_wall_seconds": 51287.2392844772,
+      "durable_wall_seconds": 51857.645357935224,
       "checkpoint_wall_high_water_seconds": 51287.2289688359,
-      "interval": {
-        "sequence": 86,
-        "identity_sha256": "3a22efc255ca65bf5e9abd4f4fcc0477ad3626d0538f19ad622108ef2b3516e5",
-        "base_wall_seconds": 51287.2289688359,
-        "start_utc_seconds": 1793099151.46246,
-        "start_monotonic_seconds": 2248982.871014001,
-        "boot_id": "6d28dc8b-0dd2-468a-a2ad-2346f0fb38d5",
-        "intent": "persisted_before_work",
-        "last_observed_utc_seconds": 1793099151.472744,
-        "last_observed_monotonic_seconds": 2248982.881329642
-      },
+      "interval": null,
       "next_interval_sequence": 87,
       "clock_block": null,
       "amendments": [
@@ -1679,7 +1682,7 @@
           "policy": "max_same_boot_UTC_monotonic_elapsed_including_downtime"
         }
       ],
-      "closed_intervals": 85
+      "closed_intervals": 86
     }
   },
   "b5_latest": {
@@ -1688,7 +1691,7 @@
       "action_key": "profile-B5",
       "slot": 0,
       "job_id": "772906",
-      "claim_token": "963afa119b434194a0bd2ed192337777",
+      "claim_token": "8c5020e88950475fb83fc4d232a0bb28",
       "returncode": 75,
       "receipt_complete": false,
       "status": "PAUSED",
@@ -1700,20 +1703,20 @@
           "new_fit": true
         },
         "action_key": "profile-B5",
-        "claim_token": "963afa119b434194a0bd2ed192337777",
+        "claim_token": "8c5020e88950475fb83fc4d232a0bb28",
         "receipt_complete": false
       },
-      "log": "/public/home/zhuziyuan/projects/paper3/runs/training_campaign_parallel_v1/actions/d0ca02490e54ebb786a63802604f31d670b4720e8065099c306fe4b7e65e8386/attempts/963afa119b434194a0bd2ed192337777/kernel.log",
-      "finished_at": 1793093719.0357676
+      "log": "/public/home/zhuziyuan/projects/paper3/runs/training_campaign_parallel_v1/actions/d0ca02490e54ebb786a63802604f31d670b4720e8065099c306fe4b7e65e8386/attempts/8c5020e88950475fb83fc4d232a0bb28/kernel.log",
+      "finished_at": 1793099748.1468644
     }
   },
   "b5_last_kernel": {
     "status": "OK",
-    "value": "{\"event\": \"R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED\", \"native_sources_changed\": false, \"observed_driver_versions\": [\"535.104.12\", \"550.54.14\"], \"utc\": \"2026-10-27T09:23:38Z\", \"version\": \"paper3-r1-observed-cu121-driver-transition-v1\"}\n{\"event\": \"R1_FILE_DIGEST_CACHE_ACTIVE\", \"loaded_entries\": 68814, \"source_hashes_reused_from_declarations\": false, \"utc\": \"2026-10-27T09:28:10Z\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_STARTED\", \"utc\": \"2026-10-27T09:28:10Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.0, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_FINISHED\", \"utc\": \"2026-10-27T09:28:10Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.256, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\", \"hardware_type\": \"A100_PCIE_40GB\", \"observed_gpu\": {\"device_name\": \"NVIDIA A100-PCIE-40GB\", \"device_uuid\": \"818da03d-1fae-8bf8-1290-45492aedfc86\", \"device_total_memory_bytes\": 42298834944, \"device_compute_capability\": [8, 0], \"python\": \"3.12.3\", \"torch\": \"2.5.1+cu121\", \"cuda\": \"12.1\"}}\n{\"event\": \"R1_STARTUP_SCOPE_ACTIVE\", \"utc\": \"2026-10-27T09:28:10Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.263, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\"}\nKERNEL_READY 963afa119b434194a0bd2ed192337777\n{\"stage\": \"STARTED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"expected_receipt\": \"runs/training_campaign_v1/profiles/B5/receipt.json\", \"pid\": 28981}\n{\"status\": \"CONTINUOUS_CHILD_TIME_WINDOW\", \"stage\": \"development_calibration_profile\", \"prior_max_wall_seconds\": 1290, \"max_wall_seconds\": 34585200, \"budget\": {\"path\": \"runs/training_campaign_v1/budgets/operational/7d944f7e86b51e7fadc55beb3e39862d20292d878ec42b04089edb74a23df46b.json\", \"sha256\": \"d6f9158d2583f4bd250f761b8fcea8a45935313a222f4980f552f90a3a663c88\"}, \"scientific_update_limits_changed\": false, \"cumulative_charges_reset\": false}\n{\"bytes_reused\": 690499123, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"window_acceptance.py\", \"hashes_saved\": 1, \"hits\": 2489, \"misses\": 1, \"utc\": \"2026-10-27T09:28:41Z\"}\n{\"bytes_reused\": 759158755, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 3051, \"misses\": 1, \"utc\": \"2026-10-27T09:29:11Z\"}\n{\"bytes_reused\": 937210891, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 4346, \"misses\": 1, \"utc\": \"2026-10-27T09:29:41Z\"}\n{\"bytes_reused\": 1097940070, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 5515, \"misses\": 1, \"utc\": \"2026-10-27T09:30:12Z\"}\n{\"bytes_reused\": 1369119865, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6456, \"misses\": 1, \"utc\": \"2026-10-27T09:30:42Z\"}\n{\"bytes_reused\": 1423724033, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 7077, \"misses\": 1, \"utc\": \"2026-10-27T09:31:12Z\"}\n{\"bytes_reused\": 1446783362, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 8025, \"misses\": 1, \"utc\": \"2026-10-27T09:31:42Z\"}\n{\"bytes_reused\": 1469474134, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 9105, \"misses\": 1, \"utc\": \"2026-10-27T09:32:12Z\"}\n{\"bytes_reused\": 1494013005, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 10272, \"misses\": 1, \"utc\": \"2026-10-27T09:32:42Z\"}\n{\"bytes_reused\": 1518047042, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 11415, \"misses\": 1, \"utc\": \"2026-10-27T09:33:12Z\"}\n{\"bytes_reused\": 1841941128, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 13297, \"misses\": 1, \"utc\": \"2026-10-27T09:33:42Z\"}\n{\"event\": \"R1_SOURCE_CONTEXT_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:07Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 0, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 0, \"dependencies\": 2464}\n{\"bytes_reused\": 3673885206, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"artifact_manifest.json\", \"hashes_saved\": 1, \"hits\": 26622, \"misses\": 1, \"utc\": \"2026-10-27T09:34:12Z\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:28Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 1, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 0, \"method\": \"B5\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:28Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 1, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 1, \"dependencies\": 2605, \"anchors\": 7, \"source_payloads_revalidated_on_hit\": false}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:35Z\", \"context_verifications\": 1, \"context_hits\": 1, \"bank_verifications\": 2, \"bank_hits\": 2, \"boundary_checks\": 0, \"anchor_checks\": 3, \"method\": \"B5\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:34:41Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 4, \"boundary_checks\": 0, \"anchor_checks\": 6, \"method\": \"B5\"}\n{\"bytes_reused\": 3848631931, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 27541, \"misses\": 1, \"utc\": \"2026-10-27T09:34:43Z\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:35:04Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 6, \"boundary_checks\": 0, \"anchor_checks\": 9, \"dependencies\": 2629, \"anchors\": 9, \"source_payloads_revalidated_on_hit\": false}\n{\"stage\": \"PAUSED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"receipt\": null, \"elapsed_seconds\": 420.733}\n{\"event\": \"R1_STARTUP_SCOPE_RETURNED\", \"utc\": \"2026-10-27T09:35:11Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 421.229, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\", \"status\": \"RETURNED\"}\n{\"bytes_reused\": 3955314855, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_SUMMARY\", \"hashes_saved\": 1, \"hits\": 27898, \"misses\": 1, \"utc\": \"2026-10-27T09:35:12Z\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_FINISHED\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T09:35:12Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 13, \"boundary_checks\": 1, \"anchor_checks\": 15, \"dependencies\": 2629, \"anchors\": 9, \"source_snapshot_persisted\": false}\n{\"event\": \"R1_ACTION_RETURNED\", \"utc\": \"2026-10-27T09:35:12Z\", \"action_key\": \"profile-B5\", \"status\": \"PAUSED\"}\n"
+    "value": "{\"event\": \"R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED\", \"native_sources_changed\": false, \"observed_driver_versions\": [\"535.104.12\", \"550.54.14\"], \"utc\": \"2026-10-27T11:01:42Z\", \"version\": \"paper3-r1-observed-cu121-driver-transition-v1\"}\n{\"event\": \"R1_FILE_DIGEST_CACHE_ACTIVE\", \"loaded_entries\": 82915, \"source_hashes_reused_from_declarations\": false, \"utc\": \"2026-10-27T11:05:39Z\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_STARTED\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.0, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_FINISHED\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.127, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\", \"hardware_type\": \"A100_PCIE_40GB\", \"observed_gpu\": {\"device_name\": \"NVIDIA A100-PCIE-40GB\", \"device_uuid\": \"818da03d-1fae-8bf8-1290-45492aedfc86\", \"device_total_memory_bytes\": 42298834944, \"device_compute_capability\": [8, 0], \"python\": \"3.12.3\", \"torch\": \"2.5.1+cu121\", \"cuda\": \"12.1\"}}\n{\"event\": \"R1_STARTUP_SCOPE_ACTIVE\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.132, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\"}\nKERNEL_READY 8c5020e88950475fb83fc4d232a0bb28\n{\"stage\": \"STARTED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"expected_receipt\": \"runs/training_campaign_v1/profiles/B5/receipt.json\", \"pid\": 7139}\n{\"status\": \"CONTINUOUS_CHILD_TIME_WINDOW\", \"stage\": \"development_calibration_profile\", \"prior_max_wall_seconds\": 1290, \"max_wall_seconds\": 35028600, \"budget\": {\"path\": \"runs/training_campaign_v1/budgets/operational/dc01260e746a2293315854ff546ff0bf8d1217cf37f16693e1f1960f309cd91f.json\", \"sha256\": \"63c382c9ee0c93bb29632af3cd08a24c5f98f32ede83e2e1134774c2e1d9878b\"}, \"scientific_update_limits_changed\": false, \"cumulative_charges_reset\": false}\n{\"bytes_reused\": 427694317, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 1088, \"misses\": 1, \"utc\": \"2026-10-27T11:06:09Z\"}\n{\"bytes_reused\": 690499123, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"window_acceptance.py\", \"hashes_saved\": 1, \"hits\": 2489, \"misses\": 1, \"utc\": \"2026-10-27T11:06:44Z\"}\n{\"bytes_reused\": 800059035, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 3347, \"misses\": 1, \"utc\": \"2026-10-27T11:07:14Z\"}\n{\"bytes_reused\": 900156673, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 4075, \"misses\": 1, \"utc\": \"2026-10-27T11:07:44Z\"}\n{\"bytes_reused\": 1004572589, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"backup_receipt.json\", \"hashes_saved\": 1, \"hits\": 4835, \"misses\": 1, \"utc\": \"2026-10-27T11:08:14Z\"}\n{\"bytes_reused\": 1103712140, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 5557, \"misses\": 1, \"utc\": \"2026-10-27T11:08:44Z\"}\n{\"bytes_reused\": 1342006173, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6306, \"misses\": 1, \"utc\": \"2026-10-27T11:09:20Z\"}\n{\"bytes_reused\": 1411513587, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6930, \"misses\": 1, \"utc\": \"2026-10-27T11:09:51Z\"}\n{\"bytes_reused\": 1446783362, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 8025, \"misses\": 1, \"utc\": \"2026-10-27T11:10:21Z\"}\n{\"bytes_reused\": 1473213661, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 9282, \"misses\": 1, \"utc\": \"2026-10-27T11:10:51Z\"}\n{\"bytes_reused\": 1500988422, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 10605, \"misses\": 1, \"utc\": \"2026-10-27T11:11:21Z\"}\n{\"bytes_reused\": 1525813082, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 11775, \"misses\": 1, \"utc\": \"2026-10-27T11:11:51Z\"}\n{\"bytes_reused\": 1700771052, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 12460, \"misses\": 1, \"utc\": \"2026-10-27T11:12:21Z\"}\n{\"bytes_reused\": 1856116048, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"identity.json\", \"hashes_saved\": 1, \"hits\": 13374, \"misses\": 1, \"utc\": \"2026-10-27T11:12:51Z\"}\n{\"bytes_reused\": 2505084452, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 15768, \"misses\": 1, \"utc\": \"2026-10-27T11:13:21Z\"}\n{\"event\": \"R1_SOURCE_CONTEXT_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:13:44Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 0, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 0, \"dependencies\": 2464}\n{\"bytes_reused\": 3679151932, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"basis.npy\", \"hashes_saved\": 1, \"hits\": 26644, \"misses\": 1, \"utc\": \"2026-10-27T11:13:51Z\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:14:05Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 1, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 0, \"method\": \"B5\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:14:05Z\", \"context_verifications\": 1, \"context_hits\": 0, \"bank_verifications\": 1, \"bank_hits\": 0, \"boundary_checks\": 0, \"anchor_checks\": 1, \"dependencies\": 2605, \"anchors\": 7, \"source_payloads_revalidated_on_hit\": false}\n{\"bytes_reused\": 3717943817, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"classical_training.py\", \"hashes_saved\": 1, \"hits\": 26854, \"misses\": 1, \"utc\": \"2026-10-27T11:14:26Z\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:14:30Z\", \"context_verifications\": 1, \"context_hits\": 1, \"bank_verifications\": 2, \"bank_hits\": 2, \"boundary_checks\": 0, \"anchor_checks\": 3, \"method\": \"B5\"}\n{\"event\": \"R1_SOURCE_BANK_VERIFIED_ONCE\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:14:36Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 4, \"boundary_checks\": 0, \"anchor_checks\": 6, \"method\": \"B5\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:14:36Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 4, \"boundary_checks\": 0, \"anchor_checks\": 7, \"dependencies\": 2629, \"anchors\": 9, \"source_payloads_revalidated_on_hit\": false}\n{\"bytes_reused\": 3894421909, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"events.json\", \"hashes_saved\": 1, \"hits\": 27632, \"misses\": 1, \"utc\": \"2026-10-27T11:14:56Z\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:15:15Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 6, \"boundary_checks\": 0, \"anchor_checks\": 9, \"dependencies\": 2629, \"anchors\": 9, \"source_payloads_revalidated_on_hit\": false}\n{\"stage\": \"PAUSED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"receipt\": null, \"elapsed_seconds\": 582.202}\n{\"event\": \"R1_STARTUP_SCOPE_RETURNED\", \"utc\": \"2026-10-27T11:15:21Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 582.43, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\", \"status\": \"RETURNED\"}\n{\"bytes_reused\": 3955314855, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_SUMMARY\", \"hashes_saved\": 1, \"hits\": 27898, \"misses\": 1, \"utc\": \"2026-10-27T11:15:23Z\"}\n{\"event\": \"R1_VERIFIED_SOURCE_SNAPSHOT_FINISHED\", \"version\": \"paper3-r1-action-verified-source-snapshot-v1\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"utc\": \"2026-10-27T11:15:23Z\", \"context_verifications\": 1, \"context_hits\": 2, \"bank_verifications\": 3, \"bank_hits\": 13, \"boundary_checks\": 1, \"anchor_checks\": 15, \"dependencies\": 2629, \"anchors\": 9, \"source_snapshot_persisted\": false}\n{\"event\": \"R1_ACTION_RETURNED\", \"utc\": \"2026-10-27T11:15:23Z\", \"action_key\": \"profile-B5\", \"status\": \"PAUSED\"}\n"
   },
   "slot_0_kernel": {
     "status": "OK",
-    "value": "{\"event\": \"R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED\", \"native_sources_changed\": false, \"observed_driver_versions\": [\"535.104.12\", \"550.54.14\"], \"utc\": \"2026-10-27T11:01:42Z\", \"version\": \"paper3-r1-observed-cu121-driver-transition-v1\"}\n{\"event\": \"R1_FILE_DIGEST_CACHE_ACTIVE\", \"loaded_entries\": 82915, \"source_hashes_reused_from_declarations\": false, \"utc\": \"2026-10-27T11:05:39Z\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_STARTED\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.0, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\"}\n{\"event\": \"R1_STARTUP_GPU_PROBE_FINISHED\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.127, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"gpu_probe\", \"hardware_type\": \"A100_PCIE_40GB\", \"observed_gpu\": {\"device_name\": \"NVIDIA A100-PCIE-40GB\", \"device_uuid\": \"818da03d-1fae-8bf8-1290-45492aedfc86\", \"device_total_memory_bytes\": 42298834944, \"device_compute_capability\": [8, 0], \"python\": \"3.12.3\", \"torch\": \"2.5.1+cu121\", \"cuda\": \"12.1\"}}\n{\"event\": \"R1_STARTUP_SCOPE_ACTIVE\", \"utc\": \"2026-10-27T11:05:39Z\", \"action_key\": \"profile-B5\", \"action_kind\": \"calibration_profile\", \"elapsed_seconds\": 0.132, \"checks_completed\": 0, \"cache_hits\": 0, \"phase\": \"native_action\"}\nKERNEL_READY 8c5020e88950475fb83fc4d232a0bb28\n{\"stage\": \"STARTED\", \"kind\": \"calibration_profile\", \"key\": \"profile-B5\", \"expected_receipt\": \"runs/training_campaign_v1/profiles/B5/receipt.json\", \"pid\": 7139}\n{\"status\": \"CONTINUOUS_CHILD_TIME_WINDOW\", \"stage\": \"development_calibration_profile\", \"prior_max_wall_seconds\": 1290, \"max_wall_seconds\": 35028600, \"budget\": {\"path\": \"runs/training_campaign_v1/budgets/operational/dc01260e746a2293315854ff546ff0bf8d1217cf37f16693e1f1960f309cd91f.json\", \"sha256\": \"63c382c9ee0c93bb29632af3cd08a24c5f98f32ede83e2e1134774c2e1d9878b\"}, \"scientific_update_limits_changed\": false, \"cumulative_charges_reset\": false}\n{\"bytes_reused\": 427694317, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 1, \"hits\": 1088, \"misses\": 1, \"utc\": \"2026-10-27T11:06:09Z\"}\n{\"bytes_reused\": 690499123, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"window_acceptance.py\", \"hashes_saved\": 1, \"hits\": 2489, \"misses\": 1, \"utc\": \"2026-10-27T11:06:44Z\"}\n{\"bytes_reused\": 800059035, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 3347, \"misses\": 1, \"utc\": \"2026-10-27T11:07:14Z\"}\n{\"bytes_reused\": 900156673, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 4075, \"misses\": 1, \"utc\": \"2026-10-27T11:07:44Z\"}\n{\"bytes_reused\": 1004572589, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"backup_receipt.json\", \"hashes_saved\": 1, \"hits\": 4835, \"misses\": 1, \"utc\": \"2026-10-27T11:08:14Z\"}\n{\"bytes_reused\": 1103712140, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 1, \"hits\": 5557, \"misses\": 1, \"utc\": \"2026-10-27T11:08:44Z\"}\n{\"bytes_reused\": 1342006173, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6306, \"misses\": 1, \"utc\": \"2026-10-27T11:09:20Z\"}\n{\"bytes_reused\": 1411513587, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 6930, \"misses\": 1, \"utc\": \"2026-10-27T11:09:51Z\"}\n{\"bytes_reused\": 1446783362, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 8025, \"misses\": 1, \"utc\": \"2026-10-27T11:10:21Z\"}\n{\"bytes_reused\": 1473213661, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 1, \"hits\": 9282, \"misses\": 1, \"utc\": \"2026-10-27T11:10:51Z\"}\n{\"bytes_reused\": 1500988422, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 10605, \"misses\": 1, \"utc\": \"2026-10-27T11:11:21Z\"}\n{\"bytes_reused\": 1525813082, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 11775, \"misses\": 1, \"utc\": \"2026-10-27T11:11:51Z\"}\n{\"bytes_reused\": 1700771052, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 1, \"hits\": 12460, \"misses\": 1, \"utc\": \"2026-10-27T11:12:21Z\"}\n{\"bytes_reused\": 1856116048, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"identity.json\", \"hashes_saved\": 1, \"hits\": 13374, \"misses\": 1, \"utc\": \"2026-10-27T11:12:51Z\"}\n{\"bytes_reused\": 2505084452, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 1, \"hits\": 15768, \"misses\": 1, \"utc\": \"2026-10-27T11:13:21Z\"}\n"
+    "value": "T11:51:35Z\"}\n{\"bytes_reused\": 29869015035, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"parameters.pt.sha256.json\", \"hashes_saved\": 5626, \"hits\": 144269, \"misses\": 5627, \"utc\": \"2026-10-27T11:52:05Z\"}\n{\"bytes_reused\": 30117849064, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"method_registry.py\", \"hashes_saved\": 5780, \"hits\": 144860, \"misses\": 5780, \"utc\": \"2026-10-27T11:52:35Z\"}\n{\"bytes_reused\": 30447636378, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 5961, \"hits\": 145623, \"misses\": 5961, \"utc\": \"2026-10-27T11:53:05Z\"}\n{\"bytes_reused\": 30750833511, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 6139, \"hits\": 146350, \"misses\": 6139, \"utc\": \"2026-10-27T11:53:35Z\"}\n{\"bytes_reused\": 31150246854, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"configuration.json\", \"hashes_saved\": 6309, \"hits\": 147224, \"misses\": 6309, \"utc\": \"2026-10-27T11:54:05Z\"}\n{\"bytes_reused\": 33243332786, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 6310, \"hits\": 152908, \"misses\": 6310, \"utc\": \"2026-10-27T11:54:38Z\"}\n{\"bytes_reused\": 33350005435, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 6310, \"hits\": 153811, \"misses\": 6310, \"utc\": \"2026-10-27T11:55:08Z\"}\n{\"bytes_reused\": 33445149313, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 6310, \"hits\": 154503, \"misses\": 6310, \"utc\": \"2026-10-27T11:55:38Z\"}\n{\"bytes_reused\": 33540914594, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 6310, \"hits\": 155201, \"misses\": 6310, \"utc\": \"2026-10-27T11:56:08Z\"}\n{\"bytes_reused\": 33645332348, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 6310, \"hits\": 155959, \"misses\": 6310, \"utc\": \"2026-10-27T11:56:39Z\"}\n{\"bytes_reused\": 33748323514, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"adapter_audit.json\", \"hashes_saved\": 6310, \"hits\": 156709, \"misses\": 6310, \"utc\": \"2026-10-27T11:57:09Z\"}\n{\"bytes_reused\": 34034262465, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 6310, \"hits\": 157762, \"misses\": 6310, \"utc\": \"2026-10-27T11:57:39Z\"}\n{\"bytes_reused\": 34087994191, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 6310, \"hits\": 158530, \"misses\": 6310, \"utc\": \"2026-10-27T11:58:09Z\"}\n{\"bytes_reused\": 34114725091, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 6310, \"hits\": 159802, \"misses\": 6310, \"utc\": \"2026-10-27T11:58:39Z\"}\n{\"bytes_reused\": 34166766677, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 6310, \"hits\": 162280, \"misses\": 6310, \"utc\": \"2026-10-27T11:59:09Z\"}\n{\"bytes_reused\": 34549943336, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"events.json\", \"hashes_saved\": 6310, \"hits\": 164706, \"misses\": 6310, \"utc\": \"2026-10-27T11:59:39Z\"}\n{\"bytes_reused\": 36013515129, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 6310, \"hits\": 172114, \"misses\": 6310, \"utc\": \"2026-10-27T12:00:09Z\"}\n{\"bytes_reused\": 36671159135, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"episode_plan.json\", \"hashes_saved\": 6389, \"hits\": 178897, \"misses\": 6390, \"utc\": \"2026-10-27T12:00:39Z\"}\n{\"bytes_reused\": 36889934231, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"probabilities.npy\", \"hashes_saved\": 6521, \"hits\": 179417, \"misses\": 6522, \"utc\": \"2026-10-27T12:01:09Z\"}\n{\"bytes_reused\": 37137540519, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 6650, \"hits\": 179974, \"misses\": 6650, \"utc\": \"2026-10-27T12:01:39Z\"}\n{\"bytes_reused\": 37357135315, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 6783, \"hits\": 180506, \"misses\": 6783, \"utc\": \"2026-10-27T12:02:09Z\"}\n{\"bytes_reused\": 37577885342, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"method_registry.py\", \"hashes_saved\": 6922, \"hits\": 181043, \"misses\": 6922, \"utc\": \"2026-10-27T12:02:39Z\"}\n{\"bytes_reused\": 37660482809, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"probabilities.npy\", \"hashes_saved\": 6969, \"hits\": 181237, \"misses\": 6970, \"utc\": \"2026-10-27T12:03:10Z\"}\n{\"bytes_reused\": 37907886681, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"probabilities.npy\", \"hashes_saved\": 7113, \"hits\": 181822, \"misses\": 7114, \"utc\": \"2026-10-27T12:03:40Z\"}\n{\"bytes_reused\": 38184058742, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"cost.json\", \"hashes_saved\": 7268, \"hits\": 182472, \"misses\": 7269, \"utc\": \"2026-10-27T12:04:10Z\"}\n{\"bytes_reused\": 38459771355, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"episode_plan.json\", \"hashes_saved\": 7429, \"hits\": 183122, \"misses\": 7430, \"utc\": \"2026-10-27T12:04:40Z\"}\n{\"bytes_reused\": 38680037185, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"initial_budget.json\", \"hashes_saved\": 7553, \"hits\": 183640, \"misses\": 7553, \"utc\": \"2026-10-27T12:05:10Z\"}\n{\"bytes_reused\": 38900267250, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 7681, \"hits\": 184158, \"misses\": 7681, \"utc\": \"2026-10-27T12:05:40Z\"}\n{\"bytes_reused\": 39172933196, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 7839, \"hits\": 184796, \"misses\": 7839, \"utc\": \"2026-10-27T12:06:10Z\"}\n{\"bytes_reused\": 39736707392, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"payload_manifest.json\", \"hashes_saved\": 7867, \"hits\": 185805, \"misses\": 7867, \"utc\": \"2026-10-27T12:06:40Z\"}\n{\"bytes_reused\": 40344176139, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"method_registry.py\", \"hashes_saved\": 7867, \"hits\": 186856, \"misses\": 7867, \"utc\": \"2026-10-27T12:07:11Z\"}\n{\"bytes_reused\": 40971387700, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 7868, \"hits\": 189511, \"misses\": 7868, \"utc\": \"2026-10-27T12:07:41Z\"}\n{\"bytes_reused\": 41212199436, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 7868, \"hits\": 190081, \"misses\": 7868, \"utc\": \"2026-10-27T12:08:25Z\"}\n{\"bytes_reused\": 41442823060, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 7868, \"hits\": 190961, \"misses\": 7868, \"utc\": \"2026-10-27T12:08:55Z\"}\n{\"bytes_reused\": 41602792909, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 7868, \"hits\": 192236, \"misses\": 7868, \"utc\": \"2026-10-27T12:09:25Z\"}\n{\"bytes_reused\": 41823188455, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"state.json\", \"hashes_saved\": 7868, \"hits\": 193839, \"misses\": 7868, \"utc\": \"2026-10-27T12:09:55Z\"}\n{\"bytes_reused\": 42281442716, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"trial_metadata.jsonl\", \"hashes_saved\": 7868, \"hits\": 197192, \"misses\": 7868, \"utc\": \"2026-10-27T12:10:25Z\"}\n{\"bytes_reused\": 42323490917, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 7868, \"hits\": 199193, \"misses\": 7868, \"utc\": \"2026-10-27T12:10:55Z\"}\n{\"bytes_reused\": 42358715459, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"source_native.py\", \"hashes_saved\": 7868, \"hits\": 200858, \"misses\": 7868, \"utc\": \"2026-10-27T12:11:25Z\"}\n{\"bytes_reused\": 44067177222, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"single_candidate_audit.json\", \"hashes_saved\": 7868, \"hits\": 208917, \"misses\": 7868, \"utc\": \"2026-10-27T12:11:55Z\"}\n{\"bytes_reused\": 44874889363, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"receipt.json\", \"hashes_saved\": 7953, \"hits\": 216818, \"misses\": 7954, \"utc\": \"2026-10-27T12:12:25Z\"}\n{\"bytes_reused\": 45132117822, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"stieger_cache.json\", \"hashes_saved\": 8112, \"hits\": 217428, \"misses\": 8112, \"utc\": \"2026-10-27T12:12:55Z\"}\n{\"bytes_reused\": 45424574225, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"logits.npy\", \"hashes_saved\": 8285, \"hits\": 218135, \"misses\": 8286, \"utc\": \"2026-10-27T12:13:26Z\"}\n{\"bytes_reused\": 45754463772, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"cost.json\", \"hashes_saved\": 8467, \"hits\": 218898, \"misses\": 8468, \"utc\": \"2026-10-27T12:13:56Z\"}\n{\"bytes_reused\": 46084807547, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"method_registry.py\", \"hashes_saved\": 8672, \"hits\": 219696, \"misses\": 8672, \"utc\": \"2026-10-27T12:14:26Z\"}\n{\"bytes_reused\": 46416288021, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"identity.json\", \"hashes_saved\": 8860, \"hits\": 220475, \"misses\": 8861, \"utc\": \"2026-10-27T12:14:56Z\"}\n{\"bytes_reused\": 46746247225, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"timing.json\", \"hashes_saved\": 9042, \"hits\": 221238, \"misses\": 9043, \"utc\": \"2026-10-27T12:15:26Z\"}\n{\"bytes_reused\": 47077161314, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 9239, \"hits\": 222031, \"misses\": 9239, \"utc\": \"2026-10-27T12:15:56Z\"}\n{\"bytes_reused\": 48216639435, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"logits.npy\", \"hashes_saved\": 9425, \"hits\": 224204, \"misses\": 9425, \"utc\": \"2026-10-27T12:16:26Z\"}\n{\"bytes_reused\": 51483933607, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"y.npy\", \"hashes_saved\": 9426, \"hits\": 242131, \"misses\": 9426, \"utc\": \"2026-10-27T12:16:56Z\"}\n{\"bytes_reused\": 52970372233, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"probabilities.npy\", \"hashes_saved\": 9477, \"hits\": 254513, \"misses\": 9478, \"utc\": \"2026-10-27T12:17:26Z\"}\n{\"bytes_reused\": 53298756418, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"logits.npy\", \"hashes_saved\": 9667, \"hits\": 255293, \"misses\": 9668, \"utc\": \"2026-10-27T12:17:56Z\"}\n{\"bytes_reused\": 53601445488, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 9837, \"hits\": 256004, \"misses\": 9837, \"utc\": \"2026-10-27T12:18:26Z\"}\n{\"bytes_reused\": 53931646651, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"payload_manifest.json\", \"hashes_saved\": 10031, \"hits\": 256788, \"misses\": 10032, \"utc\": \"2026-10-27T12:18:57Z\"}\n{\"bytes_reused\": 54316901746, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"probabilities.npy\", \"hashes_saved\": 10261, \"hits\": 257698, \"misses\": 10262, \"utc\": \"2026-10-27T12:19:27Z\"}\n{\"bytes_reused\": 54731400903, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"episode_plan.json\", \"hashes_saved\": 10497, \"hits\": 258673, \"misses\": 10498, \"utc\": \"2026-10-27T12:19:57Z\"}\n{\"bytes_reused\": 55144063165, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"payload_manifest.json\", \"hashes_saved\": 10735, \"hits\": 259648, \"misses\": 10736, \"utc\": \"2026-10-27T12:20:27Z\"}\n{\"bytes_reused\": 55526614916, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"stieger_cache.json\", \"hashes_saved\": 10950, \"hits\": 260529, \"misses\": 10950, \"utc\": \"2026-10-27T12:20:57Z\"}\n{\"bytes_reused\": 57561902013, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"X.npy\", \"hashes_saved\": 10984, \"hits\": 265817, \"misses\": 10984, \"utc\": \"2026-10-27T12:21:29Z\"}\n{\"bytes_reused\": 60420965347, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"single_candidate_audit.json\", \"hashes_saved\": 10984, \"hits\": 284663, \"misses\": 10984, \"utc\": \"2026-10-27T12:22:00Z\"}\n{\"bytes_reused\": 61256255737, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 11091, \"hits\": 292642, \"misses\": 11091, \"utc\": \"2026-10-27T12:22:30Z\"}\n{\"bytes_reused\": 61613487994, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"payload_manifest.json\", \"hashes_saved\": 11301, \"hits\": 293491, \"misses\": 11302, \"utc\": \"2026-10-27T12:23:00Z\"}\n{\"bytes_reused\": 61998351456, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"episode_plan.json\", \"hashes_saved\": 11527, \"hits\": 294401, \"misses\": 11528, \"utc\": \"2026-10-27T12:23:30Z\"}\n{\"bytes_reused\": 62383324860, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"logits.npy\", \"hashes_saved\": 11753, \"hits\": 295311, \"misses\": 11754, \"utc\": \"2026-10-27T12:24:00Z\"}\n{\"bytes_reused\": 62825109089, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 12001, \"hits\": 296335, \"misses\": 12001, \"utc\": \"2026-10-27T12:24:30Z\"}\n{\"bytes_reused\": 63265511899, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"f0_receipt_seed-20261018.json\", \"hashes_saved\": 12257, \"hits\": 297375, \"misses\": 12257, \"utc\": \"2026-10-27T12:25:00Z\"}\n{\"bytes_reused\": 63649459197, \"cache_io_errors\": 0, \"event\": \"R1_FILE_DIGEST_CACHE_PROGRESS\", \"file\": \"cost.json\", \"hashes_saved\": 12479, \"hits\": 298284, \"misses\": 12480, \"utc\": \"2026-10-27T12:25:31Z\"}\n"
   },
   "r11_scheduler": {
     "status": "OK",
@@ -1721,7 +1724,7 @@
       "controller_status": "RUNNING",
       "created_at": 1792998411.894521,
       "inflight_jobs": 4,
-      "last_successful_queue_observation_utc": "2026-10-27T11:13:22Z",
+      "last_successful_queue_observation_utc": "2026-10-27T12:25:29Z",
       "marker": "paper3r11p-cd7c7f56e16ace79",
       "slots": {
         "0": {
@@ -1823,7 +1826,7 @@
               "marker": "paper3r11p-cd7c7f56e16ace79",
               "name": "paper3r11p-cd7c7f56e16ace79-s0-a2",
               "node": "gpu3",
-              "observed_at": 1793099602.409681,
+              "observed_at": 1793103929.35616,
               "queue_reason": "gpu3",
               "sequence": 2,
               "slot": 0,
@@ -1934,7 +1937,7 @@
               "marker": "paper3r11p-cd7c7f56e16ace79",
               "name": "paper3r11p-cd7c7f56e16ace79-s1-a2",
               "node": "gpu3",
-              "observed_at": 1793099602.4228973,
+              "observed_at": 1793103929.3715937,
               "queue_reason": "gpu3",
               "sequence": 2,
               "slot": 1,
@@ -1990,7 +1993,7 @@
               "marker": "paper3r11p-cd7c7f56e16ace79",
               "name": "paper3r11p-cd7c7f56e16ace79-s2-a1",
               "node": "gpu1",
-              "observed_at": 1793099602.438016,
+              "observed_at": 1793103929.3862286,
               "queue_reason": "gpu1",
               "sequence": 1,
               "slot": 2,
@@ -2101,7 +2104,7 @@
               "marker": "paper3r11p-cd7c7f56e16ace79",
               "name": "paper3r11p-cd7c7f56e16ace79-s3-a2",
               "node": "",
-              "observed_at": 1793099602.452684,
+              "observed_at": 1793103929.404453,
               "queue_reason": "(AssocGrpGRES)",
               "sequence": 2,
               "slot": 3,
@@ -2114,7 +2117,7 @@
           "worker_failures": 1
         }
       },
-      "updated_at": 1793099602.467319,
+      "updated_at": 1793103929.4195144,
       "version": 1
     }
   },
@@ -2226,14 +2229,14 @@
       "task_status": {
         "blocked_tasks": 0,
         "complete_state_history_preserved": true,
-        "complete_tasks": 1444,
+        "complete_tasks": 1506,
         "completion_counts_from_durable_verified_cache": true,
         "observation_successful": true,
-        "runnable_remaining_tasks": 8826,
+        "runnable_remaining_tasks": 8764,
         "total_tasks": 10270,
-        "updated_utc": "2026-10-27T11:13:22Z"
+        "updated_utc": "2026-10-27T12:25:28Z"
       },
-      "updated_utc": "2026-10-27T11:13:22Z"
+      "updated_utc": "2026-10-27T12:25:29Z"
     }
   },
   "r11_errors": {
@@ -2242,111 +2245,7 @@
   },
   "live_queue": {
     "code": 0,
-    "output": "777013|PENDING|0:00||(AssocGrpGRES)\n775288|RUNNING|19:42:00|gpu1|gpu1\n772906|RUNNING|1-12:31:30|gpu1|gpu1\n772905|RUNNING|1-12:56:06|gpu2|gpu2\n772904|RUNNING|1-17:55:06|gpu2|gpu2\n776302|RUNNING|9:52:49|gpu3|gpu3\n776301|RUNNING|9:52:55|gpu3|gpu3\n",
+    "output": "777013|PENDING|0:00||(AssocGrpGRES)\n775288|RUNNING|20:54:12|gpu1|gpu1\n772906|RUNNING|1-13:43:42|gpu1|gpu1\n772905|RUNNING|1-14:08:18|gpu2|gpu2\n772904|RUNNING|1-19:07:18|gpu2|gpu2\n776302|RUNNING|11:05:01|gpu3|gpu3\n776301|RUNNING|11:05:07|gpu3|gpu3\n",
     "detail": ""
-  },
-  "selection_hook": {
-    "schema_version": "paper3-r1-selection-startup-continuation-v1",
-    "status": "R1_FUTURE_STARTUP_CONTINUATION_INSTALLED",
-    "activation": "FUTURE_ACTIONS_ONLY",
-    "package": "/public/home/zhuziyuan/paper3-r1-r11-continuation/4e51fed36e3c2a87b707",
-    "root": "/public/home/zhuziyuan/projects/paper3",
-    "helpers": {
-      "selection_cache.py": {
-        "path": "/public/home/zhuziyuan/paper3-r1-r11-continuation/4e51fed36e3c2a87b707/selection_cache.py",
-        "sha256": "4b9f164faf1fa15c29382f140cddf0dab6b6eeb5eaa429a68770a16889205c33"
-      },
-      "b5_retry_budget.py": {
-        "path": "/public/home/zhuziyuan/paper3-r1-r11-continuation/4e51fed36e3c2a87b707/b5_retry_budget.py",
-        "sha256": "12a6038b6558f22e880b0ed957ea51d6ce34c25d1947be84d66feac58c43d50e"
-      }
-    },
-    "operational_files": [
-      {
-        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/action_startup.py",
-        "before_sha256": "1aeaabfc2329ce460cf4542cd49944753208efc502274c5cab4e6f178383cd0a",
-        "after_sha256": "39366ff6e4060a5a2a9c7164a9747a3f21ca3768a8b9ea14ce479a965b1dfb46",
-        "changed": true
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/action_startup.py",
-        "before_sha256": "1aeaabfc2329ce460cf4542cd49944753208efc502274c5cab4e6f178383cd0a",
-        "after_sha256": "39366ff6e4060a5a2a9c7164a9747a3f21ca3768a8b9ea14ce479a965b1dfb46",
-        "changed": true
-      }
-    ],
-    "preserved_sources": [
-      {
-        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/START.py",
-        "sha256": "31eead679bca46a826b91c9833b9f1e45f031bfcf95a81a64b1ed8db0a39165b"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/audited_runtime.py",
-        "sha256": "d43e1cc9bd08d7cfff4255a969e99743da51702a18080d3963d8ab96a99925c8"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/kernel_bridge.py",
-        "sha256": "444a1cfd5ef516e1de59bdd2cefb6d7b3a50f8c1f7a6c7a29876b46381ce49c3"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/scheduler.py",
-        "sha256": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-parallel-migrations/fa00be482b1440d3fae7fff1/round1/worker.py",
-        "sha256": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-full-repair/2bfd664251ee5d1bcaf5/verified_context_cache.py",
-        "sha256": "bd5716d74f6aa09fa9c9abd61e4604df78f717e43552a4e124d0e9bf177bef40"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/START.py",
-        "sha256": "a03cb53e89f19f6a48dc6159e61e322042bba8bf709c4a97a3e6db8bfe7b2987"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/audited_runtime.py",
-        "sha256": "d43e1cc9bd08d7cfff4255a969e99743da51702a18080d3963d8ab96a99925c8"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/kernel_bridge.py",
-        "sha256": "444a1cfd5ef516e1de59bdd2cefb6d7b3a50f8c1f7a6c7a29876b46381ce49c3"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/scheduler.py",
-        "sha256": "89a477ccc014f5ce2ce77293dc92dbb1b35d97b829be5e61944f751865326af3"
-      },
-      {
-        "path": "/public/home/zhuziyuan/paper3-r1-repairs/d8ee006073f23292089b/active-round1/c36635429230c732b802/worker.py",
-        "sha256": "cdf0dfb2a3e850da0b99ddca8b50560a33bae780bb6f7a12916e75c95cd80836"
-      },
-      {
-        "path": "/public/home/zhuziyuan/projects/paper3/p3work/classical_training.py",
-        "sha256": "c22b1f58684ba82709a330af30ab392f2f8561699514099158460fbc0bc03098"
-      },
-      {
-        "path": "/public/home/zhuziyuan/projects/paper3/p3work/development_evaluation.py",
-        "sha256": "dc5de7376b5b774dd7d846cdce2cf6d1ba4f5f51df228130c275e13ec6724618"
-      },
-      {
-        "path": "/public/home/zhuziyuan/projects/paper3/p3work/meta_training.py",
-        "sha256": "499427d197a7f7aaef35f7b25a41f685077419d6bddb1e197f8e8a825ed4a2f2"
-      },
-      {
-        "path": "/public/home/zhuziyuan/projects/paper3/p3work/method_registry.py",
-        "sha256": "c6404b3a8e7e1759663aaaee4f3cee1df67baaf0932554b501a13d6f9370c9ee"
-      }
-    ],
-    "existing_children_modified": false,
-    "current_selection_interrupted": false,
-    "jobs_submitted": 0,
-    "jobs_cancelled": 0,
-    "signals_sent": 0,
-    "scientific_files_changed": 0,
-    "plan_files_changed": 0,
-    "checkpoint_files_changed": 0,
-    "controller_or_queue_modified": false,
-    "receipt_path": "/public/home/zhuziyuan/paper3-r1-selection-continuation/applied-e0c5a6f5cf3e8a6450355bed043446f708bf2ea96fd89a0a51fafb35c72cf718.json",
-    "receipt_persisted": true
   }
 }
