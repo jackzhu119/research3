@@ -1,0 +1,214 @@
+{
+  "schema_version": "paper3-controlled-mechanism-design-v1",
+  "status": "DESIGN_DRAFT_REQUIRES_DEVELOPMENT_FREEZE",
+  "execution_enabled": false,
+  "study_claim": "Controlled algorithmic mechanism validation; no new algorithm novelty or real-data benefit claimed",
+  "code_base_commit": "934ee026c6fe253646cfb03361e64eb566ffecb8",
+  "evidence_results_commit": "a2e00af51a26bdc39a7b74a5186fe1191a426002",
+  "data": {
+    "acquired_budgets": [
+      4,
+      8,
+      12,
+      16,
+      20
+    ],
+    "primary_budget": 20,
+    "maximum_acquired_positions": 20,
+    "replenish_after_qc": false,
+    "fixed_query_after_B20": true,
+    "inherit_original_boundary_run_exclusion": true,
+    "target_query_inputs_used_for_fit_or_scaling": false,
+    "target_query_labels_used_for_selection": false,
+    "reference_participants": 32,
+    "reference_events_per_participant": 2,
+    "reference_events_total": 64,
+    "pilot_participants": 8,
+    "development_validation_participants": 11,
+    "participant_split": "SHA256(20261027|meta_train|canonical_participant_uid) order; first32reference last8pilot",
+    "reference_selection": "one fixed UID-hash-minimum legal meta_train event perclass perreference participant; reference preprocessor frozen once",
+    "old_exploratory_cohorts": {
+      "internal_holdout": 11,
+      "pan2023_published_order": 14,
+      "weibo2014_published_order": 10
+    },
+    "new_independent_cohort": "not yet identified or acquired; must be unused in R1-R11 development/source/model selection",
+    "planned_new_evaluable_participants": 90,
+    "planned_new_initial_participants": 110
+  },
+  "model": {
+    "source_seeds": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "source_frozen": true,
+    "bn_and_dropout_frozen": true,
+    "anchor": "correct_support_EA",
+    "primary_head_trainable_parameters": 0,
+    "spatial_dictionary": "completed R7 rank4 full generator dictionary; existing static mode exp(M) applied in frozen reference-white coordinates; no skew-only projection",
+    "spatial_dimension": 4,
+    "dictionary_sha256": null,
+    "geometry_sha256": null,
+    "source_checkpoint_sha256_by_seed": null,
+    "reference_event_uids_sha256": null,
+    "eigen_threshold_absolute": 1e-10,
+    "eigen_threshold_relative": 1e-06,
+    "q_rule": "min(2,floor(positive_rank/2))",
+    "random_subspaces_in_positive_rowspace": true,
+    "random_draws": 5,
+    "random_draw_aggregation": "average metrics within participant, never ensemble probabilities or select best draw",
+    "temporal_adaptation": "not included in this new static-map intervention; not a rerun of original R7 spatiotemporal relative_dro",
+    "random_base_seed": 20261027,
+    "random_key": "SHA256(base_seed|source_seed|participant_uid|session_uid|budget|experiment_block|draw_index), first64bits; canonical QR signs"
+  },
+  "optimizer": {
+    "primary_steps": 100,
+    "secondary_steps": 10,
+    "theta_learning_rate": 0.05,
+    "theta_l2": 0.01,
+    "theta_radius": 0.15,
+    "initial_theta_zero": true,
+    "head_frozen_primary": true,
+    "reuse_full_update_for_component_deletion": true,
+    "support_objective": "balanced mean BCE + 0.01 ||theta||^2; not relative_dro",
+    "ball_projection_every_step": true,
+    "head_secondary": {
+      "learning_rate": 0.01,
+      "penalty": "0.001 * (||delta_w||^2 + delta_b^2) / 65 in original64feature physical coordinates",
+      "physical_denominator": 65,
+      "initial_delta_zero": true
+    }
+  },
+  "matching": {
+    "metric": "fixed64reference logit RMS change",
+    "families": [
+      "primary_top_random_full",
+      "secondary_weak_vs_top",
+      "actual_update_weak_random_removal_and_scalar_shrink"
+    ],
+    "EA_zero_anchor_in_minimum": false,
+    "scale_range": [
+      0,
+      1
+    ],
+    "target": "minimum of tau_B and all unscaled member reference RMS in this matching family",
+    "tau_B_rule": "pilot support-only Full-SGD10 reference RMS median perbudget; no query objective search",
+    "tau_B_values": null,
+    "absolute_match_tolerance": 1e-05,
+    "target_query_dose_used_for_matching": false,
+    "support_loss_gain_claimed_matched": false,
+    "weak_direction_excluded_from_primary_minimum": true,
+    "secondary_parameter_norm_control": true,
+    "parameter_norm_and_function_norm_claimed_jointly_matched": false
+  },
+  "statistics": {
+    "unit": "participant",
+    "aggregation": "session equal within source seed; random draw metrics equal within participant/source seed; source seeds equal within participant",
+    "primary_family": [
+      {
+        "id": "P1",
+        "candidate": "top_q",
+        "baseline": "random_q",
+        "metric": "BA",
+        "expected_sign": "positive"
+      },
+      {
+        "id": "P2",
+        "candidate": "top_q",
+        "baseline": "random_q",
+        "metric": "balanced_NLL",
+        "expected_sign": "negative"
+      },
+      {
+        "id": "P3",
+        "candidate": "drop_weak",
+        "baseline": "drop_random",
+        "metric": "BA",
+        "expected_sign": "positive"
+      },
+      {
+        "id": "P4",
+        "candidate": "drop_weak",
+        "baseline": "drop_random",
+        "metric": "balanced_NLL",
+        "expected_sign": "negative"
+      },
+      {
+        "id": "P5",
+        "candidate": "top_q",
+        "baseline": "scalar_shrink_full",
+        "metric": "BA",
+        "expected_sign": "positive"
+      },
+      {
+        "id": "P6",
+        "candidate": "top_q",
+        "baseline": "support_EA",
+        "metric": "BA",
+        "expected_sign": "positive"
+      }
+    ],
+    "primary_adjustment": "Holm",
+    "primary_alpha": 0.05,
+    "tests_two_sided": true,
+    "bootstrap_resamples": 20000,
+    "statistical_seed": 20261027,
+    "large_n_signflip_draws": 100000,
+    "CI_scope": "individual pointwise percentile intervals, not simultaneous",
+    "power_planning_assumptions": {
+      "BA_difference": 0.015,
+      "participant_difference_sd": 0.04,
+      "power": 0.8,
+      "conservative_family_size": 6,
+      "normal_approximation_complete_n": 87,
+      "not_a_NLL_or_joint_power_guarantee": true
+    }
+  },
+  "stages": {
+    "pilot_paired_participant_seed_blocks": 24,
+    "development_validation_blocks": 33,
+    "old_exploratory_blocks": 105,
+    "planned_new_confirmation_blocks": 270,
+    "block_contains_all_paired_conditions_and_budgets": true,
+    "counts_are_not_fits_or_independent_participants": true,
+    "pilot_query_use": "development only, predefined go/no-go signs; never newtarget tuning"
+  },
+  "resources": {
+    "workers": 4,
+    "gpus_per_worker": 1,
+    "cpus_per_worker": 16,
+    "memory_per_worker": "64G",
+    "partition": "hpc_gpu",
+    "submission_requires_explicit_submit": true,
+    "automatic_submission": false
+  },
+  "operations": {
+    "automatic_child_refresh": false,
+    "scientific_task_signals_from_monitor": false,
+    "monitor_failure_controls_training": false,
+    "network_failure_controls_training": false,
+    "full_source_revalidation_every_fit": false,
+    "immutable_input_binding_once_per_worker": true,
+    "reuse_completed_scientific_receipts": true,
+    "bounded_transient_io_retries": 3,
+    "independent_upload_channels": [
+      "paper_analysis",
+      "full_scientific_archive"
+    ]
+  },
+  "secondary_known_shifts": {
+    "scope": "development data only",
+    "generators": "fixed first and second full spatial generators of main dictionary; individual perturbations, not chosen by future results",
+    "amplitudes": [
+      0.05,
+      0.15
+    ],
+    "conditions": [
+      "clean",
+      "same_persistent_shift_in_support_and_query",
+      "support_only_shift"
+    ],
+    "oracle": "known inverse, diagnostic only; no true-label selection"
+  }
+}

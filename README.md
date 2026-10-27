@@ -10,6 +10,10 @@
 
 [第七轮完整总JSON定向补传](operations/round7_report_supplement_20261025/README_ZH.md) · [第九轮：实测依据、数学与代码](docs/experiments/ROUND9_ZH.md)（已设计，未提交学校任务）
 
+## 受控机制研究设计（2026-10-27）
+
+[少样本空间适配为何负迁移](experiments/controlled_mechanism_20261027/README.md)：核对R7匹配容量对照及R10已完成165项的原始主要比较，设计同容量、同参考预测改变量与真实弱成分删除实验。先以8名开发参与者做24个参与者-seed配对块；旧队列仅探索复现，新数据另作独立确认。当前交付设计、统计配置与证据，不提交学校作业。下列既有轮次的历史描述保持原位，新的来源范围以本设计证据快照为准。
+
 ## 第十一轮：前缀—未来得分输运（2026-10-26）
 
 [研究与文献](experiments/round11_20261026/R11_RESEARCH_PROPOSAL_ZH.md) · [数学](experiments/round11_20261026/R11_MATH.md) · [10270任务实验](experiments/round11_20261026/R11_EXPERIMENT_PLAN.md) · [代码与运行](experiments/round11_20261026/R11_IMPLEMENTATION.md) · [完整一行启动](experiments/round11_20261026/delivery/SCHOOL_COMMANDS.md)

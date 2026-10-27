@@ -1,0 +1,261 @@
+{
+  "schema_version": "paper3-controlled-mechanism-existing-evidence-v1",
+  "scope": "Exploratory reused-cohort motivating evidence, not independent confirmatory tests",
+  "pinned_results_head": "68a8d5c5714ad2a4796bfc21b9203ed29027878d",
+  "statistical_unit": "Participant; sessions averaged within seed then seeds within participant; three seeds are not 3N independent people",
+  "sources": [
+    {
+      "path": "/workspace/paper3-round9/evidence/round-07/reports/sensitivity_comparisons.csv",
+      "bytes": 190993,
+      "sha256": "6654386a2e41be3956b5da5c5bce3e4171325a51f63e247cbf3489be4e1295aa"
+    },
+    {
+      "path": "/workspace/paper3-round9/evidence/round-07/reports/sensitivities.csv",
+      "bytes": 152089,
+      "sha256": "6629ded8c5451790828cf48a0e5dbb61c551110f614fc3b95a7f6dbb1ec07912"
+    },
+    {
+      "path": "/workspace/paper3-round9/evidence/round-07/reports/budget_curves.csv",
+      "bytes": 753238,
+      "sha256": "a794261820ac17e7533559dfae0ead6cabb61c8f7e15fd75d986a57d0764fee6"
+    },
+    {
+      "path": "/workspace/paper3-round9/evidence/round-07/reports/diagnostics.csv",
+      "bytes": 32495438,
+      "sha256": "5d3332aca18cd692e52202a8fecf583dd87b90393779e1d4260f093ea9a7b15a"
+    },
+    {
+      "path": "/workspace/paper3-round9/evidence/round-03/reports/primary_comparisons.csv",
+      "bytes": 65672,
+      "sha256": "77965128761b565aed6437749ec3ce9746b87c5f9e9d70ccfafb6b890d7395e5"
+    }
+  ],
+  "facts": [
+    {
+      "round": 7,
+      "comparison": {
+        "candidate": "sensitivity:head-rank-0",
+        "baseline": "static_ce:st:rel:full",
+        "budget": 20,
+        "partition": "holdout",
+        "n_participants": 11,
+        "session_seed_rows": 315,
+        "seeds": [
+          20261018,
+          20261019,
+          20261020
+        ],
+        "BA_delta_candidate_minus_baseline_pp": 4.474103507322519,
+        "BA_ci95_pp": [
+          2.2126405472517776,
+          6.6961215555303655
+        ],
+        "NLL_delta_candidate_minus_baseline": {
+          "ci95": [
+            -0.41931432298854404,
+            -0.2548014621969321
+          ],
+          "delta": -0.32678167183258044,
+          "excluded_metric_session_seed_rows": 0,
+          "inference": "descriptive_individual_unadjusted_interval",
+          "n_excluded_participants": 0,
+          "n_paired_session_seed_rows": 315,
+          "n_participants": 11,
+          "participant_seed_counts": {
+            "S18": 3,
+            "S20": 3,
+            "S28": 3,
+            "S31": 3,
+            "S32": 3,
+            "S42": 3,
+            "S44": 3,
+            "S48": 3,
+            "S58": 3,
+            "S62": 3,
+            "S9": 3
+          },
+          "unit": "metric_units"
+        },
+        "stored_p_value": "",
+        "posthoc_signflip_p_unadjusted": 0.005859375,
+        "p_status": "Computed post hoc from published participant vector; original sensitivity CSV leaves p blank; no new significance claim"
+      },
+      "metrics_by_group": {
+        "sensitivity:head-rank-0": {
+          "ba": 0.6130973883027077,
+          "nll_balanced": 0.6577626027988309,
+          "config": {
+            "damping": 0.0001,
+            "geometry": "single",
+            "head_basis": "pca",
+            "head_l2": 0.1,
+            "head_lr": 0.01,
+            "head_max_rank": 16,
+            "head_policy": "fixed",
+            "head_quadrature": 9,
+            "head_rank": 0,
+            "head_seed": 20261024,
+            "initializer": "tangent",
+            "inner_steps": 5,
+            "max_transform_deviation": null,
+            "mode": "spatiotemporal",
+            "objective": "relative_dro",
+            "quadrature_rotation": null,
+            "radius": 0.15,
+            "rank": 4,
+            "sigma_center_weight": 0.5,
+            "tangent_steps": 10,
+            "temperature": 0.5,
+            "theta_l2": 0.01,
+            "theta_lr": 0.05,
+            "time_operator": "zero_boundary",
+            "variance_fraction": 0.25,
+            "variant": "r7_refined"
+          },
+          "actual_support_bce": 0.6721258107666223,
+          "data_only_spatial_info_rank": 4.0,
+          "head_absorbed_spatial_fraction": 0.3436232509786907,
+          "head_parameter_count_including_bias": 1.0,
+          "valid_support_count": 15.530106257378986,
+          "weighted_head_span_rank": 1.0
+        },
+        "sensitivity:head-rank-4": {
+          "ba": 0.5918317419128649,
+          "nll_balanced": 0.8137096503228574,
+          "config": {
+            "damping": 0.0001,
+            "geometry": "single",
+            "head_basis": "pca",
+            "head_l2": 0.1,
+            "head_lr": 0.01,
+            "head_max_rank": 16,
+            "head_policy": "fixed",
+            "head_quadrature": 9,
+            "head_rank": 4,
+            "head_seed": 20261024,
+            "initializer": "tangent",
+            "inner_steps": 5,
+            "max_transform_deviation": null,
+            "mode": "spatiotemporal",
+            "objective": "relative_dro",
+            "quadrature_rotation": null,
+            "radius": 0.15,
+            "rank": 4,
+            "sigma_center_weight": 0.5,
+            "tangent_steps": 10,
+            "temperature": 0.5,
+            "theta_l2": 0.01,
+            "theta_lr": 0.05,
+            "time_operator": "zero_boundary",
+            "variance_fraction": 0.25,
+            "variant": "r7_refined"
+          },
+          "actual_support_bce": 0.511141216597962,
+          "data_only_spatial_info_rank": 3.9067296340023616,
+          "head_absorbed_spatial_fraction": 0.6250393864976752,
+          "head_parameter_count_including_bias": 5.0,
+          "valid_support_count": 15.530106257378986,
+          "weighted_head_span_rank": 5.0
+        },
+        "sensitivity:head-rank-8": {
+          "ba": 0.5699149123685511,
+          "nll_balanced": 0.9681287620916067,
+          "config": {
+            "damping": 0.0001,
+            "geometry": "single",
+            "head_basis": "pca",
+            "head_l2": 0.1,
+            "head_lr": 0.01,
+            "head_max_rank": 16,
+            "head_policy": "fixed",
+            "head_quadrature": 9,
+            "head_rank": 8,
+            "head_seed": 20261024,
+            "initializer": "tangent",
+            "inner_steps": 5,
+            "max_transform_deviation": null,
+            "mode": "spatiotemporal",
+            "objective": "relative_dro",
+            "quadrature_rotation": null,
+            "radius": 0.15,
+            "rank": 4,
+            "sigma_center_weight": 0.5,
+            "tangent_steps": 10,
+            "temperature": 0.5,
+            "theta_l2": 0.01,
+            "theta_lr": 0.05,
+            "time_operator": "zero_boundary",
+            "variance_fraction": 0.25,
+            "variant": "r7_refined"
+          },
+          "actual_support_bce": 0.2833368262402444,
+          "data_only_spatial_info_rank": 3.5796930342384883,
+          "head_absorbed_spatial_fraction": 0.8185423334191518,
+          "head_parameter_count_including_bias": 8.90672963400236,
+          "valid_support_count": 15.530106257378986,
+          "weighted_head_span_rank": 8.90672963400236
+        },
+        "static_ce:st:rel:full": {
+          "ba": 0.5683563532294825,
+          "nll_balanced": 0.9845442746314114,
+          "config": {
+            "damping": 0.0001,
+            "geometry": "single",
+            "head_basis": "pca",
+            "head_l2": 0.1,
+            "head_lr": 0.01,
+            "head_max_rank": 16,
+            "head_policy": "full",
+            "head_quadrature": 9,
+            "head_rank": 4,
+            "head_seed": 20261024,
+            "initializer": "tangent",
+            "inner_steps": 5,
+            "max_transform_deviation": null,
+            "mode": "spatiotemporal",
+            "objective": "relative_dro",
+            "quadrature_rotation": null,
+            "radius": 0.15,
+            "rank": 4,
+            "sigma_center_weight": 0.5,
+            "tangent_steps": 10,
+            "temperature": 0.5,
+            "theta_l2": 0.01,
+            "theta_lr": 0.05,
+            "time_operator": "zero_boundary",
+            "variance_fraction": 0.25,
+            "variant": "r7_refined"
+          },
+          "actual_support_bce": 0.12133812311834674,
+          "data_only_spatial_info_rank": 0.0,
+          "head_absorbed_spatial_fraction": 1.0,
+          "head_parameter_count_including_bias": 65.0,
+          "valid_support_count": 15.530106257378986,
+          "weighted_head_span_rank": 15.530106257378986
+        }
+      },
+      "caveats": [
+        "15.53 is mean valid acquired support count; not a temporal dependence-adjusted effective sample size",
+        "Restriction changes both capacity and head subspace; does not by itself isolate a spatial mechanism",
+        "Full-head row-span saturation mechanically removes data-only projected spatial information on support, not proof about future features or a global physical transformation"
+      ]
+    },
+    {
+      "round": 3,
+      "contrast": {
+        "candidate": "legacy:tangent_protected",
+        "baseline": "legacy:tangent_profiled",
+        "partition": "holdout",
+        "budget": "20",
+        "n_participants": "11",
+        "n_paired_session_seed_rows": "315",
+        "delta_ba_pp": "4.658872174687025",
+        "ci95_pp": "[2.39646724142858, 6.909417253022452]",
+        "p": "0.0048828125",
+        "p_holm": "0.0439453125",
+        "holm_family_size": "10"
+      },
+      "caveat": "Protection rescues a badly overfitted comparator; does not establish superiority to SGD100 or Support-EA"
+    }
+  ]
+}
