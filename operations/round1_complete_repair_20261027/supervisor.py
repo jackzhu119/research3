@@ -147,7 +147,17 @@ def node_call(mode,root,runtime,slot,job,python,*,runner=subprocess.run):
 
 
 def watch_allocations(root,runtime,work,python,stop,*,runner=subprocess.run):
-    observed={}; refreshed={};last_attempt={}
+    """Observe existing allocations; never interrupt an action child.
+
+    Missing repair markers during imports do not authorize SIGINT. Startup
+    hooks are loaded naturally by each new action; this watcher only observes
+    hardware so slow imports, new claims, retries and restarts cannot create a
+    repeated checkpoint-refresh loop.
+    """
+    observed={};last_attempt={}
+    pr.emit('R1_AUTOMATIC_CHILD_REFRESH_DISABLED',
+        refresh_policy='DISABLED_NEW_ACTIONS_NEVER_SIGNALLED',
+        scientific_children_signalled=0,live_allocations_signalled=0)
     while not stop.is_set():
         try:
             jobs=current_jobs(runtime);reference,source=reference_runtime(root)
@@ -161,23 +171,19 @@ def watch_allocations(root,runtime,work,python,stop,*,runner=subprocess.run):
                             and result.get('step_returncode')==0 and isinstance(result.get('runtime_profile'),dict))
                         observed[str(slot)]=dict(result,verified=good)
                         pr.put(work/'node-probes'/('slot-%d-%s.json'%(slot,job)),result)
-                # A successful checkpoint request is issued only once for this
-                # live old child. The helper recognizes already repaired ones.
-                worker=pr.read_json(runtime/'worker-status'/('slot-%d.json'%slot),{}) or {}
-                token=worker.get('claim_token'); signature=(job,token,worker.get('child_pid'))
-                if token and refreshed.get(str(slot))!=signature:
-                    result=node_call('refresh',root,runtime,slot,job,python,runner=runner)
-                    if result.get('status') in ('CHECKPOINT_REFRESH_REQUESTED','CURRENT_REPAIRED_CHILD_KEPT','PRETRAIN_CHILD_REFRESH_REQUESTED'):
-                        refreshed[str(slot)]=signature
-                    pr.put(work/'refresh-results'/('slot-%d.json'%slot),result)
+                # Deliberately no refresh call. A new child can legitimately
+                # lack repair-active.json until imports complete; every claim
+                # and allocation replacement must remain free to finish.
             with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
                 list(pool.map(one,jobs))
             # Readers bind every observation back to the current allocation ID.
             pr.put(work/'hardware-observations.json',dict(schema_version=pr.HARDWARE_SCHEMA,
                 reference_runtime_profile=reference,reference_source=source,slots=observed,
-                updated_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),new_allocations_created_by_probe=False))
+                updated_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
+                refresh_policy='DISABLED_NEW_ACTIONS_NEVER_SIGNALLED',
+                scientific_children_signalled=0,new_allocations_created_by_probe=False))
         except Exception as error:
-            pr.emit('R1_EXISTING_ALLOCATION_REFRESH_RETRY',error_type=type(error).__name__)
+            pr.emit('R1_EXISTING_ALLOCATION_OBSERVATION_RETRY',error_type=type(error).__name__)
         stop.wait(15)
 
 

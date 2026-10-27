@@ -2,6 +2,14 @@
 
 本包针对第一轮 B4/B5 反复完整验证源依赖、子进程 `-11` 退出及当前阶段只向槽位0派发任务的问题。使用学校已经安装的 Python/Torch 和原始科研实现，保留已完成结果、断点、种子、数据划分、参数更新数量、模型选择规则和计时原始证据。
 
+## 2026-10-27 自动刷新修正
+
+学校日志已确认原 B4 动作完成，三个槽位均通过实际完整运行环境观察并允许分配独立任务。但旧版后台 watcher 在新子进程尚未写入 `repair-active.json` 时，可能把新动作误当成待刷新旧动作，再次发送 SIGINT。09:44 的新动作断点退出暴露了这个遗漏，不能描述成三卡已经持续正常计算。
+
+当前 `supervisor.py` 完全移除后台自动 child refresh。新动作导入、任务切换、探测失败或 allocation 替换均不会触发科学子进程信号。硬件观察、三槽调度及首次完整验证后的动作内缓存保留。修正前的确定性复现中，四个新 claim 触发四次 refresh；修正后为零，见 `proof/REFRESH_RACE_AUDIT.json`。
+
+已部署用户使用 `delivery/HOTFIX-PAPER3-R1-REFRESH.py --apply`，具体固定下载命令见 `delivery/REFRESH_HOTFIX_COMMAND.md`。更新安装在独立运维目录；旧固定包及其 manifest、已安装 hook 和科学任务不修改，只替换同用户、同 root、同启动 token 的管理进程。旧版入口、ZIP 和119项测试证据保留作历史记录，不应重新运行旧版恢复命令来覆盖此次修正。
+
 ## 原因与证据
 
 1. 每次 B4/B5 支持集拟合与拟合工件验证都会调用源模型加载器，源模型加载器又执行完整 W1/W2、505个源对象、事件/数组数值及10项核心拟合检查。已有哈希缓存仅避免部分重复哈希；大量 JSON、数组遍历和路径检查仍重复。用户的失败动作累计827900次哈希命中，不能把这些命中或 bytes_reused 当成 GPU 更新。
@@ -13,7 +21,7 @@
 - `verified_context_cache.py`：一个 action 首次调用原始完整验证，之后复用已验证的冻结源上下文与小型 B4/B5 源模型；每次 fit 使用独立只读模型副本。不开跨 action 缓存，不缓存支持集拟合结果、query结果或可变学习模型，不拷贝大 EEG mmap。命中只检查小型身份锚点；最终完成回执发布前检查捕获的全部依赖。源身份变化不能产生成功完成回执。全局状态仅核对相关 W1/W2，其他阶段更新不会造成误中断。
 - `newdiagnostics.py`：新动作的周期堆栈计时器关闭，保留原检查点信号语义与父进程心跳，尽可能保留真正致命错误报告。
 - `parallel_runtime.py`：原依赖 DAG 生成合法就绪动作后，只改变独立 calibration/development 的运维路由。现有父进程直接领取工作；claim、任务锁及原完成回执防止重复。选择、冻结、内部验证等串行动作保留原屏障。修复旧阶段遗留的虚假 RUNNING 状态。
-- `newnode_tool.py`：在现有 allocation 内观察原生完整运行环境，不训练模型。恢复旧动作时，严格绑定同用户、作业、父子PID启动身份、action文件及claim token，只向旧科学子进程发送原有 SIGINT 断点退出请求，绝不向科学进程发送 SIGKILL，不取消 allocation。已激活新修复的子进程保留，重复命令不会反复中断它。已提交的拟合与断点保留，尚未提交的单次拟合可能需要继续或重做。
+- `newnode_tool.py`：在现有 allocation 内观察原生完整运行环境，不训练模型。历史的手动 refresh 工具保留，但修正后的后台 watcher 不再调用它；缺少动作标记不能作为打断新任务的依据。
 - `supervisor.py`：后台管理恢复。只接管身份可确认的原CPU控制器；现有科学worker与其他轮次不取消。先观察原三槽队列，首次观察零提交；显式 `--submit` 只允许原调度器为已结束槽位补位，不能增至六个作业。
 - `install_hooks.py`：仅对已有运维 `action_startup.py` 追加带备份的独立标记块，保留此前时钟、驱动、哈希缓存修复。原 `p3work/` 科学源码、检查点及完成结果不改。
 
@@ -25,7 +33,7 @@
 
 ## 学校运行
 
-完整固定下载链接及一行命令见 `delivery/SCHOOL_COMMANDS.md`。默认仅离线解包，不改运行文件、不启动子进程、不导入Torch、不访问网络。`--check` 只读。必须显式 `--repair --submit` 才安装运维hook、启动后台控制器、请求旧动作按检查点退出以及续跑原作业槽。
+首次修复的历史下载记录见 `delivery/SCHOOL_COMMANDS.md`。已部署用户应改用 `delivery/REFRESH_HOTFIX_COMMAND.md` 的自动刷新修正。新修正默认只读检查，显式 `--apply` 才安装独立运维更新并接管管理进程；不重新提交或取消任何学校作业。
 
 后台位置：`~/paper3-r1-full-repair/work/`，重点文件：
 
@@ -34,7 +42,7 @@
 - `controller-status.json`：当前阶段、作业及实际路由槽位。
 - `controller.log`：后台管理日志。
 - `hardware-observations.json`：按现有job_id绑定的实际运行环境观察。
-- `refresh-results/slot-*.json`：旧子进程断点刷新结果或新进程保留结果。
+- `refresh-results/slot-*.json`：旧版刷新历史，不能作为当前 watcher 仍在请求刷新的证据；新 watcher 记录 `DISABLED_NEW_ACTIONS_NEVER_SIGNALLED`。
 
 原科学日志仍在 `runs/training_campaign_parallel_v1/logs/`；原动作尝试仍在 `actions/<key_sha>/attempts/<claim>/`。`repair-active.json` 绑定当前动作、PID、claim及helper SHA，日志中应出现 `R1_SOURCE_CONTEXT_VERIFIED_ONCE`、`R1_SOURCE_BANK_VERIFIED_ONCE`、`R1_VERIFIED_SOURCE_SNAPSHOT_PROGRESS` 等记录，原生完成仍以 `receipt_complete: true` 为准。
 

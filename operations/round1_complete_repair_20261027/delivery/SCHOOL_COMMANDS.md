@@ -1,5 +1,7 @@
 # 第一轮完整运行修复
 
+> 2026-10-27 自动刷新修正：下列命令为首次恢复的历史记录。已部署用户请使用 [REFRESH_HOTFIX_COMMAND.md](REFRESH_HOTFIX_COMMAND.md)，避免旧后台刷新逻辑再次打断新动作。
+
 固定代码提交：`13a80ad8886297cba8a49f1fcb8f3f244487989c`；入口 SHA256：`14c3638a6705150837b7f6604990cb58d03fe13cf16c43667f92a12ffb65e6c0`。
 
 在 login1 执行下列一整行。仅保留原三槽位，旧动作以原 SIGINT 路径断点退出；不取消现有 allocation、不清空结果。

@@ -1,0 +1,38 @@
+{
+  "schema_version": "paper3-r1-refresh-race-audit-v1",
+  "observed_school_evidence": {
+    "controller_ready_beijing": "2026-10-27 09:37:37",
+    "all_three_slots_eligible": true,
+    "profile_B5_checkpoint_unwind_beijing": "2026-10-27 09:37:50",
+    "new_development_action_checkpoint_unwind_beijing": "2026-10-27 09:44:02",
+    "new_action_key": "development-39d64271bf8bb2bc205c97d42a54a647ebfd52bdbe4165c42e3c9efbdb07822c",
+    "original_B4_completed": true
+  },
+  "root_cause": "Fresh child status is visible before action_startup.active can write its activation marker; previous watcher treated each new claim with a missing marker as a refresh target.",
+  "reproduction": {
+    "delivered_original": {
+      "calls": [
+        "probe",
+        "refresh",
+        "refresh",
+        "refresh",
+        "refresh"
+      ],
+      "refresh_requests": 4,
+      "scientific_signals_actually_sent": 0
+    },
+    "refresh_fixed": {
+      "calls": [
+        "probe"
+      ],
+      "refresh_requests": 0,
+      "scientific_signals_actually_sent": 0
+    }
+  },
+  "fix": "Allocation watcher observes hardware only; no scientific child refresh call for any claim.",
+  "pre_hotfix_suite": {
+    "passed": 122,
+    "actual_school_calls": 0
+  },
+  "native_sigsegv_root_cause_proven": false
+}

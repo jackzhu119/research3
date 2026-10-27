@@ -272,7 +272,7 @@ def test_wrong_job_stdout_or_timeout_cannot_authorize_runtime_observation(tmp_pa
     assert result['status']=='ALLOCATION_STEP_RETRY' and result['error_type']=='TimeoutExpired'
 
 
-def test_allocation_watch_memoizes_successful_exact_child_refresh(tmp_path,monkeypatch):
+def test_allocation_watch_observes_existing_job_without_child_refresh(tmp_path,monkeypatch):
     runtime=tmp_path/'runtime';work=tmp_path/'work'
     s.pr.put(runtime/'worker-status/slot-0.json',dict(claim_token='claim',child_pid=222))
     monkeypatch.setattr(s,'current_jobs',lambda p:[(0,'123')])
@@ -289,8 +289,78 @@ def test_allocation_watch_memoizes_successful_exact_child_refresh(tmp_path,monke
         def is_set(self):return self.n>=2
         def wait(self,n):self.n+=1
     s.watch_allocations(tmp_path,runtime,work,sys.executable,Stop())
-    assert calls==['probe','refresh']
+    assert calls==['probe']
     value=s.pr.read_json(work/'hardware-observations.json')
     assert value['slots']['0']['verified'] is True
     assert value['slots']['0']['job_id']=='123'
     assert value['new_allocations_created_by_probe'] is False
+
+
+@pytest.mark.parametrize('probe_available',[True,False])
+def test_watch_never_interrupts_importing_or_replaced_children_on_three_allocations(tmp_path,monkeypatch,probe_available):
+    runtime=tmp_path/'runtime';work=tmp_path/'work'
+    jobs=[(0,'772906'),(1,'772904'),(2,'772905')]
+    for slot,job in jobs:
+        s.pr.put(runtime/'worker-status'/('slot-%d.json'%slot),dict(
+            job_id=job,slot=slot,pid=100+slot,child_pid=200+slot,
+            claim_token='before-import-'+str(slot),action_key='development-before-'+str(slot),
+            phase='RUNNING',kernel_ready=False))
+    monkeypatch.setattr(s,'current_jobs',lambda p:jobs)
+    monkeypatch.setattr(s,'reference_runtime',lambda p:({'device_name':'actual'},{'source':'software-fixture'}))
+    calls=[]
+    def call(mode,root,runtime,slot,job,python,**kw):
+        calls.append((mode,slot,job))
+        assert mode=='probe', 'Observing an absent import-time marker must never signal a child'
+        # Simulate an import completing and the worker immediately switching to
+        # another action while the hardware-only allocation step is still live.
+        s.pr.put(runtime/'worker-status'/('slot-%d.json'%slot),dict(
+            job_id=job,slot=slot,pid=100+slot,child_pid=300+slot,
+            claim_token='during-probe-'+str(slot),action_key='development-new-'+str(slot),
+            phase='RUNNING',kernel_ready=False))
+        return (dict(status='ACTUAL_RUNTIME_OBSERVED_NO_FIT',job_id=job,slot=slot,
+                     step_returncode=0,runtime_profile={'device_name':'actual'}) if probe_available
+                else dict(status='ALLOCATION_STEP_RETRY',job_id=job,slot=slot,returncode=1))
+    monkeypatch.setattr(s,'node_call',call)
+    notices=[]
+    monkeypatch.setattr(s.pr,'emit',lambda event,**fields:notices.append((event,fields)))
+    class Stop:
+        n=0
+        def is_set(self):return self.n>=4
+        def wait(self,n):
+            self.n+=1
+            # No repair-active marker is ever written, covering newly imported
+            # tasks and an old package whose optional marker write is delayed.
+            for slot,job in jobs:
+                s.pr.put(runtime/'worker-status'/('slot-%d.json'%slot),dict(
+                    job_id=job,slot=slot,pid=100+slot,child_pid=400+slot+self.n*10,
+                    claim_token='new-claim-'+str(self.n),action_key='development-'+str(self.n),
+                    phase='RUNNING',kernel_ready=False))
+    s.watch_allocations(tmp_path,runtime,work,sys.executable,Stop())
+    assert sorted(calls)==[('probe',slot,job) for slot,job in jobs]
+    assert not (work/'refresh-results').exists()
+    value=s.pr.read_json(work/'hardware-observations.json')
+    assert value['refresh_policy']=='DISABLED_NEW_ACTIONS_NEVER_SIGNALLED'
+    assert value['scientific_children_signalled']==0
+    assert value['new_allocations_created_by_probe'] is False
+    assert set(value['slots'])=={'0','1','2'}
+    assert notices[0][0]=='R1_AUTOMATIC_CHILD_REFRESH_DISABLED'
+
+
+def test_new_allocation_is_only_probed_never_refreshed(tmp_path,monkeypatch):
+    runtime=tmp_path/'runtime';work=tmp_path/'work';current=['772906']
+    monkeypatch.setattr(s,'current_jobs',lambda p:[(0,current[0])])
+    monkeypatch.setattr(s,'reference_runtime',lambda p:({'device_name':'actual'},{}))
+    calls=[]
+    def call(mode,root,runtime,slot,job,python,**kw):
+        calls.append((mode,job))
+        assert mode=='probe'
+        return dict(status='ACTUAL_RUNTIME_OBSERVED_NO_FIT',job_id=job,slot=slot,
+                    step_returncode=0,runtime_profile={'device_name':'actual'})
+    monkeypatch.setattr(s,'node_call',call)
+    class Stop:
+        n=0
+        def is_set(self):return self.n>=2
+        def wait(self,n):self.n+=1;current[0]='replacement'
+    s.watch_allocations(tmp_path,runtime,work,sys.executable,Stop())
+    assert calls==[('probe','772906'),('probe','replacement')]
+    assert not (work/'refresh-results').exists()

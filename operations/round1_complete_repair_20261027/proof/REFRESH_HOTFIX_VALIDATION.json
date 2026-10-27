@@ -1,0 +1,46 @@
+{
+  "schema_version": "paper3-r1-refresh-hotfix-validation-v1",
+  "verified_utc": "2026-10-27T02:06:30.815187+00:00",
+  "tests": {
+    "command": "python -m pytest -q tests --disable-warnings",
+    "passed": 151,
+    "failed": 0,
+    "duration_seconds": 6.64
+  },
+  "meaningful_checks": [
+    "Three original worker slots continue claiming distinct original-DAG actions without duplicate fits",
+    "Fresh child imports and continuously replaced claims never trigger automatic refresh",
+    "Real CPU process management handover preserves independent computation, checkpoint, completion receipt and original scheduler bytes",
+    "Repeated apply keeps same verified hotfix controller with no additional signal or spawn",
+    "Exact generated standalone entry runs under isolated Python without Torch/NumPy/SciPy/sklearn imports",
+    "Original installed package manifest and dependency hashes validated before overlay; immutable original package preserved",
+    "Old owned refresh srun launchers drained; unfinished or reused PID cannot produce false READY",
+    "TERM/startup/exec races and recorded failed startup can be resumed without signalling scientific workers",
+    "Real CPU takeover interrupted by simulated new-controller exec failure can be resumed; scientific fixture keeps running and checkpoint stays unchanged",
+    "Delayed exec of old orphan refresh launchers is rescanned through a short management-only settling interval"
+  ],
+  "supervisor_sha256": "43aeea5f1714c8171352b3ec2c86a2e907c8b49d95431b96da33fe8b9f8db0c7",
+  "hotfix_template_sha256": "6d8a3353d03af67afc38516e5c9197190a53e320f39fdc7d93312c0460de5aed",
+  "original_zip_sha256": "2bfd664251ee5d1bcaf5aa90b2a453d73d01e823d22af68ffb4ea6849c1b8f18",
+  "original_entry_sha256": "14c3638a6705150837b7f6604990cb58d03fe13cf16c43667f92a12ffb65e6c0",
+  "real_school_commands_executed": 0,
+  "actual_slurm_calls": 0,
+  "actual_gpu_used": false,
+  "validation_limits": [
+    "Real process integration uses deterministic CPU management/computation fixtures; it does not reproduce school GPUs or long-duration training",
+    "Original native -11 root cause is unproven; this hotfix removes a separately reproduced automatic refresh race",
+    "School hotfix application and subsequent native task completion require school execution evidence"
+  ],
+  "local_python": "Python 3.12.14",
+  "standalone_entry": {
+    "hotfix_id": "paper3-r1-refresh-disabled-v1",
+    "entry": "HOTFIX-PAPER3-R1-REFRESH.py",
+    "entry_sha256": "f2f202c1330296e45defed4f6bf4d3e3e095b6623a4012a1b3ef938d71c2be0d",
+    "entry_bytes": 35516,
+    "supervisor_sha256": "43aeea5f1714c8171352b3ec2c86a2e907c8b49d95431b96da33fe8b9f8db0c7",
+    "default": "read_only_inspection",
+    "activation": "--apply",
+    "scientific_children_signalled": 0,
+    "old_package_files_changed": 0
+  }
+}
