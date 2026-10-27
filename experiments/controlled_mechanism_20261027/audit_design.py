@@ -63,7 +63,8 @@ def main():
     result = dict(status='DESIGN_AND_EVIDENCE_AUDIT_PASSED', verified_evidence_files=checked,
                   primary_comparisons=len(rows), illustrative_BA_power_complete_n=count,
                   actual_gpu_used=False, slurm_calls=0, new_EEG_experiments_run=0,
-                  experiment_engine_implemented=False,
+                  historical_design_execution_enabled=config['execution_enabled'],
+                  execution_package_present=(ROOT/'paper3m12/worker.py').is_file(),
                   scope='Specification and copied evidence consistency only; not experiment execution or GPU compatibility')
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return result
