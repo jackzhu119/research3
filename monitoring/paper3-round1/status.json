@@ -14,10 +14,10 @@
   },
   "coordinator": {
     "phase": "DEVELOPMENT_SCREENING",
-    "progress_age_seconds": 8.0,
+    "progress_age_seconds": 11.0,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-27T01:52:45Z"
+    "updated_utc": "2026-10-27T01:55:42Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -55,7 +55,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 164598.0,
+    "progress_age_seconds": 164778.0,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -100,7 +100,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1-03:10:45",
+        "elapsed": "1-03:13:45",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -110,7 +110,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1-03:35:21",
+        "elapsed": "1-03:38:21",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -120,7 +120,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "1-08:34:21",
+        "elapsed": "1-08:37:21",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -130,7 +130,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-27T01:52:53Z",
+    "observed_utc": "2026-10-27T01:55:53Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -667,12 +667,13 @@
           "seed": 20261018
         },
         "error_type": "KeyboardInterrupt",
-        "job_id": "772905",
+        "job_id": "772906",
         "key": "development-888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530",
         "kind": "development",
         "method": "B4",
-        "slot": 2,
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "observations": [],
+        "slot": 0,
+        "status": "RUNNING"
       },
       {
         "configuration": {
@@ -873,7 +874,13 @@
         "key": "development-b6d5d75b4b27a264c93f4cc273cac4dbd7935ff578125f156c3db5bf6a7058c1",
         "kind": "development",
         "method": "B6",
-        "observations": [],
+        "observations": [
+          {
+            "age_seconds": 26.0,
+            "path": "runs/training_campaign_v1/development/b6d5d75b4b27a264c93f4cc273cac4dbd7935ff578125f156c3db5bf6a7058c1/progress.json",
+            "values": {}
+          }
+        ],
         "slot": 2,
         "status": "RUNNING"
       },
@@ -1142,20 +1149,13 @@
         "status": "WAITING_DEPENDENCY_OR_SLOT"
       },
       {
-        "error_type": "KeyboardInterrupt",
+        "error_type": "ExitCode75",
         "job_id": "772906",
         "key": "profile-B5",
         "kind": "calibration_profile",
         "method": "B5",
-        "observations": [
-          {
-            "age_seconds": 67.0,
-            "path": "runs/training_campaign_v1/profiles/B5/progress.json",
-            "values": {}
-          }
-        ],
         "slot": 0,
-        "status": "RUNNING"
+        "status": "RETRY_WAIT"
       },
       {
         "key": "selection-B0",
@@ -1280,16 +1280,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793065973.031316,
+  "sampled_unix": 1793066153.0329428,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 412462.0,
+    "age_seconds": 412642.0,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 412806.0,
+    "age_seconds": 412986.0,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -2038,12 +2038,13 @@
         "seed": 20261018
       },
       "error_type": "KeyboardInterrupt",
-      "job_id": "772905",
+      "job_id": "772906",
       "key": "development-888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530",
       "kind": "development",
       "method": "B4",
-      "slot": 2,
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "observations": [],
+      "slot": 0,
+      "status": "RUNNING"
     },
     {
       "configuration": {
@@ -2322,7 +2323,13 @@
       "key": "development-b6d5d75b4b27a264c93f4cc273cac4dbd7935ff578125f156c3db5bf6a7058c1",
       "kind": "development",
       "method": "B6",
-      "observations": [],
+      "observations": [
+        {
+          "age_seconds": 26.0,
+          "path": "runs/training_campaign_v1/development/b6d5d75b4b27a264c93f4cc273cac4dbd7935ff578125f156c3db5bf6a7058c1/progress.json",
+          "values": {}
+        }
+      ],
       "slot": 2,
       "status": "RUNNING"
     },
@@ -3466,20 +3473,13 @@
       "status": "COMPLETE"
     },
     {
-      "error_type": "KeyboardInterrupt",
+      "error_type": "ExitCode75",
       "job_id": "772906",
       "key": "profile-B5",
       "kind": "calibration_profile",
       "method": "B5",
-      "observations": [
-        {
-          "age_seconds": 67.0,
-          "path": "runs/training_campaign_v1/profiles/B5/progress.json",
-          "values": {}
-        }
-      ],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "RETRY_WAIT"
     },
     {
       "job_id": "772906",
@@ -3636,5 +3636,5 @@
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-27T01:52:53Z"
+  "updated_utc": "2026-10-27T01:55:53Z"
 }
