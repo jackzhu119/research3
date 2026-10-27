@@ -1,32 +1,8 @@
 {
   "automatic_child_refresh": false,
   "blocked_tasks": 0,
-  "complete_tasks": 40,
+  "complete_tasks": 41,
   "current_tasks": [
-    {
-      "attempt": 1,
-      "current_error": null,
-      "job_id": "776380",
-      "key": "head-pilot-S6-s20261020",
-      "kind": "head_block",
-      "phase": "RUNNING",
-      "progress": {
-        "attempt_token": "c8d2001ed541f877c05b55ef75c4fc01e359ad76456b61304aad3c826610f889",
-        "budget": 16,
-        "intervention": "clean",
-        "raw_condition": "random_q_2_head_frozen",
-        "session": "7",
-        "stage": "head_competition_fit",
-        "step": 60,
-        "support_objective": 0.8027219269365653,
-        "task_key": "head-pilot-S6-s20261020",
-        "task_kind": "head_block",
-        "total_steps": 100,
-        "updated_utc": "2026-10-27T16:38:45Z"
-      },
-      "progress_is_current_attempt": true,
-      "slot": 1
-    },
     {
       "attempt": 1,
       "current_error": null,
@@ -36,20 +12,44 @@
       "phase": "RUNNING",
       "progress": {
         "attempt_token": "e3343740276b14e17263dd73fbc9d3a5da69271d341d9d09cdf89f4b2f20c7e4",
-        "budget": 8,
+        "budget": 20,
         "intervention": "clean",
-        "raw_condition": "random_q_3_head_bias",
+        "raw_condition": "random_q_2_head_frozen",
         "session": "3",
         "stage": "head_competition_fit",
-        "step": 100,
-        "support_objective": 0.6280273456876836,
+        "step": 70,
+        "support_objective": 0.65343134311273,
         "task_key": "head-pilot-S3-s20261018",
         "task_kind": "head_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T16:38:45Z"
+        "updated_utc": "2026-10-27T16:41:05Z"
       },
       "progress_is_current_attempt": true,
       "slot": 0
+    },
+    {
+      "attempt": 1,
+      "current_error": null,
+      "job_id": "776380",
+      "key": "head-pilot-S3-s20261019",
+      "kind": "head_block",
+      "phase": "RUNNING",
+      "progress": {
+        "attempt_token": "7f0829a678ba53d3f233b00013b9e17cfd841dcdeb26bed690bad4f6d294e2f8",
+        "budget": 4,
+        "intervention": "clean",
+        "raw_condition": "random_q_4_head_bias",
+        "session": "1",
+        "stage": "head_competition_fit",
+        "step": 60,
+        "support_objective": 0.9139204877892622,
+        "task_key": "head-pilot-S3-s20261019",
+        "task_kind": "head_block",
+        "total_steps": 100,
+        "updated_utc": "2026-10-27T16:41:05Z"
+      },
+      "progress_is_current_attempt": true,
+      "slot": 1
     }
   ],
   "monitoring_full_scientific_payloads_rehashed": false,
@@ -64,7 +64,7 @@
         "job_id": "776379",
         "name": "paper3m12-b04a1db8d593f259-s0-a1",
         "node": "gpu2",
-        "observed_utc": "2026-10-27T16:38:47Z",
+        "observed_utc": "2026-10-27T16:41:05Z",
         "reason": "gpu2",
         "slot": 0,
         "slurm_state": "RUNNING",
@@ -76,7 +76,7 @@
         "job_id": "776380",
         "name": "paper3m12-b04a1db8d593f259-s1-a1",
         "node": "gpu1",
-        "observed_utc": "2026-10-27T16:38:47Z",
+        "observed_utc": "2026-10-27T16:41:05Z",
         "reason": "gpu1",
         "slot": 1,
         "slurm_state": "RUNNING",
@@ -88,7 +88,7 @@
         "job_id": "776381",
         "name": "paper3m12-b04a1db8d593f259-s2-a1",
         "node": "",
-        "observed_utc": "2026-10-27T16:38:47Z",
+        "observed_utc": "2026-10-27T16:41:05Z",
         "reason": "(AssocGrpGRES)",
         "slot": 2,
         "slurm_state": "PENDING",
@@ -100,7 +100,7 @@
         "job_id": "776382",
         "name": "paper3m12-b04a1db8d593f259-s3-a1",
         "node": "",
-        "observed_utc": "2026-10-27T16:38:47Z",
+        "observed_utc": "2026-10-27T16:41:05Z",
         "reason": "(AssocGrpGRES)",
         "slot": 3,
         "slurm_state": "PENDING",
@@ -109,7 +109,7 @@
       }
     ],
     "marker": "paper3m12-b04a1db8d593f259",
-    "observed_utc": "2026-10-27T16:38:47Z",
+    "observed_utc": "2026-10-27T16:41:05Z",
     "queue_observation_successful": true
   },
   "schema_version": "paper3-m12-operational-status-v1",
@@ -118,13 +118,13 @@
   "skipped_by_decision": 139,
   "status": "RUNNING_OR_READY",
   "task_phase_counts": {
-    "COMPLETE": 40,
-    "NEW": 36,
+    "COMPLETE": 41,
+    "NEW": 35,
     "RUNNING": 2,
     "SKIPPED_DECISION": 139
   },
   "total_tasks": 217,
-  "updated_utc": "2026-10-27T16:38:51Z",
+  "updated_utc": "2026-10-27T16:41:07Z",
   "uploads": {
     "full": {
       "channel": "full",
@@ -145,36 +145,41 @@
     },
     "paper": {
       "channel": "paper",
+      "commit": "064eebe3f15a0a0026524f0ac225b0c78c9fa552",
       "complete_tasks": 40,
-      "error_type": "TransportError",
-      "http_status": 502,
+      "completed_task_keys_sha256": "68dfa6800935a25dd9d1eef732f7be601cff7853e919d5b2bf2de5841512df7a",
+      "independent_from_other_channel": true,
+      "original_bytes": 243435378,
       "recipe_sha256": "b04a1db8d593f2590cb57649ae0dc55f3ac751bc2b36c08cd9782b6d62748343",
-      "schema_version": "paper3-m12-upload-state-v1",
-      "scientific_files_changed": false,
-      "status": "RETRYING",
+      "remote_complete_blob_GET_SHA256_verified": true,
+      "round": 12,
+      "schema_version": "paper3-m12-channel-pointer-v1",
+      "scientific_completion_claimed": false,
+      "status": "PARTIAL",
+      "total_tasks": 217,
       "training_controlled": false,
-      "updated_utc": "2026-10-27T16:38:23Z"
+      "updated_utc": "2026-10-27T16:41:01Z"
     }
   },
   "workers": [
     {
       "attempt_token": "e3343740276b14e17263dd73fbc9d3a5da69271d341d9d09cdf89f4b2f20c7e4",
       "job_id": "776379",
-      "last_activity_utc": "2026-10-27T16:38:45Z",
-      "last_numerical_advance_utc": "2026-10-27T16:38:45Z",
+      "last_activity_utc": "2026-10-27T16:41:05Z",
+      "last_numerical_advance_utc": "2026-10-27T16:41:05Z",
       "numerical_progress": {
         "attempt_token": "e3343740276b14e17263dd73fbc9d3a5da69271d341d9d09cdf89f4b2f20c7e4",
-        "budget": 8,
+        "budget": 20,
         "intervention": "clean",
-        "raw_condition": "random_q_3_head_bias",
+        "raw_condition": "random_q_2_head_frozen",
         "session": "3",
         "stage": "head_competition_fit",
-        "step": 100,
-        "support_objective": 0.6280273456876836,
+        "step": 70,
+        "support_objective": 0.65343134311273,
         "task_key": "head-pilot-S3-s20261018",
         "task_kind": "head_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T16:38:45Z"
+        "updated_utc": "2026-10-27T16:41:05Z"
       },
       "phase": "RUNNING",
       "pid": 55568,
@@ -184,30 +189,30 @@
       "updated_utc": "2026-10-27T16:28:56Z"
     },
     {
-      "attempt_token": "c8d2001ed541f877c05b55ef75c4fc01e359ad76456b61304aad3c826610f889",
+      "attempt_token": "7f0829a678ba53d3f233b00013b9e17cfd841dcdeb26bed690bad4f6d294e2f8",
       "job_id": "776380",
-      "last_activity_utc": "2026-10-27T16:38:45Z",
-      "last_numerical_advance_utc": "2026-10-27T16:38:45Z",
+      "last_activity_utc": "2026-10-27T16:41:05Z",
+      "last_numerical_advance_utc": "2026-10-27T16:41:05Z",
       "numerical_progress": {
-        "attempt_token": "c8d2001ed541f877c05b55ef75c4fc01e359ad76456b61304aad3c826610f889",
-        "budget": 16,
+        "attempt_token": "7f0829a678ba53d3f233b00013b9e17cfd841dcdeb26bed690bad4f6d294e2f8",
+        "budget": 4,
         "intervention": "clean",
-        "raw_condition": "random_q_2_head_frozen",
-        "session": "7",
+        "raw_condition": "random_q_4_head_bias",
+        "session": "1",
         "stage": "head_competition_fit",
         "step": 60,
-        "support_objective": 0.8027219269365653,
-        "task_key": "head-pilot-S6-s20261020",
+        "support_objective": 0.9139204877892622,
+        "task_key": "head-pilot-S3-s20261019",
         "task_kind": "head_block",
         "total_steps": 100,
-        "updated_utc": "2026-10-27T16:38:45Z"
+        "updated_utc": "2026-10-27T16:41:05Z"
       },
       "phase": "RUNNING",
       "pid": 33513,
       "slot": 1,
-      "task_key": "head-pilot-S6-s20261020",
+      "task_key": "head-pilot-S3-s20261019",
       "task_kind": "head_block",
-      "updated_utc": "2026-10-27T16:11:40Z"
+      "updated_utc": "2026-10-27T16:40:36Z"
     },
     {},
     {}
