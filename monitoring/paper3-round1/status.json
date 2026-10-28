@@ -1,6 +1,6 @@
 {
   "all_original_complete": false,
-  "allocation_metadata_age_seconds": 34.8,
+  "allocation_metadata_age_seconds": 9.6,
   "completed_by_kind": {
     "calibration_profile": 14,
     "classical": 1,
@@ -16,12 +16,12 @@
   },
   "coordinator": {
     "phase": "MAINLINE_FINALIZATION",
-    "progress_age_seconds": 65.8,
+    "progress_age_seconds": 40.6,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T17:23:19Z"
+    "updated_utc": "2026-10-28T17:26:44Z"
   },
-  "dispatch_queue_age_seconds": 65.8,
+  "dispatch_queue_age_seconds": 40.6,
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
     "BASE4_PLUS_DREYER": {
@@ -67,7 +67,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "2:01:55",
+        "elapsed": "2:04:55",
         "job_id": "779398",
         "name": "paper3r1s-1f1194ad8d2b8125-s0-a1",
         "node": "gpu2",
@@ -76,7 +76,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-28T17:24:24Z",
+    "observed_utc": "2026-10-28T17:27:24Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -88,7 +88,7 @@
         "kind": "strongest_control",
         "observations": [],
         "slot": 0,
-        "status": "RUNNING"
+        "status": "RETRY_WAIT"
       }
     ],
     "completed_observed_actions": 245,
@@ -115,100 +115,85 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793208264.7661278,
+  "sampled_unix": 1793208444.5601196,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "single_gpu_controller": {
-    "age_seconds": 65.8,
-    "cycle": 91,
+    "age_seconds": 40.6,
+    "cycle": 94,
     "jobs_submitted": 0,
     "phase": "MAINLINE_FINALIZATION",
     "read_error": null,
     "status": "RUNNING",
-    "updated_utc": "2026-10-28T17:23:19Z"
+    "updated_utc": "2026-10-28T17:26:44Z"
   },
   "single_gpu_worker": {
     "action_key": "strongest-control",
     "action_kind": "strongest_control",
     "actual_numeric_counters": [],
-    "age_seconds": 6.8,
+    "age_seconds": 15.6,
     "allocation_log": {
-      "age_seconds": 22.8,
-      "bytes": 147390,
+      "age_seconds": 23.6,
+      "bytes": 156623,
       "observed_error_types": [],
       "raw_log_text_published": false,
       "recent_events": [
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:23:02Z"
-        },
-        {
-          "event": "R1_KERNEL_RUNNING",
-          "utc": "2026-10-28T17:23:31Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:23:32Z"
+          "action_key": "strongest-control",
+          "action_kind": "strongest_control",
+          "event": "R1_FINALIZATION_VERIFICATION_REUSE_FINISHED",
+          "utc": "2026-10-28T17:25:39Z"
         },
         {
           "action_key": "strongest-control",
           "action_kind": "strongest_control",
-          "event": "R1_FINALIZATION_NATIVE_VERIFICATION_FINISHED",
-          "utc": "2026-10-28T17:23:40Z"
+          "event": "R1_VERIFIED_SOURCE_SNAPSHOT_FINISHED",
+          "utc": "2026-10-28T17:25:39Z"
+        },
+        {
+          "action_key": "strongest-control",
+          "error_type": "FinalizationDependencyChanged",
+          "event": "R1_ACTION_ERROR",
+          "utc": "2026-10-28T17:25:39Z"
+        },
+        {
+          "action_key": "strongest-control",
+          "event": "R1_ACTION_FINISHED",
+          "receipt_complete": false,
+          "returncode": 2,
+          "utc": "2026-10-28T17:25:54Z"
         },
         {
           "event": "R1_KERNEL_RUNNING",
-          "utc": "2026-10-28T17:24:01Z"
+          "utc": "2026-10-28T17:26:54Z"
         },
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:24:02Z"
+          "event": "R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED",
+          "utc": "2026-10-28T17:27:01Z"
         }
       ],
-      "tail_sha256": "4d797e6e3522bebd93bc336b6d9e90793643f065edf204a0951b105154d8b9fe"
+      "tail_sha256": "ec50d1bbf1cec0260174f66fa459da6d3b13395aa9df0a0049b1a86c0071faba"
     },
-    "child_pid": 44751,
+    "child_pid": 54351,
     "claim_bound": true,
     "current_action_log": {
-      "age_seconds": 22.8,
-      "bytes": 3378,
+      "age_seconds": 23.6,
+      "bytes": 237,
       "observed_error_types": [],
       "raw_log_text_published": false,
       "recent_events": [
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:22:01Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:22:32Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:23:02Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:23:32Z"
-        },
-        {
-          "action_key": "strongest-control",
-          "action_kind": "strongest_control",
-          "event": "R1_FINALIZATION_NATIVE_VERIFICATION_FINISHED",
-          "utc": "2026-10-28T17:23:40Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T17:24:02Z"
+          "event": "R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED",
+          "utc": "2026-10-28T17:27:01Z"
         }
       ],
-      "tail_sha256": "156c7fa33f13f05df7b15cfac5ea58ec7b9ec157562953f00a2489f9bea567cc"
+      "tail_sha256": "845e217f5f8cf42a87d72a1ef0dc2e059f41b1c8517a6162aa508945893dc38f"
     },
     "job_id": "779398",
     "phase": "ACTION_RUNNING",
     "pid": 54353,
     "slot": 0,
-    "updated_utc": "2026-10-28T17:24:18Z"
+    "updated_utc": "2026-10-28T17:27:09Z"
   },
   "tasks": [
     {
@@ -2299,10 +2284,10 @@
       "kind": "strongest_control",
       "observations": [],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "RETRY_WAIT"
     }
   ],
   "training_controlled": false,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-28T17:24:24Z"
+  "updated_utc": "2026-10-28T17:27:24Z"
 }
