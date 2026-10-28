@@ -1,6 +1,6 @@
 {
   "all_original_complete": false,
-  "allocation_metadata_age_seconds": 55.5,
+  "allocation_metadata_age_seconds": 41.7,
   "completed_by_kind": {
     "calibration_profile": 14,
     "classical": 1,
@@ -16,12 +16,12 @@
   },
   "coordinator": {
     "phase": "MAINLINE_FINALIZATION",
-    "progress_age_seconds": 19.5,
+    "progress_age_seconds": 72.7,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T18:20:59Z"
+    "updated_utc": "2026-10-28T18:23:08Z"
   },
-  "dispatch_queue_age_seconds": 19.5,
+  "dispatch_queue_age_seconds": 72.7,
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
     "BASE4_PLUS_DREYER": {
@@ -67,7 +67,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "2:58:49",
+        "elapsed": "3:01:52",
         "job_id": "779398",
         "name": "paper3r1s-1f1194ad8d2b8125-s0-a1",
         "node": "gpu2",
@@ -76,7 +76,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-28T18:21:18Z",
+    "observed_utc": "2026-10-28T18:24:21Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -88,7 +88,7 @@
         "kind": "strongest_control",
         "observations": [],
         "slot": 0,
-        "status": "RUNNING"
+        "status": "RETRY_WAIT"
       }
     ],
     "completed_observed_actions": 245,
@@ -115,96 +115,102 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793211678.5201418,
+  "sampled_unix": 1793211860.7041636,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "single_gpu_controller": {
-    "age_seconds": 18.5,
-    "cycle": 137,
+    "age_seconds": 72.7,
+    "cycle": 139,
     "jobs_submitted": 0,
     "phase": "MAINLINE_FINALIZATION",
     "read_error": null,
     "status": "RUNNING",
-    "updated_utc": "2026-10-28T18:21:00Z"
+    "updated_utc": "2026-10-28T18:23:08Z"
   },
   "single_gpu_worker": {
     "action_key": "strongest-control",
     "action_kind": "strongest_control",
     "actual_numeric_counters": [],
-    "age_seconds": 16.5,
+    "age_seconds": 11.7,
     "allocation_log": {
-      "age_seconds": 32.5,
-      "bytes": 224679,
+      "age_seconds": 11.7,
+      "bytes": 235037,
       "observed_error_types": [],
       "raw_log_text_published": false,
       "recent_events": [
         {
+          "action_key": "strongest-control",
+          "action_kind": "strongest_control",
+          "event": "R1_FINALIZATION_VERIFICATION_REUSE_ACTIVE",
+          "utc": "2026-10-28T18:23:58Z"
+        },
+        {
+          "event": "R1_FILE_DIGEST_CACHE_ACTIVE",
+          "utc": "2026-10-28T18:23:58Z"
+        },
+        {
+          "action_key": "strongest-control",
+          "action_kind": "strongest_control",
+          "event": "R1_STARTUP_SCOPE_ACTIVE",
+          "phase": "native_action",
+          "utc": "2026-10-28T18:23:58Z"
+        },
+        {
+          "event": "R1_KERNEL_READY_OBSERVED",
+          "utc": "2026-10-28T18:23:58Z"
+        },
+        {
+          "kind": "strongest_control",
+          "stage": "STARTED"
+        },
+        {
           "event": "R1_KERNEL_RUNNING",
-          "utc": "2026-10-28T18:19:43Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:19:46Z"
-        },
-        {
-          "event": "R1_KERNEL_RUNNING",
-          "utc": "2026-10-28T18:20:14Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:20:16Z"
-        },
-        {
-          "event": "R1_KERNEL_RUNNING",
-          "utc": "2026-10-28T18:20:44Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:20:46Z"
+          "utc": "2026-10-28T18:24:09Z"
         }
       ],
-      "tail_sha256": "74c9928afda7808dff1bc7a0bcaaf59767d97a0f38c397184de059b7a282f881"
+      "tail_sha256": "852b1fb35c84161cb136d1ecf58bed1c64af1dc614cb9c8fcd022cbe2edf3275"
     },
-    "child_pid": 40527,
+    "child_pid": 56749,
     "claim_bound": true,
     "current_action_log": {
-      "age_seconds": 32.5,
-      "bytes": 8339,
+      "age_seconds": 22.7,
+      "bytes": 1319,
       "observed_error_types": [],
       "raw_log_text_published": false,
       "recent_events": [
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:18:15Z"
+          "event": "R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED",
+          "utc": "2026-10-28T18:23:43Z"
         },
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:18:45Z"
+          "action_key": "strongest-control",
+          "action_kind": "strongest_control",
+          "event": "R1_FINALIZATION_VERIFICATION_REUSE_ACTIVE",
+          "utc": "2026-10-28T18:23:58Z"
         },
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:19:15Z"
+          "event": "R1_FILE_DIGEST_CACHE_ACTIVE",
+          "utc": "2026-10-28T18:23:58Z"
         },
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:19:46Z"
+          "action_key": "strongest-control",
+          "action_kind": "strongest_control",
+          "event": "R1_STARTUP_SCOPE_ACTIVE",
+          "phase": "native_action",
+          "utc": "2026-10-28T18:23:58Z"
         },
         {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:20:16Z"
-        },
-        {
-          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
-          "utc": "2026-10-28T18:20:46Z"
+          "kind": "strongest_control",
+          "stage": "STARTED"
         }
       ],
-      "tail_sha256": "b42b075665b3821e8b376eb8a5b5148476e8e7e0473ece4cf2e7a8b0f597b81c"
+      "tail_sha256": "67f12884c8b979d52929187c313d48132f4ad906850df6941ccf11d617b14775"
     },
     "job_id": "779398",
     "phase": "ACTION_RUNNING",
     "pid": 54353,
     "slot": 0,
-    "updated_utc": "2026-10-28T18:21:02Z"
+    "updated_utc": "2026-10-28T18:24:09Z"
   },
   "tasks": [
     {
@@ -2295,10 +2301,10 @@
       "kind": "strongest_control",
       "observations": [],
       "slot": 0,
-      "status": "RUNNING"
+      "status": "RETRY_WAIT"
     }
   ],
   "training_controlled": false,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-28T18:21:18Z"
+  "updated_utc": "2026-10-28T18:24:21Z"
 }
