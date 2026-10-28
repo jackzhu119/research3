@@ -4,7 +4,7 @@
   "completed_by_kind": {
     "calibration_profile": 14,
     "classical": 1,
-    "development": 130,
+    "development": 146,
     "development_selection": 14,
     "meta_confirmation": 10,
     "meta_engineering": 5,
@@ -15,11 +15,11 @@
     "source": 1
   },
   "coordinator": {
-    "phase": "DEVELOPMENT_CONFIRMATION",
-    "progress_age_seconds": 22882.9,
+    "phase": "MAINLINE_FINALIZATION",
+    "progress_age_seconds": 50.9,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T05:10:10Z"
+    "updated_utc": "2026-10-28T11:33:42Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -57,7 +57,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 285717.9,
+    "progress_age_seconds": 285897.9,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -102,7 +102,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "2-12:49:25",
+        "elapsed": "2-12:52:24",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -112,7 +112,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "2-13:14:01",
+        "elapsed": "2-13:17:00",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -122,7 +122,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "2-18:13:01",
+        "elapsed": "2-18:16:00",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -132,286 +132,28 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-28T11:31:33Z",
+    "observed_utc": "2026-10-28T11:34:32Z",
     "status": "OBSERVED"
   },
   "mainline": {
     "active_actions": [
       {
-        "configuration": {
-          "method": "B6",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
         "job_id": "772906",
-        "key": "development-785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed",
-        "kind": "development",
-        "method": "B6",
-        "observations": [
-          {
-            "age_seconds": 19498.9,
-            "path": "runs/training_campaign_v1/development/785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed/progress.json",
-            "values": {}
-          }
-        ],
+        "key": "strongest-control",
+        "kind": "strongest_control",
+        "observations": [],
         "slot": 0,
         "status": "RUNNING"
-      },
-      {
-        "configuration": {
-          "method": "B6",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "job_id": "772904",
-        "key": "development-44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8",
-        "kind": "development",
-        "method": "B6",
-        "observations": [
-          {
-            "age_seconds": 20405.9,
-            "path": "runs/training_campaign_v1/development/44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8/progress.json",
-            "values": {}
-          }
-        ],
-        "slot": 1,
-        "status": "RUNNING"
-      },
-      {
-        "configuration": {
-          "method": "B7",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "job_id": "772905",
-        "key": "development-b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22",
-        "kind": "development",
-        "method": "B7",
-        "observations": [
-          {
-            "age_seconds": 19699.9,
-            "path": "runs/training_campaign_v1/development/b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22/progress.json",
-            "values": {}
-          }
-        ],
-        "slot": 2,
-        "status": "RUNNING"
-      },
-      {
-        "configuration": {
-          "method": "B7",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226",
-        "kind": "development",
-        "method": "B7",
-        "observations": [
-          {
-            "age_seconds": 17751.9,
-            "path": "runs/training_campaign_v1/development/c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B8",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "key": "development-5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc",
-        "kind": "development",
-        "method": "B8",
-        "observations": [
-          {
-            "age_seconds": 16641.9,
-            "path": "runs/training_campaign_v1/development/5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B8",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7",
-        "kind": "development",
-        "method": "B8",
-        "observations": [
-          {
-            "age_seconds": 14900.9,
-            "path": "runs/training_campaign_v1/development/1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B9",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "key": "development-c65fe5654121a8e404c3e6e993ec6979f769cbe022af32ebb86dcee5df4a5f5c",
-        "kind": "development",
-        "method": "B9",
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B9",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818",
-        "kind": "development",
-        "method": "B9",
-        "observations": [
-          {
-            "age_seconds": 15205.9,
-            "path": "runs/training_campaign_v1/development/af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B10",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "key": "development-f31b3038945ec7f86587f68df48ec3b116e488b182405e95c1d79251761d9328",
-        "kind": "development",
-        "method": "B10",
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B10",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987",
-        "kind": "development",
-        "method": "B10",
-        "observations": [
-          {
-            "age_seconds": 11839.9,
-            "path": "runs/training_campaign_v1/development/7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B11",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "key": "development-0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7",
-        "kind": "development",
-        "method": "B11",
-        "observations": [
-          {
-            "age_seconds": 11160.9,
-            "path": "runs/training_campaign_v1/development/0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "B11",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34",
-        "kind": "development",
-        "method": "B11",
-        "observations": [
-          {
-            "age_seconds": 8924.9,
-            "path": "runs/training_campaign_v1/development/2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "P",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "key": "development-f6b14b4853d5e09da7cde188269032b017d62514fedf1f5a4133f94be39e3f33",
-        "kind": "development",
-        "method": "P",
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "P",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90",
-        "kind": "development",
-        "method": "P",
-        "observations": [
-          {
-            "age_seconds": 7624.9,
-            "path": "runs/training_campaign_v1/development/b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "P+PCT",
-          "phase": "confirmation",
-          "seed": 20261019
-        },
-        "key": "development-5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022",
-        "kind": "development",
-        "method": "P+PCT",
-        "observations": [
-          {
-            "age_seconds": 6549.9,
-            "path": "runs/training_campaign_v1/development/5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022/progress.json",
-            "values": {}
-          }
-        ],
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
-      },
-      {
-        "configuration": {
-          "method": "P+PCT",
-          "phase": "confirmation",
-          "seed": 20261020
-        },
-        "key": "development-f1dd5592008e5ff6d9c5bdad066c614a50c9d6e14884c1e949695104c60ac05b",
-        "kind": "development",
-        "method": "P+PCT",
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
       }
     ],
-    "completed_observed_actions": 229,
+    "completed_observed_actions": 245,
     "coordinator_declares_complete": false,
     "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
-    "observed_actions": 245
+    "observed_actions": 246
   },
   "mainline_complete": false,
-  "parallel_plan_complete_tasks": 229,
-  "parallel_plan_total_tasks": 245,
+  "parallel_plan_complete_tasks": 245,
+  "parallel_plan_total_tasks": 246,
   "planned_counts": {
     "calibration_profile": 14,
     "development_confirmation": 28,
@@ -442,22 +184,33 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793187092.877284,
+  "sampled_unix": 1793187272.8809254,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 533581.9,
+    "age_seconds": 533761.9,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 533925.9,
+    "age_seconds": 534105.9,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
     {
       "key": "classical",
       "kind": "classical",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B11",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7",
+      "kind": "development",
+      "method": "B11",
       "status": "COMPLETE"
     },
     {
@@ -471,6 +224,19 @@
       "kind": "development",
       "method": "B11",
       "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B3",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772905",
+      "key": "development-0a3f9af748db6a51e2d61c2793df8d53cce72a7878380f041ef231eb4114de0b",
+      "kind": "development",
+      "method": "B3",
+      "slot": 2,
       "status": "COMPLETE"
     },
     {
@@ -579,6 +345,17 @@
     },
     {
       "configuration": {
+        "method": "B8",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7",
+      "kind": "development",
+      "method": "B8",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B2",
         "phase": "screening",
         "seed": 20261018
@@ -670,6 +447,17 @@
     },
     {
       "configuration": {
+        "method": "B11",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34",
+      "kind": "development",
+      "method": "B11",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B1",
         "phase": "screening",
         "seed": 20261018
@@ -735,6 +523,19 @@
     },
     {
       "configuration": {
+        "method": "B4",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772904",
+      "key": "development-3d24eccab2c60461f7ad2ff967c660bb6055a8212c70dbc4aaeee50d00593ddd",
+      "kind": "development",
+      "method": "B4",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B5",
         "phase": "screening",
         "seed": 20261018
@@ -770,6 +571,19 @@
       "kind": "development",
       "method": "B1",
       "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B6",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "development-44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8",
+      "kind": "development",
+      "method": "B6",
+      "slot": 1,
       "status": "COMPLETE"
     },
     {
@@ -891,6 +705,19 @@
     },
     {
       "configuration": {
+        "method": "B0",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772905",
+      "key": "development-553e005a86958341d5fcdedc6be5a41c711bcb6ac33417f04858c612f6aae5c0",
+      "kind": "development",
+      "method": "B0",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B10",
         "phase": "screening",
         "seed": 20261018
@@ -956,6 +783,19 @@
     },
     {
       "configuration": {
+        "method": "B3",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "development-59cbf3d457d7a47d00ae7201f8573dd7f4cc35398da483e0a0937c2230aaac08",
+      "kind": "development",
+      "method": "B3",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "P+PCT",
         "phase": "screening",
         "seed": 20261018
@@ -965,6 +805,28 @@
       "kind": "development",
       "method": "P+PCT",
       "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "P+PCT",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022",
+      "kind": "development",
+      "method": "P+PCT",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B8",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc",
+      "kind": "development",
+      "method": "B8",
       "status": "COMPLETE"
     },
     {
@@ -1112,6 +974,17 @@
     },
     {
       "configuration": {
+        "method": "B10",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987",
+      "kind": "development",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B2",
         "phase": "screening",
         "seed": 20261018
@@ -1146,6 +1019,19 @@
       "key": "development-77d2b9cfe5d30f00056a8a0f8dfd6107f9a7fd9538d7766ed8338bd1c07e8672",
       "kind": "development",
       "method": "B7",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B6",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "development-785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed",
+      "kind": "development",
+      "method": "B6",
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -1269,6 +1155,19 @@
     {
       "configuration": {
         "method": "B4",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772905",
+      "key": "development-888922b96de127cc0f78afc56c10c1a96f9ae1b5a5eebfcc439294ae15f03bfb",
+      "kind": "development",
+      "method": "B4",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B4",
         "phase": "screening",
         "seed": 20261018
       },
@@ -1341,6 +1240,19 @@
       "key": "development-9253655a4505c2d258bbc0f4c42267a52edda4ba580cb0dbd1a8b118d74eb6a2",
       "kind": "development",
       "method": "P+PCT",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B0",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772905",
+      "key": "development-9674d0109907ae045aeccb2bdffb98c0b03f1d24a623a1c2f1ff3cf97428c178",
+      "kind": "development",
+      "method": "B0",
       "slot": 2,
       "status": "COMPLETE"
     },
@@ -1424,6 +1336,32 @@
     },
     {
       "configuration": {
+        "method": "B5",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "development-9fd427414a18c93a9e89fec9b93a6a7e8371ae070dda7fedf5a22da8835a5c8b",
+      "kind": "development",
+      "method": "B5",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B5",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "development-a0ea775712c2bd02b5aec9ca7c89f9cbf3eef7e53694269b2e9497d52f0d45a8",
+      "kind": "development",
+      "method": "B5",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B11",
         "phase": "screening",
         "seed": 20261018
@@ -1446,6 +1384,19 @@
       "kind": "development",
       "method": "B3",
       "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B2",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "development-a777ae4009c2d8e341712ee2d8fc26e17c20398f9852d9101f48eeb6a6c047f7",
+      "kind": "development",
+      "method": "B2",
+      "slot": 1,
       "status": "COMPLETE"
     },
     {
@@ -1541,6 +1492,17 @@
     },
     {
       "configuration": {
+        "method": "B9",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818",
+      "kind": "development",
+      "method": "B9",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B3",
         "phase": "screening",
         "seed": 20261018
@@ -1567,6 +1529,17 @@
     },
     {
       "configuration": {
+        "method": "P",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90",
+      "kind": "development",
+      "method": "P",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B6",
         "phase": "screening",
         "seed": 20261018
@@ -1575,6 +1548,19 @@
       "key": "development-b6d5d75b4b27a264c93f4cc273cac4dbd7935ff578125f156c3db5bf6a7058c1",
       "kind": "development",
       "method": "B6",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B7",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772905",
+      "key": "development-b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22",
+      "kind": "development",
+      "method": "B7",
       "slot": 2,
       "status": "COMPLETE"
     },
@@ -1684,6 +1670,17 @@
     },
     {
       "configuration": {
+        "method": "B7",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226",
+      "kind": "development",
+      "method": "B7",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B5",
         "phase": "screening",
         "seed": 20261018
@@ -1693,6 +1690,17 @@
       "kind": "development",
       "method": "B5",
       "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B9",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-c65fe5654121a8e404c3e6e993ec6979f769cbe022af32ebb86dcee5df4a5f5c",
+      "kind": "development",
+      "method": "B9",
       "status": "COMPLETE"
     },
     {
@@ -1731,6 +1739,19 @@
       "key": "development-c7c07e44785710dcbeed727a244ad4c9066038ed078392b4924d892cb2296e40",
       "kind": "development",
       "method": "B6",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B2",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772905",
+      "key": "development-cc752c25fec3766336062385f213affb4a6f958fa5c8b688532313ab5b167a8b",
+      "kind": "development",
+      "method": "B2",
       "slot": 2,
       "status": "COMPLETE"
     },
@@ -1892,6 +1913,19 @@
     },
     {
       "configuration": {
+        "method": "B1",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "development-e664911623da5712e61e4336013afc7592fc2fc15bac7ccab4f41f4b270ff0eb",
+      "kind": "development",
+      "method": "B1",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B11",
         "phase": "screening",
         "seed": 20261018
@@ -1900,6 +1934,19 @@
       "key": "development-e874201bb7fec63b6be590d26f8d2d139ef62d7c5c00106ea7f6ee8ba1f45648",
       "kind": "development",
       "method": "B11",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B1",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "development-e9678e9631884acd9004bb4faebeb9eeed49f42ee92458fc3804e7e25f58a8cb",
+      "kind": "development",
+      "method": "B1",
       "slot": 1,
       "status": "COMPLETE"
     },
@@ -1918,6 +1965,17 @@
     },
     {
       "configuration": {
+        "method": "P+PCT",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-f1dd5592008e5ff6d9c5bdad066c614a50c9d6e14884c1e949695104c60ac05b",
+      "kind": "development",
+      "method": "P+PCT",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B2",
         "phase": "screening",
         "seed": 20261018
@@ -1931,6 +1989,17 @@
     },
     {
       "configuration": {
+        "method": "B10",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-f31b3038945ec7f86587f68df48ec3b116e488b182405e95c1d79251761d9328",
+      "kind": "development",
+      "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "method": "B8",
         "phase": "screening",
         "seed": 20261018
@@ -1940,6 +2009,17 @@
       "kind": "development",
       "method": "B8",
       "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "P",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-f6b14b4853d5e09da7cde188269032b017d62514fedf1f5a4133f94be39e3f33",
+      "kind": "development",
+      "method": "P",
       "status": "COMPLETE"
     },
     {
@@ -2085,6 +2165,36 @@
       "key": "meta-23efbae3f5fa6d11fad2b567a5a477326376bbd8063f5100e1460e971710ba4a",
       "kind": "meta_screening",
       "method": "B10",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B10",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261019
+      },
+      "job_id": "772905",
+      "key": "meta-3be8127d8a183d10ee6de1460b8f241212f843e86e4537d6a15e2db27ca07329",
+      "kind": "meta_confirmation",
+      "method": "B10",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B8",
+        "phase": "confirmation",
+        "radius": 0.15,
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "meta-3d204121654af7c2695669f5549f929b35dea4736c0db402aa59983fa9f62179",
+      "kind": "meta_confirmation",
+      "method": "B8",
+      "slot": 0,
       "status": "COMPLETE"
     },
     {
@@ -2278,6 +2388,21 @@
     {
       "configuration": {
         "dimension": 4,
+        "method": "B11",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261020
+      },
+      "job_id": "772905",
+      "key": "meta-723c24a09229b5d5197a908451f4556d16447ba3502e96aa5b044eb014e96e9e",
+      "kind": "meta_confirmation",
+      "method": "B11",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
         "method": "P",
         "phase": "screening",
         "radius": 0.35,
@@ -2316,6 +2441,51 @@
       "kind": "meta_screening",
       "method": "P",
       "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "P",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "meta-858a3dcd30dc772dc893b8620b0b9c6dbd64bf22b5a9f7ff84b37874e2b44899",
+      "kind": "meta_confirmation",
+      "method": "P",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 8,
+        "method": "P+PCT",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261019
+      },
+      "job_id": "772905",
+      "key": "meta-875047b205033cddd06f509b03a765c8081a1535de4db46af80beafdc4bcfe90",
+      "kind": "meta_confirmation",
+      "method": "P+PCT",
+      "slot": 2,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "P",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "meta-8811c2dc5d1e1df195228d8f006bb1e23a78c2dd01f4b9c7656bcfa461b71f67",
+      "kind": "meta_confirmation",
+      "method": "P",
+      "slot": 1,
       "status": "COMPLETE"
     },
     {
@@ -2508,6 +2678,21 @@
     },
     {
       "configuration": {
+        "dimension": 8,
+        "method": "P+PCT",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261020
+      },
+      "job_id": "772906",
+      "key": "meta-b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42",
+      "kind": "meta_confirmation",
+      "method": "P+PCT",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "dimension": 1,
         "method": "B10",
         "phase": "screening",
@@ -2551,6 +2736,21 @@
     },
     {
       "configuration": {
+        "dimension": 4,
+        "method": "B10",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261020
+      },
+      "job_id": "772906",
+      "key": "meta-c7eb82ea99908fcf7b959fdfa103b93ed56042db3b94a7eafbad3835b5e06b51",
+      "kind": "meta_confirmation",
+      "method": "B10",
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
         "dimension": 8,
         "method": "B8",
         "phase": "screening",
@@ -2587,6 +2787,21 @@
       "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "slot": 1,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B11",
+        "phase": "confirmation",
+        "radius": 0.35,
+        "seed": 20261019
+      },
+      "job_id": "772904",
+      "key": "meta-dbced60b13c76d731f8551aabdf165f0d64e11365b7bc69f57c1c896d354de7f",
+      "kind": "meta_confirmation",
+      "method": "B11",
       "slot": 1,
       "status": "COMPLETE"
     },
@@ -2668,6 +2883,21 @@
       "key": "meta-ee724f04b7380c3f45530e7b684a4d1af8ce05b16c3e6d92b9d10fb65735c607",
       "kind": "meta_screening",
       "method": "P",
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "dimension": 4,
+        "method": "B8",
+        "phase": "confirmation",
+        "radius": 0.15,
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "meta-fe1e7416439968fda89f76b942bd80916d4084fb000ba7dde0440513f6e88964",
+      "kind": "meta_confirmation",
+      "method": "B8",
+      "slot": 1,
       "status": "COMPLETE"
     },
     {
@@ -2954,579 +3184,15 @@
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "confirmation",
-        "radius": 0.15,
-        "seed": 20261019
-      },
       "job_id": "772906",
-      "key": "meta-3d204121654af7c2695669f5549f929b35dea4736c0db402aa59983fa9f62179",
-      "kind": "meta_confirmation",
-      "method": "B8",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "confirmation",
-        "radius": 0.15,
-        "seed": 20261020
-      },
-      "job_id": "772904",
-      "key": "meta-fe1e7416439968fda89f76b942bd80916d4084fb000ba7dde0440513f6e88964",
-      "kind": "meta_confirmation",
-      "method": "B8",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
-      "job_id": "772905",
-      "key": "meta-3be8127d8a183d10ee6de1460b8f241212f843e86e4537d6a15e2db27ca07329",
-      "kind": "meta_confirmation",
-      "method": "B10",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
-      "job_id": "772906",
-      "key": "meta-c7eb82ea99908fcf7b959fdfa103b93ed56042db3b94a7eafbad3835b5e06b51",
-      "kind": "meta_confirmation",
-      "method": "B10",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
-      "job_id": "772904",
-      "key": "meta-dbced60b13c76d731f8551aabdf165f0d64e11365b7bc69f57c1c896d354de7f",
-      "kind": "meta_confirmation",
-      "method": "B11",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
-      "job_id": "772905",
-      "key": "meta-723c24a09229b5d5197a908451f4556d16447ba3502e96aa5b044eb014e96e9e",
-      "kind": "meta_confirmation",
-      "method": "B11",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
-      "job_id": "772906",
-      "key": "meta-858a3dcd30dc772dc893b8620b0b9c6dbd64bf22b5a9f7ff84b37874e2b44899",
-      "kind": "meta_confirmation",
-      "method": "P",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
-      "job_id": "772904",
-      "key": "meta-8811c2dc5d1e1df195228d8f006bb1e23a78c2dd01f4b9c7656bcfa461b71f67",
-      "kind": "meta_confirmation",
-      "method": "P",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
-      "job_id": "772905",
-      "key": "meta-875047b205033cddd06f509b03a765c8081a1535de4db46af80beafdc4bcfe90",
-      "kind": "meta_confirmation",
-      "method": "P+PCT",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
-      "job_id": "772906",
-      "key": "meta-b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42",
-      "kind": "meta_confirmation",
-      "method": "P+PCT",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B0",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772905",
-      "key": "development-553e005a86958341d5fcdedc6be5a41c711bcb6ac33417f04858c612f6aae5c0",
-      "kind": "development",
-      "method": "B0",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B0",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772905",
-      "key": "development-9674d0109907ae045aeccb2bdffb98c0b03f1d24a623a1c2f1ff3cf97428c178",
-      "kind": "development",
-      "method": "B0",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B1",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772906",
-      "key": "development-e664911623da5712e61e4336013afc7592fc2fc15bac7ccab4f41f4b270ff0eb",
-      "kind": "development",
-      "method": "B1",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B1",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772904",
-      "key": "development-e9678e9631884acd9004bb4faebeb9eeed49f42ee92458fc3804e7e25f58a8cb",
-      "kind": "development",
-      "method": "B1",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B2",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772905",
-      "key": "development-cc752c25fec3766336062385f213affb4a6f958fa5c8b688532313ab5b167a8b",
-      "kind": "development",
-      "method": "B2",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B2",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772904",
-      "key": "development-a777ae4009c2d8e341712ee2d8fc26e17c20398f9852d9101f48eeb6a6c047f7",
-      "kind": "development",
-      "method": "B2",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B3",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772906",
-      "key": "development-59cbf3d457d7a47d00ae7201f8573dd7f4cc35398da483e0a0937c2230aaac08",
-      "kind": "development",
-      "method": "B3",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B3",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772905",
-      "key": "development-0a3f9af748db6a51e2d61c2793df8d53cce72a7878380f041ef231eb4114de0b",
-      "kind": "development",
-      "method": "B3",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B4",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772904",
-      "key": "development-3d24eccab2c60461f7ad2ff967c660bb6055a8212c70dbc4aaeee50d00593ddd",
-      "kind": "development",
-      "method": "B4",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B4",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772905",
-      "key": "development-888922b96de127cc0f78afc56c10c1a96f9ae1b5a5eebfcc439294ae15f03bfb",
-      "kind": "development",
-      "method": "B4",
-      "slot": 2,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B5",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772906",
-      "key": "development-9fd427414a18c93a9e89fec9b93a6a7e8371ae070dda7fedf5a22da8835a5c8b",
-      "kind": "development",
-      "method": "B5",
-      "slot": 0,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B5",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772904",
-      "key": "development-a0ea775712c2bd02b5aec9ca7c89f9cbf3eef7e53694269b2e9497d52f0d45a8",
-      "kind": "development",
-      "method": "B5",
-      "slot": 1,
-      "status": "COMPLETE"
-    },
-    {
-      "configuration": {
-        "method": "B6",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772906",
-      "key": "development-785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed",
-      "kind": "development",
-      "method": "B6",
-      "observations": [
-        {
-          "age_seconds": 19498.9,
-          "path": "runs/training_campaign_v1/development/785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed/progress.json",
-          "values": {}
-        }
-      ],
+      "key": "strongest-control",
+      "kind": "strongest_control",
+      "observations": [],
       "slot": 0,
       "status": "RUNNING"
-    },
-    {
-      "configuration": {
-        "method": "B6",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "job_id": "772904",
-      "key": "development-44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8",
-      "kind": "development",
-      "method": "B6",
-      "observations": [
-        {
-          "age_seconds": 20405.9,
-          "path": "runs/training_campaign_v1/development/44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8/progress.json",
-          "values": {}
-        }
-      ],
-      "slot": 1,
-      "status": "RUNNING"
-    },
-    {
-      "configuration": {
-        "method": "B7",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "job_id": "772905",
-      "key": "development-b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22",
-      "kind": "development",
-      "method": "B7",
-      "observations": [
-        {
-          "age_seconds": 19699.9,
-          "path": "runs/training_campaign_v1/development/b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22/progress.json",
-          "values": {}
-        }
-      ],
-      "slot": 2,
-      "status": "RUNNING"
-    },
-    {
-      "configuration": {
-        "method": "B7",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226",
-      "kind": "development",
-      "method": "B7",
-      "observations": [
-        {
-          "age_seconds": 17751.9,
-          "path": "runs/training_campaign_v1/development/c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B8",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "key": "development-5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc",
-      "kind": "development",
-      "method": "B8",
-      "observations": [
-        {
-          "age_seconds": 16641.9,
-          "path": "runs/training_campaign_v1/development/5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B8",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7",
-      "kind": "development",
-      "method": "B8",
-      "observations": [
-        {
-          "age_seconds": 14900.9,
-          "path": "runs/training_campaign_v1/development/1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B9",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "key": "development-c65fe5654121a8e404c3e6e993ec6979f769cbe022af32ebb86dcee5df4a5f5c",
-      "kind": "development",
-      "method": "B9",
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B9",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818",
-      "kind": "development",
-      "method": "B9",
-      "observations": [
-        {
-          "age_seconds": 15205.9,
-          "path": "runs/training_campaign_v1/development/af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B10",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "key": "development-f31b3038945ec7f86587f68df48ec3b116e488b182405e95c1d79251761d9328",
-      "kind": "development",
-      "method": "B10",
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B10",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987",
-      "kind": "development",
-      "method": "B10",
-      "observations": [
-        {
-          "age_seconds": 11839.9,
-          "path": "runs/training_campaign_v1/development/7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B11",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "key": "development-0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7",
-      "kind": "development",
-      "method": "B11",
-      "observations": [
-        {
-          "age_seconds": 11160.9,
-          "path": "runs/training_campaign_v1/development/0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "B11",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34",
-      "kind": "development",
-      "method": "B11",
-      "observations": [
-        {
-          "age_seconds": 8924.9,
-          "path": "runs/training_campaign_v1/development/2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "P",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "key": "development-f6b14b4853d5e09da7cde188269032b017d62514fedf1f5a4133f94be39e3f33",
-      "kind": "development",
-      "method": "P",
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "P",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90",
-      "kind": "development",
-      "method": "P",
-      "observations": [
-        {
-          "age_seconds": 7624.9,
-          "path": "runs/training_campaign_v1/development/b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
-      "key": "development-5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022",
-      "kind": "development",
-      "method": "P+PCT",
-      "observations": [
-        {
-          "age_seconds": 6549.9,
-          "path": "runs/training_campaign_v1/development/5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022/progress.json",
-          "values": {}
-        }
-      ],
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
-    },
-    {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
-      "key": "development-f1dd5592008e5ff6d9c5bdad066c614a50c9d6e14884c1e949695104c60ac05b",
-      "kind": "development",
-      "method": "P+PCT",
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
     }
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-28T11:31:33Z"
+  "updated_utc": "2026-10-28T11:34:32Z"
 }
