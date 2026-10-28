@@ -1,6 +1,6 @@
 {
   "all_original_complete": false,
-  "allocation_metadata_age_seconds": 108.5,
+  "allocation_metadata_age_seconds": 45.4,
   "completed_by_kind": {
     "calibration_profile": 14,
     "classical": 1,
@@ -16,12 +16,12 @@
   },
   "coordinator": {
     "phase": "MAINLINE_FINALIZATION",
-    "progress_age_seconds": 25.5,
+    "progress_age_seconds": 83.4,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T16:54:05Z"
+    "updated_utc": "2026-10-28T16:56:07Z"
   },
-  "dispatch_queue_age_seconds": 26.5,
+  "dispatch_queue_age_seconds": 84.4,
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
     "BASE4_PLUS_DREYER": {
@@ -67,7 +67,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "1:32:01",
+        "elapsed": "1:35:01",
         "job_id": "779398",
         "name": "paper3r1s-1f1194ad8d2b8125-s0-a1",
         "node": "gpu2",
@@ -76,7 +76,7 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-28T16:54:30Z",
+    "observed_utc": "2026-10-28T16:57:30Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -88,7 +88,7 @@
         "kind": "strongest_control",
         "observations": [],
         "slot": 0,
-        "status": "RETRY_WAIT"
+        "status": "RUNNING"
       }
     ],
     "completed_observed_actions": 245,
@@ -115,70 +115,104 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793206470.4506958,
+  "sampled_unix": 1793206650.4176333,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "single_gpu_controller": {
-    "age_seconds": 21.5,
-    "cycle": 71,
+    "age_seconds": 79.4,
+    "cycle": 72,
     "jobs_submitted": 0,
     "phase": "MAINLINE_FINALIZATION",
     "read_error": null,
     "status": "RUNNING",
-    "updated_utc": "2026-10-28T16:54:09Z"
+    "updated_utc": "2026-10-28T16:56:11Z"
   },
   "single_gpu_worker": {
+    "action_key": "strongest-control",
+    "action_kind": "strongest_control",
     "actual_numeric_counters": [],
-    "age_seconds": 6.5,
+    "age_seconds": 10.4,
     "allocation_log": {
-      "age_seconds": 41.5,
-      "bytes": 115538,
+      "age_seconds": 10.4,
+      "bytes": 118186,
       "observed_error_types": [],
       "raw_log_text_published": false,
       "recent_events": [
         {
-          "event": "R1_FILE_DIGEST_CACHE_SUMMARY",
-          "utc": "2026-10-28T16:53:04Z"
-        },
-        {
           "action_key": "strongest-control",
           "action_kind": "strongest_control",
-          "event": "R1_FINALIZATION_VERIFICATION_REUSE_FINISHED",
-          "utc": "2026-10-28T16:53:04Z"
+          "event": "R1_STARTUP_SCOPE_ACTIVE",
+          "phase": "native_action",
+          "utc": "2026-10-28T16:56:29Z"
         },
         {
-          "action_key": "strongest-control",
-          "action_kind": "strongest_control",
-          "event": "R1_VERIFIED_SOURCE_SNAPSHOT_FINISHED",
-          "utc": "2026-10-28T16:53:04Z"
+          "event": "R1_KERNEL_READY_OBSERVED",
+          "utc": "2026-10-28T16:56:29Z"
         },
         {
-          "action_key": "strongest-control",
-          "error_type": "FinalizationDependencyChanged",
-          "event": "R1_ACTION_ERROR",
-          "utc": "2026-10-28T16:53:04Z"
+          "kind": "strongest_control",
+          "stage": "STARTED"
         },
         {
           "event": "R1_KERNEL_RUNNING",
-          "utc": "2026-10-28T16:53:24Z"
+          "utc": "2026-10-28T16:56:49Z"
+        },
+        {
+          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
+          "utc": "2026-10-28T16:56:59Z"
+        },
+        {
+          "event": "R1_KERNEL_RUNNING",
+          "utc": "2026-10-28T16:57:20Z"
+        }
+      ],
+      "tail_sha256": "9ceda0b9755b2f4059924fffac5d53c0a689128be2b00b339a248363bb19962c"
+    },
+    "child_pid": 24581,
+    "claim_bound": true,
+    "current_action_log": {
+      "age_seconds": 31.4,
+      "bytes": 1517,
+      "observed_error_types": [],
+      "raw_log_text_published": false,
+      "recent_events": [
+        {
+          "event": "R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED",
+          "utc": "2026-10-28T16:54:54Z"
         },
         {
           "action_key": "strongest-control",
-          "event": "R1_ACTION_FINISHED",
-          "receipt_complete": false,
-          "returncode": 2,
-          "utc": "2026-10-28T16:53:49Z"
+          "action_kind": "strongest_control",
+          "event": "R1_FINALIZATION_VERIFICATION_REUSE_ACTIVE",
+          "utc": "2026-10-28T16:56:29Z"
+        },
+        {
+          "event": "R1_FILE_DIGEST_CACHE_ACTIVE",
+          "utc": "2026-10-28T16:56:29Z"
+        },
+        {
+          "action_key": "strongest-control",
+          "action_kind": "strongest_control",
+          "event": "R1_STARTUP_SCOPE_ACTIVE",
+          "phase": "native_action",
+          "utc": "2026-10-28T16:56:29Z"
+        },
+        {
+          "kind": "strongest_control",
+          "stage": "STARTED"
+        },
+        {
+          "event": "R1_FILE_DIGEST_CACHE_PROGRESS",
+          "utc": "2026-10-28T16:56:59Z"
         }
       ],
-      "tail_sha256": "b2aae6db290f7b079d93f533d8e19ec4bc25bbebe9c8a68f108a72f87710619b"
+      "tail_sha256": "b48a92ac77bac50eb72980120837e26814e026a44e4e03f821f87c69a26db8ed"
     },
-    "child_pid": null,
-    "claim_bound": false,
     "job_id": "779398",
-    "phase": "WAITING_READY_ACTION",
+    "phase": "ACTION_RUNNING",
     "pid": 54353,
     "slot": 0,
-    "updated_utc": "2026-10-28T16:54:24Z"
+    "updated_utc": "2026-10-28T16:57:20Z"
   },
   "tasks": [
     {
@@ -2269,10 +2303,10 @@
       "kind": "strongest_control",
       "observations": [],
       "slot": 0,
-      "status": "RETRY_WAIT"
+      "status": "RUNNING"
     }
   ],
   "training_controlled": false,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-28T16:54:30Z"
+  "updated_utc": "2026-10-28T16:57:31Z"
 }
