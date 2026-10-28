@@ -6,7 +6,7 @@
     "classical": 1,
     "development": 118,
     "development_selection": 14,
-    "meta_confirmation": 9,
+    "meta_confirmation": 10,
     "meta_engineering": 5,
     "meta_screening": 45,
     "meta_selection": 5,
@@ -15,11 +15,11 @@
     "source": 1
   },
   "coordinator": {
-    "phase": "META_CONFIRMATION",
-    "progress_age_seconds": 17.8,
+    "phase": "DEVELOPMENT_CONFIRMATION",
+    "progress_age_seconds": 28.8,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T01:29:21Z"
+    "updated_utc": "2026-10-28T01:32:10Z"
   },
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
@@ -57,7 +57,7 @@
       "reference": 3,
       "source": 1
     },
-    "progress_age_seconds": 249603.8,
+    "progress_age_seconds": 249783.8,
     "status": "RUNNING_LOCAL_USER_STARTED_GPU"
   },
   "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
@@ -102,7 +102,7 @@
   "live_queue": {
     "jobs": [
       {
-        "elapsed": "2-02:47:30",
+        "elapsed": "2-02:50:30",
         "job_id": "772906",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s0-a2",
@@ -112,7 +112,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "2-03:12:06",
+        "elapsed": "2-03:15:06",
         "job_id": "772905",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s2-a2",
@@ -122,7 +122,7 @@
         "state": "RUNNING"
       },
       {
-        "elapsed": "2-08:11:06",
+        "elapsed": "2-08:14:06",
         "job_id": "772904",
         "marker": "paper3r1p-84c2da292f724ce9",
         "name": "paper3r1p-84c2da292f724ce9-s1-a2",
@@ -132,50 +132,346 @@
         "state": "RUNNING"
       }
     ],
-    "observed_utc": "2026-10-28T01:29:38Z",
+    "observed_utc": "2026-10-28T01:32:38Z",
     "status": "OBSERVED"
   },
   "mainline": {
     "active_actions": [
       {
         "configuration": {
-          "dimension": 8,
-          "method": "P+PCT",
+          "method": "B0",
           "phase": "confirmation",
-          "radius": 0.35,
+          "seed": 20261019
+        },
+        "job_id": "772905",
+        "key": "development-553e005a86958341d5fcdedc6be5a41c711bcb6ac33417f04858c612f6aae5c0",
+        "kind": "development",
+        "method": "B0",
+        "observations": [],
+        "slot": 2,
+        "status": "RUNNING"
+      },
+      {
+        "configuration": {
+          "method": "B0",
+          "phase": "confirmation",
           "seed": 20261020
         },
+        "job_id": "772904",
+        "key": "development-9674d0109907ae045aeccb2bdffb98c0b03f1d24a623a1c2f1ff3cf97428c178",
+        "kind": "development",
+        "method": "B0",
+        "observations": [],
+        "slot": 1,
+        "status": "RUNNING"
+      },
+      {
+        "configuration": {
+          "method": "B1",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
         "job_id": "772906",
-        "key": "meta-b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42",
-        "kind": "meta_confirmation",
-        "method": "P+PCT",
-        "observations": [
-          {
-            "age_seconds": 17.8,
-            "path": "runs/meta/b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42/progress.json",
-            "values": {
-              "confirmed_outer_updates_observed": 1000,
-              "inner_updates_actual": 40000,
-              "outer_attempts_dispatched": 1000,
-              "outer_updates_completed": 1000,
-              "replayed_observed_outer_updates": 0,
-              "status": "UPDATE_BUDGET_COMPLETED",
-              "validation_checkpoints": 20
-            }
-          }
-        ],
+        "key": "development-e664911623da5712e61e4336013afc7592fc2fc15bac7ccab4f41f4b270ff0eb",
+        "kind": "development",
+        "method": "B1",
+        "observations": [],
         "slot": 0,
         "status": "RUNNING"
+      },
+      {
+        "configuration": {
+          "method": "B1",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-e9678e9631884acd9004bb4faebeb9eeed49f42ee92458fc3804e7e25f58a8cb",
+        "kind": "development",
+        "method": "B1",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B2",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-cc752c25fec3766336062385f213affb4a6f958fa5c8b688532313ab5b167a8b",
+        "kind": "development",
+        "method": "B2",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B2",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-a777ae4009c2d8e341712ee2d8fc26e17c20398f9852d9101f48eeb6a6c047f7",
+        "kind": "development",
+        "method": "B2",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B3",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-59cbf3d457d7a47d00ae7201f8573dd7f4cc35398da483e0a0937c2230aaac08",
+        "kind": "development",
+        "method": "B3",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B3",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-0a3f9af748db6a51e2d61c2793df8d53cce72a7878380f041ef231eb4114de0b",
+        "kind": "development",
+        "method": "B3",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B4",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-3d24eccab2c60461f7ad2ff967c660bb6055a8212c70dbc4aaeee50d00593ddd",
+        "kind": "development",
+        "method": "B4",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B4",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-888922b96de127cc0f78afc56c10c1a96f9ae1b5a5eebfcc439294ae15f03bfb",
+        "kind": "development",
+        "method": "B4",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B5",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-9fd427414a18c93a9e89fec9b93a6a7e8371ae070dda7fedf5a22da8835a5c8b",
+        "kind": "development",
+        "method": "B5",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B5",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-a0ea775712c2bd02b5aec9ca7c89f9cbf3eef7e53694269b2e9497d52f0d45a8",
+        "kind": "development",
+        "method": "B5",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B6",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed",
+        "kind": "development",
+        "method": "B6",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B6",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8",
+        "kind": "development",
+        "method": "B6",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B7",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22",
+        "kind": "development",
+        "method": "B7",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B7",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226",
+        "kind": "development",
+        "method": "B7",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B8",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc",
+        "kind": "development",
+        "method": "B8",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B8",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7",
+        "kind": "development",
+        "method": "B8",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B9",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-c65fe5654121a8e404c3e6e993ec6979f769cbe022af32ebb86dcee5df4a5f5c",
+        "kind": "development",
+        "method": "B9",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B9",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818",
+        "kind": "development",
+        "method": "B9",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B10",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-f31b3038945ec7f86587f68df48ec3b116e488b182405e95c1d79251761d9328",
+        "kind": "development",
+        "method": "B10",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B10",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987",
+        "kind": "development",
+        "method": "B10",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B11",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7",
+        "kind": "development",
+        "method": "B11",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "B11",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34",
+        "kind": "development",
+        "method": "B11",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "P",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-f6b14b4853d5e09da7cde188269032b017d62514fedf1f5a4133f94be39e3f33",
+        "kind": "development",
+        "method": "P",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "P",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90",
+        "kind": "development",
+        "method": "P",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "P+PCT",
+          "phase": "confirmation",
+          "seed": 20261019
+        },
+        "key": "development-5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022",
+        "kind": "development",
+        "method": "P+PCT",
+        "observations": [],
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
+      },
+      {
+        "configuration": {
+          "method": "P+PCT",
+          "phase": "confirmation",
+          "seed": 20261020
+        },
+        "key": "development-f1dd5592008e5ff6d9c5bdad066c614a50c9d6e14884c1e949695104c60ac05b",
+        "kind": "development",
+        "method": "P+PCT",
+        "status": "WAITING_DEPENDENCY_OR_SLOT"
       }
     ],
-    "completed_observed_actions": 216,
+    "completed_observed_actions": 217,
     "coordinator_declares_complete": false,
     "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
-    "observed_actions": 217
+    "observed_actions": 245
   },
   "mainline_complete": false,
-  "parallel_plan_complete_tasks": 216,
-  "parallel_plan_total_tasks": 217,
+  "parallel_plan_complete_tasks": 217,
+  "parallel_plan_total_tasks": 245,
   "planned_counts": {
     "calibration_profile": 14,
     "development_confirmation": 28,
@@ -206,16 +502,16 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793150978.773555,
+  "sampled_unix": 1793151158.7753212,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "source_classical": {
-    "age_seconds": 497467.8,
+    "age_seconds": 497647.8,
     "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
   },
   "source_neural": {
     "actual_neural_fits_complete": 15,
-    "age_seconds": 497811.8,
+    "age_seconds": 497991.8,
     "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
   },
   "tasks": [
@@ -2864,26 +3160,337 @@
       "key": "meta-b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42",
       "kind": "meta_confirmation",
       "method": "P+PCT",
-      "observations": [
-        {
-          "age_seconds": 17.8,
-          "path": "runs/meta/b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42/progress.json",
-          "values": {
-            "confirmed_outer_updates_observed": 1000,
-            "inner_updates_actual": 40000,
-            "outer_attempts_dispatched": 1000,
-            "outer_updates_completed": 1000,
-            "replayed_observed_outer_updates": 0,
-            "status": "UPDATE_BUDGET_COMPLETED",
-            "validation_checkpoints": 20
-          }
-        }
-      ],
+      "slot": 0,
+      "status": "COMPLETE"
+    },
+    {
+      "configuration": {
+        "method": "B0",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772905",
+      "key": "development-553e005a86958341d5fcdedc6be5a41c711bcb6ac33417f04858c612f6aae5c0",
+      "kind": "development",
+      "method": "B0",
+      "observations": [],
+      "slot": 2,
+      "status": "RUNNING"
+    },
+    {
+      "configuration": {
+        "method": "B0",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "job_id": "772904",
+      "key": "development-9674d0109907ae045aeccb2bdffb98c0b03f1d24a623a1c2f1ff3cf97428c178",
+      "kind": "development",
+      "method": "B0",
+      "observations": [],
+      "slot": 1,
+      "status": "RUNNING"
+    },
+    {
+      "configuration": {
+        "method": "B1",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "job_id": "772906",
+      "key": "development-e664911623da5712e61e4336013afc7592fc2fc15bac7ccab4f41f4b270ff0eb",
+      "kind": "development",
+      "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "RUNNING"
+    },
+    {
+      "configuration": {
+        "method": "B1",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-e9678e9631884acd9004bb4faebeb9eeed49f42ee92458fc3804e7e25f58a8cb",
+      "kind": "development",
+      "method": "B1",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B2",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-cc752c25fec3766336062385f213affb4a6f958fa5c8b688532313ab5b167a8b",
+      "kind": "development",
+      "method": "B2",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B2",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-a777ae4009c2d8e341712ee2d8fc26e17c20398f9852d9101f48eeb6a6c047f7",
+      "kind": "development",
+      "method": "B2",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B3",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-59cbf3d457d7a47d00ae7201f8573dd7f4cc35398da483e0a0937c2230aaac08",
+      "kind": "development",
+      "method": "B3",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B3",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-0a3f9af748db6a51e2d61c2793df8d53cce72a7878380f041ef231eb4114de0b",
+      "kind": "development",
+      "method": "B3",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B4",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-3d24eccab2c60461f7ad2ff967c660bb6055a8212c70dbc4aaeee50d00593ddd",
+      "kind": "development",
+      "method": "B4",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B4",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-888922b96de127cc0f78afc56c10c1a96f9ae1b5a5eebfcc439294ae15f03bfb",
+      "kind": "development",
+      "method": "B4",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B5",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-9fd427414a18c93a9e89fec9b93a6a7e8371ae070dda7fedf5a22da8835a5c8b",
+      "kind": "development",
+      "method": "B5",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B5",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-a0ea775712c2bd02b5aec9ca7c89f9cbf3eef7e53694269b2e9497d52f0d45a8",
+      "kind": "development",
+      "method": "B5",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B6",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed",
+      "kind": "development",
+      "method": "B6",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B6",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8",
+      "kind": "development",
+      "method": "B6",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B7",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22",
+      "kind": "development",
+      "method": "B7",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B7",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226",
+      "kind": "development",
+      "method": "B7",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B8",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc",
+      "kind": "development",
+      "method": "B8",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B8",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7",
+      "kind": "development",
+      "method": "B8",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B9",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-c65fe5654121a8e404c3e6e993ec6979f769cbe022af32ebb86dcee5df4a5f5c",
+      "kind": "development",
+      "method": "B9",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B9",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818",
+      "kind": "development",
+      "method": "B9",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B10",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-f31b3038945ec7f86587f68df48ec3b116e488b182405e95c1d79251761d9328",
+      "kind": "development",
+      "method": "B10",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B10",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987",
+      "kind": "development",
+      "method": "B10",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B11",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7",
+      "kind": "development",
+      "method": "B11",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "B11",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34",
+      "kind": "development",
+      "method": "B11",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "P",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-f6b14b4853d5e09da7cde188269032b017d62514fedf1f5a4133f94be39e3f33",
+      "kind": "development",
+      "method": "P",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "P",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90",
+      "kind": "development",
+      "method": "P",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "P+PCT",
+        "phase": "confirmation",
+        "seed": 20261019
+      },
+      "key": "development-5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022",
+      "kind": "development",
+      "method": "P+PCT",
+      "observations": [],
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
+    },
+    {
+      "configuration": {
+        "method": "P+PCT",
+        "phase": "confirmation",
+        "seed": 20261020
+      },
+      "key": "development-f1dd5592008e5ff6d9c5bdad066c614a50c9d6e14884c1e949695104c60ac05b",
+      "kind": "development",
+      "method": "P+PCT",
+      "status": "WAITING_DEPENDENCY_OR_SLOT"
     }
   ],
   "trial_predictions_read": false,
   "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-28T01:29:38Z"
+  "updated_utc": "2026-10-28T01:32:38Z"
 }
