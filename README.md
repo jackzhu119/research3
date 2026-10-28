@@ -16,15 +16,15 @@
 
 | 轮次 | 最近确认状态 | 任务完成 | 队列观测 | 来源时间（北京） | 论文报告 | 完整结果包 |
 |---|---|---|---|---|---|---|
-| [第1轮](https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json) | 阶段记录：开发集确认 | 分阶段，不合并百分比 | 3运行 / 0排队 | 10-28 13:44:15 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
+| [第1轮](https://github.com/jackzhu119/research3/blob/paper3-r1-progress/monitoring/paper3-round1/status.json) | 阶段记录：主线冻结与内部评价 | 分阶段，不合并百分比 | 3运行 / 0排队 | 10-28 20:58:26 | 尚未发布论文报告回执 | 未见完整上传完成回执 |
 | [第2轮](https://github.com/jackzhu119/research3/blob/paper3-v2-progress/monitoring/paper3-followup-v2/status.json) | 任务完成；快照滞后 | 66/66 | 本源未查询队列 | 10-25 10:16:55 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-02/PAPER_DATA_ZH.md) | 上传完成回执已发布 |
 | [第3轮](https://github.com/jackzhu119/research3/blob/paper3-r3-progress/monitoring/paper3-round3/status.json) | 任务完成；快照滞后 | 174/174 | 本源未查询队列 | 10-25 08:09:10 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-03/PAPER_DATA_ZH.md) | 上传完成回执已发布 |
 | [第4轮](https://github.com/jackzhu119/research3/blob/paper3-r4-progress/monitoring/paper3-round4/status.json) | 任务完成；快照滞后 | 204/204 | 本源未查询队列 | 10-25 16:46:54 | 尚未发布论文报告回执；读取失败，状态待核实 | 上传完成回执已发布 |
-| [第5轮](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json) | 任务完成 | 105/105 | 0运行 / 0排队 | 10-28 13:45:05 | 尚未发布论文报告回执；读取失败，状态待核实 | 上传完成回执已发布 |
-| [第6轮](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json) | 任务完成 | 198/198 | 0运行 / 0排队 | 10-28 13:45:16 | 尚未发布论文报告回执；读取失败，状态待核实 | 上传完成回执已发布 |
+| [第5轮](https://github.com/jackzhu119/research3/blob/paper3-r5-progress/monitoring/paper3-round5/three-jobs-status.json) | 任务完成 | 105/105 | 0运行 / 0排队 | 10-28 20:59:16 | 尚未发布论文报告回执；读取失败，状态待核实 | 上传完成回执已发布 |
+| [第6轮](https://github.com/jackzhu119/research3/blob/paper3-r6-progress/monitoring/paper3-round6/three-jobs-status.json) | 任务完成 | 198/198 | 0运行 / 0排队 | 10-28 20:59:33 | 尚未发布论文报告回执；读取失败，状态待核实 | 上传完成回执已发布 |
 | [第7轮](https://github.com/jackzhu119/research3/blob/paper3-r7-progress/monitoring/paper3-round7/status.json) | 任务完成；快照滞后 | 273/273 | 本源未查询队列 | 10-25 09:03:06 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-07/PAPER_DATA_ZH.md)；[聚合JSON已补传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-07/REPORT_JSON_ZH.md) | 上传完成回执已发布 |
-| [第8轮](https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json) | 任务完成 | 2835/2835 | 0运行 / 0排队 | 10-28 13:44:59 | 尚未发布论文报告回执；读取失败，状态待核实 | 未见完整上传完成回执 |
-| [第9轮](https://github.com/jackzhu119/research3/blob/paper3-r9-progress/monitoring/paper3-round9/three-jobs-status.json) | 任务完成 | 1548/1548 | 0运行 / 0排队 | 10-28 13:45:58 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-09/PAPER_DATA_ZH.md) | 上传完成回执已发布 |
+| [第8轮](https://github.com/jackzhu119/research3/blob/paper3-r8-progress/monitoring/paper3-round8/three-jobs-status.json) | 任务完成 | 2835/2835 | 0运行 / 0排队 | 10-28 20:59:12 | 尚未发布论文报告回执；读取失败，状态待核实 | 未见完整上传完成回执 |
+| [第9轮](https://github.com/jackzhu119/research3/blob/paper3-r9-progress/monitoring/paper3-round9/three-jobs-status.json) | 任务完成 | 1548/1548 | 0运行 / 0排队 | 10-28 21:00:03 | [论文报告已上传](https://github.com/jackzhu119/research3/blob/paper3-results/results/paper3/round-09/PAPER_DATA_ZH.md) | 上传完成回执已发布 |
 
 [完整状态、观测时间与上传口径](docs/LIVE_STATUS_ZH.md)
 
