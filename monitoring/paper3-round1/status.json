@@ -1,6 +1,6 @@
 {
-  "aggregate_results_destination": "paper3-results:results/paper3/round-01",
   "all_original_complete": false,
+  "allocation_metadata_age_seconds": null,
   "completed_by_kind": {
     "calibration_profile": 14,
     "classical": 1,
@@ -16,11 +16,12 @@
   },
   "coordinator": {
     "phase": "MAINLINE_FINALIZATION",
-    "progress_age_seconds": 6.8,
+    "progress_age_seconds": 56.9,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T15:19:07Z"
+    "updated_utc": "2026-10-28T15:20:45Z"
   },
+  "dispatch_queue_age_seconds": 89.9,
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
     "BASE4_PLUS_DREYER": {
@@ -29,7 +30,7 @@
       "catalog_age_seconds": null,
       "completed_observed_actions": 0,
       "completion_receipt_status": null,
-      "count_scope": "Native catalog receipt counts; extension wrapper actions are not individual fits.",
+      "count_scope": "Native receipt catalog counts; wrapper actions are not individual fits.",
       "native_completed_artifact_counts": {},
       "observed_actions": 0,
       "status": "NOT_STARTED"
@@ -40,27 +41,13 @@
       "catalog_age_seconds": null,
       "completed_observed_actions": 0,
       "completion_receipt_status": null,
-      "count_scope": "Native catalog receipt counts; extension wrapper actions are not individual fits.",
+      "count_scope": "Native receipt catalog counts; wrapper actions are not individual fits.",
       "native_completed_artifact_counts": {},
       "observed_actions": 0,
       "status": "NOT_STARTED"
     }
   },
-  "historical_campaign": {
-    "active_is_historical_after_handoff": true,
-    "completed_stage_counts": {
-      "classical": 1,
-      "meta_engineering": 4,
-      "meta_screening": 33,
-      "meta_selection": 3,
-      "pilot": 1,
-      "reference": 3,
-      "source": 1
-    },
-    "progress_age_seconds": 299378.8,
-    "status": "RUNNING_LOCAL_USER_STARTED_GPU"
-  },
-  "interpretation": "Live operational observations; cached TRAINING is not proof of a live Slurm job.",
+  "interpretation": "Sampling/queue/cache activity is not proof of numerical optimizer progress.",
   "jobs": [
     {
       "attempt": 2,
@@ -68,6 +55,7 @@
       "job_id": "772906",
       "live_state": "NOT_IN_CURRENT_QUEUE",
       "memory": "43G",
+      "node": "gpu1",
       "partition": "hpc_gpu",
       "queue_reason": "gpu1",
       "slot": 0,
@@ -79,6 +67,7 @@
       "job_id": "772904",
       "live_state": "NOT_IN_CURRENT_QUEUE",
       "memory": "43G",
+      "node": "gpu2",
       "partition": "hpc_gpu",
       "queue_reason": "gpu2",
       "slot": 1,
@@ -90,6 +79,7 @@
       "job_id": "772905",
       "live_state": "NOT_IN_CURRENT_QUEUE",
       "memory": "42G",
+      "node": "gpu2",
       "partition": "hpc_gpu",
       "queue_reason": "gpu2",
       "slot": 2,
@@ -98,7 +88,7 @@
   ],
   "live_queue": {
     "jobs": [],
-    "observed_utc": "2026-10-28T15:19:13Z",
+    "observed_utc": "2026-10-28T15:21:42Z",
     "status": "OBSERVED"
   },
   "mainline": {
@@ -114,2755 +104,1809 @@
     ],
     "completed_observed_actions": 245,
     "coordinator_declares_complete": false,
-    "count_scope": "Observed primary actions, not all original work or equal-duration fits.",
+    "count_scope": "Observed primary actions; not a duration-weighted overall percentage.",
     "observed_actions": 246
   },
   "mainline_complete": false,
   "parallel_plan_complete_tasks": 245,
   "parallel_plan_total_tasks": 246,
-  "planned_counts": {
-    "calibration_profile": 14,
-    "development_confirmation": 28,
-    "development_screening": 118,
-    "development_selection": 14,
-    "extension_arms": 2,
-    "internal_check": 1,
-    "meta_confirmation": 10,
-    "meta_engineering": 5,
-    "meta_screening": 45,
-    "meta_selection": 5
-  },
   "report_recomputed": false,
   "resources_target": {
-    "configuration_source": "new_launch",
-    "cpus_per_job": 12,
-    "cpus_total": 36,
-    "gpu_model_requested_by_group": "A100-PCIe-40GB",
+    "configuration_source": "explicit_single_gpu_4cpu_64G_request",
+    "cpus_per_job": 4,
+    "cpus_total": 4,
     "gpus_per_job": 1,
-    "jobs": 3,
+    "gpus_total": 1,
+    "jobs": 1,
     "memory_per_job": [
-      "43G",
-      "43G",
-      "42G"
+      "64G"
     ],
-    "memory_total": "128G",
+    "memory_total": "64G",
     "observed_gpu_hardware_claimed": false,
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793200753.826185,
+  "sampled_unix": 1793200901.9445734,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
-  "source_classical": {
-    "age_seconds": 547242.8,
-    "status": "SOURCE_CLASSICAL_CORE_COMPLETE"
+  "single_gpu_controller": {
+    "age_seconds": null,
+    "read_error": "FileNotFoundError"
   },
-  "source_neural": {
-    "actual_neural_fits_complete": 15,
-    "age_seconds": 547586.8,
-    "status": "NEURAL_SOURCE_COMPLETE_CLASSICAL_PENDING"
+  "single_gpu_worker": {
+    "action_key": "strongest-control",
+    "action_kind": "strongest_control",
+    "actual_numeric_counters": [],
+    "age_seconds": 2929.9,
+    "allocation_log": {
+      "read_error": "FileNotFoundError"
+    },
+    "child_pid": 7047,
+    "claim_bound": false,
+    "job_id": "772906",
+    "phase": "ACTION_RUNNING",
+    "pid": 18219,
+    "slot": 0,
+    "updated_utc": "2026-10-28T14:32:52Z"
   },
   "tasks": [
     {
       "key": "classical",
       "kind": "classical",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "key": "development-0214c4723c483b8ea602768f154d268a4ba9c4cebbde22473367739b07cbd6a7",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-05b8251b138ad8422fc5c59868b0b2b69ce86cdb0a25ed34925cb4d8b19ea6f4",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772905",
       "key": "development-0a3f9af748db6a51e2d61c2793df8d53cce72a7878380f041ef231eb4114de0b",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-0e97e59ecd4182a38b47dde7a6799df879de18f9b2e531219dfd8bc9d2d02c8d",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-10712064c4d53bb5bb8e8b9c0c5bf51f2ad9a7b058befe882ad0d846dd5cb8f8",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-12d4658d04093f7b7cbeb9dd5fbb0259785769c8617c099e9d79f408cffeac7d",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-13934d1a4707c034de514ec721061db5156c409dd3efb64f2ccd693d7df915be",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-14e43e2fd645a887fb0ad11e8d923b67a0ccbd2c5c10f0e3da40d1a45b311458",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-15e82a3d96dd0a406951d0d494cf63d6067f18ac388e020ccef5d8fb8566f59b",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-17068eb44f8b9c262ab8fa854bc80fb79ad2db8db215a32db2d57871b7f527d8",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-18e8f399671f5b51bf532b9e80f073c531459f639470e74002435a24e04b9a92",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-1c621bb49c0ffca75b29742c2d8843da76cbfa8b1ff986ad7ac01c6a89458ab7",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-219b80257f0b433c4a6c2ac44cb56acd199771204cb7370e5eb3cafcb473c4c5",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-21a869b7311acf4f6d349c3526656990eaac69adbc969e4540e5744c4a4a9b6b",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-2579a4a09776f622fad002459012c512ad951fb9437a77d78a74f0466dab783d",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-2982c64e4de66cd0e44e1b5956613e4dc20d9e1ea34f7f1a4cd38b02cbdc3d81",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-298dedc934415d4ad9af1754b1532efe01e8e00443a4b205f171c971178a0268",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-29bb04a14c5c1b2c6d090135643d82a6c298a91bcd8d52f50aff95249cb7d705",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-2df25af0aa8e79e38ed7e5f964ecb2cc7237340e83c5bcb621017ccde58f5ba5",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-2fa712cb24d54d68f126210db672a5b9e485715f2dee6281de437b887b6a3f34",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-30eb0f51edac67b935b3bf8d6bcaaa44c23b7b1bcbc6769d0d58f4275c1bb8a6",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-35e469ca36a9ca2d12acc9bf44b85067f51265cac9989416c1cb0a4dfbe5fb49",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-3685926d09a7146d7cb3c87f8d052f01e87ccae3811ba789c014ca765c01ebeb",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-39d64271bf8bb2bc205c97d42a54a647ebfd52bdbe4165c42e3c9efbdb07822c",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-3a72804abca374a08c3969b5df53183f7709b81b8c6234b1d1c454f8f922986a",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772904",
       "key": "development-3d24eccab2c60461f7ad2ff967c660bb6055a8212c70dbc4aaeee50d00593ddd",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-3f7794064e53a811f8ebfd953e63dbc0c7af940aeb61a3b6c44580e34e68978a",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-3ffd0bb6c718ea39790322c6213ddb3061fbfcc9bc57776f2a2dfc05b405ac74",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-436bc61ea88bd9b6cedb3c196dfb6786c7038adcd5af9e4ce0b83795760fc110",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772904",
       "key": "development-44db059c1f1188c7218977ce8e430cff1b0d9eb66ccab481f2ece44bd432bab8",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-44fc93bbfd2d471a499b25de86f061de587de4f0c731a6e365e1f5765b85fb23",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-45a48943fc3cade74eeea4e47b80e5263b5cb8cac09a260c9776826f50e708a5",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-4955ce3f0eb85ea9051ceb05f29a78a5cf26b628e8f527d61b39dc7ff16208ce",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-49aa6cc8161e96b6d5051edee090033687419fa751ac447d87eb51a4ebbd1d06",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-49e2c34adb5b72ec6308bf1de970b2b06d272f117f4a357be5512779b689aa8f",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-4db74fe1d648b17048772a72ff0cbf2ac8cbbda7d768f9b86898593af97acb16",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-4f740a4ce72fe78900181dbab786135f38803be93c1d52d71538063478036103",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-50237a76b4a36e60bcae7c17a2dedf49261a7932b360a2d5ae67b862d5ad1fb7",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-552d5542e86a10affa337ec46c7e9635b382f9f49e472e3f0a326974e7179ff1",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B0",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772905",
       "key": "development-553e005a86958341d5fcdedc6be5a41c711bcb6ac33417f04858c612f6aae5c0",
       "kind": "development",
       "method": "B0",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-554a608ce4273fdf0efaf766e4098d6528de6d98bf5c07666d2daec9bdd98060",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-55cfc473ed595d8b0142b7007d08081b7dfad8e2e644255ee55f65d17c63208a",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-569662c692497d60de45c0143305200a9b435682e1233cbd10dab93b2c450724",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-57e212aa7d5019eb62a38ac3df4905164e6978487a710e740e981511455cc210",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-592c26bda9c15ad35cd5893a72feadcb4901667fc596783b89cc3bb022ddb560",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772906",
       "key": "development-59cbf3d457d7a47d00ae7201f8573dd7f4cc35398da483e0a0937c2230aaac08",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-5d688ff94bb5a0d54126b89958bad6f1059d98c964f20e366aa049e73f0eea69",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "key": "development-5ea178b7fc8db01a8578794c1ce11f94de7661e355622ace9fd6ffe66f769022",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "key": "development-5ee3cfae121eab39975e7d15e78918360a33ca6bacc9b106199760fe912f8fcc",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-605b579a07ffedb758a7a7e33992e447dfd75fedd54df449a5d9cf4f781bc617",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-6689e999e1dbbb9008331086506c07a9eb331d07bb2d86fb63170ce9c6e24994",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-6761146cdd2b54ac93722c962cc6ed91cdb20b2f09a7c4ff8545494fe33a9792",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-67e62ebe9212e5feb91f6da9d0ee23ce147a1e3d90503b255865da35fd3f4702",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-68d17552abf037a257ed5ad5f3c2594efa1936daa0a8e15e02d6ec8cdcd3e7e7",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-6aad44c1c0e591705adc756fb6dbdb2a5a38a0fa9099eda59f1d084864223826",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-6d3ea54c4e7b4f4dcca9d12e7b9c34134a7d600bc272cf144c08b4354e1d2154",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-6eb97ab33dc85b3a3a02649aa024706cb517b0e374965f8766eb950228c6ce9e",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B0",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-6f888ee1180d935d860a393624c98365c8cc5fefbae92dc10a8a88035d848e64",
       "kind": "development",
       "method": "B0",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-6fc275475ae62d49066feb9eb86bfcae02bf9dd934e273d18e1c69e0efa7779f",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-71bec143894b8771d2eb36a1232dcf1bfcc9ff0d21aea3b401cc84cfd81c28f1",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-7253b128221a79349e3232810c6e24cb931c37505fa11780d71f936970db7987",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-74d7f070e989936ce065268b3574b97f6358ef5107c302ff9f23c40f8b180525",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-75a7b9af0ee96868547980b1e00bd088a02d3e593c40f3ad1707a753b9aee7b2",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-77d2b9cfe5d30f00056a8a0f8dfd6107f9a7fd9538d7766ed8338bd1c07e8672",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772906",
       "key": "development-785001f5df94ffad6f3e89a9c866d8ed9002870c3a1d9a4bf0503e37e26633ed",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-78567dcd68a7e86660265c583d0d86d135b295c03dd8c5a2ea3180d79c8d6067",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-795cdce29b9c27fde640112f889d90082408c1301ee7b46a314e85a2e1ecd4cd",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-7aaf1f5826d6020f201c53eaf05cc6bae9a32e709fdef06746c5a377fc656a92",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-7c25ec7fff7a8ffc00f72b68a33dc5e8bdf6dbb5cf237fbe7bd28cffcfe2ffce",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-7c414c7a181e116d442cd2eb9e3ce834151c6802546a642f46ea47ba77b5bb17",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-7cc81d9422fdaff0601552220259e8c96d5491d71991184ad39cd88140e9740c",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-7fbec051a0c381ccfaf5cbc937e879641b45e5db162c849486cc5d1fcbb7dbb0",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-8635932901d64dc9023c2ad107f36b2a2238466ab3f902b6c9d7b012d5509260",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-87848b4268282e0e0d4760399ea599d036d7f14676877821416dfd41b182ddd2",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772905",
       "key": "development-888922b96de127cc0f78afc56c10c1a96f9ae1b5a5eebfcc439294ae15f03bfb",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-888db15cfa009c5a9be38920a804a38886a7a6c1767b9fc31c47e09b6eb91530",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-88b044c76782c0a8aeb41296a91890104f0e0580f24e72c1638aded3324dd586",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-8bc929848fae080af7f9f96eb0e8b9af996b329c52a2a3c7068c5af2012380fb",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-8f4d5138fdefaa085d670ab0e816a7fb2b1c580ef2a3321d7aaf0dad42abd0f2",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-914736f55bf46a6c66058cdb559ab55218e45dbf3bc10a775959640e5561241f",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-9253655a4505c2d258bbc0f4c42267a52edda4ba580cb0dbd1a8b118d74eb6a2",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B0",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772905",
       "key": "development-9674d0109907ae045aeccb2bdffb98c0b03f1d24a623a1c2f1ff3cf97428c178",
       "kind": "development",
       "method": "B0",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-99c6b3b612934ff727ee52cb3fe1729631f5c750d2379f000f73c88dbe4d0424",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-9b8d905818855779bc92c765101763175dc6c23f5a96c48460d50b63c7957e93",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-9ba5063c26a910e6f36f1284776c43e01f3af97912e4280bfe5e7e26ec13f403",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-9c32285724fa9f5ad7ab2e788788cf0518bcbd298b138be49041ad628697dddd",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-9e32369921addb649d5ed872bdfd23a67eeb857a669797e8c0afbc26a3e62a37",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-9f6bc3cfc30e4106c9a9ac0cc64583afbc54e6474bb5cab2c2da5d7dea842c5e",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772906",
       "key": "development-9fd427414a18c93a9e89fec9b93a6a7e8371ae070dda7fedf5a22da8835a5c8b",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772904",
       "key": "development-a0ea775712c2bd02b5aec9ca7c89f9cbf3eef7e53694269b2e9497d52f0d45a8",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-a1874f8c4efcfa1b71315d4d4dd9ccbdfe9b18c9bbf7c379656c1c3496b57b3d",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-a6b7de572ba95b6ea0d47b5a753e84867badd5ce854a5d6ec2914c9d135bcb84",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772904",
       "key": "development-a777ae4009c2d8e341712ee2d8fc26e17c20398f9852d9101f48eeb6a6c047f7",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-a8467126ac2b2518b0b3a7fe6e344e0555ba83ab8b6abd6d414d00e46a119943",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-a8ef3396083f4f3e56258cd335660f516eed1e46505ea916e370b1342e5444b6",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-aa2f64f0a4908059ce27527f8b61b3bb1960ad92c43d3a24cd5d01b287abda78",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-ac7dbbde0e6703add550a74d5cccdc27f260fa41020743ebea9f6836e78d9351",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-acbebed6a304fa0cfd3799517855ab0b1ce33fa123ad1249fd4eaecf2238b6d1",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-ae276f3faeec9c99da30e3c7cfe9ea1abf729be9828409ffabffa0ee84be424b",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B4",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-ae64a7f470cc130c989494573e0697b92b4790140a0bceb245b3ec3b0cb34f4d",
       "kind": "development",
       "method": "B4",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-af22eca991ad472fc06651fa596473611a2e6d5443d514c767326c00ee9f2818",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-b051cb2075f03018d10187b3e9523795fa755be53e6a1889d731fadfc6ba4e2a",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-b34e8b6f3456ea9d76b8de16b535b705c44a3eefe0bb7a8fe49dbd85e5c9d86c",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-b487f05ead57227a493f859c07a023662c65f9d61a5317f3892ed7fa3078ea90",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-b6d5d75b4b27a264c93f4cc273cac4dbd7935ff578125f156c3db5bf6a7058c1",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772905",
       "key": "development-b72837097b40067548f065ae73851b501014966670daef0d337f3e2defd07d22",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-b81c75cf90157831489fa7640dea67f6f04d94f7df5cecb3cd2349ce9e6cf913",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-b8aa0b33565f9f67cc247f91ceb6352385930df7670cd415008969773bee5738",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-b99d9a8b8401dc4db5f09e4e3dc0fe5b423b4aa2d4d5bdaf87b1d55e1a7d6ce9",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-ba524804a9578449afdbabf45f974d6d44d8644568e32d16c882e4fb2d164142",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-ba74b63a368462ef00bbf823eb3e8076becc87c54209a45bbd210b2352610de8",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-ba8bef4299a2868bbc4318b0c7ed8cb650628eb686bd1c7701cbbe5c6642c966",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-be685d3d137752802d3f7ee203dc3de1aa15a0d548583f9df73cdfca099272e0",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-c048b69893368274e458d63e49ea74298ec0910d51a811e40b6a393aa91f40e3",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-c32d6e132e6843aece293f68fc9b88fd065c237eab428476ebac620648fd7226",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-c392e1651efee1252ed3133b012fc2360a9a0f6ed6153375654fbbeff1455596",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "key": "development-c65fe5654121a8e404c3e6e993ec6979f769cbe022af32ebb86dcee5df4a5f5c",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-c6bf9e249e53411e77f10092981501d1c495904e2bf88aa8a8dec6db0d1f03fd",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-c71c0d9905a72fc735ed0d931b78bc9081d5dcfc58139aa5e9d1eab8b21e064a",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B6",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-c7c07e44785710dcbeed727a244ad4c9066038ed078392b4924d892cb2296e40",
       "kind": "development",
       "method": "B6",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772905",
       "key": "development-cc752c25fec3766336062385f213affb4a6f958fa5c8b688532313ab5b167a8b",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B9",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-cca552035b0fbf5525c05f8c338cfeb6f32cbf6f795216630e5d2f11fd04bbfd",
       "kind": "development",
       "method": "B9",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-d1b159817836c6ca0f4c0b405d7a139ab5b12402c8acd789efd57d3382b994fd",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-d20070a29f3d7231222afb0f35609f5096bd6571f5e38506129293479f0df777",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-d6761d682e99a37f16cd5449308b72b4ab0b87db28836df7b8ea695480b169eb",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-de93706d8f1f123f9f9a5794b660cd29693ad79fd9285aa2edd898ee9b36b373",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-df8234524b27ec4fb032901435104f41c5548d8087177afe0da8bf3cb6147a35",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-e19ee853a026d7d486eb4ff1832b4699872a68a4d06915fe3abd9740f60d7134",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-e287b437b05912b2b2d68a79e72377e854913c7f5acb67224610ac63e4763d5c",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-e3f585daa7388bdbaa5af07f4ae958bdb68dfa14293ba83db5b1967845de037d",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B7",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-e4bd26a88784c807e7913f41010bf016975425ced37e9f2696a6c071699664ec",
       "kind": "development",
       "method": "B7",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-e52cd022024862c35f55608b13e0de155d7331c6c59eb10356f736b4ae5d504a",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B3",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-e628c8600f0fb3f73a3d27260e1b9823083e08135c06015be9fcba918d5fad82",
       "kind": "development",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "job_id": "772906",
       "key": "development-e664911623da5712e61e4336013afc7592fc2fc15bac7ccab4f41f4b270ff0eb",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B11",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-e874201bb7fec63b6be590d26f8d2d139ef62d7c5c00106ea7f6ee8ba1f45648",
       "kind": "development",
       "method": "B11",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "job_id": "772904",
       "key": "development-e9678e9631884acd9004bb4faebeb9eeed49f42ee92458fc3804e7e25f58a8cb",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-e9a173ef4f8d11573bbca1c672121c7bfa79599c6136f8c5575ae35da9325068",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "seed": 20261020
-      },
       "key": "development-f1dd5592008e5ff6d9c5bdad066c614a50c9d6e14884c1e949695104c60ac05b",
       "kind": "development",
       "method": "P+PCT",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B2",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-f2b18e6a2e2417d34d50b67d17785ec59c37087634748cf426eaca6c468851c4",
       "kind": "development",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B10",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "key": "development-f31b3038945ec7f86587f68df48ec3b116e488b182405e95c1d79251761d9328",
       "kind": "development",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "development-f5f8f4675db48222f6635b0c9bd21bee9886c364f35f2019f356461a1f6bf818",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "confirmation",
-        "seed": 20261019
-      },
       "key": "development-f6b14b4853d5e09da7cde188269032b017d62514fedf1f5a4133f94be39e3f33",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "P",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "development-f7217df8ea4a38163db7ef44bef7414fbf32906aec1c82071231e664b7ad9c95",
       "kind": "development",
       "method": "P",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B1",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-f7a04e8eef8160bc4d92717b34b0db8c2c27f762258d3f0f3b1ac6d2bdb9478d",
       "kind": "development",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B8",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-f8934cbb983486722f417823e5ce9ffc918226324e1c71bcc14d638bae9dd452",
       "kind": "development",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "method": "B5",
-        "phase": "screening",
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "development-fadb668e0319588e762f50a45cf0cf27841012830ef61fff8934501c19d139ac",
       "kind": "development",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "meta-03359b6962bcf552aad2c6b63030efc0b7d2f7b22804b40d21e3c2d2d6699bd4",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-09c11a8fa118b2e8e98aec7856eb7dacdb578c096dd449e10d59ca9bb05e0e97",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-0ade9bd5ec6d8ce82d24a1c237d1502d968ad6b2458a9884305c9d4c4f3f20e6",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-0e4d1e7a013d1a47eb72f1d7f9b0b14ebb53802f59ac7bbbe1bd5d9d30677a35",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-21464523523b75f20de3a2f52dbbbd7752dcc46180ba139e9add57975ddc4040",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-217466689bf1ff93787e5f4aa360f63e07fd099761392c86e20856eda9d82f38",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-23efbae3f5fa6d11fad2b567a5a477326376bbd8063f5100e1460e971710ba4a",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
       "job_id": "772905",
       "key": "meta-3be8127d8a183d10ee6de1460b8f241212f843e86e4537d6a15e2db27ca07329",
       "kind": "meta_confirmation",
       "method": "B10",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "confirmation",
-        "radius": 0.15,
-        "seed": 20261019
-      },
       "job_id": "772906",
       "key": "meta-3d204121654af7c2695669f5549f929b35dea4736c0db402aa59983fa9f62179",
       "kind": "meta_confirmation",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-3d4b64b8e892aa8da2c8c0746425e73b7c941ae55eb1d796400960f763ce68c3",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-400064d24c6c12b257e3e788c55cae2ec2a82c562a0489ef4f148d7025934fd6",
       "kind": "meta_engineering",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 1,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-4680b4564c80ad69dc6adeb052a157a570394a09c2cffbd03e8bae76f8b2cbae",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-48528d41d0e5434e65c0bb290b063df00349a6590e8fbfd37e68fa5d7b506bb0",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-4b3ce17c1bea1692e17285311c889bc7a23bc50b22a630772dcb31e5d95f5d6f",
       "kind": "meta_engineering",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-5220adf783ca11bf5f5dc83a035f43534fdda5d7514666195e6989ae2d16fd34",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "meta-54beab9b2df65963498b2b965aa08226f4ae2ec45ebed4762d26d3c658859976",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-56f020324c20a581e060776516000767eef342cd040e8c23195d1adec6f9c1d8",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 1,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-5d9e027283b2ada3e8e1d5b114032e25801faffb567783fbf27c3685c9e63e5f",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-5e53852f5a5bdde3d699a5104b614e1f10ff53f2cadcbef7705a1d9feafca0b8",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 1,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-5e936bc6c7831a2a26a6fe6caa2e7f193f3febd4dc7974f1f543b75c8bd1882e",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-60a8e9ba83dcd5e9de8b73a6302f6e5b98375d1a863f5817f46c7da0c4a54a57",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "meta-68e503d29700015056a50083b2b4c1381c3cf83d78735d64b87f68c0bc405f5f",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "meta-6ecd2c6f9c93b8a36b880f4fae7c93fa0a4f650559046d18c33e416c5b227fe7",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
       "job_id": "772905",
       "key": "meta-723c24a09229b5d5197a908451f4556d16447ba3502e96aa5b044eb014e96e9e",
       "kind": "meta_confirmation",
       "method": "B11",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-727327ea56bfcf5cc7cf55b054f005ab573ef46c16a40b67b8ea597f8c8105df",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "meta-7ddbcd2c73d15ad32465d8160a7128c89cc91dda83011da64fdf0f538bf13fdc",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "meta-835cd7bb17f67c560f3e68e575632893b78909b50cc1b09d636eda98b980e41c",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
       "job_id": "772906",
       "key": "meta-858a3dcd30dc772dc893b8620b0b9c6dbd64bf22b5a9f7ff84b37874e2b44899",
       "kind": "meta_confirmation",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
       "job_id": "772905",
       "key": "meta-875047b205033cddd06f509b03a765c8081a1535de4db46af80beafdc4bcfe90",
       "kind": "meta_confirmation",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
       "job_id": "772904",
       "key": "meta-8811c2dc5d1e1df195228d8f006bb1e23a78c2dd01f4b9c7656bcfa461b71f67",
       "kind": "meta_confirmation",
       "method": "P",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-8a57ed60c6ee5f4d52dc4983da017cfde822f2f012ff9dee20fade02a18a2382",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-8d0fb1b8a796a417dd1fffe144fe701a8f5680313fdfae85c5fbc097413d9c29",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-8d1c1dabdd0f3d8ff142e89b0f20e2213a77aafe406afd5b621002292c9ffada",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "meta-91461b93be4a052ad82c881d1af0bc0aaa40efcbce73e6e1b4be5a03474931b1",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-9bf21cf42ae24fe375884d6315322bf5b6e8ff8352b5149d95a62b7bf6cc2021",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-9db55490e2672639cef33f71b04de362ab49ec7a1e6c34631f17bcf7e9fb704f",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "meta-a3e418568036ee54ddce224630b20694a12742debe92755631642dc71ccef418",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 1,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-a4ee3065674d14d73b0c830f8d8f45da2dd0274813c54af82d5c1495a52bfa11",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-b059288af770484d2924795a8abb1fc39b926b6da1281011b2cfb091fd669fa2",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "job_id": "772906",
       "key": "meta-b20f5a3520274392242137161ece7e3c4415b362f80c7f50b950d0b76939efcd",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-b31ec445c58cf63ca34dcaaaec0a900922882d5890fc57282bd528ff5c3dd950",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-b664320275d24616d152ded711fc14aac90db2c11355ccd68032b58e47dd9f15",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-b6ff5588f84e873c786661a8983b57ae7cf21cfa99ffa877a466db0517467c16",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-b993c1630cd54189e3bb1870eb22401c966c8a5f406fe767739c05f5d260e61e",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
       "job_id": "772906",
       "key": "meta-b9cc280e22bb1b7eab33a6131d868bc5cc59d5e0a2a2011a95e71619390b9b42",
       "kind": "meta_confirmation",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 1,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-be4f71d96dbb6135eff6edf46f89d48f8ac63a336d00041b0120e7ce5e712f67",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "P+PCT",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "job_id": "772076",
       "key": "meta-c4e684ce229413cf5e2e5c0dcf47920480f3c8f8a95824368b4f2db1b433f096",
       "kind": "meta_engineering",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "meta-c791aea858c1d64f33374c0b9eb321ab2e502be5dacf1fda12976cbc60fe74fc",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261020
-      },
       "job_id": "772906",
       "key": "meta-c7eb82ea99908fcf7b959fdfa103b93ed56042db3b94a7eafbad3835b5e06b51",
       "kind": "meta_confirmation",
       "method": "B10",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-cb15058f5008788c3d8dca2ab704d67b2ea8332786a44e295c37a0f5b03458a9",
       "kind": "meta_screening",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 1,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-cce173539e514665b368827d3c2d2617fa969947f0dd60e7a358e02a23d2dcd3",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "job_id": "772904",
       "key": "meta-d546b7bd9681ccff2be474fd2bf6f0cd01a8b4a16d4b6c29d3c14804c10a7667",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B11",
-        "phase": "confirmation",
-        "radius": 0.35,
-        "seed": 20261019
-      },
       "job_id": "772904",
       "key": "meta-dbced60b13c76d731f8551aabdf165f0d64e11365b7bc69f57c1c896d354de7f",
       "kind": "meta_confirmation",
       "method": "B11",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "B11",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-dd526209422533db84d2987549ab21546822e762c22f68e06f5b9a0306a32d22",
       "kind": "meta_screening",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 8,
-        "method": "B8",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-dee089adcdf9ffd04795a1e348f98765f98b72697dba0cb1d4f180199a78cbe8",
       "kind": "meta_engineering",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "screening",
-        "radius": 0.15,
-        "seed": 20261018
-      },
       "key": "meta-e37fc35eaa7fe949be3c03427857c5ca1f660e86bea5497539d59b9725b74910",
       "kind": "meta_screening",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 2,
-        "method": "P+PCT",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "job_id": "772905",
       "key": "meta-ea3065886503fe026552004c3f3eba81062ccad5d0b24778c03dc53580fb4ecc",
       "kind": "meta_screening",
       "method": "P+PCT",
+      "observations": [],
       "slot": 2,
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B10",
-        "phase": "engineering",
-        "radius": 0.35,
-        "seed": 20261018
-      },
       "key": "meta-eb960a13c497761581f6a40a69992cce712dc95b1c02f99433d60c4ca08bcaac",
       "kind": "meta_engineering",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "P",
-        "phase": "screening",
-        "radius": 0.05,
-        "seed": 20261018
-      },
       "key": "meta-ee724f04b7380c3f45530e7b684a4d1af8ce05b16c3e6d92b9d10fb65735c607",
       "kind": "meta_screening",
       "method": "P",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
-      "configuration": {
-        "dimension": 4,
-        "method": "B8",
-        "phase": "confirmation",
-        "radius": 0.15,
-        "seed": 20261020
-      },
       "job_id": "772904",
       "key": "meta-fe1e7416439968fda89f76b942bd80916d4084fb000ba7dde0440513f6e88964",
       "kind": "meta_confirmation",
       "method": "B8",
+      "observations": [],
       "slot": 1,
       "status": "COMPLETE"
     },
@@ -2870,18 +1914,21 @@
       "key": "meta-selection-B10",
       "kind": "meta_selection",
       "method": "B10",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
       "key": "meta-selection-B11",
       "kind": "meta_selection",
       "method": "B11",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
       "key": "meta-selection-B8",
       "kind": "meta_selection",
       "method": "B8",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
@@ -2889,6 +1936,7 @@
       "key": "meta-selection-P",
       "kind": "meta_selection",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2897,12 +1945,14 @@
       "key": "meta-selection-P+PCT",
       "kind": "meta_selection",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
       "key": "pilot",
       "kind": "pilot",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
@@ -2910,6 +1960,7 @@
       "key": "profile-B0",
       "kind": "calibration_profile",
       "method": "B0",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2918,6 +1969,7 @@
       "key": "profile-B1",
       "kind": "calibration_profile",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2926,6 +1978,7 @@
       "key": "profile-B10",
       "kind": "calibration_profile",
       "method": "B10",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2934,6 +1987,7 @@
       "key": "profile-B11",
       "kind": "calibration_profile",
       "method": "B11",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2942,6 +1996,7 @@
       "key": "profile-B2",
       "kind": "calibration_profile",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2950,6 +2005,7 @@
       "key": "profile-B3",
       "kind": "calibration_profile",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2958,6 +2014,7 @@
       "key": "profile-B4",
       "kind": "calibration_profile",
       "method": "B4",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2966,6 +2023,7 @@
       "key": "profile-B5",
       "kind": "calibration_profile",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2974,6 +2032,7 @@
       "key": "profile-B6",
       "kind": "calibration_profile",
       "method": "B6",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2982,6 +2041,7 @@
       "key": "profile-B7",
       "kind": "calibration_profile",
       "method": "B7",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2990,6 +2050,7 @@
       "key": "profile-B8",
       "kind": "calibration_profile",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -2998,6 +2059,7 @@
       "key": "profile-B9",
       "kind": "calibration_profile",
       "method": "B9",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3006,6 +2068,7 @@
       "key": "profile-P",
       "kind": "calibration_profile",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3014,22 +2077,26 @@
       "key": "profile-P+PCT",
       "kind": "calibration_profile",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
       "key": "reference-20261018",
       "kind": "reference",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
       "key": "reference-20261019",
       "kind": "reference",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
       "key": "reference-20261020",
       "kind": "reference",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
@@ -3037,6 +2104,7 @@
       "key": "selection-B0",
       "kind": "development_selection",
       "method": "B0",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3045,6 +2113,7 @@
       "key": "selection-B1",
       "kind": "development_selection",
       "method": "B1",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3053,6 +2122,7 @@
       "key": "selection-B10",
       "kind": "development_selection",
       "method": "B10",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3061,6 +2131,7 @@
       "key": "selection-B11",
       "kind": "development_selection",
       "method": "B11",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3069,6 +2140,7 @@
       "key": "selection-B2",
       "kind": "development_selection",
       "method": "B2",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3077,6 +2149,7 @@
       "key": "selection-B3",
       "kind": "development_selection",
       "method": "B3",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3085,6 +2158,7 @@
       "key": "selection-B4",
       "kind": "development_selection",
       "method": "B4",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3093,6 +2167,7 @@
       "key": "selection-B5",
       "kind": "development_selection",
       "method": "B5",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3101,6 +2176,7 @@
       "key": "selection-B6",
       "kind": "development_selection",
       "method": "B6",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3109,6 +2185,7 @@
       "key": "selection-B7",
       "kind": "development_selection",
       "method": "B7",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3117,6 +2194,7 @@
       "key": "selection-B8",
       "kind": "development_selection",
       "method": "B8",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3125,6 +2203,7 @@
       "key": "selection-B9",
       "kind": "development_selection",
       "method": "B9",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3133,6 +2212,7 @@
       "key": "selection-P",
       "kind": "development_selection",
       "method": "P",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
@@ -3141,12 +2221,14 @@
       "key": "selection-P+PCT",
       "kind": "development_selection",
       "method": "P+PCT",
+      "observations": [],
       "slot": 0,
       "status": "COMPLETE"
     },
     {
       "key": "source",
       "kind": "source",
+      "observations": [],
       "status": "COMPLETE"
     },
     {
@@ -3158,7 +2240,7 @@
       "status": "WAITING_DEPENDENCY_OR_SLOT"
     }
   ],
+  "training_controlled": false,
   "trial_predictions_read": false,
-  "unassigned_extension_actions": [],
-  "updated_utc": "2026-10-28T15:19:13Z"
+  "updated_utc": "2026-10-28T15:21:42Z"
 }
