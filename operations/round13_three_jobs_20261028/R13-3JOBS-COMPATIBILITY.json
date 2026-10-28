@@ -1,0 +1,103 @@
+{
+  "schema_version": "paper3-r13-parallel-compatibility-v1",
+  "status": "THREE_JOB_CONTROL_AND_TARGET_CPU_LIBRARIES_TESTED_SCHOOL_GPU_NOT_TESTED",
+  "observed_utc": "2026-10-28T05:34:40.729725+00:00",
+  "actual_test_environment": {
+    "python": "3.12.14",
+    "torch": "2.5.1+cpu",
+    "numpy": "1.26.4",
+    "cuda_available": false,
+    "bash": "4.2.0(2)-release",
+    "host_glibc": "2.41",
+    "borrowed_dependency_versions": {
+      "filelock": "3.32.3",
+      "fsspec": "2026.7.0",
+      "jinja2": "3.1.6",
+      "networkx": "3.6.1",
+      "sympy": "1.14.0",
+      "typing_extensions": "4.16.0"
+    }
+  },
+  "target_environment": {
+    "python": "3.12",
+    "torch": "2.5.1+cu121 (school existing installation)",
+    "numpy": "1.26-compatible",
+    "glibc": "2.17",
+    "bash": "4.2",
+    "slurm": "20.x"
+  },
+  "resources": {
+    "jobs": 3,
+    "gpus_per_job": 1,
+    "cpus_per_job": 12,
+    "memory_per_job": "64G",
+    "partition": "hpc_gpu1",
+    "total_gpus": 3,
+    "total_cpus": 36,
+    "total_memory": "192G"
+  },
+  "scheduling_only_change": true,
+  "scientific_core_matches_exact_previous_release": true,
+  "previous_entry_sha256": "6017d772c8651cdd5cbd6f8f90afacdf3074f825a3cfc43b8393fb8a78b18f67",
+  "previous_payload_sha256": "393b8d41af844a3878ff87a4d7772e7c3db4e94ef5cebdeb5456d2ee8065d5c7",
+  "scientific_core_sha256": {
+    "algorithm.py": "b2c5db34ec0f3da94e75c8d40f0f22ab99adcd630825701002e829695063854b",
+    "worker.py": "0df044b580c4ab400dd33114a773bd1732b7d2036c288638265b10ab446966b4",
+    "native.py": "f136499d44d18d946cd14688428511f87c9067104bb67c7f5dd454f6c4d34000",
+    "common.py": "c4433d9387b8be7a07bc94fa920484868459273338e62819d82363c4da4a2989"
+  },
+  "test_run": {
+    "command": "PYTHONPATH=/tmp/paper3-r13-torch251:/tmp/paper3-r13-numpy126:/workspace/paper3-round13 R13_BASH42=/workspace/paper3-bash42-portability/bash-4.2/bash python -m pytest -q /workspace/paper3-round13/tests",
+    "passed": 102,
+    "duration_seconds": 4.42,
+    "skipped": 0
+  },
+  "parallel_compatibility_tests": [
+    "Actual isolated Python -I -S metadata import does not load Torch or NumPy",
+    "Actual isolated bootstrap parallel-status returns all three slots without scientific imports",
+    "Real Bash4.2 runs all slot wrappers with paths containing spaces, preserves CUDA_VISIBLE_DEVICES and forwards cuda:0",
+    "Private science alias loads the exact immutable original package rather than new control modules",
+    "Original versus current spatial100 numerical updates and predictions are exactly equal on generated CPU data",
+    "Full original scientific software suite remains passing under Torch2.5.1 CPU and NumPy1.26.4",
+    "Actual embedded new installer replaces an exact previous-release pending job with three fake scheduler jobs without rewriting the original plan",
+    "Fake running original allocation is preserved without cancellation or additional submissions",
+    "Three disjoint source-seed shards cover the original task set; partial submissions, acknowledgement uncertainty and shared-lock exclusion are exercised by unit tests",
+    "Report/upload observer handover matches owner, command, exact plan and process identity; worker PIDs are not signalled"
+  ],
+  "no_new_runtime_dependencies": true,
+  "no_DDP_MPI_or_NCCL_required": true,
+  "per_allocated_process_device": "cuda:0 within each Slurm allocation",
+  "not_tested": [
+    "School CUDA/A100 kernel execution",
+    "Actual school Slurm scheduling or cancellation",
+    "Real school EEG/catalog/source checkpoint access",
+    "Immediate availability of three GPU allocations"
+  ],
+  "school_environment_modified_by_tests": false,
+  "real_slurm_jobs_submitted_or_cancelled_by_tests": 0,
+  "limits": "CPU compatibility and fake-scheduler tests do not establish that all school GPU/runtime failures are impossible or that GPU quota will permit immediate concurrent allocation.",
+  "reviewed_source_sha256": {
+    "__init__.py": "976e1626ec80817ec60b12ba48b14eb58abd8025c41a623373052ed824ae9707",
+    "algorithm.py": "b2c5db34ec0f3da94e75c8d40f0f22ab99adcd630825701002e829695063854b",
+    "bootstrap.py": "789a8f0d6ee8d13c6e4ee604b7b1287465fa9696b3c480a08cba969a381ae7d1",
+    "common.py": "c4433d9387b8be7a07bc94fa920484868459273338e62819d82363c4da4a2989",
+    "native.py": "f136499d44d18d946cd14688428511f87c9067104bb67c7f5dd454f6c4d34000",
+    "observer.py": "b6dbb8855bb805e1a642b7c32159cdaaa4dc62c22500c4dda693042f52248680",
+    "parallel.py": "dc328b722d116f495c4569f2022f04becd625cf81effc268dc09149cdd8ab046",
+    "parallel_observer.py": "18510ed2feadf8ec2c670925df4f25c8721ebe7676dda9b8f00114748189e3b4",
+    "parallel_slurm.sh": "24728686a0625d6a4d164abd37457a5aac2a1baa494c7e2d22e9f226c4b84a96",
+    "report.py": "9058d5ad669d6f3ee53c9195c4451ce6672517ed4763c5487ac0a589dc840c3f",
+    "runtime.py": "cc690f5f2c4f89074c9bbc019070cbfb526342fdc361128eede254d4454dbcd6",
+    "slurm.sh": "5d0ece7fc3ef9abb99a8658be7594dd3afe25e3e861e861799354eca3ebc4beb",
+    "worker.py": "0df044b580c4ab400dd33114a773bd1732b7d2036c288638265b10ab446966b4"
+  },
+  "final_reviewed_utc": "2026-10-28T05:35:48.254899+00:00",
+  "final_control_sha256": {
+    "parallel.py": "dc328b722d116f495c4569f2022f04becd625cf81effc268dc09149cdd8ab046",
+    "parallel_observer.py": "18510ed2feadf8ec2c670925df4f25c8721ebe7676dda9b8f00114748189e3b4",
+    "parallel_slurm.sh": "24728686a0625d6a4d164abd37457a5aac2a1baa494c7e2d22e9f226c4b84a96",
+    "bootstrap.py": "789a8f0d6ee8d13c6e4ee604b7b1287465fa9696b3c480a08cba969a381ae7d1",
+    "observer.py": "b6dbb8855bb805e1a642b7c32159cdaaa4dc62c22500c4dda693042f52248680"
+  },
+  "entrypoint_integration": "Actual self-extracting new entry tested against exact saved original single-worker package: held/rechecked pending replaced by3fakeSlurmjobs, oldplan and checkpoint unchanged, repeated command zero duplicate submits, RUNNING protected."
+}

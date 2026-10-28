@@ -1,0 +1,26 @@
+R13三独立作业版
+
+将 START-PAPER3-R13-3JOBS.py 通过学校E-File上传家目录，在login1执行：
+/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python -I -S -B -u "$HOME/START-PAPER3-R13-3JOBS.py" --submit
+
+固定申请hpc_gpu1三份独立作业，每份1节点1GPU、12核CPU、64G内存；合计3GPU/36CPU/192G。不是一个3GPU分布式训练，不需要NCCL、MPI或新依赖，每份只使用分配给自己的cuda:0。仍受学校GPU额度和可用资源调度，提交不等于三卡立即同时开始。
+
+分片：槽0/1/2分别使用原计划源种子20261018/20261019/20261020。默认pilot每槽32个持久任务，总96个原任务；三个集合互斥，合并等于原计划，算法与总实验条件不变。每槽在独立GPU上顺序处理自己的任务。
+
+旧作业替换：程序先准备全部新控制代码，加载已有R13 plan及旧安装包，保留科学recipe和checkpoint。只读取runtime/submission.json指向的原R13作业，核对作业ID、用户、comment、脚本参数、工作目录及资源。只有PENDING且未分配节点的作业，才hold后再次确认并取消，确认terminal后提交三槽。若旧作业已经RUNNING/CONFIGURING，则保留原作业并明确返回状态，不启动重复计算。不会取消R1/R11/M12或按用户名批量取消。
+
+没有额外GPU前置测试，不pip，不重装CUDA，不重复全量核验旧数据。新调度层从旧不可变安装包加载原科学worker/algorithm/native/common，旧plan不被改写。旧源码小清单每worker启动核验一次；源模型首次加载验证后缓存。
+
+每槽持自己的worker锁、每任务锁，并对旧singleworker全局锁持共享保护，因此三槽可同时运行而旧单worker无法重复抢同一批任务。completed结果保留，失败槽再次执行同一命令续跑；已运行/排队的槽不会重复提交，提交回执不确定时先按唯一标记恢复。若部分槽提交被学校拒绝，已成功槽保留并继续，重跑只补缺槽，不全体取消重来。
+
+查看三个作业：把 --submit 改成 --status。
+生成共同报告：改成 --report。
+看到R13_THREE_JOBS_READY表示三槽提交记录已核对；是否RUNNING请以status中的slurm_state为准。终端可关闭。
+
+科学输出仍在原 runs/r13_update_validity/；并行元数据在 runtime/parallel/；日志 logs/parallel-slot0-<jobid>.out/.err（1/2同理）。每槽30秒心跳，包含会话、fit/step/预测条件进度。
+
+新观察器在login1后台汇总三个槽并继续回传原recipe目录。它只验证并温和退出旧报告观察器；不向训练worker发信号。旧观察器若正在网络请求，新观察器在后台等待观察锁，不阻止三个作业提交或训练。网络/报告失败只重试观察器。
+
+默认数据仍是历史pilot8人机制探索，三个种子不增加独立参与者N；不是新独立确认。R13原始科学步骤、预算、标签隔离、CAR算子与真实会话恢复逻辑全部保留。没有因为调度并行而删科学条件或增加fit次数额度。
+
+兼容证据见PARALLEL_COMPATIBILITY.json：精确CPU库版本、Bash4.2和模拟Slurm测试；学校GPU/CUDA和真实调度未由开发环境实际执行。复用学校原已运行的Python3.12/Torch2.5.1cu121环境。
