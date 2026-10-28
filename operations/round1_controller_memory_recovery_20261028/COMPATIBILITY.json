@@ -1,6 +1,6 @@
 {
   "repair_id": "paper3-r1-controller-memory-recovery-v1",
-  "tests_passed": 54,
+  "tests_passed": 65,
   "tests_skipped": 0,
   "python": "3.12.14",
   "dependencies": "Python3 standard library only; no pip or GPU preflight jobs",
@@ -19,5 +19,10 @@
   "projection_peak_tracemalloc_bytes": 268311,
   "guarded_completion": "queue COMPLETE and Slurm inflight_jobs == 0",
   "scope": "Resume existing allocated workers; no automatic submission of replacement workers",
-  "projection_seconds": 0.0431
+  "projection_seconds": 0.0431,
+  "release_revision": 2,
+  "shutdown_regression": "Real main-thread MemoryError + surviving non-daemon thread + custom TERM handler; exact manager TERM/KILL via pidfd and unavailable-pidfd fallback; independent synthetic worker continues",
+  "pid_reuse_prevents_escalation": true,
+  "kernel_pending_does_not_claim_ready": true,
+  "school_execution_verified": false
 }

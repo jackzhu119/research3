@@ -1,5 +1,7 @@
 R1 调度器内存故障恢复（2026-10-28）
 
+第2版修正：旧控制器报出 MemoryError 后，进程可能因残留线程继续存在，不能将主线程报错视为整个进程已经退出。先请求旧CPU管理进程正常退出；若未退出，重新核对用户、完整启动命令、启动nonce和进程启动时间，只结束这个已确认的CPU管理进程，再接续原任务派发。原科学worker及Slurm作业不发退出信号。内核尚未释放进程时明确记录接管等待状态，不误报调度恢复。
+
 已观察到的故障
 三个原作业仍是 Slurm RUNNING，但 worker-status 均为 WAITING_READY_ACTION，child_pid=null，claims.json={}。
 CPU 调度器在 kernel_bridge._read 读取已完成回执时发生 MemoryError，最后一次进度写入为2026-10-28T05:10:10Z。
