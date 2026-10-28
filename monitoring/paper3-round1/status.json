@@ -1,6 +1,6 @@
 {
   "all_original_complete": false,
-  "allocation_metadata_age_seconds": null,
+  "allocation_metadata_age_seconds": 20.5,
   "completed_by_kind": {
     "calibration_profile": 14,
     "classical": 1,
@@ -16,12 +16,12 @@
   },
   "coordinator": {
     "phase": "MAINLINE_FINALIZATION",
-    "progress_age_seconds": 56.9,
+    "progress_age_seconds": 58.5,
     "progress_path": "runs/training_campaign_parallel_v1/progress.json",
     "status": "RUNNING_OR_QUEUED",
-    "updated_utc": "2026-10-28T15:20:45Z"
+    "updated_utc": "2026-10-28T15:23:44Z"
   },
-  "dispatch_queue_age_seconds": 89.9,
+  "dispatch_queue_age_seconds": 58.5,
   "experiment": "paper3-original-campaign-round1",
   "extension_arms": {
     "BASE4_PLUS_DREYER": {
@@ -50,56 +50,44 @@
   "interpretation": "Sampling/queue/cache activity is not proof of numerical optimizer progress.",
   "jobs": [
     {
-      "attempt": 2,
-      "cpus": 12,
-      "job_id": "772906",
-      "live_state": "NOT_IN_CURRENT_QUEUE",
-      "memory": "43G",
-      "node": "gpu1",
+      "attempt": 1,
+      "cpus": 4,
+      "job_id": "779398",
+      "live_reason_or_node": "gpu2",
+      "live_state": "RUNNING",
+      "memory": "64G",
+      "name": "paper3r1s-1f1194ad8d2b8125-s0-a1",
+      "node": "gpu2",
       "partition": "hpc_gpu",
-      "queue_reason": "gpu1",
+      "queue_reason": "gpu2",
       "slot": 0,
-      "slurm_state": "CANCELLED"
-    },
-    {
-      "attempt": 2,
-      "cpus": 12,
-      "job_id": "772904",
-      "live_state": "NOT_IN_CURRENT_QUEUE",
-      "memory": "43G",
-      "node": "gpu2",
-      "partition": "hpc_gpu",
-      "queue_reason": "gpu2",
-      "slot": 1,
-      "slurm_state": "CANCELLED"
-    },
-    {
-      "attempt": 2,
-      "cpus": 12,
-      "job_id": "772905",
-      "live_state": "NOT_IN_CURRENT_QUEUE",
-      "memory": "42G",
-      "node": "gpu2",
-      "partition": "hpc_gpu",
-      "queue_reason": "gpu2",
-      "slot": 2,
-      "slurm_state": "CANCELLED"
+      "slurm_state": "RUNNING"
     }
   ],
   "live_queue": {
-    "jobs": [],
-    "observed_utc": "2026-10-28T15:21:42Z",
+    "jobs": [
+      {
+        "elapsed": "2:13",
+        "job_id": "779398",
+        "name": "paper3r1s-1f1194ad8d2b8125-s0-a1",
+        "node": "gpu2",
+        "partition": "hpc_gpu",
+        "reason_or_node": "gpu2",
+        "state": "RUNNING"
+      }
+    ],
+    "observed_utc": "2026-10-28T15:24:42Z",
     "status": "OBSERVED"
   },
   "mainline": {
     "active_actions": [
       {
-        "job_id": "772906",
+        "job_id": "779398",
         "key": "strongest-control",
         "kind": "strongest_control",
         "observations": [],
         "slot": 0,
-        "status": "WAITING_DEPENDENCY_OR_SLOT"
+        "status": "RUNNING"
       }
     ],
     "completed_observed_actions": 245,
@@ -126,28 +114,76 @@
     "partition": "hpc_gpu"
   },
   "round": 1,
-  "sampled_unix": 1793200901.9445734,
+  "sampled_unix": 1793201082.5417726,
   "schema_version": "paper3-round1-parallel-monitor-v1",
   "scientific_completion_claimed": false,
   "single_gpu_controller": {
-    "age_seconds": null,
-    "read_error": "FileNotFoundError"
+    "age_seconds": 58.5,
+    "cycle": 2,
+    "jobs_submitted": 0,
+    "phase": "MAINLINE_FINALIZATION",
+    "read_error": null,
+    "status": "RUNNING",
+    "updated_utc": "2026-10-28T15:23:44Z"
   },
   "single_gpu_worker": {
     "action_key": "strongest-control",
     "action_kind": "strongest_control",
     "actual_numeric_counters": [],
-    "age_seconds": 2929.9,
+    "age_seconds": 9.5,
     "allocation_log": {
-      "read_error": "FileNotFoundError"
+      "age_seconds": 10.5,
+      "bytes": 1706,
+      "observed_error_types": [],
+      "raw_log_text_published": false,
+      "recent_events": [
+        {
+          "event": "R1_KERNEL_RUNNING",
+          "utc": "2026-10-28T15:22:32Z"
+        },
+        {
+          "event": "R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED",
+          "utc": "2026-10-28T15:22:35Z"
+        },
+        {
+          "event": "R1_KERNEL_RUNNING",
+          "utc": "2026-10-28T15:23:02Z"
+        },
+        {
+          "event": "R1_KERNEL_RUNNING",
+          "utc": "2026-10-28T15:23:32Z"
+        },
+        {
+          "event": "R1_KERNEL_RUNNING",
+          "utc": "2026-10-28T15:24:02Z"
+        },
+        {
+          "event": "R1_KERNEL_RUNNING",
+          "utc": "2026-10-28T15:24:32Z"
+        }
+      ],
+      "tail_sha256": "1a2abab91f5b5d5762def4848743d20d04198545bbfa4fa1c4267c8602d8cc50"
     },
-    "child_pid": 7047,
-    "claim_bound": false,
-    "job_id": "772906",
+    "child_pid": 54548,
+    "claim_bound": true,
+    "current_action_log": {
+      "age_seconds": 127.5,
+      "bytes": 237,
+      "observed_error_types": [],
+      "raw_log_text_published": false,
+      "recent_events": [
+        {
+          "event": "R1_OBSERVED_DRIVER_COMPATIBILITY_INSTALLED",
+          "utc": "2026-10-28T15:22:35Z"
+        }
+      ],
+      "tail_sha256": "de8d50e6dfc87651a77c946a7ba9836ae8d56117e1421caea910ce3c4e54f0a0"
+    },
+    "job_id": "779398",
     "phase": "ACTION_RUNNING",
-    "pid": 18219,
+    "pid": 54353,
     "slot": 0,
-    "updated_utc": "2026-10-28T14:32:52Z"
+    "updated_utc": "2026-10-28T15:24:33Z"
   },
   "tasks": [
     {
@@ -2232,15 +2268,15 @@
       "status": "COMPLETE"
     },
     {
-      "job_id": "772906",
+      "job_id": "779398",
       "key": "strongest-control",
       "kind": "strongest_control",
       "observations": [],
       "slot": 0,
-      "status": "WAITING_DEPENDENCY_OR_SLOT"
+      "status": "RUNNING"
     }
   ],
   "training_controlled": false,
   "trial_predictions_read": false,
-  "updated_utc": "2026-10-28T15:21:42Z"
+  "updated_utc": "2026-10-28T15:24:36Z"
 }
