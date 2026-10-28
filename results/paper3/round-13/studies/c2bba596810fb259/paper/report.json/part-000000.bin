@@ -2,9 +2,9 @@
   "aggregation": "sessions equally within generator/amplitude/source-seed; four perturbation strata equally within seed; seeds equally within participant",
   "artifacts": {
     "participant_metrics": {
-      "bytes": 197128,
+      "bytes": 206363,
       "path": "participant_metrics.csv",
-      "sha256": "ca41b3cd4ead96be9b6dc26f19eb384c7662e2f732e988a8fcd921613608cedd"
+      "sha256": "706a3c495173829959a2da9591a2947f4cbfe41c3d7fda4ddba5a4b1fbaeb155"
     }
   },
   "cohort_roles": [
@@ -17,26 +17,27 @@
       20261020
     ],
     "expected_tasks": 96,
-    "fully_paired_primary_participants": 4,
-    "observed_metric_rows": 43416,
+    "fully_paired_primary_participants": 5,
+    "observed_metric_rows": 44208,
     "observed_primary_participant_completeness": {
       "S1": true,
       "S14": true,
       "S2": true,
       "S26": true,
-      "S3": false
+      "S3": true,
+      "S50": false
     },
     "session_status": {
-      "COMPLETE": 603,
+      "COMPLETE": 614,
       "ERROR": 0,
       "REJECTED": 0,
       "SKIPPED": 0
     },
     "task_status": {
-      "COMPLETE": 58,
+      "COMPLETE": 60,
       "ERROR": 0,
       "SKIPPED": 0,
-      "UNOBSERVED_OR_PARTIAL": 38
+      "UNOBSERVED_OR_PARTIAL": 36
     }
   },
   "independent_confirmation_available": false,
@@ -55,7 +56,7 @@
     "exploratory_sign_reversal_supported": false,
     "information": "prefix_only",
     "interpretation": "An interaction alone is not sign reversal. Statistics use complete matched participant vectors only; all results are exploratory, not independent confirmation.",
-    "joint_sign_reversal_p": 0.9375,
+    "joint_sign_reversal_p": 0.96875,
     "k": 0,
     "methods": [
       "retain_initial",
@@ -83,46 +84,51 @@
         "d_persistent": -0.0016116705197896438,
         "d_reset": -0.0016409034284321988,
         "interaction": -2.923290864255499e-05
+      },
+      "S3": {
+        "d_persistent": -0.0014148460126840957,
+        "d_reset": -0.0013999368379428933,
+        "interaction": 1.4909174741202427e-05
       }
     },
     "statistics": {
       "d_persistent": {
         "alternative": "less",
         "ci95": [
-          -0.0019647282556548434,
-          -0.00028352060614326134
+          -0.0018911907590359067,
+          -0.0004708767678023103
         ],
         "ci_method": "participant_percentile_bootstrap_2000_seed20261028",
-        "mean": -0.0011652964451001455,
-        "n_participants": 4,
+        "mean": -0.0012152063586169356,
+        "n_participants": 5,
         "sign_flip_exact": true,
-        "sign_flip_p": 0.125,
+        "sign_flip_p": 0.0625,
         "test_assumption": "paired participant differences are sign-exchangeable under the null"
       },
       "d_reset": {
         "alternative": "greater",
         "ci95": [
-          -0.001945923358389509,
-          -0.00026124744411473553
+          -0.0018657578500621817,
+          -0.0004815784205065159
         ],
         "ci_method": "participant_percentile_bootstrap_2000_seed20261028",
-        "mean": -0.0011570661974065458,
-        "n_participants": 4,
+        "mean": -0.0012056403255138151,
+        "n_participants": 5,
         "sign_flip_exact": true,
-        "sign_flip_p": 0.9375,
+        "sign_flip_p": 0.96875,
         "test_assumption": "paired participant differences are sign-exchangeable under the null"
       },
       "interaction": {
         "alternative": "two-sided",
         "ci95": [
-          -4.040621916700553e-05,
-          5.314227771272138e-05
+          -2.6363590912177125e-05,
+          4.5495657118417586e-05
         ],
         "ci_method": "participant_percentile_bootstrap_2000_seed20261028",
-        "mean": 8.230247693599681e-06,
-        "n_participants": 4,
+        "mean": 9.56603310312023e-06,
+        "n_participants": 5,
         "sign_flip_exact": true,
-        "sign_flip_p": 0.875,
+        "sign_flip_p": 0.6875,
         "test_assumption": "paired participant differences are sign-exchangeable under the null"
       }
     }
@@ -134,5 +140,5 @@
   "scientific_scope": "retrospective exploratory replay; historical cohorts are reused; the pilot subset was in source meta_train",
   "status": "PARTIAL_EXPLORATORY",
   "training_controlled": false,
-  "updated_utc": "2026-10-28T09:07:35Z"
+  "updated_utc": "2026-10-28T09:18:38Z"
 }
