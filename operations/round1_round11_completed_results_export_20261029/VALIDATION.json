@@ -2,16 +2,16 @@
   "command": "python -m pytest -q test_delivery.py test_r1_export.py test_r11_export.py test_bootstrap.py",
   "counts": {
     "actual_offline_bootstrap": 6,
-    "driver_background_and_identity": 16,
+    "driver_background_identity_refresh": 21,
     "r11_native_ledger_and_reports": 15,
-    "r1_native_output": 11
+    "r1_native_output_and_real_transport_receipts": 14
   },
   "limits": "Tests use tiny local scientific fixtures and fake transport. Existing school package and credentials are reused when user starts actual export. Actual upload success must be read from school status and resulting remote manifests.",
   "school_execution_performed": false,
   "school_gpu_test_jobs_submitted": 0,
-  "tested_utc": "2026-10-29T01:28:50.511206+00:00",
+  "tested_utc": "2026-10-29T05:33:33.926601+00:00",
   "tests_failed": 0,
-  "tests_passed": 48,
+  "tests_passed": 56,
   "verified": [
     "four detached roles survive launcher exit",
     "repeat start reuses background processes",
@@ -26,6 +26,9 @@
     "R1/R11 scientific STOP bytes unchanged",
     "fresh metadata process for every archive group",
     "actual isolated offline install and check without Torch or network imports",
-    "no literal credentials in public runtime source"
+    "no literal credentials in public runtime source",
+    "real transport PARTIAL scope with whole-file GET/index proofs opens upload gate without changing science completion",
+    "deterministic snapshot-matched prior proof reused without repeated 428MB network reads",
+    "only exact old R1 paper upload worker/direct child refreshed; other uploader roles and same-group science process continue"
   ]
 }

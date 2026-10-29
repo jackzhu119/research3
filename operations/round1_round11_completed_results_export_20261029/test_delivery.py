@@ -204,3 +204,65 @@ def test_sensitive_error_body_is_not_logged_even_when_uppercase(cloned):
     assert secret not in result.stdout+result.stderr
     assert secret not in (work/'r1-paper/status.json').read_text()
     assert final_json(result)['error_type']=='RuntimeError'
+
+
+def test_real_refresh_replaces_only_old_paper_worker_and_direct_child(cloned,tmp_path):
+    driver=module();bundle,root,work,args,protected=cloned
+    old=tmp_path/'paper3-r1-r11-results-uploader'/('a'*20);old.mkdir(parents=True)
+    for name in ('delivery.py','r1_export.py','r11_export.py'):
+        (old/name).write_bytes((bundle/name).read_bytes())
+    counter=work/'science-counter';science_stop=work/'science-stop'
+    counter_script=old/'science_counter.py'
+    counter_script.write_text('import os,time\nfrom pathlib import Path\np=Path('+repr(str(counter))+')\n'
+        'p.with_suffix(".pid").write_text(str(os.getpid()))\nn=0\n'
+        'while not Path('+repr(str(science_stop))+').exists():\n'
+        ' n+=1;q=p.with_suffix(".tmp");q.write_text(str(n));q.replace(p);time.sleep(.01)\n')
+    adapter=(old/'r1_export.py').read_text().replace(' remember(args)\n secret=',
+        ' remember(args)\n if args.role=="r1-paper":\n  import subprocess\n  subprocess.Popen([sys.executable,"-I","-S","-B",'+repr(str(counter_script))+'],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)\n secret=')
+    (old/'r1_export.py').write_text(adapter)
+    original={str(p):p.read_bytes() for p in protected};old_pids=[];new_pid=None;science_pid=None
+    try:
+        first=subprocess.run([sys.executable,'-I','-S','-B','-u',str(old/'delivery.py'),'--start',*args],capture_output=True,text=True,timeout=12)
+        assert first.returncode==0,first.stdout+first.stderr
+        rows=final_json(first)['roles'];old_pids=[r['pid'] for r in rows]
+        wait_for(lambda:counter.exists() and counter.with_suffix('.pid').exists())
+        science_pid=int(counter.with_suffix('.pid').read_text())
+        old_child=driver.read(work/'r1-paper-calls.json')[0]['pid']
+        assert os.getpgid(science_pid)==os.getpgid(old_pids[0])
+        refreshed=run(cloned,'--start','--refresh-r1-paper')
+        assert refreshed.returncode==0,refreshed.stdout+refreshed.stderr
+        result=final_json(refreshed);refresh=result['r1_paper_refresh']
+        assert refresh['status']=='OLDER_R1_PAPER_EXPORT_REFRESHED'
+        assert refresh['child_pids']==[old_child]
+        assert {item['pid'] for item in refresh['signals']}=={old_pids[0],old_child}
+        assert {'pid':old_pids[0],'signal':'SIGSTOP'} in refresh['signals']
+        assert not any(item['pid']==old_child and item['signal'] in ('SIGSTOP','SIGCONT') for item in refresh['signals'])
+        assert driver.identity(old_pids[0]) is None and driver.identity(old_child) is None
+        assert all(driver.identity(pid) for pid in old_pids[1:])
+        assert all(row['status']=='EXISTING_BACKGROUND_WORKER_REUSED' for row in result['roles'][1:])
+        new_pid=result['roles'][0]['pid'];assert new_pid!=old_pids[0]
+        before=counter.read_text();wait_for(lambda:counter.read_text()!=before)
+        repeat=run(cloned,'--start','--refresh-r1-paper');assert repeat.returncode==0,repeat.stderr
+        repeated=final_json(repeat)
+        assert repeated['r1_paper_refresh']['status']=='CURRENT_R1_PAPER_EXPORT_REUSED'
+        assert repeated['r1_paper_refresh']['signals']==[]
+        assert repeated['roles'][0]['process']['pid']==new_pid
+        assert {str(p):p.read_bytes() for p in protected}==original
+    finally:
+        science_stop.touch();(work/'STOP').touch()
+        until=time.monotonic()+5
+        while any(driver.identity(pid) for pid in [*old_pids,*([new_pid] if new_pid else [])]) and time.monotonic()<until:time.sleep(.02)
+
+
+@pytest.mark.parametrize('change',('uid','argv','start_ticks','role'))
+def test_refresh_refuses_changed_identity_without_sending_signals(tmp_path,monkeypatch,change):
+    driver=module();args=SimpleNamespace(work=str(tmp_path),root='/project',plan='/project/plan.json',credentials=None)
+    record=dict(pid=303,uid=os.getuid(),start_ticks='1',argv=['python'],role='r1-paper')
+    driver.atomic(tmp_path/'r1-paper/process.json',record)
+    current={k:record[k] for k in ('pid','uid','start_ticks','argv')}
+    if change=='role':record['role']='r11-paper';driver.atomic(tmp_path/'r1-paper/process.json',record)
+    else:current[change]=['other'] if change=='argv' else 'different'
+    monkeypatch.setattr(driver,'identity',lambda pid:current)
+    sent=[];monkeypatch.setattr(driver.os,'kill',lambda *values:sent.append(values))
+    with pytest.raises(ValueError,match='IDENTITY_DIFFERS'):driver.refresh_r1_paper(args)
+    assert sent==[]

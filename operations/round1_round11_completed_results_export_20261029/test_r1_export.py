@@ -10,6 +10,7 @@ import unittest
 from unittest.mock import patch
 
 import r1_export as export
+from transport import lossless_publish as lossless
 
 
 class FakeGitHub:
@@ -24,6 +25,29 @@ class FakeGitHub:
     def git_publish(self,files,message):
         self.contents.update(files)
         return hashlib.sha1(message.encode()).hexdigest()
+
+
+class PaperMemoryGitHub(lossless.VerifiedGitHub):
+    """Real paper publisher and full blob verifier, with in-memory HTTP bytes."""
+    def __init__(self):self.blobs={};self.paths={};self.prefix='repos/fixture/research3';self.full_reads=0
+    def _emit(self,*args,**kwargs):pass
+    def _request(self,url,**kwargs):
+        self.full_reads+=1
+        return io.BytesIO(self.blobs[url.rsplit('/',1)[-1]])
+    def _blob(self,content):
+        checksum=hashlib.sha1(b'blob '+str(len(content)).encode()+b'\0'+content).hexdigest()
+        self.blobs[checksum]=content
+        self._verify_blob(checksum,content)
+        return checksum
+    def api(self,path):
+        from urllib.parse import unquote
+        target=unquote(path.split('/contents/',1)[1].split('?',1)[0])
+        return dict(sha=self.paths[target])
+
+
+def paper_entries(gh,entries,message):
+    gh.paths.update({row['path']:row['sha'] for row in entries})
+    return '1'*40
 
 
 class ExportTest(unittest.TestCase):
@@ -128,20 +152,59 @@ class ExportTest(unittest.TestCase):
         base=self.complete_development();report=(('科学结果\r\n'*160000)+'end\n').encode()
         self.write(export.CAMPAIGN+'/reports/full.json',report)
         captured={}
+        real_publish=lossless.publish_snapshot;gh=PaperMemoryGitHub()
         def publish(gh,round_number,files,work,metadata=None):
             for value in files:
                 captured[value['source_path']]=b''.join(Path(part['local_path']).read_bytes() for part in value['parts'])
             metadata_record.update(metadata)
-            return dict(status='PAPER_DATA_FILES_VERIFIED')
+            return real_publish(gh,round_number,files,work,metadata=metadata)
         metadata_record={}
-        with patch.object(export,'_client',return_value=object()),patch('transport.lossless_publish.publish_snapshot',side_effect=publish):
+        with patch.object(export,'_client',return_value=gh),patch.object(lossless,'publish_snapshot',side_effect=publish),patch.object(lossless,'publish_entries',side_effect=paper_entries):
             result=export.paper_once(self.args)
         self.assertTrue(result['paper_ready']);self.assertFalse(result['whole_round_completed'])
+        self.assertEqual(result['receipt']['status'],'PAPER_DATA_PARTIAL_FILES_VERIFIED')
+        self.assertTrue(result['receipt']['remote_complete_blob_GET_SHA256_verified'])
+        self.assertTrue(result['receipt']['published_index_paths_verified'])
+        self.assertGreater(gh.full_reads,0)
         self.assertEqual(captured[export.CAMPAIGN+'/reports/full.json'],report)
         self.assertEqual(captured[base+'/receipt.json'],(self.root/base/'receipt.json').read_bytes())
         self.assertEqual(captured[base+'/metrics.csv'],b'method,metric\r\nP,0.82\r\n')
         self.assertFalse(metadata_record['report_recomputed'])
         self.assertFalse(any(p.endswith('.pt') for p in captured))
+
+    def _publish_real_paper_fixture(self):
+        self.complete_development();gh=PaperMemoryGitHub()
+        with patch.object(export,'_client',return_value=gh),patch.object(lossless,'publish_entries',side_effect=paper_entries):
+            result=export.paper_once(self.args)
+        (self.work/'r1-paper'/'uploaded.json').unlink()
+        return result
+
+    def test_recovers_matching_actual_transport_receipt_without_remote_GET_or_republish(self):
+        original=self._publish_real_paper_fixture()
+        with (patch.object(export,'_client',side_effect=AssertionError('remote client recreated')),
+              patch.object(lossless,'publish_snapshot',side_effect=AssertionError('verified snapshot republished'))):
+            result=export.paper_once(self.args)
+        self.assertTrue(result['paper_ready']);self.assertTrue(result['reused_verified_receipt'])
+        self.assertEqual(result['receipt'],original['receipt'])
+        self.assertFalse(result['whole_round_completed'])
+
+    def test_foreign_source_snapshot_receipt_is_not_reused(self):
+        original=self._publish_real_paper_fixture()
+        path=self.work/'r1-paper'/'round-01-PAPER-UPLOADED.json';foreign=json.loads(path.read_bytes())
+        foreign['snapshot_id']='0'*64
+        foreign['manifest']=export.PREFIX+'/paper-data/'+foreign['snapshot_id']+'/manifest.json'
+        foreign['index']=export.PREFIX+'/paper-data/'+foreign['snapshot_id']+'/README_ZH.md'
+        export.atomic(path,foreign);gh=PaperMemoryGitHub()
+        with patch.object(export,'_client',return_value=gh),patch.object(lossless,'publish_entries',side_effect=paper_entries),patch.object(lossless,'publish_snapshot',wraps=lossless.publish_snapshot) as publish:
+            result=export.paper_once(self.args)
+        publish.assert_called_once()
+        self.assertFalse(result['reused_verified_receipt']);self.assertTrue(result['paper_ready'])
+        self.assertEqual(result['receipt']['snapshot_id'],original['receipt']['snapshot_id'])
+
+    def test_partial_status_without_real_verification_proofs_never_opens_gate(self):
+        self.complete_development()
+        with patch.object(export,'_client',return_value=object()),patch.object(lossless,'publish_snapshot',return_value=dict(status='PAPER_DATA_PARTIAL_FILES_VERIFIED')):
+            with self.assertRaisesRegex(RuntimeError,'R1_PAPER_UPLOAD_NOT_VERIFIED'):export.paper_once(self.args)
 
     def test_actual_archive_restores_all_original_bytes_resume_never_changes_sources(self):
         self.complete_development()

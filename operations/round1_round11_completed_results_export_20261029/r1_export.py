@@ -364,6 +364,30 @@ def _group_files(root,group):
     return paths
 
 
+def _paper_snapshot_id(staged,metadata):
+    """Use the transport's exact source-byte identity, including its metadata."""
+    from transport.lossless_publish import encoded as transport_encoded
+    summaries=[dict(source_path=row['source_path'],bytes=row['source_bytes'],sha256=row['source_sha256'],
+        source_version=row['source_version']) for row in staged]
+    return hashlib.sha256(transport_encoded(dict(round=1,
+        files=sorted(summaries,key=lambda row:row['source_path']),metadata=metadata))).hexdigest()
+
+
+def _paper_receipt_verified(receipt,snapshot,files,source_bytes):
+    """File verification is independent of completion of the scientific plan."""
+    if not isinstance(receipt,dict) or not isinstance(snapshot,str) or len(snapshot)!=64:return False
+    if any(char not in '0123456789abcdef' for char in snapshot):return False
+    prefix=PREFIX+'/paper-data/'+snapshot
+    return (receipt.get('round')==1 and receipt.get('snapshot_id')==snapshot
+        and receipt.get('manifest')==prefix+'/manifest.json' and receipt.get('index')==prefix+'/README_ZH.md'
+        and receipt.get('files')==files and receipt.get('bytes')==source_bytes
+        and receipt.get('exact_original_bytes') is True
+        and receipt.get('remote_complete_blob_GET_SHA256_verified') is True
+        and receipt.get('published_index_paths_verified') is True
+        and receipt.get('scientific_completion_claimed') is False
+        and isinstance(receipt.get('commit'),str) and bool(receipt['commit']))
+
+
 def paper_once(args):
     root=Path(args.root).resolve();work=Path(args.work)/'r1-paper';work.mkdir(parents=True,exist_ok=True)
     bundle=inventory(root,args.work);snapshot=Path(args.work)/'r1-inventory'/'metadata'/bundle['metadata_epoch']
@@ -394,20 +418,31 @@ def paper_once(args):
         scope='Complete existing native receipts plus existing CSV/reports/selection/configuration metadata; no model fit or report recomputation.')
     identity=hashlib.sha256(encoded(dict(files=source_rows,metadata=metadata))).hexdigest()
     prior=read(work/'uploaded.json',{}) or {}
-    if prior.get('identity')==identity:return dict(prior,paper_ready=True,status='AVAILABLE_PAPER_UPLOADED',complete=True)
+    previous_receipt=prior.get('receipt',{})
+    source_bytes=sum(row['signature'][2] for row in source_rows)
+    if prior.get('identity')==identity and _paper_receipt_verified(previous_receipt,
+        previous_receipt.get('snapshot_id'),len(paths),source_bytes):
+        return dict(prior,paper_ready=True,status='AVAILABLE_PAPER_UPLOADED',complete=True,reused_verified_receipt=True)
     from transport.lossless_publish import stage_file,publish_snapshot
-    gh=_client(args,work)
     staged=[]
     for i,(name,(base,path)) in enumerate(sorted(paths.items()),1):
         emit('R1_PAPER_SOURCE_STAGING',file=i,total_files=len(paths),source_path=name)
         staged.append(stage_file(base,name,work/'staged',notify=emit))
-    receipt=publish_snapshot(gh,1,staged,work,metadata=metadata)
-    if receipt.get('status')!='PAPER_DATA_FILES_VERIFIED':raise RuntimeError('R1_PAPER_UPLOAD_NOT_VERIFIED')
+    snapshot_id=_paper_snapshot_id(staged,metadata)
+    receipt=read(work/'round-01-PAPER-UPLOADED.json',{}) or {}
+    reused=_paper_receipt_verified(receipt,snapshot_id,len(paths),source_bytes)
+    if reused:
+        emit('R1_PAPER_VERIFIED_RECEIPT_RECOVERED',snapshot_id=snapshot_id,files=len(paths),
+            bytes=source_bytes,remote_blob_downloads=0,scientific_completion_claimed=False)
+    else:receipt=publish_snapshot(_client(args,work),1,staged,work,metadata=metadata)
+    if not _paper_receipt_verified(receipt,snapshot_id,len(paths),source_bytes):
+        raise RuntimeError('R1_PAPER_UPLOAD_NOT_VERIFIED')
     result=dict(status='AVAILABLE_PAPER_UPLOADED',paper_ready=True,complete=True,identity=identity,
         files=len(paths),completed_native_receipts=bundle['completed_native_receipts'],
         pending_receipt_errors=len(bundle['warnings']),required_warnings=bundle['warnings'],
         science_complete=bundle['science_complete'],whole_round_completed=bundle['whole_round_completed'],
-        pointer=PREFIX+'/PAPER_DATA_LATEST.json',receipt=receipt,updated_utc=utc(),training_controlled=False)
+        pointer=PREFIX+'/PAPER_DATA_LATEST.json',receipt=receipt,reused_verified_receipt=reused,
+        updated_utc=utc(),training_controlled=False)
     atomic(work/'uploaded.json',result);return result
 
 

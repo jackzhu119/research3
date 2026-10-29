@@ -6,6 +6,7 @@ import importlib
 import json
 import os
 from pathlib import Path
+import re
 import signal
 import subprocess
 import sys
@@ -123,6 +124,91 @@ def paper_ready(work):
     return all((read(Path(work)/role/'status.json',{}) or {}).get('priority_ready') is True for role in ('r1-paper','r11-paper'))
 
 
+def _paper_command(record,args,mode,source=None):
+    """Bind a CPU export process to its full command, installation and work."""
+    argv=record.get('argv',[])
+    if not isinstance(argv,list) or len(argv)<15:return None
+    try:
+        script=Path(argv[5])
+        if (not script.is_absolute() or script.name!='delivery.py' or not script.is_file()
+                or str(script.resolve())!=str(script)):
+            return None
+        if source is not None:
+            if script!=source:return None
+        elif script!=HERE/'delivery.py' and not (
+            re.fullmatch('[0-9a-f]{20}',script.parent.name)
+            and script.parent.parent.name=='paper3-r1-r11-results-uploader'):
+            return None
+        expected=[argv[0],'-I','-S','-B','-u',str(script),mode,'--role','r1-paper',
+            '--root',args.root,'--work',args.work,'--plan',args.plan]
+        if args.credentials:expected+=['--credentials',args.credentials]
+        if Path(argv[0]).resolve()!=Path(sys.executable).resolve() or argv!=expected:return None
+        return script
+    except (OSError,TypeError,ValueError):return None
+
+
+def refresh_r1_paper(args):
+    """Replace only an older, exactly identified R1 paper export CPU worker."""
+    record=read(Path(args.work)/'r1-paper/process.json',{}) or {}
+    current=identity(record.get('pid'))
+    if current is None:return dict(status='NO_RUNNING_R1_PAPER_EXPORT_TO_REFRESH',signals=[])
+    if record.get('role')!='r1-paper' or not same(record,current):
+        raise ValueError('R1_PAPER_REFRESH_PROCESS_IDENTITY_DIFFERS')
+    source=_paper_command(current,args,'--worker')
+    if source is None:raise ValueError('R1_PAPER_REFRESH_COMMAND_BINDING_REQUIRED')
+    if source==HERE/'delivery.py':
+        return dict(status='CURRENT_R1_PAPER_EXPORT_REUSED',pid=current['pid'],signals=[])
+    children=[];signals=[];frozen=False
+    def send(target,number):
+        if not same(target,identity(target['pid'])):return False
+        try:os.kill(target['pid'],number)
+        except ProcessLookupError:return False
+        signals.append(dict(pid=target['pid'],signal=signal.Signals(number).name));return True
+    def fields(pid):
+        try:return (Path('/proc')/str(pid)/'stat').read_text().rsplit(')',1)[1].split()
+        except (FileNotFoundError,ProcessLookupError):return []
+    try:
+        # Freeze only the bound CPU worker so it cannot launch an uncaptured
+        # --once child between discovery and termination. Never signal a group.
+        frozen=send(current,signal.SIGSTOP)
+        deadline=time.monotonic()+2
+        while same(current,identity(current['pid'])) and time.monotonic()<deadline:
+            observed=fields(current['pid'])
+            if observed and observed[0] in ('T','t'):break
+            time.sleep(.01)
+        else:
+            if same(current,identity(current['pid'])):raise RuntimeError('R1_PAPER_REFRESH_FREEZE_PENDING')
+        try:
+            child_ids=(Path('/proc')/str(current['pid'])/'task'/str(current['pid'])/'children').read_text().split()
+        except FileNotFoundError:
+            # Some managed /proc mounts omit task/children; PPid gives the
+            # same direct-parent proof without using process names.
+            child_ids=[p.name for p in Path('/proc').iterdir() if p.name.isdigit()]
+        for value in child_ids:
+            observed=fields(int(value))
+            if len(observed)<2 or int(observed[1])!=current['pid']:continue
+            child=identity(int(value))
+            if child is None:continue
+            if _paper_command(child,args,'--once',source) is None:
+                raise ValueError('R1_PAPER_REFRESH_UNEXPECTED_DIRECT_CHILD')
+            children.append(child)
+        targets=[current,*children]
+        for number,grace in ((signal.SIGTERM,2),(signal.SIGKILL,2)):
+            for target in targets:send(target,number)
+            if frozen:send(current,signal.SIGCONT);frozen=False
+            deadline=time.monotonic()+grace
+            while any(same(t,identity(t['pid'])) for t in targets) and time.monotonic()<deadline:time.sleep(.05)
+        if any(same(t,identity(t['pid'])) for t in targets):raise RuntimeError('R1_PAPER_REFRESH_EXIT_PENDING')
+    finally:
+        if frozen:send(current,signal.SIGCONT)
+    result=dict(status='OLDER_R1_PAPER_EXPORT_REFRESHED',pid=current['pid'],
+        child_pids=[c['pid'] for c in children],signals=signals,scientific_processes_signalled=0,
+        process_groups_signalled=0,other_export_roles_signalled=0)
+    atomic(Path(args.work)/'r1-paper/refresh.json',result)
+    emit('R1_PAPER_CPU_EXPORT_REFRESHED',**result)
+    return result
+
+
 def worker(args):
     folder=Path(args.work)/args.role;folder.mkdir(parents=True,exist_ok=True)
     with (folder/'worker.lock').open('a') as lock:
@@ -167,6 +253,7 @@ def start(args):
     work=Path(args.work);work.mkdir(parents=True,exist_ok=True);rows=[]
     with (work/'start.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
+        refresh=refresh_r1_paper(args) if getattr(args,'refresh_r1_paper',False) else None
         # This explicit upload start clears only this upload service's STOP.
         # Neither the R1 nor R11 scientific STOP is ever removed.
         (work/'STOP').unlink(missing_ok=True)
@@ -194,6 +281,7 @@ def start(args):
                 time.sleep(.1)
             rows.append(dict(role=role,pid=child.pid,acknowledged=acknowledged,log=str(folder/'upload.log')))
         result=dict(status='R1_R11_RESULT_EXPORT_BACKGROUND_STARTED',work=str(work),roles=rows,
+            r1_paper_refresh=refresh,
             terminal_can_close=all(row.get('acknowledged') or row.get('status')=='EXISTING_BACKGROUND_WORKER_REUSED' for row in rows),
             scientific_stops_retained=True,slurm_jobs_submitted=0,slurm_jobs_cancelled=0,
             priority='Available exact paper evidence first; all completed scientific output follows.',updated_utc=utc())
@@ -207,6 +295,7 @@ def main(argv=None):
     parser.add_argument('--root',default='/public/home/zhuziyuan/projects/paper3')
     parser.add_argument('--work',default=str(Path.home()/'paper3-r1-r11-results-upload'))
     parser.add_argument('--plan','--r11-plan',dest='plan');parser.add_argument('--credentials');parser.add_argument('--role',choices=ROLES,default='r1-paper')
+    parser.add_argument('--refresh-r1-paper',action='store_true')
     args=parser.parse_args(argv);args.root=str(Path(args.root).expanduser().resolve());args.work=str(Path(args.work).expanduser().resolve())
     args.plan=str(Path(args.plan).expanduser().resolve()) if args.plan else str(Path(args.root)/'runs/r11_campaign/plan.json')
     args.r11_plan=args.plan
