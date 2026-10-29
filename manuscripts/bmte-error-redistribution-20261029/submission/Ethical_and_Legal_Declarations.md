@@ -1,0 +1,33 @@
+# Ethical and legal declarations
+
+## Acknowledgments
+
+We thank the investigators who released the EEG datasets and documentation. ChatGPT (OpenAI; accessed on 29 October 2026) assisted with literature synthesis, manuscript organization and drafting, language editing, and preparation of analysis and plotting code. Numerical results were computed from archived data with the accompanying Python scripts. Scientific figures were plotted from those data using Matplotlib; no generative image model created or altered experimental data or images. The human authors are responsible for verifying the content and the final manuscript.
+
+## Research ethics
+
+This study was a secondary computational analysis of lawfully obtained public EEG data and involved no new participant recruitment, contact or intervention. Ethical review was not required under Article 32(1) of the Measures for Ethical Review of Life Science and Medical Research Involving Human Subjects (Guo Wei Ke Jiao Fa [2023] No. 4), under the author-confirmed conditions concerning bodily harm, sensitive personal information and commercial interests. Dataset-specific information reported for the original recordings is documented in the Supplementary Materials.
+
+## Informed consent
+
+No participants were newly recruited or contacted for this secondary analysis. The ethics and consent information reported by the respective original dataset providers is identified separately in the supplementary dataset documentation.
+
+## Author contributions (for double- anonymized journals: please use initials)
+
+Conceptualization, methodology, formal analysis, investigation, visualization and writing—original draft preparation: Ziyuan Zhu. Software: Ziyuan Zhu and Sihao Liu. Data curation: Ziyuan Zhu and Haoyang Yu. Publication-policy verification: Sihao Liu. Material organization and repository-record verification: Haoyang Yu. Project administration: Ziyuan Zhu. All authors accept responsibility for the content of the manuscript.
+
+## Use of Large Language Models, AI and Machine Learning Tools
+
+ChatGPT (OpenAI; accessed on 29 October 2026) assisted with literature synthesis, manuscript organization and drafting, language editing, and preparation of analysis and plotting code. Numerical results were computed from archived data with the accompanying Python scripts. Scientific figures were plotted from those data using Matplotlib; no generative image model created or altered experimental data or images. The human authors are responsible for verifying the content and the final manuscript.
+
+## Conflict of interest
+
+The authors state no conflict of interest.
+
+## Research funding
+
+This research received no external funding.
+
+## Data availability
+
+The original EEG datasets are available from their cited providers, subject to their access conditions. Selected matched predictions, verified participant summaries, the complete descriptive tables and executable reanalysis code accompany this article. The conventional archive is pinned to jackzhu119/few-shot-mi-eeg, commit da2a3acee24746981bbcdd779ab88132da6e24c4; the neural archive to jackzhu119/research3, paper3-results, commit a16d06760ae77699a809c9ba36d002d684560c82; and the separate source-model extension to jackzhu119/cross-subject-mi-eeg, commit c4ea1f4ee1d078bcb015922f8092f05e263f2399. Input SHA-256 hashes and source paths are provided in the supplementary data manifest. Related earlier repository manuscripts are identified in the submission correspondence.

@@ -1,0 +1,93 @@
+## Supplementary methods
+
+### Cohort partitions, temporal units and information access
+
+The main calibration analysis contains five separately evaluated cohorts and 56 dataset participants: Kumar primary 12; BNCI2014-001 nine; Stieger historical test 11; Pan 14; and Weibo ten. Kumar's six development participants remain a separate analysis role. The source-model extension uses 85 Dreyer participants. Method, budget, session, seed and scoring-reference rows are repeated observations of these participants.
+
+| Cohort and role | Source information | Support budget and boundary | Query definition |
+| --- | --- | --- | --- |
+| Kumar primary 12; development six separately | Each participant's session 0/runs 0–1: 40 training labels; run 2: 20 source-validation labels | First run of each of five later sessions; first 4/8/12/16 valid labels or full run, 19/20 labels | Subsequent whole runs; identical ordered queries across methods and budgets |
+| BNCI conventional evaluation, nine | First recording day/runs 1–4: 96 hand-imagery labels | Second day/run 1: first 20 chronological hand trials; four remainder trials withheld | Second day/runs 2–6: 120 hand trials per participant, 60 per class |
+| Stieger neural evaluation, 11 historical test | Four-dataset EEGNet source training; 40 separate Stieger training-reference participants for feature references | First 4/8/12/16/20 acquired positions, including rejected trials | Complete later physical runs after the position-20 boundary run |
+| Pan neural evaluation, 14 | Same neural source checkpoints and fixed references | First 4/8/12/16/20 acquired positions | Fixed trials after the position-20 boundary in published trial order |
+| Weibo neural evaluation, ten | Same neural source checkpoints and fixed references | First 4/8/12/16/20 acquired positions | Fixed trials after the position-20 boundary in published trial order |
+| Dreyer source-model extension, 85 | BNCI-only S9 versus BNCI-plus-Yang S60; source-only checkpoint selection | Zero target-calibration labels | Same 80 hand-imagery task trials per participant for both source models |
+
+BNCI and Kumar query signals did not estimate alignment references. Neural query statistics did not update source or feature references. Chronological prefixes retained their observed class composition. A support prefix with one true class remained eligible where the recorded implementation supported it. Target labels were not sampled from later queries to balance or replenish calibration inputs.
+
+Kumar's 18 identifiers had six sessions each. Development identifiers were sub-1, sub-4, sub-7, sub-10, sub-13 and sub-16. The primary cohort contained the other twelve. Of 7,200 exported left/right events, 7,156 supplied complete five-second windows; the 44 incomplete windows crossed recording ends and were excluded without padding. The fixed original query set included 360 source-query and 3,930 later-session query trials. Thirty partial target-query windows were excluded in its original construction. All 18 participants supplied complete five-target-session endpoints for the four conventional methods at all five scheduled budgets. Fourteen of the 90 full-support runs supplied 19 valid labels; the remaining 76 supplied 20. Thus `full` is retained as the final budget label rather than universally relabeled B20.
+
+Kumar source-validation examples were used for the archived source-model selection where applicable; they were not included in the conventional CSP/LDA fits analyzed here. Each later session reset to its source/current-support definition; labels revealed in earlier target sessions did not accumulate into later-session fitting.
+
+BNCI's initial electrooculogram calibration objects were excluded from MI-run numbering. The one-based original MAT trial-start sample preceded the class cue by 500 samples at 250 Hz. Its source-day runs 5–6 did not enter fitting; run 6's source-query partition was retained outside the target endpoint. Support was the first 20 chronological left/right observations from target-day run 1. The other four observations of that run were withheld, and later runs supplied the common query set. All original trial identities, artifact flags and assigned roles were retained. No artifact-marked trials were excluded in this evaluation: flags occurred in 87 source-fit, 17 support and 94 query observations.
+
+The Stieger allocation contained 40 training-reference, 11 development-validation and 11 historical test participants. The analyzed historical test partition supplied 105 sessions; Pan supplied 28 sessions and Weibo ten. Three source seeds produced 315, 84 and 30 session–seed evaluations. Stieger queries required at least 20 valid trials and five examples per true class in an eligible complete run. Invalid calibration trials consumed their original acquired positions. The mean number of valid Stieger support examples at 20 acquired positions was 15.53; Pan and Weibo supplied 20. Pan and Weibo used the trial order supplied with their public releases rather than an asserted physical-run chronology. Previous development exposure of the neural evaluation cohorts is retained in the retrospective study interpretation.
+
+### Signal processing and decoder definitions
+
+| Evaluation | Referencing and channels | Epoch and sampling | Recorded conventional/neural implementation |
+| --- | --- | --- | --- |
+| Kumar | Common average, 22 EEG channels | Cue-anchored 5 s; 512→128 Hz; 22×640 values in volts | Four-component CSP with Ledoit–Wolf regularization and log-power features; LDA automatic shrinkage |
+| BNCI conventional | Recorded reference, first 22 EEG channels; EOG excluded | Cue [0,4) s at 250 Hz; continuous-run filtering | Four-component NumPy CSP; covariance and LDA shrinkage 0.1 |
+| Stieger/Pan/Weibo neural | Common average, fixed 11-channel montage | Crop [0.25,1.25) s after task anchor; 128 Hz; 11×128 inputs | EEGNet source representation and 18 saved calibration configurations |
+| Dreyer source-model extension | Common average, fixed 18-channel montage | Cue-relative [0.5,2.5) s crop from a six-second context; 160 Hz; 18×320 inputs | Broadband EEGNet; fixed S60-versus-S9 source comparison |
+
+All four paths used fourth-order 8–30 Hz bidirectional Butterworth filtering. Kumar filtering occurred within complete trial windows. BNCI conventional filtering occurred within continuous runs. Neural calibration used the original trial's [0,1.5) s task-relative context; the task/feedback anchor in Stieger occurred 2 s after cue onset. Channels were temporally demeaned, followed by division by each trial's joint channel–time root-mean-square amplitude. Insufficient-duration, nonfinite and zero-energy trials were rejected under the fixed input contract.
+
+The neural calibration montage was FC3, FC4, C5, C3, C1, Cz, C2, C4, C6, CP3 and CP4, in that order. EEGNet used eight temporal filters, a 16-channel depthwise spatial stage, a depthwise-temporal/pointwise stage, ELU nonlinearities and pooling to 64 features and two logits [@lawhern2018]. Source training used BNCI2014-001, Cho2017, Lee2019 MI and PhysioNet MI [@tangermann2012; @cho2017; @lee2019; @goldberger2000]. Seeds 20261018/19/20 selected 39/30/45 source-training epochs. Each epoch comprised 64 steps at batch size 64. Adam used learning rate 0.001, β=(0.9,0.999), ε=10⁻⁸, zero weight decay and training dropout 0.25. Replacement sampling selected dataset, participant, observed class and trial. Target configurations retained their recorded initialization, selected fitting modules and native anchors, with batch-normalization and dropout in evaluation mode.
+
+The complete neural method inventory is `frozen`, `support_ea`, `head_bias`, `head_rank4`, `head_full`, `sgd10`, `sgd100`, `r3_protected`, `r4_xfit_select_stack`, `r8_fiber_bounded`, `r9_raw_anchored`, `r9_ea_anchored`, `profile_map`, `profile`, `profile_no_completion`, `profile_frozen_anchor`, `profile_quadratic` and `profile_variance_gate`. Human-readable labels organize the recorded implementations; method keys preserve their provenance. The comparison concerns their saved prediction behavior. Complete configuration receipts provide the fitting definitions and numerical settings.
+
+### Three support-alignment implementations
+
+The conventional component contrast follows the sequence frozen CSP/LDA, LDA-only updating, full CSP/LDA refitting and alignment before full refitting. LDA-only refits the decision rule on source plus support while retaining source CSP. Full refitting re-estimates CSP and LDA on exactly the same source/support union. Its increment beyond LDA-only consequently includes both the new spatial representation and the classifier fitted in that representation.
+
+Kumar alignment represents the common-average-referenced signal in 21 orthonormal coordinates. Each domain reference is the arithmetic mean of trial sample covariances, estimated from the 40 source-training trials or current support prefix. Multiplication by that domain reference's inverse square root whitens the signals. Aligned source and support then enter the same CSP/LDA fit, and target queries use the fixed support-domain transform. Source-validation and target-query observations do not estimate either reference.
+
+BNCI conventional alignment uses the recorded reference, separate source/support covariance estimates and fixed 0.1 covariance/LDA shrinkage in its versioned NumPy implementation. The aligned fit receives the same 96 source and 20 target labels as the other updating fits. It supplies an independent dataset-specific CSP component comparison; BNCI's use elsewhere as a neural training source remains explicit.
+
+Neural alignment acts in the ten-dimensional effective subspace of its 11 common-average channels. Trial covariances are trace-normalized, averaged over valid support inputs and shrunk as 0.95 times the mean covariance plus 0.05 times its isotropic covariance. Whitening of that support reference is followed by recoloring to a fixed source reference [@he2020; @rod2019]. Feature-reference means and whiteners, where required, came from 40 Stieger training-reference participants and 396 sessions. Only valid inputs within each session's first 20 acquired positions entered these feature references. Participants, their sessions and valid support trials received equal hierarchical weights; feature covariance used 0.1 shrinkage. No target queries updated these references.
+
+The alignment operation therefore retains its recorded covariance estimator, channel space and source/support information within each evaluation. Budget curves describe these complete processing paths. They do not isolate a covariance-estimator effect across different acquisitions or decoder implementations.
+
+### Class-balanced prediction transitions
+
+All target tasks have two labels. With \(w_j=1/(2n_{y_j})\), corrected mass C is the weighted sum of query observations changing from incorrect under reference a to correct under method m; introduced mass I is the reverse. Disagreement D=C+I and net gain G=C−I exactly reproduce class-balanced label disagreement and the paired BA difference. We compute transitions before session/seed averaging. Their denominator is the entire class-balanced query set, not just the reference's errors or correct predictions. Values in percentage points are 100 times the stored fractions.
+
+Frozen source decoding is the primary scoring reference within each cohort. Conventional component contrasts additionally compare Full with LDA-only and EA with Full. The neural sensitivity analysis scores the same stored predictions relative to support alignment. Changing a scoring reference changes the measured transition pair without changing any method's training, fitted anchor or prediction rule.
+
+For Kumar, each participant endpoint equally averages five target-session metrics. BNCI has one target recording per participant. For neural calibration, sessions are averaged equally within participant/source seed and the three seeds are averaged equally within participant. Dreyer source-model endpoints average the three source seeds within each participant. Cohort means assign equal weight to participants. These rules preserve the original treatment of query-rich and query-poor sessions.
+
+For participant i, define within-summary cancellation as 2min(C_i,I_i). The cohort-level identity is
+
+\[
+\overline{D}-|\overline{G}|=
+\operatorname{mean}_i[2\min(C_i,I_i)]
++\operatorname{mean}_i|G_i|-|\operatorname{mean}_iG_i|.
+\]
+
+The first term includes opposing transitions present after averaging a participant's sessions and source seeds. It therefore describes cancellation within the participant summary, including cancellation across repeated recordings. The second term captures net changes of opposite sign across participants. Component fractions divide by cohort-mean D; D=0 yields an undefined ratio retained as missing. Both identity checks use full-precision fractions before display rounding.
+
+The common neural descriptive frame includes 16 non-anchor configurations for each of three cohorts, or 48 cohort/configuration cells at the 20-position budget. Complete 17-non-reference and all-18-configuration frames are supplied alongside it. These cells are repeated summaries of the same 35 participants. Their medians and interquartile ranges describe configuration behavior rather than an enlarged independent sample.
+
+### Statistical scope and historical endpoint families
+
+The new common analysis uses pointwise participant-percentile intervals from 10,000 resampling vectors per cohort, random seed 20261029. Methods, budgets and references within a cohort share participant-index vectors. Intervals condition on the archived session/seed summaries and fitted source models. The code supplies intervals for C/I/D/G, BA/reference BA and cancellation quantities. For ratio intervals, bootstrap draws with zero disagreement remain missing; each output records its effective valid-draw count. No new p-values or cross-cohort pooled effects are estimated.
+
+The original Kumar full-minus-frozen contrast retained its primary role; full-minus-LDA-only retained its secondary role. Its historical pointwise participant-bootstrap intervals coexist with a later four-test Holm-adjusted exact sign-flip family: full-minus-frozen, full-minus-LDA-only and LDA-only-minus-frozen in the 12-person cohort, and full-minus-frozen in the ten-person amplitude-restricted subset. The saved unadjusted p values are 0.01953125, 0.01025390625, 0.26123046875 and 0.076171875; Holm values are 0.05859375, 0.041015625, 0.26123046875 and 0.15234375. Those tests retain observed magnitudes and enumerate participant signs under a sign-symmetric null. The historical intervals are pointwise rather than family-adjusted.
+
+Kumar's previously reported EA, budget and phase analyses used exploratory pointwise intervals with 10,000 draws and seed 42. BNCI's Full-minus-LDA-only comparison was the single fixed primary contrast; Full-minus-frozen, LDA-only-minus-frozen and EA-minus-Full formed a separate three-test secondary Holm family. Its exact tests enumerate 512 sign assignments; historical intervals use 10,000 participant draws, seed 20261027, and numeric participant order 1–9. New unified intervals are labeled separately from these preserved endpoint analyses.
+
+The archived neural formal-stage comparison table preserves three roles: 12 primary BA contrasts (four profile-centered comparisons in each cohort), 24 secondary ablation contrasts (four controls, BA and NLL, in each cohort), and 180 additional unadjusted secondary entries. A distinct subsequent matched-residual mechanism family contains 18 comparisons: one residual-versus-point-fit contrast over six outcomes in three cohorts, with its own Holm adjustment. The 18-comparison family does not replace the 24-entry formal-stage ablation family. Original contrast roles, tests, intervals and adjustment columns remain in the machine-readable source tables [@holm1979].
+
+Additional saved diagnostics use their own definitions. Neural probability movement is the ordinary query fraction satisfying |p_m(1|x)−p_EA(1|x)|≥10⁻⁴. A recorded negative-transfer session has method BA more than 10⁻¹² below its matched alignment-reference BA. Neither diagnostic is substituted for class-balanced C/I or recalculated against every fitting anchor. NLL and Brier scores retain their recorded probability floor and scoring conventions.
+
+### Source-model extension without target calibration
+
+The extension compares two completed source models evaluated on the same 85 Dreyer participants [@dreyer2023]. Of 87 listed participants, identifiers 17 and 41 were excluded by the fixed electrode-order eligibility rule. Each retained person supplied 80 trials, 40 per hand, from the first two acquisition runs. S9 used nine BNCI participants; S60 used the same nine plus 51 Yang participants [@yang2025]. Their eligible training inventories contained 2,592 and 33,183 trials. The source models used 18 channels, common-average referencing, 8–30 Hz broadband filtering, a two-second 160-Hz crop and trial-wise root-mean-square normalization. Dreyer's crop extends into the acquisition's feedback interval; this extension evaluates the recorded task-EEG input definition.
+
+The fixed broadband/tail-min-recall checkpoint rule used source validation. Full trajectories received 5,120 updates, with three final source seeds and source-only selected checkpoint durations. The new C/I calculation pairs S60 and S9 predictions by participant, source seed and original trial ID: 20,400 query rows per condition. Each seed receives class-balanced transition weights, then seeds are averaged within participant. This analysis uses the same 85 people as the underlying source-comparison studies; different objectives, checkpoint rules or model configurations do not add independent participants. The source-model extension remains outside the calibration-budget axis and all main calibration cohort means.
+
+### Reproducibility and source-record boundaries
+
+Raw EEG access follows each original dataset's conditions. The analysis package supplies the saved labels/predictions or verified participant-transition summaries, source hashes, configuration identities and executable calculations. Original exclusion rules and ordered query identities are retained. The calculation verifies C−I=BA difference and C+I=D before aggregation and at the reported summary levels. Source models are reused without new training or inference. Research-ethics and consent information concerns the original acquisitions and is recorded dataset by dataset in the article's declarations and source documentation.
