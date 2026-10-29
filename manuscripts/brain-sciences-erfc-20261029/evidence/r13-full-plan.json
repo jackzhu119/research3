@@ -1,0 +1,864 @@
+{
+  "code_manifest": {
+    "paper3r13/__init__.py": "976e1626ec80817ec60b12ba48b14eb58abd8025c41a623373052ed824ae9707",
+    "paper3r13/algorithm.py": "b2c5db34ec0f3da94e75c8d40f0f22ab99adcd630825701002e829695063854b",
+    "paper3r13/bootstrap.py": "5b1c4fba76c6d90c224b90e6b0c16563aef72f50d872cd07bcb3b4dccb2fba39",
+    "paper3r13/common.py": "c4433d9387b8be7a07bc94fa920484868459273338e62819d82363c4da4a2989",
+    "paper3r13/native.py": "f136499d44d18d946cd14688428511f87c9067104bb67c7f5dd454f6c4d34000",
+    "paper3r13/observer.py": "209571939f832f3c05d721497f77fb2c8b67023dc6607962dbe07d69f4cdc29f",
+    "paper3r13/report.py": "9058d5ad669d6f3ee53c9195c4451ce6672517ed4763c5487ac0a589dc840c3f",
+    "paper3r13/runtime.py": "cc690f5f2c4f89074c9bbc019070cbfb526342fdc361128eede254d4454dbcd6",
+    "paper3r13/worker.py": "0df044b580c4ab400dd33114a773bd1732b7d2036c288638265b10ab446966b4"
+  },
+  "config": {
+    "exhaustive_fixed_matrix": true,
+    "gates_on_significance": false,
+    "initial_acquired_positions": 12,
+    "max_acquired_positions": 20,
+    "optimizer": {
+      "head_l2": 0.001,
+      "head_learning_rate": 0.01,
+      "head_penalty_divisor": 65,
+      "primary_steps": 100,
+      "secondary_steps": 10,
+      "theta_l2": 0.01,
+      "theta_learning_rate": 0.05,
+      "theta_radius": 0.15
+    },
+    "rhos": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "scope": "EXPLORATORY_DEVELOPMENT_NOT_INDEPENDENT_CONFIRMATION",
+    "sentinel_positions": [
+      4,
+      8
+    ],
+    "source_seeds": [
+      20261018,
+      20261019,
+      20261020
+    ]
+  },
+  "created_utc": "2026-10-28T05:13:56Z",
+  "input_identity": "b86e7b2859fda02361920029eb0c15f5be7b489b8621070acbf7b805efc8cd6a",
+  "m12_package": "/public/home/zhuziyuan/paper3-mechanism12/0ae0b4482e13d792a780",
+  "m12_plan_path": "/public/home/zhuziyuan/projects/paper3/runs/r12_controlled_mechanism/plan.json",
+  "native_inputs": {
+    "independent_confirmation_available": false,
+    "input_identity": "b86e7b2859fda02361920029eb0c15f5be7b489b8621070acbf7b805efc8cd6a",
+    "m12_package": "/public/home/zhuziyuan/paper3-mechanism12/0ae0b4482e13d792a780",
+    "m12_plan_path": "/public/home/zhuziyuan/projects/paper3/runs/r12_controlled_mechanism/plan.json",
+    "native_bridge_reference_commit": "653dc25a2f09ed11361fe71d795f4fd31a47f1ba",
+    "native_data_sha256": "5a534f39c4ed8b95c53f844bab5f66873646f4bfc3a6dc3492f3ce716f8cff19",
+    "native_manifest_identity": "b86e7b2859fda02361920029eb0c15f5be7b489b8621070acbf7b805efc8cd6a",
+    "participants": [
+      "S2",
+      "S26",
+      "S14",
+      "S6",
+      "S3",
+      "S50",
+      "S53",
+      "S1"
+    ],
+    "role": "pilot",
+    "root": "/public/home/zhuziyuan/projects/paper3",
+    "scientific_scope": "retrospective_exploratory_replay",
+    "source_seeds": [
+      20261018,
+      20261019,
+      20261020
+    ]
+  },
+  "original_rounds_modified": false,
+  "output": "/public/home/zhuziyuan/projects/paper3/runs/r13_update_validity",
+  "package": "/public/home/zhuziyuan/paper3-round13/393b8d41af844a3878ff",
+  "python": "/public/home/zhuziyuan/.venvs/paper3-hpc-cu121-offline/bin/python",
+  "recipe_sha256": "c2bba596810fb2590a920acc13a739ff826f99b62369efe150e5699d6cef7655",
+  "resources": {
+    "account": null,
+    "cpus": 12,
+    "gpus": 1,
+    "memory": "64G",
+    "nodes": 1,
+    "partition": "hpc_gpu1",
+    "time_limit": "5-03:00:00"
+  },
+  "root": "/public/home/zhuziyuan/projects/paper3",
+  "schema_version": "paper3-r13-plan-v1",
+  "study": "paper3-r13-update-validity",
+  "tasks": [
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS1-s20261018-g0-a0p05",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS1-s20261018-g0-a0p15",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS1-s20261018-g1-a0p05",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS1-s20261018-g1-a0p15",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS1-s20261019-g0-a0p05",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS1-s20261019-g0-a0p15",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS1-s20261019-g1-a0p05",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS1-s20261019-g1-a0p15",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS1-s20261020-g0-a0p05",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS1-s20261020-g0-a0p15",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS1-s20261020-g1-a0p05",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS1-s20261020-g1-a0p15",
+      "participant": "S1",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS14-s20261018-g0-a0p05",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS14-s20261018-g0-a0p15",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS14-s20261018-g1-a0p05",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS14-s20261018-g1-a0p15",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS14-s20261019-g0-a0p05",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS14-s20261019-g0-a0p15",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS14-s20261019-g1-a0p05",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS14-s20261019-g1-a0p15",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS14-s20261020-g0-a0p05",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS14-s20261020-g0-a0p15",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS14-s20261020-g1-a0p05",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS14-s20261020-g1-a0p15",
+      "participant": "S14",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS2-s20261018-g0-a0p05",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS2-s20261018-g0-a0p15",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS2-s20261018-g1-a0p05",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS2-s20261018-g1-a0p15",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS2-s20261019-g0-a0p05",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS2-s20261019-g0-a0p15",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS2-s20261019-g1-a0p05",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS2-s20261019-g1-a0p15",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS2-s20261020-g0-a0p05",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS2-s20261020-g0-a0p15",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS2-s20261020-g1-a0p05",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS2-s20261020-g1-a0p15",
+      "participant": "S2",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS26-s20261018-g0-a0p05",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS26-s20261018-g0-a0p15",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS26-s20261018-g1-a0p05",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS26-s20261018-g1-a0p15",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS26-s20261019-g0-a0p05",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS26-s20261019-g0-a0p15",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS26-s20261019-g1-a0p05",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS26-s20261019-g1-a0p15",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS26-s20261020-g0-a0p05",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS26-s20261020-g0-a0p15",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS26-s20261020-g1-a0p05",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS26-s20261020-g1-a0p15",
+      "participant": "S26",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS3-s20261018-g0-a0p05",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS3-s20261018-g0-a0p15",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS3-s20261018-g1-a0p05",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS3-s20261018-g1-a0p15",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS3-s20261019-g0-a0p05",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS3-s20261019-g0-a0p15",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS3-s20261019-g1-a0p05",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS3-s20261019-g1-a0p15",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS3-s20261020-g0-a0p05",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS3-s20261020-g0-a0p15",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS3-s20261020-g1-a0p05",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS3-s20261020-g1-a0p15",
+      "participant": "S3",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS50-s20261018-g0-a0p05",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS50-s20261018-g0-a0p15",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS50-s20261018-g1-a0p05",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS50-s20261018-g1-a0p15",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS50-s20261019-g0-a0p05",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS50-s20261019-g0-a0p15",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS50-s20261019-g1-a0p05",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS50-s20261019-g1-a0p15",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS50-s20261020-g0-a0p05",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS50-s20261020-g0-a0p15",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS50-s20261020-g1-a0p05",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS50-s20261020-g1-a0p15",
+      "participant": "S50",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS53-s20261018-g0-a0p05",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS53-s20261018-g0-a0p15",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS53-s20261018-g1-a0p05",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS53-s20261018-g1-a0p15",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS53-s20261019-g0-a0p05",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS53-s20261019-g0-a0p15",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS53-s20261019-g1-a0p05",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS53-s20261019-g1-a0p15",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS53-s20261020-g0-a0p05",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS53-s20261020-g0-a0p15",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS53-s20261020-g1-a0p05",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS53-s20261020-g1-a0p15",
+      "participant": "S53",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS6-s20261018-g0-a0p05",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS6-s20261018-g0-a0p15",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS6-s20261018-g1-a0p05",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS6-s20261018-g1-a0p15",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261018
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS6-s20261019-g0-a0p05",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS6-s20261019-g0-a0p15",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS6-s20261019-g1-a0p05",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS6-s20261019-g1-a0p15",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261019
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 0,
+      "key": "pS6-s20261020-g0-a0p05",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 0,
+      "key": "pS6-s20261020-g0-a0p15",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.05,
+      "generator": 1,
+      "key": "pS6-s20261020-g1-a0p05",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261020
+    },
+    {
+      "amplitude": 0.15,
+      "generator": 1,
+      "key": "pS6-s20261020-g1-a0p15",
+      "participant": "S6",
+      "role": "pilot",
+      "seed": 20261020
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "draft": "drafts/methods_theory.md",
+  "word_count_whitespace": 1383,
+  "algorithm_source": "/workspace/paper3-round10/paper3r10/algorithm.py",
+  "algorithm_sha256": "6fa50fe53ee4e80b3fe9e500b12cc14eb54b5e0bfde8afac1c30611fadba1e48",
+  "algorithm_matches_plan_manifest": true,
+  "plan_recipe_sha256": "3c0482d286bfac9e31df4835898e205815d348a14aef7622681cb5f359d949d1",
+  "method_config": {
+    "amplitude": 0.3,
+    "balanced": true,
+    "certification_padding": 1e-10,
+    "evidence_fraction": 0.1,
+    "gradient_tolerance": 1e-10,
+    "include_intercept": true,
+    "kernel": "linear",
+    "lengthscale": 1.0,
+    "max_bracket": 32,
+    "max_newton": 60,
+    "max_root": 12,
+    "max_support": 20,
+    "mode": "robust",
+    "nugget": 1e-10,
+    "probability_floor": 1e-12,
+    "regularization": 1.0,
+    "root_tolerance": 1e-07,
+    "use_null_completion": true
+  },
+  "mapping": [
+    {
+      "topic": "fixed reference transform / kernel / UID nugget",
+      "source": "algorithm.py:_reference,_transform,_kernel,_kernel_diagonal,fit,predict"
+    },
+    {
+      "topic": "balanced sum objective and finite Newton residual",
+      "source": "algorithm.py:_Objective,_newton,fit"
+    },
+    {
+      "topic": "gain-retained set and support-null witness",
+      "source": "R10_MATH.md sections3–7; algorithm.py:fit,predict"
+    },
+    {
+      "topic": "dual outer bound / one-sided deployed computation",
+      "source": "R10_MATH.md section8; algorithm.py:_direction_bound,predict"
+    },
+    {
+      "topic": "probability minimax projection conditional on model set",
+      "source": "R10_MATH.md section6; algorithm.py:predict"
+    },
+    {
+      "topic": "scope and historical selection",
+      "source": "evidence/r10/plan.json:scientific_scope,retrospective_amendment,historical_target_results_used_for_algorithm_design,selection_lineage"
+    }
+  ],
+  "scope_notes": [
+    "The name ERFC describes the existing R10 selected candidate a0.3-c0.1; it is not a newly run algorithm.",
+    "No new source architecture or preprocessing parameters were invented.",
+    "Ideal two-sided profile theory is distinguished from actual one-sided conservative dual computation.",
+    "No Bayesian credible interval, calibrated coverage or actual future accuracy guarantee claimed.",
+    "No finite-iteration c=0 profile guarantee or universal approximate monotonicity claimed.",
+    "Historical target results affected algorithm design; per-episode label exclusion is not a claim of an entirely unseen research history."
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "reference": "a16d06760ae77699a809c9ba36d002d684560c82",
+  "read_only": true,
+  "source_byte_restoration_verified": true,
+  "no_model_fit_performed": true,
+  "R12": {
+    "scope": "source-trained historical pilot development cohort; no independent confirmation",
+    "n_independent_participants": 8,
+    "source_seeds": [
+      20261018,
+      20261019,
+      20261020
+    ],
+    "budgets": [
+      4,
+      8,
+      12,
+      16,
+      20
+    ],
+    "primary_budget": 20,
+    "primary_steps": 100,
+    "completed_tasks": 78,
+    "planned_dependent_skips": 139,
+    "primary_paired_blocks_completed": 24,
+    "primary_family_size": 6,
+    "primary_holm_significant_count": 0,
+    "primary_comparisons": [
+      {
+        "id": "P1",
+        "candidate": "top_q",
+        "baseline": "random_q",
+        "metric": "BA",
+        "effect_mean": 0.0004085991508986,
+        "effect_pp": 0.0408599150898622,
+        "ci95": "[0.00010728899922209101,0.000764873104892302]",
+        "pvalue": 0.0390625,
+        "holm_pvalue": 0.1953125
+      },
+      {
+        "id": "P2",
+        "candidate": "top_q",
+        "baseline": "random_q",
+        "metric": "balanced_NLL",
+        "effect_mean": -4.186316161378101e-05,
+        "effect_pp": "",
+        "ci95": "[-7.39281808578001e-05,-9.888496701887517e-06]",
+        "pvalue": 0.0546875,
+        "holm_pvalue": 0.21875
+      },
+      {
+        "id": "P3",
+        "candidate": "drop_weak",
+        "baseline": "drop_random",
+        "metric": "BA",
+        "effect_mean": 0.0004025394224508,
+        "effect_pp": 0.040253942245088,
+        "ci95": "[-0.00010411202857764368,0.0008655079752164785]",
+        "pvalue": 0.171875,
+        "holm_pvalue": 0.515625
+      },
+      {
+        "id": "P4",
+        "candidate": "drop_weak",
+        "baseline": "drop_random",
+        "metric": "balanced_NLL",
+        "effect_mean": -5.9695155168376646e-05,
+        "effect_pp": "",
+        "ci95": "[-9.790893594305294e-05,-2.1730805859758878e-05]",
+        "pvalue": 0.0234375,
+        "holm_pvalue": 0.140625
+      },
+      {
+        "id": "P5",
+        "candidate": "top_q",
+        "baseline": "scalar_shrink_full",
+        "metric": "BA",
+        "effect_mean": 8.835389499246143e-05,
+        "effect_pp": 0.0088353894992461,
+        "ci95": "[-0.00033376016159093747,0.0005471929340741116]",
+        "pvalue": 0.734375,
+        "holm_pvalue": 0.734375
+      },
+      {
+        "id": "P6",
+        "candidate": "top_q",
+        "baseline": "support_ea",
+        "metric": "BA",
+        "effect_mean": 0.0005278477070717,
+        "effect_pp": 0.0527847707071711,
+        "ci95": "[-0.0001513432999963503,0.0012743943104799454]",
+        "pvalue": 0.2265625,
+        "holm_pvalue": 0.515625
+      }
+    ],
+    "decision": {
+      "criteria": {
+        "actual_weak_deletion_evidence_complete": true,
+        "actual_weak_deletion_has_reference_effect_in_half_episodes": true,
+        "development_support_loss_evidence_complete": true,
+        "drop_weak_vs_random_BA_positive": true,
+        "drop_weak_vs_random_NLL_nonpositive": true,
+        "numeric_reference_matching_stable": true,
+        "support_fit_improves_and_future_NLL_worsens": false,
+        "top_vs_random_BA_positive": true,
+        "top_vs_random_NLL_nonpositive": true,
+        "top_vs_scalar_shrink_BA_nonnegative": true
+      },
+      "decision": "STOP",
+      "decision_status": "STOP",
+      "evidence": {
+        "insufficient_evidence": false,
+        "mean_future_NLL_delta_full_minus_EA": -0.0011800877791132147,
+        "mean_support_BCE_delta_full_minus_EA": -0.007759094655451403,
+        "meaningful_weak_deletion_fraction": 1,
+        "meaningful_weak_deletion_unit": "participant-session, mean across source seeds",
+        "primary_point_effects": {
+          "P1": 0.00040859915089862253,
+          "P2": -4.186316161378101e-05,
+          "P3": 0.0004025394224508802,
+          "P4": -5.9695155168376646e-05,
+          "P5": 8.835389499246143e-05,
+          "P6": 0.0005278477070717116
+        },
+        "support_loss_participants_available": 8,
+        "support_loss_participants_expected": 8
+      },
+      "future_risk_guarantee": false,
+      "independent_confirmation_available": false,
+      "mechanism_family_revised": false,
+      "recipe_sha256": "b04a1db8d593f2590cb57649ae0dc55f3ac751bc2b36c08cd9782b6d62748343",
+      "role": "pilot",
+      "schema_version": "paper3-m12-development-decision-v1",
+      "stability": {
+        "absolute_match_tolerance": 1e-05,
+        "matched_session_conditions": 14328,
+        "maximum_match_error": 9.99963412487339e-06
+      },
+      "statistical_significance_claimed": false,
+      "task_key": "pilot-decision",
+      "updated_utc": "2026-10-27T12:17:20Z"
+    },
+    "independent_confirmation_available": false,
+    "report_url": "https://github.com/jackzhu119/research3/blob/a16d06760ae77699a809c9ba36d002d684560c82/results/paper3/round-12/studies/b04a1db8d593f259/paper/reports/report.json/part-000000.bin",
+    "exact_table_provenance_file": "r12-restored-provenance.json"
+  },
+  "R13": {
+    "scope": "retrospective exploratory replay; historical cohorts are reused; the pilot subset was in source meta_train",
+    "n_independent_participants": 8,
+    "completed_tasks": 96,
+    "task_session_outputs": 960,
+    "metric_rows": 69120,
+    "independent_confirmation_available": false,
+    "primary": {
+      "estimand": "(NLL_adapt-NLL_EA)_rho0 - (NLL_adapt-NLL_EA)_rho1",
+      "exploratory_sign_reversal_supported": false,
+      "information": "prefix_only",
+      "interpretation": "An interaction alone is not sign reversal. Statistics use complete matched participant vectors only; all results are exploratory, not independent confirmation.",
+      "joint_sign_reversal_p": 0.9921875,
+      "k": 0,
+      "methods": [
+        "retain_initial",
+        "EA_B12"
+      ],
+      "model": "spatial_head_frozen",
+      "observed_mean_sign_reversal": false,
+      "participant_values": {
+        "S1": {
+          "d_persistent": -0.002317785991520043,
+          "d_reset": -0.0022509432883468196,
+          "interaction": 6.684270317322332e-05
+        },
+        "S14": {
+          "d_persistent": 0.0001591960317388661,
+          "d_reset": 0.00019863788399108553,
+          "interaction": 3.944185225221943e-05
+        },
+        "S2": {
+          "d_persistent": -0.0008909253008297613,
+          "d_reset": -0.0009350559568382503,
+          "interaction": -4.413065600848904e-05
+        },
+        "S26": {
+          "d_persistent": -0.0016116705197896438,
+          "d_reset": -0.0016409034284321988,
+          "interaction": -2.923290864255499e-05
+        },
+        "S3": {
+          "d_persistent": -0.0014148460126840957,
+          "d_reset": -0.0013999368379428933,
+          "interaction": 1.4909174741202427e-05
+        },
+        "S50": {
+          "d_persistent": -0.00014533077785543235,
+          "d_reset": -0.0001284985450287675,
+          "interaction": 1.683223282666484e-05
+        },
+        "S53": {
+          "d_persistent": -0.0013143920810358303,
+          "d_reset": -0.0013686225318388368,
+          "interaction": -5.4230450803006416e-05
+        },
+        "S6": {
+          "d_persistent": -0.0009623013839505142,
+          "d_reset": -0.0009275920272099415,
+          "interaction": 3.470935674057269e-05
+        }
+      },
+      "statistics": {
+        "d_persistent": {
+          "alternative": "less",
+          "ci95": [
+            -0.0015185734921183422,
+            -0.0005500599076785825
+          ],
+          "ci_method": "participant_percentile_bootstrap_2000_seed20261028",
+          "mean": -0.0010622570044908069,
+          "n_participants": 8,
+          "sign_flip_exact": true,
+          "sign_flip_p": 0.01171875,
+          "test_assumption": "paired participant differences are sign-exchangeable under the null"
+        },
+        "d_reset": {
+          "alternative": "greater",
+          "ci95": [
+            -0.0015130035316628673,
+            -0.0005436179428742793
+          ],
+          "ci_method": "participant_percentile_bootstrap_2000_seed20261028",
+          "mean": -0.0010566143414558278,
+          "n_participants": 8,
+          "sign_flip_exact": true,
+          "sign_flip_p": 0.9921875,
+          "test_assumption": "paired participant differences are sign-exchangeable under the null"
+        },
+        "interaction": {
+          "alternative": "two-sided",
+          "ci95": [
+            -2.37336499250535e-05,
+            3.3329376426932856e-05
+          ],
+          "ci_method": "participant_percentile_bootstrap_2000_seed20261028",
+          "mean": 5.6426630349790334e-06,
+          "n_participants": 8,
+          "sign_flip_exact": true,
+          "sign_flip_p": 0.703125,
+          "test_assumption": "paired participant differences are sign-exchangeable under the null"
+        }
+      }
+    },
+    "report_url": "https://github.com/jackzhu119/research3/blob/a16d06760ae77699a809c9ba36d002d684560c82/results/paper3/round-13/studies/c2bba596810fb259/paper/report.json/part-000000.bin",
+    "participant_csv_sha256": "c27311421bd2ffad05859d5ad234cc1bada6ee06ed33425c20488657b9a656b8",
+    "participant_csv_bytes": 317034,
+    "raw_full_archive_and_latest_paper_scientific_fields_equal": true
+  },
+  "R8": {
+    "primary_comparisons": 40,
+    "holm_significant_count": 0,
+    "minimum_holm_p": 0.15625,
+    "source_primary_csv_sha256": "d86fef2ce3b7e8fe41bd6a1481d215794a3100ce94e0e4fe63add0553c00e7da"
+  },
+  "R9": {
+    "primary_comparisons": 24,
+    "holm_significant_count": 0,
+    "minimum_holm_p": 0.9755859375,
+    "source_primary_csv_sha256": "3e799d468c92a5fa7161502adf53a14ec656f094f7c91f26e69f79e554675c3e"
+  }
+}

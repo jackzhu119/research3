@@ -1,0 +1,130 @@
+{
+  "status": "SOURCE_F0_COMPLETE",
+  "synthetic": false,
+  "architecture": "legacy_compact_eegnet_v1_clinic11",
+  "signal_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+  "source_cache_manifest_sha256": "bfc204577dfe51c1fc798c1241391ab63509fc2ad9ebfb267ba09254e01ae644",
+  "cache_manifest": {
+    "path": "cache/source_v2/source_cache.json",
+    "sha256": "bfc204577dfe51c1fc798c1241391ab63509fc2ad9ebfb267ba09254e01ae644"
+  },
+  "training_dataset_ids": [
+    "BNCI2014_001",
+    "Cho2017",
+    "Lee2019_MI",
+    "PhysionetMI"
+  ],
+  "source_lodo_selection_verified": true,
+  "seed": 20261020,
+  "pipeline_seed": 20261020,
+  "checkpoint": {
+    "path": "runs/source_training_v2/final/ALL_SOURCE/eegnet/seed-20261020/selected.pt",
+    "sha256": "f6cccb0fee3438428fb5396851bce137fd25e5bf8896af93ad4124dc25674eb3"
+  },
+  "training_uid_manifest": {
+    "path": "runs/source_training_v2/final/ALL_SOURCE/eegnet/seed-20261020/training_uids.json",
+    "sha256": "abcbec6afa794a023e0d94bc067550b13d96228fbba137ca60e5269b3a5a3ec9"
+  },
+  "source_lodo_receipt": {
+    "path": "runs/source_training_v2/source_lodo_seed-20261020.json",
+    "sha256": "2c214a6aec2cc883d2115bdcf5f856261344f7d56251592b68541335591ee7b7"
+  },
+  "configuration": {
+    "epochs": 80,
+    "steps_per_epoch": 64,
+    "batch_size": 64,
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "amsgrad": false,
+    "foreach": false,
+    "dropout": 0.25,
+    "patience": 15,
+    "min_delta": 1e-06,
+    "threads": 4,
+    "checkpoint_every_updates": 16,
+    "retain_epoch_checkpoints": true,
+    "validation": "dataset_then_participant_equal_mean_clipped_cross_entropy",
+    "final_epochs": "max(1,int(median(four_completed_same_seed_LODO_selected_epochs)))",
+    "sampling": "dataset_then_subject_then_observed_class_then_trial_with_replacement",
+    "precision": "float64_joint_RMS_then_float32_no_AMP_no_TF32",
+    "effective_epochs": 45
+  },
+  "runtime": {
+    "device": "cuda:0",
+    "device_name": "NVIDIA A100-SXM4-80GB",
+    "device_uuid": "b4f600a0-a5a4-b950-504b-b8c069e3e812",
+    "device_total_memory": 84974239744,
+    "compute_capability": [
+      8,
+      0
+    ],
+    "driver_versions": [
+      "550.54.14"
+    ],
+    "torch": "2.5.1+cu121",
+    "numpy": "2.2.6",
+    "python": "3.12.3 (main, May 15 2024, 15:01:16) [GCC 4.8.5 20150623 (Red Hat 4.8.5-36)]",
+    "cuda_runtime": "12.1",
+    "cudnn": 90100,
+    "AMP": false,
+    "TF32": false,
+    "deterministic_algorithms": true,
+    "cuda_rng_device_count": 1
+  },
+  "precision": "float64_joint_RMS_then_float32_no_AMP_no_TF32",
+  "classical_source_fits_status": "PENDING_SEPARATE_EXECUTOR",
+  "overall_W4_complete": false,
+  "engineering_pilot": {
+    "receipt": {
+      "path": "runs/controlled_source_pilot_seed20261018/engineering_receipt.json",
+      "sha256": "bbe8347d158a020a7e27d148e87931767498b07873577c2bf48ba844a56fcd5e"
+    },
+    "identity": {
+      "path": "runs/controlled_source_pilot_seed20261018/identity.json",
+      "sha256": "1d368f9d9f0b2606a862f87321ac11d01005b0d2b39d4fe22559f380fee024c6"
+    },
+    "actual_completed_updates": 200,
+    "exact_resume_verified": true,
+    "engineering_prediction_replay": {
+      "path": "runs/controlled_source_pilot_seed20261018/engineering_prediction_replay.json",
+      "sha256": "4eee706519d46352f44ce48c820c3787d6cb95ca3ba58d23a6d882303f8463eb",
+      "bytes": 6928
+    },
+    "prediction_artifacts": [
+      {
+        "path": "runs/controlled_source_pilot_seed20261018/engineering_continuous100_predictions.json",
+        "sha256": "f5b20292625a472b79088787838246f0291707e596279f9333eb15f6edce18d6",
+        "bytes": 15363
+      },
+      {
+        "path": "runs/controlled_source_pilot_seed20261018/engineering_resumed100_predictions.json",
+        "sha256": "a7b987369e509e78823be5aed5e6ecb25014ec5898348bf335ce1586cbd025d3",
+        "bytes": 15362
+      }
+    ],
+    "prediction_replay_exact": true,
+    "metric_replay_exact": true,
+    "fixed_source_batch_sha256": "7339784908337b11b33063415e92230bf868cc7844bf795a8ca7e2097233385f",
+    "fixed_source_prediction_trials": 64,
+    "artifact_manifest": {
+      "path": "runs/controlled_source_pilot_seed20261018/engineering_artifact_manifest.json",
+      "sha256": "585966b59e632de3d51f1e47aeaca719c2f6853a3f05597769d0abf9021cb5f7",
+      "bytes": 3111
+    },
+    "backup_manifest": {
+      "path": "runs/controlled_source_pilot_seed20261018/engineering_backup_manifest.json",
+      "sha256": "2cae2283b323ba5c9ecb3154dd1eb7039bef7c01391b5f4cd8165524d72c25aa",
+      "bytes": 3499
+    },
+    "backup_manifest_is_upload_receipt": false
+  },
+  "gpu_exact_resume_empirically_verified": true,
+  "gpu_exact_resume_verification_scope": "ENGINEERING_SOURCE_PILOT_ONLY",
+  "formal_fit_exact_resume_comparison_performed": false
+}

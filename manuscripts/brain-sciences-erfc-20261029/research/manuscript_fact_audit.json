@@ -1,0 +1,184 @@
+{
+  "audited_utc": "2026-10-29T07:02:58.128481+00:00",
+  "manuscript_path": "/workspace/paper3-brain-sciences-20261029/Manuscript.md",
+  "manuscript_sha256": "dc7e5356cedc1945f3fdb64be1f8a39794df68552486c5fbee0c04372472e446",
+  "blocking_scientific_findings": 0,
+  "status": "SCIENTIFIC_FACT_CHECK_PASSED_WITH_TWO_MINOR_EDITORIAL_NOTES",
+  "checks": [
+    {
+      "name": "Structured abstract word count",
+      "status": "PASS",
+      "evidence": {
+        "whitespace_words_including_four_section_labels": 242,
+        "body_words_excluding_labels": 238,
+        "journal_approximate_target": 250
+      }
+    },
+    {
+      "name": "Primary and post hoc families remain distinct",
+      "status": "PASS",
+      "evidence": {
+        "primary": 12,
+        "new_exploratory": 18,
+        "minimum_primary_adjusted_p": 0.5625,
+        "locations": "Methods2.11 and Results3.1/Table3/SupplementS1-S2"
+      }
+    },
+    {
+      "name": "Cohort/session/task counts",
+      "status": "PASS",
+      "evidence": {
+        "cohorts": {
+          "holdout": [
+            11,
+            105,
+            315
+          ],
+          "pan2023": [
+            14,
+            28,
+            84
+          ],
+          "weibo2014": [
+            10,
+            10,
+            30
+          ]
+        },
+        "total_participants": 35,
+        "total_sessions": 143,
+        "session_seed_cells": 429,
+        "actual_tasks": "18methods×3cohorts×3seeds+3references=165; each evaluation task includes five budgets"
+      }
+    },
+    {
+      "name": "Comparator names and displayed BA means",
+      "status": "PASS",
+      "evidence": {
+        "method_keys": 18,
+        "labels_map": "ERFC=profile; matched MAP=profile_map; support alignment=support_ea; anchored residual=r9_ea_anchored; spatial SGD100=sgd100",
+        "Table2": "all displayed two-decimal BA values reproduce the verified source table"
+      }
+    },
+    {
+      "name": "Actual source/feature/preprocessing provenance",
+      "status": "PASS",
+      "evidence": {
+        "epochs": [
+          39,
+          30,
+          45
+        ],
+        "source_reference_participants": 40,
+        "source_reference_sessions": 396,
+        "signal_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+        "task_config_matches": "linear/amplitude0.3/regularization1/c0.1/UIDnugget1e-10/pfloor1e-12",
+        "evidence": "evidence/source-f0-receipts-proofs.json; source F0 and checkpoint SHA match the three R10 reference-result identities"
+      }
+    },
+    {
+      "name": "Acquisition-budget and chronology scope",
+      "status": "PASS",
+      "evidence": {
+        "locations": "Methods2.1/Table1/Fig2caption",
+        "checks": [
+          "acquired positions not refilled good trials",
+          "Stieger effective B20 support15.53",
+          "fixed B20 query set across budgets",
+          "Stieger boundary run excluded",
+          "Pan/Weibo published order rather than verified physical chronology"
+        ]
+      }
+    },
+    {
+      "name": "Correction cost and aggregate classification performance",
+      "status": "PASS",
+      "evidence": {
+        "locations": "Abstract Results; Results3.1/3.3; Discussion4.2; Table3; Figure3",
+        "checks": [
+          "introduced-error reductions and lost corrected-error opportunities both reported",
+          "BA superiority/equivalence not claimed",
+          "NLL values and full comparison in SupplementS2",
+          "session negative-transfer Weibo nonsignificance retained"
+        ]
+      }
+    },
+    {
+      "name": "BA error-transition identity",
+      "status": "PASS",
+      "evidence": {
+        "assertion": "participant rows reproduce BA(method)-BA(EA)=corrected-introduced at atol1e-12",
+        "cohorts": 3
+      }
+    },
+    {
+      "name": "Query-update measurement and timing",
+      "status": "PASS",
+      "evidence": {
+        "threshold": "absolute class-1 probability change>=1e-4 verified against worker.py",
+        "timing": "fit on extracted features and incremental query calculation, no end-to-end latency claim",
+        "locations": "Methods2.11/2.12; Results3.2/3.5; Fig3caption/Discussion4.3"
+      }
+    },
+    {
+      "name": "Theoretical object and deployed one-sided implementation",
+      "status": "PASS",
+      "evidence": {
+        "checks": [
+          "deterministic retained objective set, not GP posterior",
+          "finite Newton residual strong-convexity lower bound direction correct",
+          "query-null witness correct",
+          "deployed h=-sign(mu)*a and one-sided unbounded far-end interval specified",
+          "conditional probability loss claim separated from true future risk/coverage",
+          "no clinical or future-accuracy guarantee"
+        ]
+      }
+    },
+    {
+      "name": "Originality and completed-stage scope",
+      "status": "PASS",
+      "evidence": {
+        "locations": "Intro/Methods2.1/2.10/Discussion4.4-4.5/DataAvailability",
+        "checks": [
+          "EEGNet/alignment explicitly attributed",
+          "ERFC mapped to actual archived profile-v1, not new backbone",
+          "retrospective development exposure/amendment disclosed",
+          "stopped R1/R11 not presented as completed clinical/confirmatory experiments"
+        ]
+      }
+    },
+    {
+      "name": "Author/funding/ethics factual boundary",
+      "status": "PASS_WITH_AUTHOR_CONFIRMATION_PENDING",
+      "evidence": {
+        "basis": "submission/author_information.json contains author ordering, institution, provided contributions and no-external-funding statement; repo data alone cannot certify personal declarations",
+        "remaining": [
+          "all-author final approval pending",
+          "COI remains explicit placeholder",
+          "secondary public-data exemption discussed without asserting new IRB approval/waiver number; institutional determination/legal policy reviewed by separate policy agent"
+        ]
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "LOW-P-ROUNDING",
+      "severity": "low",
+      "blocking": false,
+      "line": 296,
+      "quote": "| Weibo | Introduced errors | -0.690 | [-1.000, -0.381] | 0.0312 |",
+      "issue": "The exact Holm18 p is0.03125. Table3 rounds it0.0312 while Abstract/Results/Discussion use0.0313. Both rounding conventions are understandable, but use one convention consistently.",
+      "recommendation": "Use exact0.03125 or0.0313 consistently in Table3, prose and rendered plots."
+    },
+    {
+      "id": "LOW-STATE-WORDING",
+      "severity": "low",
+      "blocking": false,
+      "line": 234,
+      "quote": "same ... fitted coefficient state as ERFC",
+      "issue": "The archived matched MAP evaluation is a separate task using the same deterministic support-fit equations and inputs. Shared fitted-residual procedure is established by source; this audit did not compare every archived fit-state byte across the two tasks.",
+      "recommendation": "For exact provenance wording prefer same support-fit procedure/objective and its resulting point estimate, unless identical vhat values are separately checked for every episode."
+    }
+  ],
+  "policy_and_personal_attestation_scope": "Final COI/authorship approval and exemption determination remain author/institution matters; no submission-ready certification inferred from this numerical audit."
+}
