@@ -1,0 +1,25 @@
+{
+  "source": "User screenshot and public progress observation",
+  "observed_job": "779398",
+  "resources": {
+    "gpus": 1,
+    "cpus": 4,
+    "memory": "64G",
+    "partition": "hpc_gpu"
+  },
+  "action": "strongest-control",
+  "error": "FinalizationDependencyChanged: FINALIZATION_INPUT_CHANGED",
+  "path": "runs/training_campaign_parallel_v1/digest-cache-v1/index.json",
+  "cause": "Native digest cache legitimately replaces its own index during a successful verifier; v1 generic read dependency guard captured this operational index.",
+  "fix": "Ignore only exact lexical+canonical index path. Keep all scientific guards. Operational action_startup hook loads new helper in fresh child. Optional exact ready CPU-only verifier SIGINT unwind in the same existing allocation.",
+  "new_helper_sha256": "c236004413c4d355f5cde0d694330ace9c5c1b90f492084d5153cc3fc4703fcf",
+  "school_activation_confirmed": false,
+  "latest_predeployment_progress_observation": {
+    "sample_utc": "2026-10-29T00:17:25Z",
+    "controller_status": "STOPPED_BY_USER",
+    "controller_updated_utc": "2026-10-29T00:06:18Z",
+    "queue_jobs": [],
+    "last_allocation_state": "COMPLETING",
+    "user_stop_is_retained": true
+  }
+}
