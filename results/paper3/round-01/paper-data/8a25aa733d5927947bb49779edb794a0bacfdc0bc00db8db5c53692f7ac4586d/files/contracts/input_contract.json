@@ -1,0 +1,145 @@
+{
+  "band_hz": [
+    8,
+    30
+  ],
+  "base_scientific_protocol_version": "2.0",
+  "channels": [
+    "FC3",
+    "FC4",
+    "C5",
+    "C3",
+    "C1",
+    "Cz",
+    "C2",
+    "C4",
+    "C6",
+    "CP3",
+    "CP4"
+  ],
+  "context_s": [
+    0,
+    1.5
+  ],
+  "crop_s": [
+    0.25,
+    1.25
+  ],
+  "filter": "4th-order bidirectional SOS within original trial context",
+  "model_normalization": "channel temporal demeaning then joint trial RMS float64, no epsilon",
+  "n_times": 128,
+  "old_p1_or_legacy_npz_accepted": false,
+  "profile_candidates": {
+    "approved_context_1p5_v21": {
+      "approval": {
+        "bytes": 4878,
+        "path": "plans/window_amendment_v2_1_20261019.json",
+        "sha256": "2a3fcfa77b4947a49a676f4f0f611ffedc9f8b19b7233bb73c2834b589285a29"
+      },
+      "context_s": [
+        0,
+        1.5
+      ],
+      "crop_s": [
+        0.25,
+        1.25
+      ],
+      "n_times": 128,
+      "registration": "user_approved_scientific_amendment_v2.1"
+    },
+    "long": {
+      "context_s": [
+        0,
+        3
+      ],
+      "crop_s": [
+        0.5,
+        2.5
+      ],
+      "n_times": 256
+    },
+    "short": {
+      "context_s": [
+        0,
+        2
+      ],
+      "crop_s": [
+        0.5,
+        1.5
+      ],
+      "n_times": 128
+    }
+  },
+  "protocol_freeze_sha256": null,
+  "reference": "CAR_exact_clinic11",
+  "schema_version": "paper3-signal-v2.1",
+  "scientific_protocol_version": "2.1",
+  "selected_profile": "approved_context_1p5_v21",
+  "sfreq_hz": 128,
+  "spatial_adapter_position": "after CAR/filter/resample/crop/temporal demeaning and before joint RMS",
+  "status": "window_frozen",
+  "window_audit_receipt": {
+    "approval": {
+      "bytes": 4878,
+      "path": "plans/window_amendment_v2_1_20261019.json",
+      "sha256": "2a3fcfa77b4947a49a676f4f0f611ffedc9f8b19b7233bb73c2834b589285a29"
+    },
+    "base_selection_plan_sha256": "0c53f43ca0f4eb424796d3d7c83c736936bc886f92b0555c35811b4daa306c37",
+    "candidate": {
+      "participant_mean_absolute_class_exclusion_gap": {
+        "denominator": 1854636258103125549423120739862013905280,
+        "numerator": 81346669795347206593477442875275464473
+      },
+      "participant_mean_retention": {
+        "denominator": 18139000,
+        "numerator": 14897013
+      },
+      "passes": true
+    },
+    "complete_objects": 396,
+    "decision_pool_role": "meta_train",
+    "original_lr_trials": 59399,
+    "original_v2_exact_artifact_sha256": "6133022119d6497e87f3f08bc5373c4714a14bc7f4a99969a0c9ff716b6ec8e9",
+    "original_v2_exact_audit": {
+      "bytes": 188516,
+      "path": "audit/stieger_w1/window_exact_gate_failure_20261018.json",
+      "sha256": "f7c58673ecca0d320ed7d39a817065cadba48c5f3c23e8f0a06bba3ed711a9cc"
+    },
+    "original_v2_window_coverage": {
+      "bytes": 132678,
+      "path": "audit/stieger_w1/batches/0c53f43ca0f4eb424796d3d7c83c736936bc886f92b0555c35811b4daa306c37/window_coverage.json",
+      "sha256": "d93b5435ec660661d868eeffb4146346d85519da47a23baf31e50df7cdf5cb9c"
+    },
+    "participants": 40,
+    "profile": "approved_context_1p5_v21",
+    "raw_metadata_manifest_sha256": "d3ec779767f0f91246c31e0910f6956b8394759bc00b3d02d01fb1ba5f42c7b5",
+    "schema_version": "paper3-approved-single-window-receipt-v2.1",
+    "single_candidate_artifact_sha256": "a00b13d27ec9ddec63d66dec9d6a1ee52f121632645c5d3f59fc50b85acd6eac",
+    "single_candidate_audit": {
+      "bytes": 57818,
+      "path": "audit/stieger_w1/window_amendment_v2_1_20261019/single_candidate_audit.json",
+      "sha256": "d43b1cf7063e731a82d55d6608669865389fe68d11119fb2b28ef6d8664ecbae"
+    },
+    "split_sha256": "1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd",
+    "thresholds": {
+      "participant_mean_absolute_class_exclusion_gap_max": {
+        "denominator": 10,
+        "numerator": 1
+      },
+      "participant_mean_retention_min": {
+        "denominator": 5,
+        "numerator": 4
+      }
+    },
+    "window_coverage": {
+      "bytes": 57818,
+      "path": "audit/stieger_w1/window_amendment_v2_1_20261019/single_candidate_audit.json",
+      "sha256": "d43b1cf7063e731a82d55d6608669865389fe68d11119fb2b28ef6d8664ecbae"
+    },
+    "window_input_session_manifest": {
+      "bytes": 175121,
+      "path": "audit/stieger_w1/batches/0c53f43ca0f4eb424796d3d7c83c736936bc886f92b0555c35811b4daa306c37/window_input_session_manifest.json",
+      "sha256": "19133b1cb9848e88381e98117a94d6237b6a2886cb1326ffa944640f63318c34"
+    }
+  }
+}

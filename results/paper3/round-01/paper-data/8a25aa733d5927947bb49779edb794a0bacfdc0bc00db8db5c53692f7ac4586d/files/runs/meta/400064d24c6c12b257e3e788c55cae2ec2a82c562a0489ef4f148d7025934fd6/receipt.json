@@ -1,0 +1,2390 @@
+{
+  "status": "META_ENGINEERING_COMPLETE",
+  "synthetic": false,
+  "job": {
+    "method": "P",
+    "dimension": 8,
+    "radius": 0.35,
+    "seed": 20261018,
+    "phase": "engineering"
+  },
+  "signal_contract_sha256": "5c8ea3f01634c060546af29b9330d314c4f03c265677a74b875ac7c302e31872",
+  "source_architecture": "legacy_compact_eegnet_v1_clinic11",
+  "source_feature_dim": 64,
+  "source_model_state_sha256": "e2af16a1c69e547bd4f6ab539f297044b1ec4ae7a40bffecafeff2c6ccf8c32f",
+  "source_training_event_uids_sha256": "9c7462daee1a1488a4f1ed8b3a45accf5fc0020d6d9457b27ae51affc7432e18",
+  "geometry_sha256": "c57610278c4dc34b5884e99664a3199562fe46c92d5fcfc54bb71e9eb2c4ebf5",
+  "source_receipt_sha256": "47a5c2a434f7a911bd3c2a45728f21b5119bb386eea11b06996f0fdeba5707af",
+  "reference_receipt_sha256": "bcfd55c96a659dd9d0f986c0d5476e2dd40682929ba4046ae3b9150e1e1890da",
+  "stieger_manifest_sha256": "e959323209124bfe9c407c47d95d874dd0ff7ea9a15dae47eb002e36a3e0c857",
+  "split_sha256": "1a4704555760dd1d8956b31268931617b5c12d2441a17f68dd8f34d108dd61fd",
+  "selection_receipt_sha256": null,
+  "source_receipt": {
+    "path": "runs/source_training_v2/f0_receipt_seed-20261018.json",
+    "sha256": "47a5c2a434f7a911bd3c2a45728f21b5119bb386eea11b06996f0fdeba5707af"
+  },
+  "reference_receipt": {
+    "path": "runs/training_campaign_v1/references/seed-20261018/receipt.json",
+    "sha256": "bcfd55c96a659dd9d0f986c0d5476e2dd40682929ba4046ae3b9150e1e1890da"
+  },
+  "identity_sha256": "8cfc89da2c5c3c84b4b024a0bfdfe37291b8665b4bc1c630397db76896c3de39",
+  "episode_plan": {
+    "path": "runs/meta/400064d24c6c12b257e3e788c55cae2ec2a82c562a0489ef4f148d7025934fd6/episode_plans.json",
+    "sha256": "86a7e4099538a6640a9ed24b1743ffbfe7c71068d5bbfd8570cfad42f41c7b82"
+  },
+  "runtime_profile": {
+    "python": "3.12.3",
+    "torch": "2.5.1+cu121",
+    "cuda": "12.1",
+    "cudnn": 90100,
+    "driver_versions": [
+      "550.54.14"
+    ],
+    "device_name": "NVIDIA A100-SXM4-80GB",
+    "device_uuid": "f3eaebc7-c337-2dc6-e2fd-c14bd6a98c58",
+    "device_total_memory_bytes": 84974239744,
+    "device_compute_capability": [
+      8,
+      0
+    ],
+    "autocast": false,
+    "tf32": false,
+    "float32_matmul_precision": "highest",
+    "deterministic_algorithms": true,
+    "cublas_workspace_config": ":4096:8",
+    "code": {
+      "p3work/meta_training.py": "499427d197a7f7aaef35f7b25a41f685077419d6bddb1e197f8e8a825ed4a2f2",
+      "p3work/meta_artifacts.py": "1dc441f06c2a4cf813d8e526849fa5c1368cc52f48317bec5435d961fb774a39",
+      "p3work/training_state.py": "0b813c83462a80593fdab99f487f09bb6aa3058c3307030881293368ec143096",
+      "p3work/recovery_budget.py": "a1448a2a7bef15793b5e55d5f64d3a73a0b4a87f444d66f0e27c7d637b93e737",
+      "p3work/meta_engineering.py": "0b428a1390d471e370096da7f5e7919bb8ad321c80a93d70f1e09d70eeeb4623",
+      "p3work/selection.py": "0eeaf56477e3a40ca1434f98f34d44bfe2ad6567b41c8785556228f0ee46f4cc",
+      "p3work/episodes.py": "6ee44b0adafdf080885be943a45a3df84cb7407c602a64bf8dcd549746f092cb",
+      "p3work/contracts.py": "c1ecd6c7c8496064deecdcc8222b4e87d43a8ffe41065fa4350b113a0cea52ca",
+      "p3work/splits.py": "7daadaa03701b4edcbedab1f8e03832808fb4374ce16e5714fde58a5e32d34e5",
+      "p3work/adapt.py": "3fa787123abe054b795ca6fc3386ce8f4bfba401e33a88acf108b5ef6097c520",
+      "p3work/spatial_geometry.py": "2c739b2f0967aad718da3173c6c273a6c64e612a0d5e1b79fdfc6753c9f6e47a",
+      "p3work/methods/meta_train.py": "ee1217a6e3cb53b39feef0cab6d0b3401c6e139b8f19c4d2a3de2620a1b915f2",
+      "p3work/methods/lowrank.py": "f0c9899d7e9cbdb54c2ab5933d4e153bffd545ad7f2228146f2e9d787e2c0503",
+      "p3work/source_reference_io.py": "92d9b6ee85c947a65f56b0092f1f35d9bf087dafc7c9366b3bc90b3608129f8b",
+      "p3work/f0_bridge.py": "0b8b6bb76cf64fd786ff61f35e2fc3c1b9275fbf81ebb6369ac2043507c474f6",
+      "tools/train_meta.py": "3deff3d65efd27a6216f5c59ceb425bfcaf036ddcd1d34affffd03749c14cc09",
+      "p3work/window_acceptance.py": "8165e27218c280768fa3a92cd600827a7d9035025dad4500d008b5d8ac68b8f3",
+      "p3work/source_cache_acceptance.py": "44ab541c405d68e81ed9a3efe89726da17fe714368b93e8729ab3c967d74474f",
+      "p3work/source_training.py": "149bae9b9caf371b170e061f0975a95f2c1e2de69efe17c5d5ac972cc1d7567e",
+      "p3work/runtime_clock.py": "46a5d645136c36854c17167c663b36a0487582969ff2327b6f1c1b9e0dce43b3",
+      "tools/run_controlled_pilot.py": "95058f93b9ccaaa3143116b227eabef4fe046f924225c2ed274c1a80d09535a3"
+    }
+  },
+  "memory_measurement_scope": "per_outer_full_unroll_including_live_tensors_and_allocator_reservations",
+  "operational_budget": {
+    "path": "runs/training_campaign_v1/budgets/operational/be42bbd684884c0be85694e5fcc0a701cd6c071a6ff3f95e05d99b3f25da0088.json",
+    "sha256": "983cf232928d33954298eeb4529f5580518afef998b2f63d8869ec73dcbc0518",
+    "max_cumulative_wall_seconds": 447789
+  },
+  "started_at_utc": "2026-10-24T14:33:29.861463+00:00",
+  "training_started": true,
+  "training_kernel_dispatch_attempted": true,
+  "remote_actions": false,
+  "external_access": false,
+  "full_unroll": true,
+  "outer_updates_completed": 100,
+  "episodes_completed": 400,
+  "inner_updates_upper_bound": 4000,
+  "inner_updates_actual": 4000,
+  "confirmed_outer_updates_observed": 100,
+  "outer_attempts_dispatched": 100,
+  "replayed_observed_outer_updates": 0,
+  "compute_count_basis": "logical trajectory plus separately retained physical attempts/replay; unreturned interrupted work is a lower bound",
+  "validation_checkpoints": 2,
+  "active_wall_seconds": 441.8146280441433,
+  "latest_checkpoint": {
+    "path": "outer-0100.pt",
+    "relative_to_job_output": true,
+    "sha256": "09d9f175fd01cc14b5072dfa08412ab564dec4be09f283f66b7dfc05b4aee3eb",
+    "outer_cursor": 100
+  },
+  "final_query_accessed": false,
+  "validation": [
+    {
+      "participant_mean_ba": 0.6347227761626809,
+      "participant_mean_bce": 0.6246343762773269,
+      "participants": [
+        {
+          "participant_id": "S16",
+          "sessions": 11,
+          "ba": 0.49453482537325716,
+          "balanced_bce": 0.739650921388106
+        },
+        {
+          "participant_id": "S22",
+          "sessions": 7,
+          "ba": 0.5180943015311748,
+          "balanced_bce": 0.7589946900095258
+        },
+        {
+          "participant_id": "S33",
+          "sessions": 11,
+          "ba": 0.6292302211738009,
+          "balanced_bce": 0.6433956135403026
+        },
+        {
+          "participant_id": "S37",
+          "sessions": 7,
+          "ba": 0.6241104294880208,
+          "balanced_bce": 0.6401039447103228
+        },
+        {
+          "participant_id": "S40",
+          "sessions": 7,
+          "ba": 0.4287771202662491,
+          "balanced_bce": 0.8076877508844648
+        },
+        {
+          "participant_id": "S46",
+          "sessions": 11,
+          "ba": 0.6789851734930583,
+          "balanced_bce": 0.6018950830806385
+        },
+        {
+          "participant_id": "S5",
+          "sessions": 7,
+          "ba": 0.8340046372092619,
+          "balanced_bce": 0.41599551694733755
+        },
+        {
+          "participant_id": "S57",
+          "sessions": 7,
+          "ba": 0.7324690213277749,
+          "balanced_bce": 0.5168370093618121
+        },
+        {
+          "participant_id": "S60",
+          "sessions": 7,
+          "ba": 0.7022663864430656,
+          "balanced_bce": 0.5436702072620392
+        },
+        {
+          "participant_id": "S7",
+          "sessions": 11,
+          "ba": 0.5486141736343222,
+          "balanced_bce": 0.7054509683088823
+        },
+        {
+          "participant_id": "S8",
+          "sessions": 11,
+          "ba": 0.7908642478495044,
+          "balanced_bce": 0.4972964335571636
+        }
+      ],
+      "aggregation": "participant_equal/session_equal/class_equal/trial_equal_within_class",
+      "sessions": [
+        {
+          "participant_id": "S5",
+          "session_id": "1",
+          "ba": 0.7391304347826086,
+          "balanced_bce": 0.5027821063995361,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "2",
+          "ba": 0.8571428571428571,
+          "balanced_bce": 0.4073686897754669,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "3",
+          "ba": 0.7976958525345622,
+          "balanced_bce": 0.4307612180709839,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "4",
+          "ba": 0.8202570921985815,
+          "balanced_bce": 0.47458645701408386,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "5",
+          "ba": 0.9230769230769231,
+          "balanced_bce": 0.3472710847854614,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "6",
+          "ba": 0.7412698412698413,
+          "balanced_bce": 0.48893439769744873,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "7",
+          "ba": 0.9594594594594595,
+          "balanced_bce": 0.26026466488838196,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "1",
+          "ba": 0.5091991341991342,
+          "balanced_bce": 0.7042244672775269,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "2",
+          "ba": 0.5086956521739131,
+          "balanced_bce": 0.7603960037231445,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "3",
+          "ba": 0.6057377049180328,
+          "balanced_bce": 0.6655490398406982,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "4",
+          "ba": 0.5412698412698412,
+          "balanced_bce": 0.7004914283752441,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "5",
+          "ba": 0.5,
+          "balanced_bce": 0.7129982709884644,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "6",
+          "ba": 0.5210691823899372,
+          "balanced_bce": 0.7118362188339233,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "7",
+          "ba": 0.6202380952380953,
+          "balanced_bce": 0.681581974029541,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "8",
+          "ba": 0.5450819672131147,
+          "balanced_bce": 0.6777840256690979,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "9",
+          "ba": 0.5253868471953579,
+          "balanced_bce": 0.7273303866386414,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "10",
+          "ba": 0.6493055555555555,
+          "balanced_bce": 0.6612557172775269,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "11",
+          "ba": 0.5087719298245614,
+          "balanced_bce": 0.7565131187438965,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "1",
+          "ba": 0.7341269841269841,
+          "balanced_bce": 0.5810298323631287,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "2",
+          "ba": 0.5990672696438666,
+          "balanced_bce": 0.6338474750518799,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "3",
+          "ba": 0.8187274909963985,
+          "balanced_bce": 0.46096867322921753,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "4",
+          "ba": 0.8587234042553191,
+          "balanced_bce": 0.42032361030578613,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "5",
+          "ba": 0.853448275862069,
+          "balanced_bce": 0.4644608199596405,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "6",
+          "ba": 0.7117913832199546,
+          "balanced_bce": 0.5184259414672852,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "7",
+          "ba": 0.7545219638242895,
+          "balanced_bce": 0.49689435958862305,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "8",
+          "ba": 0.8989825581395349,
+          "balanced_bce": 0.45275184512138367,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "9",
+          "ba": 0.8,
+          "balanced_bce": 0.4751306176185608,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "10",
+          "ba": 0.8847913093196111,
+          "balanced_bce": 0.4779494106769562,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "11",
+          "ba": 0.7853260869565217,
+          "balanced_bce": 0.4884781837463379,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "1",
+          "ba": 0.5070878274268105,
+          "balanced_bce": 0.7210671901702881,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "2",
+          "ba": 0.38095238095238093,
+          "balanced_bce": 0.801005482673645,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "3",
+          "ba": 0.49102870813397126,
+          "balanced_bce": 0.7280150651931763,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "4",
+          "ba": 0.5810276679841897,
+          "balanced_bce": 0.6733337640762329,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "5",
+          "ba": 0.5,
+          "balanced_bce": 0.7219101190567017,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "6",
+          "ba": 0.4929187192118227,
+          "balanced_bce": 0.7379162311553955,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "7",
+          "ba": 0.5018007202881152,
+          "balanced_bce": 0.7122215628623962,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "8",
+          "ba": 0.5887611749680715,
+          "balanced_bce": 0.6941402554512024,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "9",
+          "ba": 0.48662131519274376,
+          "balanced_bce": 0.7993501424789429,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "10",
+          "ba": 0.4954545454545455,
+          "balanced_bce": 0.7626505494117737,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "11",
+          "ba": 0.4142300194931774,
+          "balanced_bce": 0.7845497727394104,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "1",
+          "ba": 0.4880952380952381,
+          "balanced_bce": 0.7985701560974121,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "2",
+          "ba": 0.44207547169811323,
+          "balanced_bce": 0.7674885988235474,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "3",
+          "ba": 0.47204968944099374,
+          "balanced_bce": 0.7689926624298096,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "4",
+          "ba": 0.5583333333333333,
+          "balanced_bce": 0.7308894991874695,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "5",
+          "ba": 0.5570588235294118,
+          "balanced_bce": 0.7264904975891113,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "6",
+          "ba": 0.4994036970781157,
+          "balanced_bce": 0.832776665687561,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "7",
+          "ba": 0.6096438575430172,
+          "balanced_bce": 0.68775475025177,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "1",
+          "ba": 0.5808366308648955,
+          "balanced_bce": 0.6745939254760742,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "2",
+          "ba": 0.6259608665269043,
+          "balanced_bce": 0.6234028935432434,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "3",
+          "ba": 0.6626815980629539,
+          "balanced_bce": 0.6350363492965698,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "4",
+          "ba": 0.7364417989417988,
+          "balanced_bce": 0.5677657127380371,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "5",
+          "ba": 0.6819648093841642,
+          "balanced_bce": 0.564618706703186,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "6",
+          "ba": 0.6803030303030302,
+          "balanced_bce": 0.6316694617271423,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "7",
+          "ba": 0.5944309927360775,
+          "balanced_bce": 0.6781560182571411,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "8",
+          "ba": 0.565034965034965,
+          "balanced_bce": 0.722740888595581,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "9",
+          "ba": 0.5697004608294931,
+          "balanced_bce": 0.6798719167709351,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "10",
+          "ba": 0.5941546429892711,
+          "balanced_bce": 0.6341188549995422,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "11",
+          "ba": 0.6300226372382569,
+          "balanced_bce": 0.6653770208358765,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "1",
+          "ba": 0.5221751412429378,
+          "balanced_bce": 0.718324601650238,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "2",
+          "ba": 0.6016949152542372,
+          "balanced_bce": 0.6581780910491943,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "3",
+          "ba": 0.6853448275862069,
+          "balanced_bce": 0.6120714545249939,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "4",
+          "ba": 0.6169590643274854,
+          "balanced_bce": 0.6182987093925476,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "5",
+          "ba": 0.6126342566421707,
+          "balanced_bce": 0.628698468208313,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "6",
+          "ba": 0.7007275132275133,
+          "balanced_bce": 0.5966945886611938,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "7",
+          "ba": 0.6292372881355932,
+          "balanced_bce": 0.6484616994857788,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "1",
+          "ba": 0.4864114552893045,
+          "balanced_bce": 0.7437493801116943,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "2",
+          "ba": 0.5236742424242424,
+          "balanced_bce": 0.7299817204475403,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "3",
+          "ba": 0.3705128205128205,
+          "balanced_bce": 0.8717749714851379,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "4",
+          "ba": 0.40462519936204144,
+          "balanced_bce": 0.7700077295303345,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "5",
+          "ba": 0.3685805422647528,
+          "balanced_bce": 0.8198432326316833,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "6",
+          "ba": 0.4056712962962963,
+          "balanced_bce": 0.8809301853179932,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "7",
+          "ba": 0.4419642857142857,
+          "balanced_bce": 0.8375270366668701,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "1",
+          "ba": 0.7733841830590125,
+          "balanced_bce": 0.5426498651504517,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "2",
+          "ba": 0.6154761904761904,
+          "balanced_bce": 0.6721234321594238,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "3",
+          "ba": 0.5947712418300652,
+          "balanced_bce": 0.6321709156036377,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "4",
+          "ba": 0.6381118881118881,
+          "balanced_bce": 0.6706036329269409,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "5",
+          "ba": 0.627564674397859,
+          "balanced_bce": 0.6291075348854065,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "6",
+          "ba": 0.6666666666666667,
+          "balanced_bce": 0.5950124859809875,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "7",
+          "ba": 0.6240079365079365,
+          "balanced_bce": 0.63868248462677,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "8",
+          "ba": 0.7179310344827586,
+          "balanced_bce": 0.5512762069702148,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "9",
+          "ba": 0.7067196292618338,
+          "balanced_bce": 0.6006784439086914,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "10",
+          "ba": 0.7433181225554107,
+          "balanced_bce": 0.5480119585990906,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "11",
+          "ba": 0.7608853410740203,
+          "balanced_bce": 0.5405289530754089,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "1",
+          "ba": 0.8247549019607843,
+          "balanced_bce": 0.44442877173423767,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "2",
+          "ba": 0.6802325581395349,
+          "balanced_bce": 0.6037000417709351,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "3",
+          "ba": 0.7233381157340986,
+          "balanced_bce": 0.5197309255599976,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "4",
+          "ba": 0.6578947368421053,
+          "balanced_bce": 0.5538725256919861,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "5",
+          "ba": 0.7303921568627451,
+          "balanced_bce": 0.48004886507987976,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "6",
+          "ba": 0.683065953654189,
+          "balanced_bce": 0.5965088605880737,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "7",
+          "ba": 0.8276047261009667,
+          "balanced_bce": 0.41956907510757446,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "1",
+          "ba": 0.5536363636363637,
+          "balanced_bce": 0.6781632304191589,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "2",
+          "ba": 0.7272727272727273,
+          "balanced_bce": 0.5479999780654907,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "3",
+          "ba": 0.7467166979362101,
+          "balanced_bce": 0.5341436266899109,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "4",
+          "ba": 0.6810344827586207,
+          "balanced_bce": 0.5251602530479431,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "5",
+          "ba": 0.8339901477832512,
+          "balanced_bce": 0.44024917483329773,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "6",
+          "ba": 0.5375,
+          "balanced_bce": 0.6431124210357666,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "7",
+          "ba": 0.8357142857142857,
+          "balanced_bce": 0.4368627667427063,
+          "fallback": false
+        }
+      ],
+      "ineligible_sessions": [],
+      "outer_update": 50
+    },
+    {
+      "participant_mean_ba": 0.6344362881258077,
+      "participant_mean_bce": 0.6246182267260523,
+      "participants": [
+        {
+          "participant_id": "S16",
+          "sessions": 11,
+          "ba": 0.49453482537325716,
+          "balanced_bce": 0.739644624970176
+        },
+        {
+          "participant_id": "S22",
+          "sessions": 7,
+          "ba": 0.5180943015311748,
+          "balanced_bce": 0.7589721509388515
+        },
+        {
+          "participant_id": "S33",
+          "sessions": 11,
+          "ba": 0.6292302211738009,
+          "balanced_bce": 0.6433865319598805
+        },
+        {
+          "participant_id": "S37",
+          "sessions": 7,
+          "ba": 0.6217294771070682,
+          "balanced_bce": 0.6400783232280186
+        },
+        {
+          "participant_id": "S40",
+          "sessions": 7,
+          "ba": 0.4287771202662491,
+          "balanced_bce": 0.8076871378081185
+        },
+        {
+          "participant_id": "S46",
+          "sessions": 11,
+          "ba": 0.6782147574684051,
+          "balanced_bce": 0.6018761721524325
+        },
+        {
+          "participant_id": "S5",
+          "sessions": 7,
+          "ba": 0.8340046372092619,
+          "balanced_bce": 0.41601938009262085
+        },
+        {
+          "participant_id": "S57",
+          "sessions": 7,
+          "ba": 0.7324690213277749,
+          "balanced_bce": 0.5168023535183498
+        },
+        {
+          "participant_id": "S60",
+          "sessions": 7,
+          "ba": 0.7022663864430656,
+          "balanced_bce": 0.5436528197356633
+        },
+        {
+          "participant_id": "S7",
+          "sessions": 11,
+          "ba": 0.5486141736343222,
+          "balanced_bce": 0.7053987058726224
+        },
+        {
+          "participant_id": "S8",
+          "sessions": 11,
+          "ba": 0.7908642478495044,
+          "balanced_bce": 0.4972822937098416
+        }
+      ],
+      "aggregation": "participant_equal/session_equal/class_equal/trial_equal_within_class",
+      "sessions": [
+        {
+          "participant_id": "S5",
+          "session_id": "1",
+          "ba": 0.7391304347826086,
+          "balanced_bce": 0.5027343034744263,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "2",
+          "ba": 0.8571428571428571,
+          "balanced_bce": 0.40749049186706543,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "3",
+          "ba": 0.7976958525345622,
+          "balanced_bce": 0.43076539039611816,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "4",
+          "ba": 0.8202570921985815,
+          "balanced_bce": 0.4745892882347107,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "5",
+          "ba": 0.9230769230769231,
+          "balanced_bce": 0.3472864627838135,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "6",
+          "ba": 0.7412698412698413,
+          "balanced_bce": 0.4889988899230957,
+          "fallback": false
+        },
+        {
+          "participant_id": "S5",
+          "session_id": "7",
+          "ba": 0.9594594594594595,
+          "balanced_bce": 0.2602708339691162,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "1",
+          "ba": 0.5091991341991342,
+          "balanced_bce": 0.7042268514633179,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "2",
+          "ba": 0.5086956521739131,
+          "balanced_bce": 0.7603111267089844,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "3",
+          "ba": 0.6057377049180328,
+          "balanced_bce": 0.665489912033081,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "4",
+          "ba": 0.5412698412698412,
+          "balanced_bce": 0.7004611492156982,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "5",
+          "ba": 0.5,
+          "balanced_bce": 0.7130016684532166,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "6",
+          "ba": 0.5210691823899372,
+          "balanced_bce": 0.7116562724113464,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "7",
+          "ba": 0.6202380952380953,
+          "balanced_bce": 0.6815819144248962,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "8",
+          "ba": 0.5450819672131147,
+          "balanced_bce": 0.677781343460083,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "9",
+          "ba": 0.5253868471953579,
+          "balanced_bce": 0.7272275686264038,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "10",
+          "ba": 0.6493055555555555,
+          "balanced_bce": 0.6612623333930969,
+          "fallback": false
+        },
+        {
+          "participant_id": "S7",
+          "session_id": "11",
+          "ba": 0.5087719298245614,
+          "balanced_bce": 0.7563856244087219,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "1",
+          "ba": 0.7341269841269841,
+          "balanced_bce": 0.5810046195983887,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "2",
+          "ba": 0.5990672696438666,
+          "balanced_bce": 0.6338533163070679,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "3",
+          "ba": 0.8187274909963985,
+          "balanced_bce": 0.460979700088501,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "4",
+          "ba": 0.8587234042553191,
+          "balanced_bce": 0.42030155658721924,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "5",
+          "ba": 0.853448275862069,
+          "balanced_bce": 0.4644009470939636,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "6",
+          "ba": 0.7117913832199546,
+          "balanced_bce": 0.5184291005134583,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "7",
+          "ba": 0.7545219638242895,
+          "balanced_bce": 0.49685800075531006,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "8",
+          "ba": 0.8989825581395349,
+          "balanced_bce": 0.45275527238845825,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "9",
+          "ba": 0.8,
+          "balanced_bce": 0.4751265048980713,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "10",
+          "ba": 0.8847913093196111,
+          "balanced_bce": 0.47795119881629944,
+          "fallback": false
+        },
+        {
+          "participant_id": "S8",
+          "session_id": "11",
+          "ba": 0.7853260869565217,
+          "balanced_bce": 0.4884450137615204,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "1",
+          "ba": 0.5070878274268105,
+          "balanced_bce": 0.7209997773170471,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "2",
+          "ba": 0.38095238095238093,
+          "balanced_bce": 0.8010029792785645,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "3",
+          "ba": 0.49102870813397126,
+          "balanced_bce": 0.7280176877975464,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "4",
+          "ba": 0.5810276679841897,
+          "balanced_bce": 0.673336923122406,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "5",
+          "ba": 0.5,
+          "balanced_bce": 0.7219099998474121,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "6",
+          "ba": 0.4929187192118227,
+          "balanced_bce": 0.7379069328308105,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "7",
+          "ba": 0.5018007202881152,
+          "balanced_bce": 0.7122281789779663,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "8",
+          "ba": 0.5887611749680715,
+          "balanced_bce": 0.6941481828689575,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "9",
+          "ba": 0.48662131519274376,
+          "balanced_bce": 0.7993063926696777,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "10",
+          "ba": 0.4954545454545455,
+          "balanced_bce": 0.7626527547836304,
+          "fallback": false
+        },
+        {
+          "participant_id": "S16",
+          "session_id": "11",
+          "ba": 0.4142300194931774,
+          "balanced_bce": 0.7845810651779175,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "1",
+          "ba": 0.4880952380952381,
+          "balanced_bce": 0.7986372709274292,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "2",
+          "ba": 0.44207547169811323,
+          "balanced_bce": 0.7674197554588318,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "3",
+          "ba": 0.47204968944099374,
+          "balanced_bce": 0.768926739692688,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "4",
+          "ba": 0.5583333333333333,
+          "balanced_bce": 0.7308640480041504,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "5",
+          "ba": 0.5570588235294118,
+          "balanced_bce": 0.7264115810394287,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "6",
+          "ba": 0.4994036970781157,
+          "balanced_bce": 0.8328100442886353,
+          "fallback": false
+        },
+        {
+          "participant_id": "S22",
+          "session_id": "7",
+          "ba": 0.6096438575430172,
+          "balanced_bce": 0.6877356171607971,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "1",
+          "ba": 0.5808366308648955,
+          "balanced_bce": 0.6745947003364563,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "2",
+          "ba": 0.6259608665269043,
+          "balanced_bce": 0.6234042644500732,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "3",
+          "ba": 0.6626815980629539,
+          "balanced_bce": 0.6349676847457886,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "4",
+          "ba": 0.7364417989417988,
+          "balanced_bce": 0.5677808523178101,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "5",
+          "ba": 0.6819648093841642,
+          "balanced_bce": 0.5646138191223145,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "6",
+          "ba": 0.6803030303030302,
+          "balanced_bce": 0.6316235661506653,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "7",
+          "ba": 0.5944309927360775,
+          "balanced_bce": 0.6781699657440186,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "8",
+          "ba": 0.565034965034965,
+          "balanced_bce": 0.7227190732955933,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "9",
+          "ba": 0.5697004608294931,
+          "balanced_bce": 0.6798660755157471,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "10",
+          "ba": 0.5941546429892711,
+          "balanced_bce": 0.634121298789978,
+          "fallback": false
+        },
+        {
+          "participant_id": "S33",
+          "session_id": "11",
+          "ba": 0.6300226372382569,
+          "balanced_bce": 0.6653905510902405,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "1",
+          "ba": 0.5221751412429378,
+          "balanced_bce": 0.7182716131210327,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "2",
+          "ba": 0.6016949152542372,
+          "balanced_bce": 0.6581865549087524,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "3",
+          "ba": 0.6686781609195402,
+          "balanced_bce": 0.6120615005493164,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "4",
+          "ba": 0.6169590643274854,
+          "balanced_bce": 0.6181881427764893,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "5",
+          "ba": 0.6126342566421707,
+          "balanced_bce": 0.6286637783050537,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "6",
+          "ba": 0.7007275132275133,
+          "balanced_bce": 0.596695065498352,
+          "fallback": false
+        },
+        {
+          "participant_id": "S37",
+          "session_id": "7",
+          "ba": 0.6292372881355932,
+          "balanced_bce": 0.6484816074371338,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "1",
+          "ba": 0.4864114552893045,
+          "balanced_bce": 0.7437155246734619,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "2",
+          "ba": 0.5236742424242424,
+          "balanced_bce": 0.7299918532371521,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "3",
+          "ba": 0.3705128205128205,
+          "balanced_bce": 0.8717283010482788,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "4",
+          "ba": 0.40462519936204144,
+          "balanced_bce": 0.7700020670890808,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "5",
+          "ba": 0.3685805422647528,
+          "balanced_bce": 0.8198851346969604,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "6",
+          "ba": 0.4056712962962963,
+          "balanced_bce": 0.8809352517127991,
+          "fallback": false
+        },
+        {
+          "participant_id": "S40",
+          "session_id": "7",
+          "ba": 0.4419642857142857,
+          "balanced_bce": 0.8375518321990967,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "1",
+          "ba": 0.7733841830590125,
+          "balanced_bce": 0.5426039695739746,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "2",
+          "ba": 0.6154761904761904,
+          "balanced_bce": 0.6720491051673889,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "3",
+          "ba": 0.5947712418300652,
+          "balanced_bce": 0.6321605443954468,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "4",
+          "ba": 0.6381118881118881,
+          "balanced_bce": 0.6705936193466187,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "5",
+          "ba": 0.627564674397859,
+          "balanced_bce": 0.6291128396987915,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "6",
+          "ba": 0.6666666666666667,
+          "balanced_bce": 0.5949602127075195,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "7",
+          "ba": 0.6240079365079365,
+          "balanced_bce": 0.6386591196060181,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "8",
+          "ba": 0.7179310344827586,
+          "balanced_bce": 0.5512863397598267,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "9",
+          "ba": 0.7067196292618338,
+          "balanced_bce": 0.6006834506988525,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "10",
+          "ba": 0.7348435462842242,
+          "balanced_bce": 0.5480095148086548,
+          "fallback": false
+        },
+        {
+          "participant_id": "S46",
+          "session_id": "11",
+          "ba": 0.7608853410740203,
+          "balanced_bce": 0.5405191779136658,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "1",
+          "ba": 0.8247549019607843,
+          "balanced_bce": 0.4443933367729187,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "2",
+          "ba": 0.6802325581395349,
+          "balanced_bce": 0.6036819219589233,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "3",
+          "ba": 0.7233381157340986,
+          "balanced_bce": 0.5196573138237,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "4",
+          "ba": 0.6578947368421053,
+          "balanced_bce": 0.5538246035575867,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "5",
+          "ba": 0.7303921568627451,
+          "balanced_bce": 0.4800359010696411,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "6",
+          "ba": 0.683065953654189,
+          "balanced_bce": 0.5964977741241455,
+          "fallback": false
+        },
+        {
+          "participant_id": "S57",
+          "session_id": "7",
+          "ba": 0.8276047261009667,
+          "balanced_bce": 0.4195256233215332,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "1",
+          "ba": 0.5536363636363637,
+          "balanced_bce": 0.678125262260437,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "2",
+          "ba": 0.7272727272727273,
+          "balanced_bce": 0.5481088161468506,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "3",
+          "ba": 0.7467166979362101,
+          "balanced_bce": 0.5341281294822693,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "4",
+          "ba": 0.6810344827586207,
+          "balanced_bce": 0.5250653028488159,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "5",
+          "ba": 0.8339901477832512,
+          "balanced_bce": 0.4401971697807312,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "6",
+          "ba": 0.5375,
+          "balanced_bce": 0.6428855657577515,
+          "fallback": false
+        },
+        {
+          "participant_id": "S60",
+          "session_id": "7",
+          "ba": 0.8357142857142857,
+          "balanced_bce": 0.4370594918727875,
+          "fallback": false
+        }
+      ],
+      "ineligible_sessions": [],
+      "outer_update": 100
+    }
+  ],
+  "selected_checkpoint": {
+    "participant_mean_ba": 0.6347227761626809,
+    "participant_mean_bce": 0.6246343762773269,
+    "participants": [
+      {
+        "participant_id": "S16",
+        "sessions": 11,
+        "ba": 0.49453482537325716,
+        "balanced_bce": 0.739650921388106
+      },
+      {
+        "participant_id": "S22",
+        "sessions": 7,
+        "ba": 0.5180943015311748,
+        "balanced_bce": 0.7589946900095258
+      },
+      {
+        "participant_id": "S33",
+        "sessions": 11,
+        "ba": 0.6292302211738009,
+        "balanced_bce": 0.6433956135403026
+      },
+      {
+        "participant_id": "S37",
+        "sessions": 7,
+        "ba": 0.6241104294880208,
+        "balanced_bce": 0.6401039447103228
+      },
+      {
+        "participant_id": "S40",
+        "sessions": 7,
+        "ba": 0.4287771202662491,
+        "balanced_bce": 0.8076877508844648
+      },
+      {
+        "participant_id": "S46",
+        "sessions": 11,
+        "ba": 0.6789851734930583,
+        "balanced_bce": 0.6018950830806385
+      },
+      {
+        "participant_id": "S5",
+        "sessions": 7,
+        "ba": 0.8340046372092619,
+        "balanced_bce": 0.41599551694733755
+      },
+      {
+        "participant_id": "S57",
+        "sessions": 7,
+        "ba": 0.7324690213277749,
+        "balanced_bce": 0.5168370093618121
+      },
+      {
+        "participant_id": "S60",
+        "sessions": 7,
+        "ba": 0.7022663864430656,
+        "balanced_bce": 0.5436702072620392
+      },
+      {
+        "participant_id": "S7",
+        "sessions": 11,
+        "ba": 0.5486141736343222,
+        "balanced_bce": 0.7054509683088823
+      },
+      {
+        "participant_id": "S8",
+        "sessions": 11,
+        "ba": 0.7908642478495044,
+        "balanced_bce": 0.4972964335571636
+      }
+    ],
+    "aggregation": "participant_equal/session_equal/class_equal/trial_equal_within_class",
+    "sessions": [
+      {
+        "participant_id": "S5",
+        "session_id": "1",
+        "ba": 0.7391304347826086,
+        "balanced_bce": 0.5027821063995361,
+        "fallback": false
+      },
+      {
+        "participant_id": "S5",
+        "session_id": "2",
+        "ba": 0.8571428571428571,
+        "balanced_bce": 0.4073686897754669,
+        "fallback": false
+      },
+      {
+        "participant_id": "S5",
+        "session_id": "3",
+        "ba": 0.7976958525345622,
+        "balanced_bce": 0.4307612180709839,
+        "fallback": false
+      },
+      {
+        "participant_id": "S5",
+        "session_id": "4",
+        "ba": 0.8202570921985815,
+        "balanced_bce": 0.47458645701408386,
+        "fallback": false
+      },
+      {
+        "participant_id": "S5",
+        "session_id": "5",
+        "ba": 0.9230769230769231,
+        "balanced_bce": 0.3472710847854614,
+        "fallback": false
+      },
+      {
+        "participant_id": "S5",
+        "session_id": "6",
+        "ba": 0.7412698412698413,
+        "balanced_bce": 0.48893439769744873,
+        "fallback": false
+      },
+      {
+        "participant_id": "S5",
+        "session_id": "7",
+        "ba": 0.9594594594594595,
+        "balanced_bce": 0.26026466488838196,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "1",
+        "ba": 0.5091991341991342,
+        "balanced_bce": 0.7042244672775269,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "2",
+        "ba": 0.5086956521739131,
+        "balanced_bce": 0.7603960037231445,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "3",
+        "ba": 0.6057377049180328,
+        "balanced_bce": 0.6655490398406982,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "4",
+        "ba": 0.5412698412698412,
+        "balanced_bce": 0.7004914283752441,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "5",
+        "ba": 0.5,
+        "balanced_bce": 0.7129982709884644,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "6",
+        "ba": 0.5210691823899372,
+        "balanced_bce": 0.7118362188339233,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "7",
+        "ba": 0.6202380952380953,
+        "balanced_bce": 0.681581974029541,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "8",
+        "ba": 0.5450819672131147,
+        "balanced_bce": 0.6777840256690979,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "9",
+        "ba": 0.5253868471953579,
+        "balanced_bce": 0.7273303866386414,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "10",
+        "ba": 0.6493055555555555,
+        "balanced_bce": 0.6612557172775269,
+        "fallback": false
+      },
+      {
+        "participant_id": "S7",
+        "session_id": "11",
+        "ba": 0.5087719298245614,
+        "balanced_bce": 0.7565131187438965,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "1",
+        "ba": 0.7341269841269841,
+        "balanced_bce": 0.5810298323631287,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "2",
+        "ba": 0.5990672696438666,
+        "balanced_bce": 0.6338474750518799,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "3",
+        "ba": 0.8187274909963985,
+        "balanced_bce": 0.46096867322921753,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "4",
+        "ba": 0.8587234042553191,
+        "balanced_bce": 0.42032361030578613,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "5",
+        "ba": 0.853448275862069,
+        "balanced_bce": 0.4644608199596405,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "6",
+        "ba": 0.7117913832199546,
+        "balanced_bce": 0.5184259414672852,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "7",
+        "ba": 0.7545219638242895,
+        "balanced_bce": 0.49689435958862305,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "8",
+        "ba": 0.8989825581395349,
+        "balanced_bce": 0.45275184512138367,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "9",
+        "ba": 0.8,
+        "balanced_bce": 0.4751306176185608,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "10",
+        "ba": 0.8847913093196111,
+        "balanced_bce": 0.4779494106769562,
+        "fallback": false
+      },
+      {
+        "participant_id": "S8",
+        "session_id": "11",
+        "ba": 0.7853260869565217,
+        "balanced_bce": 0.4884781837463379,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "1",
+        "ba": 0.5070878274268105,
+        "balanced_bce": 0.7210671901702881,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "2",
+        "ba": 0.38095238095238093,
+        "balanced_bce": 0.801005482673645,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "3",
+        "ba": 0.49102870813397126,
+        "balanced_bce": 0.7280150651931763,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "4",
+        "ba": 0.5810276679841897,
+        "balanced_bce": 0.6733337640762329,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "5",
+        "ba": 0.5,
+        "balanced_bce": 0.7219101190567017,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "6",
+        "ba": 0.4929187192118227,
+        "balanced_bce": 0.7379162311553955,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "7",
+        "ba": 0.5018007202881152,
+        "balanced_bce": 0.7122215628623962,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "8",
+        "ba": 0.5887611749680715,
+        "balanced_bce": 0.6941402554512024,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "9",
+        "ba": 0.48662131519274376,
+        "balanced_bce": 0.7993501424789429,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "10",
+        "ba": 0.4954545454545455,
+        "balanced_bce": 0.7626505494117737,
+        "fallback": false
+      },
+      {
+        "participant_id": "S16",
+        "session_id": "11",
+        "ba": 0.4142300194931774,
+        "balanced_bce": 0.7845497727394104,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "1",
+        "ba": 0.4880952380952381,
+        "balanced_bce": 0.7985701560974121,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "2",
+        "ba": 0.44207547169811323,
+        "balanced_bce": 0.7674885988235474,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "3",
+        "ba": 0.47204968944099374,
+        "balanced_bce": 0.7689926624298096,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "4",
+        "ba": 0.5583333333333333,
+        "balanced_bce": 0.7308894991874695,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "5",
+        "ba": 0.5570588235294118,
+        "balanced_bce": 0.7264904975891113,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "6",
+        "ba": 0.4994036970781157,
+        "balanced_bce": 0.832776665687561,
+        "fallback": false
+      },
+      {
+        "participant_id": "S22",
+        "session_id": "7",
+        "ba": 0.6096438575430172,
+        "balanced_bce": 0.68775475025177,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "1",
+        "ba": 0.5808366308648955,
+        "balanced_bce": 0.6745939254760742,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "2",
+        "ba": 0.6259608665269043,
+        "balanced_bce": 0.6234028935432434,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "3",
+        "ba": 0.6626815980629539,
+        "balanced_bce": 0.6350363492965698,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "4",
+        "ba": 0.7364417989417988,
+        "balanced_bce": 0.5677657127380371,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "5",
+        "ba": 0.6819648093841642,
+        "balanced_bce": 0.564618706703186,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "6",
+        "ba": 0.6803030303030302,
+        "balanced_bce": 0.6316694617271423,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "7",
+        "ba": 0.5944309927360775,
+        "balanced_bce": 0.6781560182571411,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "8",
+        "ba": 0.565034965034965,
+        "balanced_bce": 0.722740888595581,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "9",
+        "ba": 0.5697004608294931,
+        "balanced_bce": 0.6798719167709351,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "10",
+        "ba": 0.5941546429892711,
+        "balanced_bce": 0.6341188549995422,
+        "fallback": false
+      },
+      {
+        "participant_id": "S33",
+        "session_id": "11",
+        "ba": 0.6300226372382569,
+        "balanced_bce": 0.6653770208358765,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "1",
+        "ba": 0.5221751412429378,
+        "balanced_bce": 0.718324601650238,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "2",
+        "ba": 0.6016949152542372,
+        "balanced_bce": 0.6581780910491943,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "3",
+        "ba": 0.6853448275862069,
+        "balanced_bce": 0.6120714545249939,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "4",
+        "ba": 0.6169590643274854,
+        "balanced_bce": 0.6182987093925476,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "5",
+        "ba": 0.6126342566421707,
+        "balanced_bce": 0.628698468208313,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "6",
+        "ba": 0.7007275132275133,
+        "balanced_bce": 0.5966945886611938,
+        "fallback": false
+      },
+      {
+        "participant_id": "S37",
+        "session_id": "7",
+        "ba": 0.6292372881355932,
+        "balanced_bce": 0.6484616994857788,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "1",
+        "ba": 0.4864114552893045,
+        "balanced_bce": 0.7437493801116943,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "2",
+        "ba": 0.5236742424242424,
+        "balanced_bce": 0.7299817204475403,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "3",
+        "ba": 0.3705128205128205,
+        "balanced_bce": 0.8717749714851379,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "4",
+        "ba": 0.40462519936204144,
+        "balanced_bce": 0.7700077295303345,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "5",
+        "ba": 0.3685805422647528,
+        "balanced_bce": 0.8198432326316833,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "6",
+        "ba": 0.4056712962962963,
+        "balanced_bce": 0.8809301853179932,
+        "fallback": false
+      },
+      {
+        "participant_id": "S40",
+        "session_id": "7",
+        "ba": 0.4419642857142857,
+        "balanced_bce": 0.8375270366668701,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "1",
+        "ba": 0.7733841830590125,
+        "balanced_bce": 0.5426498651504517,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "2",
+        "ba": 0.6154761904761904,
+        "balanced_bce": 0.6721234321594238,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "3",
+        "ba": 0.5947712418300652,
+        "balanced_bce": 0.6321709156036377,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "4",
+        "ba": 0.6381118881118881,
+        "balanced_bce": 0.6706036329269409,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "5",
+        "ba": 0.627564674397859,
+        "balanced_bce": 0.6291075348854065,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "6",
+        "ba": 0.6666666666666667,
+        "balanced_bce": 0.5950124859809875,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "7",
+        "ba": 0.6240079365079365,
+        "balanced_bce": 0.63868248462677,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "8",
+        "ba": 0.7179310344827586,
+        "balanced_bce": 0.5512762069702148,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "9",
+        "ba": 0.7067196292618338,
+        "balanced_bce": 0.6006784439086914,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "10",
+        "ba": 0.7433181225554107,
+        "balanced_bce": 0.5480119585990906,
+        "fallback": false
+      },
+      {
+        "participant_id": "S46",
+        "session_id": "11",
+        "ba": 0.7608853410740203,
+        "balanced_bce": 0.5405289530754089,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "1",
+        "ba": 0.8247549019607843,
+        "balanced_bce": 0.44442877173423767,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "2",
+        "ba": 0.6802325581395349,
+        "balanced_bce": 0.6037000417709351,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "3",
+        "ba": 0.7233381157340986,
+        "balanced_bce": 0.5197309255599976,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "4",
+        "ba": 0.6578947368421053,
+        "balanced_bce": 0.5538725256919861,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "5",
+        "ba": 0.7303921568627451,
+        "balanced_bce": 0.48004886507987976,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "6",
+        "ba": 0.683065953654189,
+        "balanced_bce": 0.5965088605880737,
+        "fallback": false
+      },
+      {
+        "participant_id": "S57",
+        "session_id": "7",
+        "ba": 0.8276047261009667,
+        "balanced_bce": 0.41956907510757446,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "1",
+        "ba": 0.5536363636363637,
+        "balanced_bce": 0.6781632304191589,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "2",
+        "ba": 0.7272727272727273,
+        "balanced_bce": 0.5479999780654907,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "3",
+        "ba": 0.7467166979362101,
+        "balanced_bce": 0.5341436266899109,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "4",
+        "ba": 0.6810344827586207,
+        "balanced_bce": 0.5251602530479431,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "5",
+        "ba": 0.8339901477832512,
+        "balanced_bce": 0.44024917483329773,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "6",
+        "ba": 0.5375,
+        "balanced_bce": 0.6431124210357666,
+        "fallback": false
+      },
+      {
+        "participant_id": "S60",
+        "session_id": "7",
+        "ba": 0.8357142857142857,
+        "balanced_bce": 0.4368627667427063,
+        "fallback": false
+      }
+    ],
+    "ineligible_sessions": [],
+    "outer_update": 50
+  },
+  "checkpoint": {
+    "path": "outer-0100.pt",
+    "relative_to_job_output": true,
+    "sha256": "09d9f175fd01cc14b5072dfa08412ab564dec4be09f283f66b7dfc05b4aee3eb",
+    "outer_cursor": 100
+  },
+  "source_state_unchanged": true,
+  "scientific_fit_completed": false,
+  "selected_parameter_checkpoint": {
+    "path": "runs/meta/400064d24c6c12b257e3e788c55cae2ec2a82c562a0489ef4f148d7025934fd6/outer-0050.pt",
+    "sha256": "2738404940284d25d4a241d30448238d05a640f0f4bd7292852aa031aff05de4"
+  }
+}
